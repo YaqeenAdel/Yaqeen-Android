@@ -21,4 +21,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "Yaqeen"
-include ':app'
+include(":app")
