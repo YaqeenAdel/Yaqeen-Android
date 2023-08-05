@@ -40,6 +40,7 @@ class ErrorHandlerImpl constructor(private val context: Context) : ErrorHandler 
             is IOException -> ErrorEntity.ApiError.Network("errorOccurred"
 //                context.getString(R.string.errorOccurred)
             )
+
             is HttpException -> {
                 when (throwable.code()) {
                     // no cache found in case of no network, thrown by retrofit -> treated as network error
