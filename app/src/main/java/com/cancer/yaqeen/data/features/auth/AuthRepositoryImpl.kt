@@ -44,6 +44,8 @@ class AuthRepositoryImpl @Inject constructor(
                         .withScope("openid profile email read:current_user update:current_user_metadata")
                         .withAudience(AUTH_0_URL)
                         .await(context)
+
+                    sharedPrefEncryptionUtil.setToken(credentials.accessToken)
                     emit(
                         Resource.Success(
                             MappingLoginRemoteAsUser().map(credentials.user)
