@@ -16,13 +16,9 @@ class AuthViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase
 ): ViewModel() {
 
-    fun login(email: String, password: String){
+    fun login(){
         viewModelScope.launch {
-            loginUseCase(
-                LoginRequestBody(
-                    email, password
-                )
-            ).onEach {
+            loginUseCase().onEach {
 
             }.catch {
 

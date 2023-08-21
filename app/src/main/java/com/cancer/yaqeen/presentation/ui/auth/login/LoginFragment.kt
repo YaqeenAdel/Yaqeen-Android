@@ -97,10 +97,10 @@ class LoginFragment : Fragment(), OnClickListener {
     }
 
     private fun login() {
-        val email = _binding?.emailAuthET?.text.toString().trim()
-        val password = _binding?.passwordAuthEt?.text.toString().trim()
+//        val email = _binding?.emailAuthET?.text.toString().trim()
+//        val password = _binding?.passwordAuthEt?.text.toString().trim()
 
-        authViewModel.login(email, password)
+        authViewModel.login()
 
 //        dbLogin(email,password)
     }

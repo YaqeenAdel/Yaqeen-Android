@@ -6,5 +6,5 @@ import com.cancer.yaqeen.data.features.auth.requests.LoginRequestBody
 import kotlinx.coroutines.flow.Flow
 
 interface IAuthRepository {
-    suspend fun login(requestBody: LoginRequestBody): Flow<Resource<User>>
+    suspend fun login(): Flow<Resource<User>>
 }
