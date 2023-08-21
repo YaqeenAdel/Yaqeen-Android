@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.widget.Button
 import com.auth0.android.Auth0
 import com.cancer.yaqeen.R
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

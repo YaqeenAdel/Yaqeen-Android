@@ -5,7 +5,7 @@ import com.google.gson.Gson
 import java.util.*
 import javax.inject.Inject
 
-public class SharedPrefEncryptionUtil @Inject constructor(
+class SharedPrefEncryptionUtil @Inject constructor(
     val sharedPreferences: SharedPreferences,
     val gson: Gson
 ) {

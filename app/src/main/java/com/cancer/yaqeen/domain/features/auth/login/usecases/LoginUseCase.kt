@@ -15,7 +15,7 @@ class LoginUseCase @Inject constructor(private val repository: IAuthRepository) 
     suspend operator fun invoke(body: LoginRequestBody): Flow<Resource<User>> {
 
         body.apply {
-            if (username.isEmpty()) {
+            if (email.isEmpty()) {
                 return flow {
                     throw LoginErrors.NullUserNameInput
                 }

@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("kapt")
+    id("com.google.dagger.hilt.android")
 //    id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
     id("androidx.navigation.safeargs")
@@ -19,7 +20,7 @@ android {
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        manifestPlaceholders["auth0Domain"] =  "@string/com_auth0_domain"
+        manifestPlaceholders["auth0Domain"] =  "AUTH_0_DOMAIN"
         manifestPlaceholders["auth0Scheme"] =  "demo"
     }
 
@@ -52,8 +53,9 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
     // Hilt
-    implementation("com.google.dagger:hilt-android:2.42")
-    kapt("com.google.dagger:hilt-android-compiler:2.42")
+    implementation("com.google.dagger:hilt-android:2.44")
+    kapt("com.google.dagger:hilt-android-compiler:2.44")
+    kapt("androidx.hilt:hilt-compiler:1.0.0")
 
     // Firebase
     implementation("com.google.firebase:firebase-analytics-ktx")
