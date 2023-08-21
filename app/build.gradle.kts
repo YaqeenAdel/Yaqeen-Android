@@ -18,8 +18,9 @@ android {
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        manifestPlaceholders["auth0Domain"] =  "@string/com_auth0_domain"
+        manifestPlaceholders["auth0Scheme"] =  "demo"
     }
 
     buildTypes {
@@ -114,5 +115,7 @@ dependencies {
     // Easy Permissions
     implementation("pub.devrel:easypermissions:3.0.0")
 
+    //Auth 0
+    implementation ("com.auth0.android:auth0:2.+")
 
 }

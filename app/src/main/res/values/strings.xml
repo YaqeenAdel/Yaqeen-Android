@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Yaqeen</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="com_auth0_domain">yaqeen.eu.auth0.com</string>
+    <string name="com_auth0_client_id">mZMed35pxMgKDicv5d9pIPNrTOAyBtq4</string>
 </resources>
