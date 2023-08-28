@@ -5,6 +5,8 @@ import android.content.Context
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.data.network.NetworkConnectionInterceptor
 import com.cancer.yaqeen.data.network.error.ErrorHandlerImpl
+import com.google.gson.GsonBuilder
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,6 +14,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
 import java.util.concurrent.TimeUnit
@@ -46,15 +50,15 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideOkHttpClient(
+        @ApplicationContext context: Context,
         loggingInterceptor: HttpLoggingInterceptor,
         sharedPrefUtil: SharedPrefEncryptionUtil,
         arrTrustManager: Array<TrustManager>,
         sslSocketFactory: SSLSocketFactory,
-        networkConnectionInterceptor: NetworkConnectionInterceptor
     ): OkHttpClient {
 
-        val client: OkHttpClient.Builder = OkHttpClient.Builder()
-            .addInterceptor(networkConnectionInterceptor)
+        val client = OkHttpClient.Builder()
+            .addInterceptor(NetworkConnectionInterceptor(context, sharedPrefUtil))
             .sslSocketFactory(sslSocketFactory, arrTrustManager[0] as X509TrustManager)
             .hostnameVerifier { hostname, session -> true }
             .readTimeout(15, TimeUnit.SECONDS)
@@ -63,9 +67,9 @@ object NetworkModule {
 
         client.addInterceptor(loggingInterceptor)
 
+
         return client.build()
     }
-
 
     @Singleton
     @Provides

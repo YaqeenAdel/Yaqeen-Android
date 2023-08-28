@@ -1,4 +1,4 @@
-package com.cancer.yaqeen.data.network
+package com.cancer.yaqeen.data.network.apis
 
 import com.cancer.yaqeen.data.features.auth.requests.LoginRequestBody
 import com.cancer.yaqeen.data.features.auth.responses.LoginRemote
