@@ -9,8 +9,8 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 class ViewPagerAdapter(
     fragmentManager: FragmentManager,
     lifecycle: Lifecycle,
-    private val pages: List<Fragment>,
-    private val itemList: List<Int>
+    private val pages: List<Fragment> = listOf(),
+    private val itemList: List<Int> = listOf()
 ) : FragmentStateAdapter(fragmentManager, lifecycle) {
 
     override fun getItemCount(): Int =

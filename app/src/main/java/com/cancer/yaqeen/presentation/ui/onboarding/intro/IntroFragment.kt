@@ -1,22 +1,21 @@
-package com.cancer.yaqeen.presentation.ui.splash
+package com.cancer.yaqeen.presentation.ui.onboarding.intro
 
 import android.os.Bundle
-import android.os.Handler
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
+import com.cancer.yaqeen.databinding.FragmentIntroBinding
 import com.cancer.yaqeen.databinding.FragmentSplashBinding
 import com.cancer.yaqeen.presentation.util.autoCleared
-import kotlinx.coroutines.launch
+import com.cancer.yaqeen.presentation.util.tryNavigate
 
-class SplashFragment : Fragment() {
+class IntroFragment : Fragment() {
 
-    private var _binding: FragmentSplashBinding by autoCleared()
+    private var binding: FragmentIntroBinding by autoCleared()
 
     private lateinit var navController: NavController
 
@@ -25,8 +24,8 @@ class SplashFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        _binding = FragmentSplashBinding.inflate(inflater, container, false)
-        return _binding.root
+        binding = FragmentIntroBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -34,12 +33,11 @@ class SplashFragment : Fragment() {
 
         navController = findNavController()
 
-        Handler().postDelayed({
-            lifecycleScope.launch {
-                navController.navigate(
-                    SplashFragmentDirections.actionSplashFragmentToOnBoardingFragment()
-                )
-            }
-        }, 2000)
+        binding.tvNext.setOnClickListener {
+            navController.tryNavigate(
+                IntroFragmentDirections.actionIntroFragmentToSelectUserTypeFragment()
+            )
+        }
     }
+
 }

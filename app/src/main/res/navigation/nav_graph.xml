@@ -7,7 +7,6 @@
     <fragment
         android:id="@+id/splashFragment"
         android:name="com.cancer.yaqeen.presentation.ui.splash.SplashFragment"
-        android:label="SplashFragment"
         tools:layout="@layout/fragment_splash">
         <action
             android:id="@+id/action_splashFragment_to_loginFragment"
@@ -25,7 +24,6 @@
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.cancer.yaqeen.presentation.ui.auth.login.LoginFragment"
-        android:label="fragment_login"
         tools:layout="@layout/fragment_login" >
         <action
             android:id="@+id/action_loginFragment_to_signUpFragment"
@@ -37,17 +35,38 @@
     <fragment
         android:id="@+id/signUpFragment"
         android:name="com.cancer.yaqeen.presentation.ui.auth.signup.SignUpFragment"
-        android:label="fragment_sign_up"
         tools:layout="@layout/fragment_sign_up" />
     <fragment
         android:id="@+id/forgotPasswordFragment"
         android:name="com.cancer.yaqeen.presentation.ui.auth.forgot_password.ForgotPasswordFragment"
-        android:label="fragment_forgot_password"
         tools:layout="@layout/fragment_forgot_password" />
     <fragment
         android:id="@+id/onBoardingFragment"
         android:name="com.cancer.yaqeen.presentation.ui.onboarding.OnBoardingFragment"
-        android:label="fragment_on_boarding"
-        tools:layout="@layout/fragment_on_boarding" />
+        tools:layout="@layout/fragment_on_boarding" >
+        <action
+            android:id="@+id/action_onBoardingFragment_to_introFragment"
+            app:destination="@id/introFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/introFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.onboarding.intro.IntroFragment"
+        tools:layout="@layout/fragment_intro" >
+        <action
+            android:id="@+id/action_introFragment_to_selectUserTypeFragment"
+            app:destination="@id/selectUserTypeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/selectUserTypeFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.onboarding.intro.user_type.SelectUserTypeFragment"
+        tools:layout="@layout/fragment_select_user_type" >
+        <action
+            android:id="@+id/action_selectUserTypeFragment_to_selectCancerTypeFragment"
+            app:destination="@id/selectCancerTypeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/selectCancerTypeFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.onboarding.intro.cancer_type.SelectCancerTypeFragment"
+        tools:layout="@layout/fragment_select_cancer_type" />
 
 </navigation>

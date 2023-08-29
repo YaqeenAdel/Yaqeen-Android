@@ -7,8 +7,8 @@
     <ImageView
         android:id="@+id/image"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_420sdp"
-        android:src="@mipmap/ic_launcher_round"
+        android:layout_height="match_parent"
+        android:background="@color/white_gray"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
