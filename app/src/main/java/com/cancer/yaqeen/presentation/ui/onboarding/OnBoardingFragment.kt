@@ -7,17 +7,21 @@ import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.databinding.FragmentOnBoardingBinding
+import com.cancer.yaqeen.presentation.ui.auth.AuthViewModel
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.autoScroll
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import com.google.android.material.tabs.TabLayout
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 class OnBoardingFragment : Fragment(), OnClickListener {
 
     private var binding: FragmentOnBoardingBinding by autoCleared()
@@ -25,6 +29,8 @@ class OnBoardingFragment : Fragment(), OnClickListener {
     private lateinit var navController: NavController
 
     private lateinit var adapter: ViewPagerAdapter
+
+    private val authViewModel: AuthViewModel by viewModels()
 
     private val handler = Handler()
     private var scrollPosition = 0
@@ -143,7 +149,9 @@ class OnBoardingFragment : Fragment(), OnClickListener {
                     OnBoardingFragmentDirections.actionOnBoardingFragmentToIntroFragment()
                 )
             }
-            R.id.tv_login -> {}
+            R.id.tv_login -> {
+                authViewModel.login()
+            }
         }
     }
 

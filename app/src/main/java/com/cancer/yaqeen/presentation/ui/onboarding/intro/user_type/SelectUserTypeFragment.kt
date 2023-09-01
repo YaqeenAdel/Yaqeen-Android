@@ -36,9 +36,14 @@ class SelectUserTypeFragment : Fragment() {
         navController = findNavController()
 
         binding.tvNext.setOnClickListener {
-            navController.tryNavigate(
-                SelectUserTypeFragmentDirections.actionSelectUserTypeFragmentToSelectCancerTypeFragment()
-            )
+            if(binding.btnPatient.isChecked)
+                navController.tryNavigate(
+                    SelectUserTypeFragmentDirections.actionSelectUserTypeFragmentToSelectCancerTypeFragment()
+                )
+            else
+                navController.tryNavigate(
+                    SelectUserTypeFragmentDirections.actionSelectUserTypeFragmentToSpecializationFragment()
+                )
         }
 
         binding.tvBack.setOnClickListener {

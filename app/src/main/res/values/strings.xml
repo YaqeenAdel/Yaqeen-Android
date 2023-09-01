@@ -21,4 +21,14 @@
     <string name="question">Question .. ?</string>
     <string name="select_module_you_interest">Select Module you interest?</string>
     <string name="i_m_yet_unknown">i’m yet unknown</string>
+    <string name="more_information_about_your_specialization">More information about your specialization</string>
+    <string name="terms_condition"><![CDATA[Terms & condition]]></string>
+    <string name="accept">Accept</string>
+    <string name="reject">Reject</string>
+    <string name="check_your_email">check your email</string>
+    <string name="activation">Activation</string>
+    <string name="resend_again">Resend again</string>
+    <string name="university">University</string>
+    <string name="degree">Degree</string>
+    <string name="medical_field">Medical Field</string>
 </resources>

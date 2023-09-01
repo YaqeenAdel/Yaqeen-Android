@@ -63,6 +63,9 @@
         <action
             android:id="@+id/action_selectUserTypeFragment_to_selectCancerTypeFragment"
             app:destination="@id/selectCancerTypeFragment" />
+        <action
+            android:id="@+id/action_selectUserTypeFragment_to_specializationFragment"
+            app:destination="@id/specializationFragment" />
     </fragment>
     <fragment
         android:id="@+id/selectCancerTypeFragment"
@@ -83,6 +86,30 @@
     <fragment
         android:id="@+id/modulesFragment"
         android:name="com.cancer.yaqeen.presentation.ui.onboarding.intro.user_type.modules.ModulesFragment"
-        tools:layout="@layout/fragment_modules" />
+        tools:layout="@layout/fragment_modules" >
+        <action
+            android:id="@+id/action_modulesFragment_to_termsAndConditionFragment"
+            app:destination="@id/termsAndConditionFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/specializationFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.onboarding.intro.user_type.doctor.specialization.SpecializationFragment"
+        tools:layout="@layout/fragment_specialization" >
+        <action
+            android:id="@+id/action_specializationFragment_to_modulesFragment"
+            app:destination="@id/modulesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/termsAndConditionFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.onboarding.terms_condition.TermsAndConditionFragment"
+        tools:layout="@layout/fragment_terms_and_condition" >
+        <action
+            android:id="@+id/action_termsAndConditionFragment_to_activationFragment"
+            app:destination="@id/activationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/activationFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.onboarding.activation.ActivationFragment"
+        tools:layout="@layout/fragment_activation" />
 
 </navigation>

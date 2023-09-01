@@ -18,4 +18,6 @@
     <color name="silver_medal_transparent_60">#66DAD8D8</color>
     <color name="silver_medal_transparent_20">#33DAD8D8</color>
     <color name="super_silver">#F1F1F1</color>
+    <color name="mercury">#ECECEC</color>
+    <color name="red">#F40F0F</color>
 </resources>

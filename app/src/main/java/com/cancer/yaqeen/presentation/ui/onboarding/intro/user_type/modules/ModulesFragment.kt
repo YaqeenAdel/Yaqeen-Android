@@ -13,11 +13,13 @@ import com.cancer.yaqeen.data.features.onboarding.patient.models.Stage
 import com.cancer.yaqeen.databinding.FragmentModulesBinding
 import com.cancer.yaqeen.databinding.FragmentStagesBinding
 import com.cancer.yaqeen.presentation.ui.onboarding.intro.user_type.patient.stages.StagesAdapter
+import com.cancer.yaqeen.presentation.ui.onboarding.terms_condition.TermsAndConditionFragmentDirections
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.dpToPx
 import com.cancer.yaqeen.presentation.util.recyclerview.CenterGridMarginItemDecoration
 import com.cancer.yaqeen.presentation.util.recyclerview.GridMarginItemDecoration
 import com.cancer.yaqeen.presentation.util.recyclerview.HorizontalMarginItemDecoration
+import com.cancer.yaqeen.presentation.util.tryNavigate
 import com.cancer.yaqeen.presentation.util.tryPopBackStack
 
 class ModulesFragment : Fragment() {
@@ -45,7 +47,9 @@ class ModulesFragment : Fragment() {
         setupModulesAdapter()
 
         binding.tvNext.setOnClickListener {
-
+            navController.tryNavigate(
+                ModulesFragmentDirections.actionModulesFragmentToTermsAndConditionFragment()
+            )
         }
 
         binding.tvBack.setOnClickListener {

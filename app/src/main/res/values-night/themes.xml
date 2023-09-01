@@ -39,4 +39,11 @@
         <item name="android:textColor">@color/black</item>
         <!-- Add more customizations as needed -->
     </style>
+
+
+    <style name="ExposedDropdownMenuTheme"  parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <item name="colorSurface">@color/white</item>
+        <item name="android:popupElevation">8dp</item>
+    </style>
+
 </resources>
