@@ -18,4 +18,7 @@
     <string name="volunteer_doctor">Volunteer Doctor</string>
     <string name="what_is_your_cancer_type">What is your cancer type .. ?</string>
     <string name="other">Other</string>
+    <string name="question">Question .. ?</string>
+    <string name="select_module_you_interest">Select Module you interest?</string>
+    <string name="i_m_yet_unknown">i’m yet unknown</string>
 </resources>

@@ -7,11 +7,15 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="white_50">#80FFFFFF</color>
 
     <color name="black_transparent_30">#4D000000</color>
+    <color name="black_transparent_20">#33000000</color>
+    <color name="black_transparent_10">#1A000000</color>
     <color name="private_black">#4B4646</color>
     <color name="white_gray">#F6F3F3</color>
     <color name="silver_medal">#DAD8D8</color>
+    <color name="silver_medal_transparent_60">#66DAD8D8</color>
     <color name="silver_medal_transparent_20">#33DAD8D8</color>
     <color name="super_silver">#F1F1F1</color>
 </resources>

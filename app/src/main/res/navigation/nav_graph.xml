@@ -66,7 +66,23 @@
     </fragment>
     <fragment
         android:id="@+id/selectCancerTypeFragment"
-        android:name="com.cancer.yaqeen.presentation.ui.onboarding.intro.cancer_type.SelectCancerTypeFragment"
-        tools:layout="@layout/fragment_select_cancer_type" />
+        android:name="com.cancer.yaqeen.presentation.ui.onboarding.intro.user_type.patient.cancer_type.SelectCancerTypeFragment"
+        tools:layout="@layout/fragment_select_cancer_type" >
+        <action
+            android:id="@+id/action_selectCancerTypeFragment_to_stagesFragment"
+            app:destination="@id/stagesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/stagesFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.onboarding.intro.user_type.patient.stages.StagesFragment"
+        tools:layout="@layout/fragment_stages" >
+        <action
+            android:id="@+id/action_stagesFragment_to_modulesFragment"
+            app:destination="@id/modulesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/modulesFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.onboarding.intro.user_type.modules.ModulesFragment"
+        tools:layout="@layout/fragment_modules" />
 
 </navigation>

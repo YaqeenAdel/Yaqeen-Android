@@ -17,8 +17,8 @@
             android:id="@+id/iv_back"
             android:layout_width="@dimen/_48sdp"
             android:layout_height="@dimen/_48sdp"
-            android:padding="@dimen/_8sdp"
-            android:src="@drawable/baseline_arrow_back_ios_new_24"
+            android:padding="@dimen/_12sdp"
+            android:src="@drawable/arrow_back"
             android:layout_marginStart="@dimen/_8sdp"
             android:layout_marginTop="@dimen/_24sdp"
             app:layout_constraintHorizontal_bias="0"
@@ -91,7 +91,7 @@
                 android:textSize="@dimen/_14ssp"
                 android:checked="true"
                 app:buttonTint="@color/black"
-                android:drawableEnd="@drawable/baseline_info_24"
+                android:drawableEnd="@drawable/info"
                 android:background="@drawable/radio_button_background"/>
 
             <com.google.android.material.radiobutton.MaterialRadioButton
@@ -103,7 +103,7 @@
                 android:textSize="@dimen/_14ssp"
                 app:buttonTint="@color/black"
                 android:layout_marginTop="@dimen/_12sdp"
-                android:drawableEnd="@drawable/baseline_info_24"
+                android:drawableEnd="@drawable/info"
                 android:background="@drawable/radio_button_background"/>
 
         </RadioGroup>

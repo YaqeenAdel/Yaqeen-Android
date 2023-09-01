@@ -33,6 +33,7 @@
                 android:layout_height="@dimen/_9sdp"
                 android:layout_marginTop="@dimen/_48sdp"
                 android:layout_marginHorizontal="@dimen/_24sdp"
+                android:background="@android:color/transparent"
                 app:tabMode="fixed"
                 app:tabIndicatorGravity="center"
                 app:tabIndicatorAnimationMode="elastic"

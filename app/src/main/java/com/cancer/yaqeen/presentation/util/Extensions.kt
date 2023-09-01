@@ -2,6 +2,7 @@ package com.cancer.yaqeen.presentation.util
 
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.os.Handler
 import android.view.View
 import android.view.WindowManager
 import androidx.core.content.ContextCompat
@@ -9,6 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import androidx.navigation.NavOptions
+import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
 import com.cancer.yaqeen.R
 import com.google.android.material.textfield.TextInputLayout
 
@@ -74,3 +77,48 @@ fun NavController.tryPopBackStack() =
     try {
         popBackStack()
     } catch (_: Exception) {}
+
+fun ViewPager2.autoScroll(interval: Long) {
+
+    val handler = Handler()
+    var scrollPosition = 0
+
+    val runnable = object : Runnable {
+
+        override fun run() {
+
+            /**
+             * Calculate "scroll position" with
+             * adapter pages count and current
+             * value of scrollPosition.
+             */
+            val count = adapter?.itemCount ?: 0
+            setCurrentItem(scrollPosition++ % count, true)
+
+            handler.postDelayed(this, interval)
+        }
+    }
+
+    registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
+        override fun onPageSelected(position: Int) {
+            // Updating "scroll position" when user scrolls manually
+            scrollPosition = position + 1
+        }
+
+        override fun onPageScrollStateChanged(state: Int) {
+            // Not necessary
+        }
+
+        override fun onPageScrolled(
+            position: Int,
+            positionOffset: Float,
+            positionOffsetPixels: Int
+        ) {
+            // Not necessary
+        }
+    })
+
+    this.removeCallbacks(runnable)
+
+    handler.post(runnable)
+}

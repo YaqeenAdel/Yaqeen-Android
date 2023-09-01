@@ -1,6 +1,7 @@
 package com.cancer.yaqeen.presentation.ui.onboarding
 
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
@@ -12,6 +13,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.databinding.FragmentOnBoardingBinding
 import com.cancer.yaqeen.presentation.util.autoCleared
+import com.cancer.yaqeen.presentation.util.autoScroll
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import com.google.android.material.tabs.TabLayout
 
@@ -23,6 +25,25 @@ class OnBoardingFragment : Fragment(), OnClickListener {
     private lateinit var navController: NavController
 
     private lateinit var adapter: ViewPagerAdapter
+
+    private val handler = Handler()
+    private var scrollPosition = 0
+
+    val runnable = object : Runnable {
+
+        override fun run() {
+
+            /**
+             * Calculate "scroll position" with
+             * adapter pages count and current
+             * value of scrollPosition.
+             */
+            val count = adapter.itemCount
+            binding.viewPager.setCurrentItem(scrollPosition++ % count, true)
+
+            handler.postDelayed(this, 3000)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -91,6 +112,25 @@ class OnBoardingFragment : Fragment(), OnClickListener {
             addTab(newTab())
             addTab(newTab())
         }
+
+        binding.viewPager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                scrollPosition = position + 1
+            }
+            override fun onPageScrollStateChanged(state: Int) {}
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {}
+        })
+
+        handler.post(runnable)
+    }
+
+    private fun removeCallbacks(){
+        binding.viewPager.removeCallbacks(runnable)
+        handler.removeCallbacks(runnable)
     }
 
     override fun onClick(v: View?) {
@@ -98,6 +138,7 @@ class OnBoardingFragment : Fragment(), OnClickListener {
             R.id.tv_language -> {}
             R.id.btn_explore_app -> {}
             R.id.btn_join -> {
+                removeCallbacks()
                 navController.tryNavigate(
                     OnBoardingFragmentDirections.actionOnBoardingFragmentToIntroFragment()
                 )
