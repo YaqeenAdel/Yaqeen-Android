@@ -11,22 +11,22 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.databinding.FragmentSplashBinding
+import com.cancer.yaqeen.presentation.util.autoCleared
 import kotlinx.coroutines.launch
 
 class SplashFragment : Fragment() {
 
-    private var _binding: FragmentSplashBinding? = null
-    private var binding: FragmentSplashBinding? = _binding
+    private var _binding: FragmentSplashBinding by autoCleared()
 
     private lateinit var navController: NavController
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         _binding = FragmentSplashBinding.inflate(inflater, container, false)
-        return _binding?.root
+        return _binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -37,15 +37,9 @@ class SplashFragment : Fragment() {
         Handler().postDelayed({
             lifecycleScope.launch {
                 navController.navigate(
-                    SplashFragmentDirections.actionSplashFragmentToLoginFragment()
+                    SplashFragmentDirections.actionSplashFragmentToOnBoardingFragment()
                 )
             }
         }, 2000)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        _binding = null
     }
 }

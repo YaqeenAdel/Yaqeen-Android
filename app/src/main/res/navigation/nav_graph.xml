@@ -7,7 +7,6 @@
     <fragment
         android:id="@+id/splashFragment"
         android:name="com.cancer.yaqeen.presentation.ui.splash.SplashFragment"
-        android:label="SplashFragment"
         tools:layout="@layout/fragment_splash">
         <action
             android:id="@+id/action_splashFragment_to_loginFragment"
@@ -15,11 +14,16 @@
             app:launchSingleTop="true"
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_splashFragment_to_onBoardingFragment"
+            app:destination="@id/onBoardingFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.cancer.yaqeen.presentation.ui.auth.login.LoginFragment"
-        android:label="fragment_login"
         tools:layout="@layout/fragment_login" >
         <action
             android:id="@+id/action_loginFragment_to_signUpFragment"
@@ -31,12 +35,81 @@
     <fragment
         android:id="@+id/signUpFragment"
         android:name="com.cancer.yaqeen.presentation.ui.auth.signup.SignUpFragment"
-        android:label="fragment_sign_up"
         tools:layout="@layout/fragment_sign_up" />
     <fragment
         android:id="@+id/forgotPasswordFragment"
         android:name="com.cancer.yaqeen.presentation.ui.auth.forgot_password.ForgotPasswordFragment"
-        android:label="fragment_forgot_password"
         tools:layout="@layout/fragment_forgot_password" />
+    <fragment
+        android:id="@+id/onBoardingFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.onboarding.OnBoardingFragment"
+        tools:layout="@layout/fragment_on_boarding" >
+        <action
+            android:id="@+id/action_onBoardingFragment_to_introFragment"
+            app:destination="@id/introFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/introFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.onboarding.intro.IntroFragment"
+        tools:layout="@layout/fragment_intro" >
+        <action
+            android:id="@+id/action_introFragment_to_selectUserTypeFragment"
+            app:destination="@id/selectUserTypeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/selectUserTypeFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.onboarding.intro.user_type.SelectUserTypeFragment"
+        tools:layout="@layout/fragment_select_user_type" >
+        <action
+            android:id="@+id/action_selectUserTypeFragment_to_selectCancerTypeFragment"
+            app:destination="@id/selectCancerTypeFragment" />
+        <action
+            android:id="@+id/action_selectUserTypeFragment_to_specializationFragment"
+            app:destination="@id/specializationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/selectCancerTypeFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.onboarding.intro.user_type.patient.cancer_type.SelectCancerTypeFragment"
+        tools:layout="@layout/fragment_select_cancer_type" >
+        <action
+            android:id="@+id/action_selectCancerTypeFragment_to_stagesFragment"
+            app:destination="@id/stagesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/stagesFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.onboarding.intro.user_type.patient.stages.StagesFragment"
+        tools:layout="@layout/fragment_stages" >
+        <action
+            android:id="@+id/action_stagesFragment_to_modulesFragment"
+            app:destination="@id/modulesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/modulesFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.onboarding.intro.user_type.modules.ModulesFragment"
+        tools:layout="@layout/fragment_modules" >
+        <action
+            android:id="@+id/action_modulesFragment_to_termsAndConditionFragment"
+            app:destination="@id/termsAndConditionFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/specializationFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.onboarding.intro.user_type.doctor.specialization.SpecializationFragment"
+        tools:layout="@layout/fragment_specialization" >
+        <action
+            android:id="@+id/action_specializationFragment_to_modulesFragment"
+            app:destination="@id/modulesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/termsAndConditionFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.onboarding.terms_condition.TermsAndConditionFragment"
+        tools:layout="@layout/fragment_terms_and_condition" >
+        <action
+            android:id="@+id/action_termsAndConditionFragment_to_activationFragment"
+            app:destination="@id/activationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/activationFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.onboarding.activation.ActivationFragment"
+        tools:layout="@layout/fragment_activation" />
 
 </navigation>

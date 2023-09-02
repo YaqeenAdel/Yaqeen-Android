@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            tools:context=".presentation.ui.onboarding.OnBoardingFragment">
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/viewPager"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintVertical_bias="0"
+                app:layout_constraintHeight_percent="0.40"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabLayout"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_9sdp"
+                android:layout_marginTop="@dimen/_48sdp"
+                android:layout_marginHorizontal="@dimen/_24sdp"
+                android:background="@android:color/transparent"
+                app:tabMode="fixed"
+                app:tabIndicatorGravity="center"
+                app:tabIndicatorAnimationMode="elastic"
+                app:tabSelectedTextColor="@color/white"
+                app:tabIndicatorColor="@null"
+                app:tabBackground="@drawable/tab_indicator_unselected"
+                app:tabIndicator="@drawable/tab_indicator_selected"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/viewPager" />
+            <ImageView
+                android:id="@+id/iv_logo"
+                android:layout_width="@dimen/_82sdp"
+                android:layout_height="@dimen/_76sdp"
+                android:layout_marginTop="@dimen/_24sdp"
+                android:layout_marginStart="@dimen/_28sdp"
+                android:background="@color/silver_medal"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/viewPager"/>
+
+            <TextView
+                android:id="@+id/tv_language"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Widget.Material3.Button.TextButton"
+                app:layout_constraintStart_toEndOf="@id/iv_logo"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/iv_logo"
+                app:layout_constraintBottom_toBottomOf="@id/iv_logo"
+                app:layout_constraintHorizontal_bias="1"
+                android:layout_marginEnd="@dimen/_16sdp"
+                android:layout_marginStart="@dimen/_2sdp"
+                android:gravity="center"
+                android:text="@string/language"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_14ssp"/>
+
+            <TextView
+                android:id="@+id/tv_info"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@id/iv_logo"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/iv_logo"
+                android:layout_marginEnd="@dimen/_26sdp"
+                android:layout_marginStart="@dimen/_3sdp"
+                android:layout_marginTop="@dimen/_12sdp"
+                android:gravity="center|start"
+                android:text="Lorem ipsum dolor sit amet consectetur."
+                android:textColor="@color/black"
+                android:textSize="@dimen/_18ssp"/>
+
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_explore_app"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                style="@style/CustomMaterialButtonStyle"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_info"
+                android:layout_marginTop="@dimen/_42sdp"
+                android:layout_marginHorizontal="@dimen/_28sdp"
+                android:paddingVertical="@dimen/_12sdp"
+                app:cornerRadius="@dimen/_8sdp"
+                android:text="@string/explore_the_app"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_join"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                style="@style/CustomMaterialButtonStrokeStyle"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btn_explore_app"
+                android:layout_marginHorizontal="@dimen/_28sdp"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:paddingVertical="@dimen/_12sdp"
+                app:cornerRadius="@dimen/_8sdp"
+                android:text="@string/start_join"/>
+
+            <TextView
+                android:id="@+id/tv_login"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                style="@style/Widget.Material3.Button.TextButton"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btn_join"
+                app:layout_constraintVertical_bias="0"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:layout_marginHorizontal="@dimen/_28sdp"
+                android:layout_marginBottom="@dimen/_18sdp"
+                android:paddingVertical="@dimen/_8sdp"
+                android:gravity="center"
+                android:text="@string/login"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_14ssp"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</layout>

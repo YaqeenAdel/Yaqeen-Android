@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        tools:context=".presentation.ui.onboarding.intro.user_type.patient.stages.StagesFragment">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="@dimen/_48sdp"
+            android:layout_height="@dimen/_48sdp"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginTop="@dimen/_24sdp"
+            android:padding="@dimen/_12sdp"
+            android:src="@drawable/arrow_back"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_logo"
+            android:layout_width="@dimen/_48sdp"
+            android:layout_height="@dimen/_48sdp"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:background="@color/silver_medal"
+            app:layout_constraintBottom_toBottomOf="@id/iv_back"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toEndOf="@id/iv_back"
+            app:layout_constraintTop_toTopOf="@id/iv_back" />
+
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="@dimen/_12sdp"
+            app:layout_constraintBottom_toTopOf="@+id/progress"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_back">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_32sdp"
+                    android:layout_marginTop="@dimen/_54sdp"
+                    android:layout_marginEnd="@dimen/_4sdp"
+                    android:gravity="center|start"
+                    android:text="@string/question"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_18ssp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <TextView
+                    android:id="@+id/tv_message"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_32sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginEnd="@dimen/_4sdp"
+                    android:gravity="center|start"
+                    android:text="Lorem ipsum dolor sit amet consectetur."
+                    android:textColor="@color/black_transparent_30"
+                    android:textSize="@dimen/_18ssp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_title" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_stages"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_60sdp"
+                    android:nestedScrollingEnabled="false"
+                    android:orientation="horizontal"
+                    android:saveEnabled="false"
+                    app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_message"
+                    tools:itemCount="4"
+                    tools:listitem="@layout/item_stage" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_join"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    style="@style/CustomMaterialButtonStrokeStyle"
+                    app:strokeColor="@color/black_transparent_10"
+                    android:textSize="@dimen/_16ssp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/rv_stages"
+                    android:layout_marginHorizontal="@dimen/_32sdp"
+                    android:layout_marginTop="@dimen/_18sdp"
+                    android:paddingVertical="@dimen/_16sdp"
+                    app:cornerRadius="@dimen/_8sdp"
+                    android:text="@string/i_m_yet_unknown"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/progress"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_2sdp"
+            android:layout_marginVertical="@dimen/_12sdp"
+            android:progress="60"
+            app:indicatorColor="@color/private_black"
+            app:layout_constraintBottom_toTopOf="@+id/tv_back"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintVertical_bias="1"
+            app:trackColor="@color/super_silver" />
+
+        <TextView
+            android:id="@+id/tv_back"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_18sdp"
+            android:layout_marginBottom="@dimen/_14sdp"
+            android:gravity="center"
+            android:paddingVertical="@dimen/_8sdp"
+            android:text="@string/back"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_20ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_next"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_18sdp"
+            android:layout_marginBottom="@dimen/_14sdp"
+            android:gravity="center"
+            android:paddingVertical="@dimen/_8sdp"
+            android:text="@string/next"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_20ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1"
+            app:layout_constraintStart_toEndOf="@id/tv_back" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

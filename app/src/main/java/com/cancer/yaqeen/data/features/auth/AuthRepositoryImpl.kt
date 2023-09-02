@@ -8,6 +8,7 @@ import com.auth0.android.authentication.AuthenticationException
 import com.auth0.android.callback.Callback
 import com.auth0.android.provider.WebAuthProvider
 import com.auth0.android.result.Credentials
+import com.cancer.yaqeen.BuildConfig.AUTH_0_SCHEMA
 import com.cancer.yaqeen.BuildConfig.AUTH_0_URL
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.base.BaseDataSource
@@ -36,22 +37,24 @@ class AuthRepositoryImpl @Inject constructor(
 ): BaseDataSource(errorHandler), IAuthRepository {
 
     override suspend fun login(): Flow<Resource<User>> =
-        flow {
-            withContext(Dispatchers.IO){
-                try {
-                    val credentials = WebAuthProvider.login(auth0)
-                        .withScheme("demo")
-                        .withScope("openid profile email read:current_user update:current_user_metadata")
-                        .withAudience(AUTH_0_URL)
-                        .await(context)
+        withContext(Dispatchers.Main){
+            try {
+                val credentials = WebAuthProvider.login(auth0)
+                    .withScheme(AUTH_0_SCHEMA)
+                    .withScope("openid profile email read:current_user update:current_user_metadata")
+                    .withAudience(AUTH_0_URL)
+                    .await(context)
 
-                    sharedPrefEncryptionUtil.setToken(credentials.accessToken)
+                sharedPrefEncryptionUtil.setToken(credentials.accessToken)
+                flow {
                     emit(
                         Resource.Success(
                             MappingLoginRemoteAsUser().map(credentials.user)
                         )
                     )
-                }catch (e: AuthenticationException){
+                }
+            }catch (e: AuthenticationException){
+                flow {
                     emit(
                         Resource.Error(
                             ErrorEntity.ApiError.Network("")
