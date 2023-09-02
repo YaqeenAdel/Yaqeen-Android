@@ -37,7 +37,7 @@ class AuthRepositoryImpl @Inject constructor(
 ): BaseDataSource(errorHandler), IAuthRepository {
 
     override suspend fun login(): Flow<Resource<User>> =
-        withContext(Dispatchers.IO){
+        withContext(Dispatchers.Main){
             try {
                 val credentials = WebAuthProvider.login(auth0)
                     .withScheme(AUTH_0_SCHEMA)
