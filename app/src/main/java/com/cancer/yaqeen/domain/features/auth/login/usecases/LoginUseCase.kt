@@ -12,20 +12,6 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class LoginUseCase @Inject constructor(private val repository: IAuthRepository) {
-    suspend operator fun invoke(): Flow<Resource<User>> {
-
-//        body.apply {
-//            if (email.isEmpty()) {
-//                return flow {
-//                    throw LoginErrors.NullUserNameInput
-//                }
-//            } else if (password.isEmpty()) {
-//                return flow {
-//                    throw LoginErrors.NullPasswordInput
-//                }
-//            }
-//        }
-
-        return repository.login()
-    }
+    suspend operator fun invoke(): Flow<Resource<User>> =
+        repository.login()
 }
