@@ -197,7 +197,7 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
                 )
             }
             R.id.tv_login -> {
-                authViewModel.login()
+                authViewModel.login(requireContext())
             }
         }
     }
