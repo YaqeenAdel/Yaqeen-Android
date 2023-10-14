@@ -19,10 +19,9 @@ object RepositoryModule {
     @Singleton
     @Provides
     fun provideAuthRepository(
-        @ApplicationContext context: Context,
         auth0: Auth0,
         errorHandlerImpl: ErrorHandlerImpl,
         sharedPrefEncryptionUtil: SharedPrefEncryptionUtil
-    ) = AuthRepositoryImpl(context, auth0, errorHandlerImpl, sharedPrefEncryptionUtil)
+    ) = AuthRepositoryImpl(auth0, errorHandlerImpl, sharedPrefEncryptionUtil)
 
 }

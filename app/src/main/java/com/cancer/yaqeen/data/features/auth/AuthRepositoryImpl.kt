@@ -30,13 +30,12 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
-    private val context: Context,
     private val auth0: Auth0,
     errorHandler: ErrorHandlerImpl,
     private val sharedPrefEncryptionUtil: SharedPrefEncryptionUtil
 ): BaseDataSource(errorHandler), IAuthRepository {
 
-    override suspend fun login(): Flow<Resource<User>> =
+    override suspend fun login(context: Context): Flow<Resource<User>> =
         withContext(Dispatchers.Main){
             try {
                 val credentials = WebAuthProvider.login(auth0)
