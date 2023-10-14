@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.cancer.yaqeen.data.features.onboarding.patient.models.Stage
+import com.cancer.yaqeen.data.features.onboarding.models.Stage
 import com.cancer.yaqeen.databinding.ItemStageBinding
 
 class StagesAdapter(

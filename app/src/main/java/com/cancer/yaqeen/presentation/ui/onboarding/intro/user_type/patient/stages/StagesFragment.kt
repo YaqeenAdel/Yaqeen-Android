@@ -5,12 +5,20 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
-import com.cancer.yaqeen.data.features.onboarding.patient.models.CancerType
-import com.cancer.yaqeen.data.features.onboarding.patient.models.Stage
+import com.cancer.yaqeen.data.features.onboarding.models.CancerType
+import com.cancer.yaqeen.data.features.onboarding.models.Stage
+import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.databinding.FragmentStagesBinding
+import com.cancer.yaqeen.presentation.base.BaseFragment
+import com.cancer.yaqeen.presentation.ui.onboarding.OnboardingViewModel
 import com.cancer.yaqeen.presentation.ui.onboarding.intro.user_type.patient.cancer_type.CancerTypesAdapter
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.dpToPx
@@ -18,14 +26,20 @@ import com.cancer.yaqeen.presentation.util.recyclerview.HorizontalMarginItemDeco
 import com.cancer.yaqeen.presentation.util.recyclerview.VerticalMarginItemDecoration
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import com.cancer.yaqeen.presentation.util.tryPopBackStack
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
-class StagesFragment : Fragment() {
+@AndroidEntryPoint
+class StagesFragment : BaseFragment() {
 
     private var binding: FragmentStagesBinding by autoCleared()
 
     private lateinit var navController: NavController
 
     private lateinit var stagesAdapter: StagesAdapter
+
+    private val viewModel: OnboardingViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,6 +66,28 @@ class StagesFragment : Fragment() {
         binding.tvBack.setOnClickListener {
             navController.tryPopBackStack()
         }
+
+        observeStates()
+    }
+    private fun observeStates() {
+        lifecycleScope {
+            viewModel.viewStateResources.collectLatest {
+                stagesAdapter.submitList(
+                    it.stages
+                )
+            }
+        }
+    }
+
+    private fun handleResponseError(errorEntity: ErrorEntity?) {
+        val errorMessage = handleError(errorEntity)
+        displayErrorMessage(errorMessage)
+    }
+
+    private fun displayErrorMessage(errorMessage: String?) {
+        errorMessage?.let {
+            Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
+        }
     }
     private fun setupStagesAdapter() {
         stagesAdapter = StagesAdapter {
@@ -70,22 +106,22 @@ class StagesFragment : Fragment() {
         stagesAdapter.submitList(
             listOf(
                 Stage(
-                    id = 1, stageName = "Stage", number = 1
+                    id = 1, icon = "", stageName = "Stage", number = 1
                 ),
                 Stage(
-                    id = 2, stageName = "Stage", number = 2
+                    id = 2, icon = "", stageName = "Stage", number = 2
                 ),
                 Stage(
-                    id = 3, stageName = "Stage", number = 3
+                    id = 3, icon = "", stageName = "Stage", number = 3
                 ),
                 Stage(
-                    id = 4, stageName = "Stage", number = 4
+                    id = 4, icon = "", stageName = "Stage", number = 4
                 ),
                 Stage(
-                    id = 5, stageName = "Stage", number = 5
+                    id = 5, icon = "", stageName = "Stage", number = 5
                 ),
                 Stage(
-                    id = 6, stageName = "Stage", number = 6
+                    id = 6, icon = "", stageName = "Stage", number = 6
                 )
             )
         )

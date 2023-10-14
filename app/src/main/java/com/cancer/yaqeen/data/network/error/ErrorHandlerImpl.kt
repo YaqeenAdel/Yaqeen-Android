@@ -4,9 +4,7 @@ import android.content.Context
 import android.database.StaleDataException
 import android.database.sqlite.SQLiteConstraintException
 import android.database.sqlite.SQLiteException
-import android.util.Log
 import com.cancer.yaqeen.data.base.BaseResponse
-import com.cancer.yaqeen.data.base.ErrorHandler
 import com.cancer.yaqeen.data.network.NoConnectivityException
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
@@ -21,25 +19,19 @@ import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import java.util.concurrent.TimeoutException
 
-class ErrorHandlerImpl constructor(private val context: Context) : ErrorHandler {
+class ErrorHandlerImpl: ErrorHandler {
 
     override fun getError(throwable: Throwable): ErrorEntity {
         return when (throwable) {
-            is NoConnectivityException, is UnknownHostException -> ErrorEntity.ApiError.InternetConnection("failedConnection"
-//                context.getString(R.string.failedConnection)
-            )
-            is TimeoutException, is SocketTimeoutException -> ErrorEntity.ApiError.TimeOutNetwork("timeoutExceeded"
-//                context.getString(R.string.timeoutExceeded)
-            )
-            is IllegalArgumentException -> ErrorEntity.ApiError.BadRequestNetwork("missing_data"
-//                context.getString(R.string.missing_data)
-            )
-            is JsonSyntaxException -> ErrorEntity.ApiError.BadResponseNetwork("missing_response"
-//                context.getString(R.string.missing_response)
-            )
-            is IOException -> ErrorEntity.ApiError.Network("errorOccurred"
-//                context.getString(R.string.errorOccurred)
-            )
+            is NoConnectivityException, is UnknownHostException -> ErrorEntity.ApiError.InternetConnection
+
+            is TimeoutException, is SocketTimeoutException -> ErrorEntity.ApiError.TimeOutNetwork
+
+            is IllegalArgumentException -> ErrorEntity.ApiError.BadRequestNetwork
+
+            is JsonSyntaxException -> ErrorEntity.ApiError.BadResponseNetwork
+
+            is IOException -> ErrorEntity.ApiError.Network
 
             is HttpException -> {
                 when (throwable.code()) {
@@ -47,33 +39,31 @@ class ErrorHandlerImpl constructor(private val context: Context) : ErrorHandler 
 //                    DataConstants.Network.HttpStatusCode.UNSATISFIABLE_REQUEST -> ErrorEntity.Network
 
                     // not found
-                    HttpURLConnection.HTTP_NOT_FOUND -> ErrorEntity.ApiError.NotFound("")
+                    HttpURLConnection.HTTP_NOT_FOUND -> ErrorEntity.ApiError.NotFound(
+                        throwable.message()
+                    )
 
                     // access denied
-                    HttpURLConnection.HTTP_INTERNAL_ERROR -> ErrorEntity.ApiError.ServiceUnavailable("")
+                    HttpURLConnection.HTTP_FORBIDDEN -> ErrorEntity.ApiError.AccessDenied
 
                     // unavailable service
-                    HttpURLConnection.HTTP_UNAVAILABLE -> ErrorEntity.ApiError.ServiceUnavailable("")
-
-                    // access denied
-                    HttpURLConnection.HTTP_FORBIDDEN -> ErrorEntity.ApiError.AccessDenied("")
+                    HttpURLConnection.HTTP_UNAVAILABLE -> ErrorEntity.ApiError.ServiceUnavailable
 
                     // unavailable service
-                    HttpURLConnection.HTTP_UNAUTHORIZED -> ErrorEntity.ApiError.AccessDenied("")
+                    HttpURLConnection.HTTP_UNAUTHORIZED -> ErrorEntity.ApiError.AccessDenied
 
                     // all the others will be treated as unknown error
-                    else -> ErrorEntity.ApiError.Unknown("")
+                    else -> ErrorEntity.ApiError.Unknown(throwable.message())
                 }
             }
-            is FileNotFoundException -> ErrorEntity.FileError.NotFound(""
-//                context.getString(R.string.errorOccurred)
-            )
-            is SQLiteConstraintException -> ErrorEntity.DatabaseError.Unknown("")
-            is SQLiteException -> ErrorEntity.DatabaseError.Unknown("")
-            is StaleDataException -> ErrorEntity.DatabaseError.Unknown("")
-            else -> ErrorEntity.ApiError.Unknown(""
-//                context.getString(R.string.errorOccurred)
-            )
+
+            is SQLiteConstraintException -> ErrorEntity.DatabaseError.Unknown
+            is SQLiteException -> ErrorEntity.DatabaseError.Unknown
+            is StaleDataException -> ErrorEntity.DatabaseError.Unknown
+
+            is FileNotFoundException -> ErrorEntity.FileError.NotFound("")
+
+            else -> ErrorEntity.ApiError.Unknown("")
         }
     }
 
@@ -81,9 +71,7 @@ class ErrorHandlerImpl constructor(private val context: Context) : ErrorHandler 
     override fun getErrorResponseServer(errorBody: ResponseBody?, errorCode: Int): ErrorEntity {
         return when(errorCode){
             HttpURLConnection.HTTP_UNAUTHORIZED ->
-                ErrorEntity.ApiError.AccessDenied(""
-//                    context.getString(R.string.un_authorized)
-                )
+                ErrorEntity.ApiError.AccessDenied
             else -> {
                 val gson = Gson()
 
@@ -94,9 +82,7 @@ class ErrorHandlerImpl constructor(private val context: Context) : ErrorHandler 
                 if (errorResponse != null)
                     ErrorEntity.ApiError.ServerErrorResponse(errorResponse)
                 else
-                    ErrorEntity.ApiError.ServerErrorResponse(
-                        getErrorResponseServer(errorBody?.charStream())
-                    )
+                    ErrorEntity.ApiError.ServerErrorResponse(getErrorResponseServer(errorBody?.charStream()))
             }
         }
     }
@@ -107,14 +93,12 @@ class ErrorHandlerImpl constructor(private val context: Context) : ErrorHandler 
                 ErrorResponse(
                     error = null,
                     message = null,
-                    statusCode = statusCode ?: 0,
-                    isSuccess = isSuccess,
-                    errorMessage = errorMessage
+                    statusCode = statusCode ?: 0
                 )
             }
         )
 
-    private fun getErrorResponseServer(charStream: Reader?): ErrorResponse {
+    override fun getErrorResponseServer(charStream: Reader?): ErrorResponse {
         val gson = Gson()
 
         val errorMessage = gson.fromJson(charStream, String::class.java)
@@ -122,8 +106,10 @@ class ErrorHandlerImpl constructor(private val context: Context) : ErrorHandler 
         return ErrorResponse(
             error = errorMessage,
             message = errorMessage,
-            errorMessage = errorMessage,
-        )
+            statusCode = 0
+        ).apply {
+            errorsStr = errorMessage
+        }
     }
 
 }

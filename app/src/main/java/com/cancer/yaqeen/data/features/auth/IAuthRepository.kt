@@ -1,10 +1,9 @@
 package com.cancer.yaqeen.data.features.auth
 
-import com.cancer.yaqeen.data.base.Resource
+import com.cancer.yaqeen.data.network.base.DataState
 import com.cancer.yaqeen.data.features.auth.models.User
-import com.cancer.yaqeen.data.features.auth.requests.LoginRequestBody
 import kotlinx.coroutines.flow.Flow
 
 interface IAuthRepository {
-    suspend fun login(): Flow<Resource<User>>
+    suspend fun login(): Flow<DataState<User>>
 }

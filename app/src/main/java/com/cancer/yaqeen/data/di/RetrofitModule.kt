@@ -27,7 +27,7 @@ object RetrofitModule {
     @DEFAULT
     fun provideYaqeenRetrofit(httpClient: OkHttpClient): Retrofit.Builder =
         Retrofit.Builder()
-            .baseUrl("BASE_URL")
+            .baseUrl("https://yaqeen-neon.hasura.app/api/rest/")
             .client(httpClient)
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .addConverterFactory(GsonConverterFactory.create(Gson()))
@@ -37,7 +37,7 @@ object RetrofitModule {
     @AUTH
     fun provideAuthRetrofit(httpClient: OkHttpClient): Retrofit.Builder =
         Retrofit.Builder()
-            .baseUrl("BASE_URL")
+            .baseUrl("https://yaqeen-neon.hasura.app/api/rest/")
             .client(httpClient)
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .addConverterFactory(GsonConverterFactory.create(Gson()))

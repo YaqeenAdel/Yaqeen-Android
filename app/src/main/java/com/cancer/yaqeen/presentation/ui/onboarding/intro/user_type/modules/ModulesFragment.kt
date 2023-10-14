@@ -5,13 +5,22 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
-import com.cancer.yaqeen.data.features.onboarding.patient.models.Module
-import com.cancer.yaqeen.data.features.onboarding.patient.models.Stage
+import com.cancer.yaqeen.data.features.auth.models.UserType
+import com.cancer.yaqeen.data.features.onboarding.models.Module
+import com.cancer.yaqeen.data.features.onboarding.models.Stage
+import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.databinding.FragmentModulesBinding
 import com.cancer.yaqeen.databinding.FragmentStagesBinding
+import com.cancer.yaqeen.presentation.base.BaseFragment
+import com.cancer.yaqeen.presentation.ui.onboarding.OnboardingViewModel
 import com.cancer.yaqeen.presentation.ui.onboarding.intro.user_type.patient.stages.StagesAdapter
 import com.cancer.yaqeen.presentation.ui.onboarding.terms_condition.TermsAndConditionFragmentDirections
 import com.cancer.yaqeen.presentation.util.autoCleared
@@ -21,14 +30,21 @@ import com.cancer.yaqeen.presentation.util.recyclerview.GridMarginItemDecoration
 import com.cancer.yaqeen.presentation.util.recyclerview.HorizontalMarginItemDecoration
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import com.cancer.yaqeen.presentation.util.tryPopBackStack
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
-class ModulesFragment : Fragment() {
+@AndroidEntryPoint
+class ModulesFragment : BaseFragment() {
 
     private var binding: FragmentModulesBinding by autoCleared()
 
     private lateinit var navController: NavController
 
     private lateinit var modulesAdapter: ModulesAdapter
+
+
+    private val viewModel: OnboardingViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,6 +70,31 @@ class ModulesFragment : Fragment() {
 
         binding.tvBack.setOnClickListener {
             navController.tryPopBackStack()
+        }
+
+        observeStates()
+    }
+    private fun observeStates() {
+        lifecycleScope {
+
+            viewModel.viewStateResources.collectLatest {
+                val modules = when(viewModel.getUserTypeSelected()){
+                    UserType.PATIENT -> it.patientInterests
+                    UserType.DOCTOR -> it.doctorInterests
+                }
+                modulesAdapter.submitList(modules)
+            }
+        }
+    }
+
+    private fun handleResponseError(errorEntity: ErrorEntity?) {
+        val errorMessage = handleError(errorEntity)
+        displayErrorMessage(errorMessage)
+    }
+
+    private fun displayErrorMessage(errorMessage: String?) {
+        errorMessage?.let {
+            Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
         }
     }
     private fun setupModulesAdapter() {

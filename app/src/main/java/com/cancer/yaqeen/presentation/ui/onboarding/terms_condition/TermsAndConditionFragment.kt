@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
-import com.cancer.yaqeen.data.features.onboarding.patient.models.Module
-import com.cancer.yaqeen.data.features.onboarding.patient.models.TermsAndCondition
+import com.cancer.yaqeen.data.features.onboarding.models.Module
+import com.cancer.yaqeen.data.features.onboarding.models.TermsAndCondition
 import com.cancer.yaqeen.databinding.FragmentIntroBinding
 import com.cancer.yaqeen.databinding.FragmentTermsAndConditionBinding
 import com.cancer.yaqeen.presentation.ui.onboarding.intro.IntroFragmentDirections

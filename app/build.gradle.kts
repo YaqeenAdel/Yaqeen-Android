@@ -104,6 +104,8 @@ dependencies {
 
     implementation("com.makeramen:roundedimageview:2.3.0")
 
+    implementation("com.github.ybq:Android-SpinKit:1.4.0")
+
     // Lifecycle
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")

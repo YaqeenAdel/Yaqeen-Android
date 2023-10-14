@@ -1,5 +1,6 @@
-package com.cancer.yaqeen.data.base
+package com.cancer.yaqeen.data.network.base
 
+import com.cancer.yaqeen.data.base.Mapper
 import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.data.network.error.ErrorHandlerImpl
 import retrofit2.Response
@@ -7,15 +8,15 @@ import retrofit2.Response
 abstract class BaseDataSource(
     private val errorHandler: ErrorHandlerImpl
 ) {
-    protected suspend fun <T> getResultRemoteAPI(call: suspend () -> Response<T>): Resource<T> {
+    protected suspend fun <T> getResultRestAPI(call: suspend () -> Response<T>): DataState<T> {
         try {
             val response = call()
             if (response.isSuccessful) {
                 val body = response.body()
                 return if (body != null)
-                    Resource.Success(body)
+                    DataState.Success(body)
                 else
-                    Resource.Failed()
+                    DataState.Failed()
             }
 
             return error(errorHandler.getErrorResponseServer(response.errorBody(), response.code()))
@@ -25,15 +26,15 @@ abstract class BaseDataSource(
         }
     }
 
-    protected suspend fun <M, T> getResultRemote(mapper: Mapper<T, M>, call: suspend () -> Response<T>): Resource<M> {
+    protected suspend fun <M, T> getResultRestAPI(mapper: Mapper<T, M>, call: suspend () -> Response<T>): DataState<M> {
         try {
             val response = call()
             if (response.isSuccessful) {
                 val body = response.body()
                 return if (body != null)
-                    Resource.Success(mapper.map(body))
+                    DataState.Success(mapper.map(body))
                 else
-                    Resource.Failed()
+                    DataState.Failed()
             }
 
             return error(errorHandler.getErrorResponseServer(response.errorBody(), response.code()))
@@ -44,18 +45,18 @@ abstract class BaseDataSource(
     }
 
 
-    protected suspend fun <M, T> getResultDao(mapper: Mapper<T, M>, call: suspend () -> T): Resource<M> {
+    protected suspend fun <M, T> getResultDao(mapper: Mapper<T, M>, call: suspend () -> T): DataState<M> {
         return try {
             val result = call()
-            Resource.Success(mapper.map(result))
+            DataState.Success(mapper.map(result))
         } catch (e: Exception) {
-            Resource.Failed()
+            DataState.Failed()
         }
     }
 
     private fun <T> error(
         error: ErrorEntity? = null
-    ): Resource<T> {
-        return Resource.Error(error)
+    ): DataState<T> {
+        return DataState.Error(error)
     }
 }

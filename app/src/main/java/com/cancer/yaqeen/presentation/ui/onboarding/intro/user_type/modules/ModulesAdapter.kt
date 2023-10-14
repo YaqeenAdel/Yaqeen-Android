@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.cancer.yaqeen.R
-import com.cancer.yaqeen.data.features.onboarding.patient.models.Module
+import com.cancer.yaqeen.data.features.onboarding.models.Module
 import com.cancer.yaqeen.databinding.ItemModuleBinding
 
 class ModulesAdapter(
