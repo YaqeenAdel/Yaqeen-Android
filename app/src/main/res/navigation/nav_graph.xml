@@ -47,6 +47,9 @@
         <action
             android:id="@+id/action_onBoardingFragment_to_introFragment"
             app:destination="@id/introFragment" />
+        <action
+            android:id="@+id/action_onBoardingFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
     <fragment
         android:id="@+id/introFragment"

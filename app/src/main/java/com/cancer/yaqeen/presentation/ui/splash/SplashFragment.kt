@@ -37,7 +37,7 @@ class SplashFragment : Fragment() {
         Handler().postDelayed({
             lifecycleScope.launch {
                 navController.navigate(
-                    SplashFragmentDirections.actionSplashFragmentToOnBoardingFragment()
+                    SplashFragmentDirections.actionSplashFragmentToLoginFragment()
                 )
             }
         }, 2000)

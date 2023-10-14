@@ -73,7 +73,7 @@ class LoginFragment : Fragment(), OnClickListener {
     }
 
     private fun login() {
-//        authViewModel.login()
+       authViewModel.login(requireContext())
     }
 
     override fun onClick(p0: View?) {
