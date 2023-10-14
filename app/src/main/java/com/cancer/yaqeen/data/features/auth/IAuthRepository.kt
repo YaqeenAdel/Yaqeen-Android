@@ -2,7 +2,6 @@ package com.cancer.yaqeen.data.features.auth
 
 import com.cancer.yaqeen.data.network.base.DataState
 import android.content.Context
-import com.cancer.yaqeen.data.base.Resource
 import com.cancer.yaqeen.data.features.auth.models.User
 import kotlinx.coroutines.flow.Flow
 
