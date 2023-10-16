@@ -52,6 +52,13 @@ class CancerTypesAdapter(
         }
     }
 
+    fun selectItem(id: Int){
+        val positionItem = currentList.indexOfFirst {
+            it.id.toInt() == id
+        }
+        notifyItemChangedByPosition(positionItem)
+    }
+
     inner class CancerTypesViewHolder(
         private val itemBinding: ItemCancerTypeBinding,
         onItemClick: (Int) -> Unit
@@ -61,12 +68,7 @@ class CancerTypesAdapter(
             itemBinding.btnCancerType.setOnClickListener {
                 onItemClick(adapterPosition)
 
-                selectedPosition = adapterPosition
-
-                notifyItemChanged(lastSelectedPosition)
-                notifyItemChanged(selectedPosition)
-
-                lastSelectedPosition = selectedPosition
+                notifyItemChangedByPosition(adapterPosition)
             }
         }
 
@@ -75,5 +77,14 @@ class CancerTypesAdapter(
             val isSelected = selectedPosition == position
             itemBinding.btnCancerType.isChecked = isSelected
         }
+    }
+
+    private fun notifyItemChangedByPosition(position: Int) {
+        selectedPosition = position
+
+        notifyItemChanged(lastSelectedPosition)
+        notifyItemChanged(selectedPosition)
+
+        lastSelectedPosition = selectedPosition
     }
 }

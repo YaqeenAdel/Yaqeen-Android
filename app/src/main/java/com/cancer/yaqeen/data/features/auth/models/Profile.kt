@@ -7,5 +7,6 @@ data class Profile(
     var interestModuleId: Int? = null,
     var universityId: String? = null,
     var degreeId: String? = null,
-    var medicalFieldId: String? = null
+    var medicalFieldId: String? = null,
+    val agreedTerms: Boolean = false
 )

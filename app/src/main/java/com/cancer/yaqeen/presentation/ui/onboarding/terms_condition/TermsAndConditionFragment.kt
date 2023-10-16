@@ -6,12 +6,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.onboarding.models.Module
 import com.cancer.yaqeen.data.features.onboarding.models.TermsAndCondition
+import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.databinding.FragmentIntroBinding
 import com.cancer.yaqeen.databinding.FragmentTermsAndConditionBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
@@ -54,25 +56,42 @@ class TermsAndConditionFragment : BaseFragment() {
         setupTermsAndConditionAdapter()
 
         binding.btnAccept.setOnClickListener {
-            navController.tryNavigate(
-                TermsAndConditionFragmentDirections.actionTermsAndConditionFragmentToActivationFragment()
-            )
             viewModel.updateUserProfile()
         }
 
         observeStates()
 
-        viewModel.getUserProfile()?.let {
-            Log.d("TAG", "onViewCreated: $it")
-        }
     }
     private fun observeStates() {
         lifecycleScope {
-            viewModel.viewStateResources.collectLatest {
-//                stagesAdapter.submitList(
-//                    it.stages
-//                )
+            viewModel.viewStateLoading.collectLatest {
+                onLoading(it)
             }
+        }
+        lifecycleScope {
+            viewModel.viewStateError.collectLatest {
+                handleResponseError(it)
+            }
+        }
+        lifecycleScope {
+            viewModel.viewStateUpdateProfileSuccess.collectLatest {
+                it?.let {
+                    navController.tryNavigate(
+                        TermsAndConditionFragmentDirections.actionTermsAndConditionFragmentToActivationFragment()
+                    )
+                }
+            }
+        }
+    }
+
+    private fun handleResponseError(errorEntity: ErrorEntity?) {
+        val errorMessage = handleError(errorEntity)
+        displayErrorMessage(errorMessage)
+    }
+
+    private fun displayErrorMessage(errorMessage: String?) {
+        errorMessage?.let {
+            Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
         }
     }
 

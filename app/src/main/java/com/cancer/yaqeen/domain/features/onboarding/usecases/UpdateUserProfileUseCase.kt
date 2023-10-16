@@ -4,10 +4,11 @@ import com.cancer.yaqeen.data.network.base.DataState
 import com.cancer.yaqeen.data.features.onboarding.IOnboardingRepository
 import com.cancer.yaqeen.data.features.onboarding.models.Resources
 import com.cancer.yaqeen.data.features.onboarding.requests.UpdateProfileRequestBody
+import com.cancer.yaqeen.data.features.onboarding.responses.UpdateProfileResponse
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class UpdateUserProfileUseCase @Inject constructor(private val repository: IOnboardingRepository) {
-    suspend operator fun invoke(requestBody: UpdateProfileRequestBody): Flow<DataState<Boolean>> =
+    suspend operator fun invoke(requestBody: UpdateProfileRequestBody): Flow<DataState<Any>> =
         repository.updateUserProfile(requestBody)
 }

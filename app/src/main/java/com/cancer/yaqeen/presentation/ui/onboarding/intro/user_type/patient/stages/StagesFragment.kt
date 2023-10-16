@@ -72,11 +72,17 @@ class StagesFragment : BaseFragment() {
     private fun observeStates() {
         lifecycleScope {
             viewModel.viewStateResources.collectLatest {
-                stagesAdapter.submitList(
-                    it.stages
-                )
-                stagesAdapter.currentList.firstOrNull()?.apply {
-                    selectStage(this)
+                it?.let {
+                    stagesAdapter.submitList(
+                        it.stages
+                    )
+                    stagesAdapter.currentList.firstOrNull()?.apply {
+                        val stageId = viewModel.getUserProfile()?.stageId
+                        if(stageId == null)
+                            selectStage(this)
+                        else
+                            stagesAdapter.selectItem(stageId)
+                    }
                 }
             }
         }

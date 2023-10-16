@@ -18,6 +18,7 @@ import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.ui.onboarding.OnboardingViewModel
 import com.cancer.yaqeen.presentation.ui.onboarding.intro.user_type.SelectUserTypeFragmentDirections
 import com.cancer.yaqeen.presentation.util.autoCleared
+import com.cancer.yaqeen.presentation.util.selectItem
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import com.cancer.yaqeen.presentation.util.tryPopBackStack
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,6 +32,10 @@ class SpecializationFragment : BaseFragment() {
     private lateinit var navController: NavController
 
     private val viewModel: OnboardingViewModel by activityViewModels()
+
+    private lateinit var universityAutoCompleteAdapter: UniversityAutoCompleteAdapter
+    private lateinit var degreeAutoCompleteAdapter: UniversityAutoCompleteAdapter
+    private lateinit var medicalFieldAutoCompleteAdapter: UniversityAutoCompleteAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,8 +54,6 @@ class SpecializationFragment : BaseFragment() {
             navController.tryNavigate(
                 SpecializationFragmentDirections.actionSpecializationFragmentToModulesFragment()
             )
-
-
         }
 
         binding.tvBack.setOnClickListener {
@@ -75,39 +78,66 @@ class SpecializationFragment : BaseFragment() {
     }
 
     private fun setupDropDownSpecialization() {
-        val specializationList = arrayOf("Ain Shams", "Cairo", "Zagazig", "Alexandria", "Tanta", "Assuit", "Aswan")
+        universityAutoCompleteAdapter = UniversityAutoCompleteAdapter(
+            requireContext()
+        )
 
-        val adapter = ArrayAdapter<String>(requireContext(), R.layout.item_dropdown_spinner, specializationList)
-        binding.autoTvUniversity.setAdapter(adapter)
+        binding.autoTvUniversity.setAdapter(universityAutoCompleteAdapter)
+
+        universityAutoCompleteAdapter.setList(
+            listOf(
+                "Ain Shams", "Cairo", "Zagazig", "Alexandria", "Tanta", "Assuit", "Aswan"
+            )
+        )
 
         binding.autoTvUniversity.onItemClickListener =
             AdapterView.OnItemClickListener { parent, view, position, id ->
-                viewModel.selectUniversity(specializationList[position])
+                viewModel.selectUniversity(universityAutoCompleteAdapter.getItem(position))
             }
+
+//        binding.autoTvUniversity.selectItem(2, universityAutoCompleteAdapter.getItem(2))
     }
 
     private fun setupDropDownDegree() {
-        val specializationList = arrayOf("BSC", "Master", "PHD")
+        degreeAutoCompleteAdapter = UniversityAutoCompleteAdapter(
+            requireContext()
+        )
 
-        val adapter = ArrayAdapter<String>(requireContext(), R.layout.item_dropdown_spinner, specializationList)
-        binding.autoTvDegree.setAdapter(adapter)
+        binding.autoTvDegree.setAdapter(degreeAutoCompleteAdapter)
+
+        degreeAutoCompleteAdapter.setList(
+            listOf(
+                "BSC", "Master", "PHD"
+            )
+        )
 
         binding.autoTvDegree.onItemClickListener =
             AdapterView.OnItemClickListener { parent, view, position, id ->
-                viewModel.selectDegree(specializationList[position])
+                viewModel.selectDegree(degreeAutoCompleteAdapter.getItem(position))
             }
+
+//        binding.autoTvDegree.selectItem(1, degreeAutoCompleteAdapter.getItem(1))
     }
 
     private fun setupDropDownMedicalField() {
-        val specializationList = arrayOf("Field 1", "Field 2", "Field 3")
+        medicalFieldAutoCompleteAdapter = UniversityAutoCompleteAdapter(
+            requireContext()
+        )
 
-        val adapter = ArrayAdapter<String>(requireContext(), R.layout.item_dropdown_spinner, specializationList)
-        binding.autoTvMedicalField.setAdapter(adapter)
+        binding.autoTvMedicalField.setAdapter(medicalFieldAutoCompleteAdapter)
+
+        medicalFieldAutoCompleteAdapter.setList(
+            listOf(
+                "Field 1", "Field 2", "Field 3"
+            )
+        )
 
         binding.autoTvMedicalField.onItemClickListener =
             AdapterView.OnItemClickListener { parent, view, position, id ->
-                viewModel.selectMedicalField(specializationList[position])
+                viewModel.selectMedicalField(medicalFieldAutoCompleteAdapter.getItem(position))
             }
+
+//        binding.autoTvMedicalField.selectItem(0, medicalFieldAutoCompleteAdapter.getItem(0))
     }
 
 }

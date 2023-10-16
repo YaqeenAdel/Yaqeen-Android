@@ -72,12 +72,19 @@ class SelectCancerTypeFragment : BaseFragment() {
     private fun observeStates() {
         lifecycleScope {
             viewModel.viewStateResources.collectLatest {
-                cancerTypesAdapter.submitList(
-                    it.cancerTypes
-                )
-                cancerTypesAdapter.currentList.firstOrNull()?.apply {
-                    selectCancerType(this)
+                it?.let {
+                    cancerTypesAdapter.submitList(
+                        it.cancerTypes
+                    )
+                    cancerTypesAdapter.currentList.firstOrNull()?.apply {
+                        val cancerTypeId = viewModel.getUserProfile()?.cancerTypeId
+                        if(cancerTypeId == null)
+                            selectCancerType(this)
+                        else
+                            cancerTypesAdapter.selectItem(cancerTypeId)
+                    }
                 }
+
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.cancer.yaqeen.data.network.base
 
+import android.util.Log
 import com.cancer.yaqeen.data.base.Mapper
 import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.data.network.error.ErrorHandlerImpl
@@ -12,16 +13,20 @@ abstract class BaseDataSource(
         try {
             val response = call()
             if (response.isSuccessful) {
+                Log.d("TAG", "getResultRestAPI: ${response.isSuccessful}")
                 val body = response.body()
+                Log.d("TAG", "getResultRestAPI: $body")
                 return if (body != null)
                     DataState.Success(body)
                 else
                     DataState.Failed()
             }
 
+            Log.d("TAG", "getResultRestAPI: ${response.errorBody()}")
             return error(errorHandler.getErrorResponseServer(response.errorBody(), response.code()))
 
         } catch (e: Exception) {
+            Log.d("TAG", "getResultRestAPI: $e")
             return error(errorHandler.getError(e))
         }
     }

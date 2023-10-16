@@ -10,6 +10,7 @@ import com.cancer.yaqeen.data.network.DEFAULT
 import com.cancer.yaqeen.data.network.apis.Auth0API
 import com.cancer.yaqeen.data.network.apis.YaqeenAPI
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import dagger.Module
 import dagger.Provides
@@ -31,7 +32,7 @@ object RetrofitModule {
             .baseUrl(BASE_URL)
             .client(httpClient)
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
-            .addConverterFactory(GsonConverterFactory.create(Gson()))
+            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().serializeNulls().create()))
 
     @Singleton
     @Provides
@@ -41,7 +42,7 @@ object RetrofitModule {
             .baseUrl(BASE_URL)
             .client(httpClient)
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
-            .addConverterFactory(GsonConverterFactory.create(Gson()))
+            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().serializeNulls().create()))
 
     @Singleton
     @Provides

@@ -9,6 +9,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
+import com.cancer.yaqeen.data.features.auth.models.UserType
 import com.cancer.yaqeen.databinding.FragmentIntroBinding
 import com.cancer.yaqeen.databinding.FragmentSelectUserTypeBinding
 import com.cancer.yaqeen.presentation.ui.onboarding.OnboardingViewModel
@@ -40,6 +41,11 @@ class SelectUserTypeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         navController = findNavController()
+
+        val isDoctor = viewModel.getUserProfile()?.userType == UserType.DOCTOR
+
+        binding.btnPatient.isChecked = !isDoctor
+        binding.btnDoctor.isChecked = isDoctor
 
         binding.tvNext.setOnClickListener {
             val isPatient = binding.btnPatient.isChecked

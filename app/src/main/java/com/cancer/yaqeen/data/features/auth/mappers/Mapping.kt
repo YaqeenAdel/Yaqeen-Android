@@ -9,14 +9,13 @@ import com.cancer.yaqeen.data.features.auth.responses.LoginRemote
 class MappingLoginRemoteAsUser: Mapper<UserProfile, User> {
     override fun map(input: UserProfile): User = input.run {
         User(
-            id = getId(),
-            name = name,
-            nickname = nickname,
-            pictureURL = pictureURL,
-            email = email,
-            isEmailVerified = isEmailVerified,
-            familyName = familyName,
-            createdAt = createdAt
+            id = getId() ?: "",
+            name = name ?: "",
+            nickname = nickname ?: "",
+            pictureURL = pictureURL ?: "",
+            email = email ?: "",
+            isEmailVerified = isEmailVerified ?: false,
+            familyName = familyName ?: ""
         )
     }
 }

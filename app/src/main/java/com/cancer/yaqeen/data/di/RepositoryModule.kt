@@ -28,7 +28,8 @@ object RepositoryModule {
     @Provides
     fun provideOnboardingRepository(
         apiService: YaqeenAPI,
-        errorHandlerImpl: ErrorHandlerImpl
-    ) = OnboardingRepositoryImpl(apiService, errorHandlerImpl)
+        errorHandlerImpl: ErrorHandlerImpl,
+        sharedPrefEncryptionUtil: SharedPrefEncryptionUtil
+    ) = OnboardingRepositoryImpl(apiService, errorHandlerImpl, sharedPrefEncryptionUtil)
 
 }

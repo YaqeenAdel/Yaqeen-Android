@@ -20,7 +20,7 @@ android {
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        manifestPlaceholders["auth0Domain"] =  "AUTH_0_DOMAIN"
+        manifestPlaceholders["auth0Domain"] =  "yaqeen.eu.auth0.com"
         manifestPlaceholders["auth0Scheme"] =  "demo"
     }
 

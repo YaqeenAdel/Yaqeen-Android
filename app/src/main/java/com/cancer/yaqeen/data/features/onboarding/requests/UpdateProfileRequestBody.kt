@@ -4,64 +4,46 @@ import com.cancer.yaqeen.data.features.auth.models.UserType
 import com.google.gson.annotations.SerializedName
 
 data class UpdateProfileRequestBody(
-    @SerializedName("user")
-    val user: UserRequestBody
+//    @SerializedName("AgreedTerms")
+//    val agreedTerms: Boolean,
+
+    val doctor: Any?,
+
+    val patient: Any?,
+
+    val user: Any?,
+//
+//    @SerializedName("Questions_aggregate")
+//    val questionsAggregate: SAggregate?
 )
-data class UserRequestBody(
-    @SerializedName("AgreedTerms")
-    val agreedTerms: Boolean,
+class UserRequestBody
 
-    @SerializedName("Doctor")
-    val doctor: Doctor?,
-
-//    @SerializedName("Email")
-//    val email: String,
-//
-//    @SerializedName("FirstName")
-//    val firstName: String,
-//
-//    @SerializedName("Gender")
-//    val gender: String,
-//
-//    @SerializedName("IsEmailVerified")
-//    val isEmailVerified: String,
-//
-//    @SerializedName("LastName")
-//    val lastName: String,
-
-    @SerializedName("Patient")
-    val patient: Patient?,
-
-    @SerializedName("Questions_aggregate")
-    val questionsAggregate: SAggregate?
-)
-
-data class Doctor (
-    @SerializedName("Answers_aggregate")
-    val answersAggregate: SAggregate?,
+data class DoctorRequestBody (
+//    @SerializedName("Answers_aggregate")
+//    val answersAggregate: SAggregate? = null,
 
     @SerializedName("Degree")
-    val degree: String,
+    val degree: String = "",
 
     @SerializedName("MedicalField")
-    val medicalField: String,
+    val medicalField: String = "",
 
     @SerializedName("University")
-    val university: String,
+    val university: String = "",
 
-    @SerializedName("VerificationStatus")
-    val verificationStatus: VerificationStatus?
+//    @SerializedName("VerificationStatus")
+//    val verificationStatus: VerificationStatus? = null
 )
 
-data class SAggregate (
-    val aggregate: Aggregate
+data class SAggregateRequestBody (
+    val aggregate: AggregateRequestBody
 )
 
-data class Aggregate (
+data class AggregateRequestBody (
     val count: Int
 )
 
-data class VerificationStatus (
+data class VerificationStatusRequestBody (
     @SerializedName("Notes")
     val notes: String,
 
@@ -69,15 +51,15 @@ data class VerificationStatus (
     val verifierUserID: String
 )
 
-data class Patient (
+data class PatientRequestBody (
     @SerializedName("AgeGroup")
-    val ageGroup: Int?,
+    val ageGroup: Int = 0,
 
     @SerializedName("CancerStageId")
-    val cancerStageID: Int,
+    val cancerStageID: Int = 0,
 
     @SerializedName("CancerTypeId")
-    val cancerTypeID: Int
+    val cancerTypeID: Int = 0
 )
 
 data class UpdateProfileRequestBuilder(
@@ -96,45 +78,44 @@ data class UpdateProfileRequestBuilder(
 ){
     fun buildRequestBody(): UpdateProfileRequestBody =
         UpdateProfileRequestBody(
-            user = UserRequestBody(
-                agreedTerms = agreedTerms,
-                doctor =
-                if (!isPatient)
-                    Doctor(
-                        answersAggregate = aggregateCountDoctor?.let {
-                            SAggregate(
-                                Aggregate(
-                                    count = aggregateCountDoctor
-                                )
-                            )
-                        },
-                        degree = degreeIDDoctor.toString(),
-                        medicalField = medicalFieldIDDoctor.toString(),
-                        university = universityIDDoctor.toString(),
-                        verificationStatus = verifierUserIDDoctor?.let {
-                            VerificationStatus(
-                                notes = verificationNotesDoctor ?: "",
-                                verifierUserID = verifierUserIDDoctor.toString(),
-                            )
-                        },
-                    )
-                else null,
-                patient =
-                if (isPatient)
-                    Patient(
-                        ageGroup = ageGroupPatient,
-                        cancerStageID = cancerStageIDPatient ?: 0,
-                        cancerTypeID = cancerTypeIDPatient ?: 0,
-                    )
-                else null,
-                questionsAggregate = questionsAggregateCount?.let {
-                    SAggregate(
-                        aggregate = Aggregate(
-                            count = questionsAggregateCount
-                        )
-                    )
-                }
-            )
+//            agreedTerms = agreedTerms,
+            doctor =
+            if (!isPatient)
+                DoctorRequestBody(
+//                    answersAggregate = aggregateCountDoctor?.let {
+//                        SAggregate(
+//                            Aggregate(
+//                                count = aggregateCountDoctor
+//                            )
+//                        )
+//                    },
+                    degree = degreeIDDoctor.toString(),
+                    medicalField = medicalFieldIDDoctor.toString(),
+                    university = universityIDDoctor.toString(),
+//                    verificationStatus = verifierUserIDDoctor?.let {
+//                        VerificationStatus(
+//                            notes = verificationNotesDoctor ?: "",
+//                            verifierUserID = verifierUserIDDoctor.toString(),
+//                        )
+//                    },
+                )
+            else UserRequestBody(),
+            patient =
+            if (isPatient)
+                PatientRequestBody(
+                    ageGroup = ageGroupPatient ?: 0,
+                    cancerStageID = cancerStageIDPatient ?: 0,
+                    cancerTypeID = cancerTypeIDPatient ?: 0,
+                )
+            else UserRequestBody(),
+            user = UserRequestBody()
+//            questionsAggregate = questionsAggregateCount?.let {
+//                SAggregate(
+//                    aggregate = Aggregate(
+//                        count = questionsAggregateCount
+//                    )
+//                )
+//            }
         )
 
 }

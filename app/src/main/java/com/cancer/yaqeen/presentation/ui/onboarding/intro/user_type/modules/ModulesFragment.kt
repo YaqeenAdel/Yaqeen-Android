@@ -78,14 +78,21 @@ class ModulesFragment : BaseFragment() {
         lifecycleScope {
 
             viewModel.viewStateResources.collectLatest {
-                val modules = when(viewModel.getUserTypeSelected()){
-                    UserType.PATIENT -> it.patientInterests
-                    UserType.DOCTOR -> it.doctorInterests
+                it?.let {
+                    val modules = when(viewModel.getUserTypeSelected()){
+                        UserType.PATIENT -> it.patientInterests
+                        UserType.DOCTOR -> it.doctorInterests
+                    }
+                    modulesAdapter.submitList(modules)
+                    modulesAdapter.currentList.firstOrNull()?.apply {
+                        val interestModuleId = viewModel.getUserProfile()?.interestModuleId
+                        if(interestModuleId == null)
+                            selectInterestModule(this)
+                        else
+                            modulesAdapter.selectItem(interestModuleId)
+                    }
                 }
-                modulesAdapter.submitList(modules)
-                modulesAdapter.currentList.firstOrNull()?.apply {
-                    selectInterestModule(this)
-                }
+
             }
         }
     }

@@ -11,6 +11,7 @@ import com.cancer.yaqeen.data.network.base.DataState
 import com.cancer.yaqeen.data.features.auth.mappers.MappingLoginRemoteAsUser
 import com.cancer.yaqeen.data.features.auth.models.User
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
+import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil.Companion.PREF_USER
 import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.data.network.error.ErrorHandlerImpl
 import kotlinx.coroutines.Dispatchers
@@ -34,12 +35,40 @@ class AuthRepositoryImpl @Inject constructor(
                     .withAudience(AUTH_0_URL)
                     .await(context)
 
-                sharedPrefEncryptionUtil.setToken(credentials.accessToken)
+//                logout(context)
                 flow {
+                    val user = MappingLoginRemoteAsUser().map(credentials.user)
+                    sharedPrefEncryptionUtil.setToken(credentials.accessToken)
+                    sharedPrefEncryptionUtil.setModelData(user, PREF_USER)
                     emit(
                         DataState.Success(
-                            MappingLoginRemoteAsUser().map(credentials.user)
+                            user
                         )
+                    )
+                }
+
+            }catch (e: AuthenticationException){
+                flow {
+                    emit(
+                        DataState.Error(
+                            ErrorEntity.ApiError.Network
+                        )
+                    )
+                }
+            }
+        }
+
+    override suspend fun logout(context: Context): Flow<DataState<Boolean>> =
+        withContext(Dispatchers.IO){
+            try {
+                WebAuthProvider.logout(auth0)
+                    .withScheme(AUTH_0_SCHEMA)
+                    .await(context)
+
+//                sharedPrefEncryptionUtil.setToken("")
+                flow {
+                    emit(
+                        DataState.Success(true)
                     )
                 }
             }catch (e: AuthenticationException){

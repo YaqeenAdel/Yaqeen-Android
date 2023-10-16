@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.onboarding.models.Module
 import com.cancer.yaqeen.databinding.ItemModuleBinding
+import com.cancer.yaqeen.presentation.util.binding_adapters.bindImage
 
 class ModulesAdapter(
     private val onItemClick: (Module) -> Unit
@@ -55,6 +56,13 @@ class ModulesAdapter(
         }
     }
 
+    fun selectItem(id: Int){
+        val positionItem = currentList.indexOfFirst {
+            it.id.toInt() == id
+        }
+        notifyItemChangedByPosition(positionItem)
+    }
+
     inner class ModulesViewHolder(
         private val itemBinding: ItemModuleBinding,
         onItemClick: (Int) -> Unit
@@ -64,17 +72,13 @@ class ModulesAdapter(
             itemBinding.itemContainer.setOnClickListener {
                 onItemClick(adapterPosition)
 
-                selectedPosition = adapterPosition
-
-                notifyItemChanged(lastSelectedPosition)
-                notifyItemChanged(selectedPosition)
-
-                lastSelectedPosition = selectedPosition
+                notifyItemChangedByPosition(adapterPosition)
             }
         }
 
         fun bind(position: Int, item: Module) {
             itemBinding.tvModuleName.text = item.moduleName
+            bindImage(itemBinding.ivModuleIcon, item.icon)
             val isSelected = selectedPosition == position
             if(isSelected){
                 itemBinding.viewSelected.visibility = View.VISIBLE
@@ -91,5 +95,14 @@ class ModulesAdapter(
 
             }
         }
+    }
+
+    private fun notifyItemChangedByPosition(position: Int) {
+        selectedPosition = position
+
+        notifyItemChanged(lastSelectedPosition)
+        notifyItemChanged(selectedPosition)
+
+        lastSelectedPosition = selectedPosition
     }
 }
