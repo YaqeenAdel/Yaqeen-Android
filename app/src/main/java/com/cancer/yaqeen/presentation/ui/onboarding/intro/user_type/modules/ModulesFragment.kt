@@ -83,6 +83,9 @@ class ModulesFragment : BaseFragment() {
                     UserType.DOCTOR -> it.doctorInterests
                 }
                 modulesAdapter.submitList(modules)
+                modulesAdapter.currentList.firstOrNull()?.apply {
+                    selectInterestModule(this)
+                }
             }
         }
     }
@@ -99,7 +102,7 @@ class ModulesFragment : BaseFragment() {
     }
     private fun setupModulesAdapter() {
         modulesAdapter = ModulesAdapter {
-
+            selectInterestModule(it)
         }
 
         binding.rvModules.apply {
@@ -111,21 +114,28 @@ class ModulesFragment : BaseFragment() {
             )
         }
 
-        modulesAdapter.submitList(
-            listOf(
-                Module(
-                    id = 1, moduleName = "Stage"
-                ),
-                Module(
-                    id = 2, moduleName = "Stage"
-                ),
-                Module(
-                    id = 3, moduleName = "Stage"
-                ),
-                Module(
-                    id = 4, moduleName = "Stage"
-                )
-            )
-        )
+//        modulesAdapter.submitList(
+//            listOf(
+//                Module(
+//                    id = 1, moduleName = "Stage"
+//                ),
+//                Module(
+//                    id = 2, moduleName = "Stage"
+//                ),
+//                Module(
+//                    id = 3, moduleName = "Stage"
+//                ),
+//                Module(
+//                    id = 4, moduleName = "Stage"
+//                )
+//            )
+//        )
+//        modulesAdapter.currentList.firstOrNull()?.apply {
+//            selectInterestModule(this)
+//        }
+    }
+
+    private fun selectInterestModule(it: Module) {
+        viewModel.selectInterestModule(it.id.toInt())
     }
 }

@@ -18,76 +18,76 @@ data class ResourcesResponse (
 
 data class CancerStageResponse (
     @SerializedName("StageId")
-    val stageID: Long,
+    val stageID: Long?,
 
     @SerializedName("StageName")
-    val stageName: String,
+    val stageName: String?,
 
     @SerializedName("LogoURL")
-    val logoURL: String,
+    val logoURL: String?,
 
     @SerializedName("Translations")
-    val translations: List<CancerStageTranslationResponse>
+    val translations: List<CancerStageTranslationResponse>?
 )
 
 data class CancerStageTranslationResponse (
     @SerializedName("Translation")
-    val translation: PurpleTranslationResponse
+    val translation: PurpleTranslationResponse?
 )
 
 
 data class PurpleTranslationResponse (
     @SerializedName("StageName")
-    val stageName: String
+    val stageName: String?
 )
 
 data class CancerTypeResponse (
     @SerializedName("CancerId")
-    val cancerID: Long,
+    val cancerID: Long?,
 
     @SerializedName("CancerTypeName")
-    val cancerTypeName: String,
+    val cancerTypeName: String?,
 
     @SerializedName("LogoURL")
-    val logoURL: String,
+    val logoURL: String?,
 
     @SerializedName("Translations")
-    val translations: List<CancerTypeTranslationResponse>
+    val translations: List<CancerTypeTranslationResponse>?
 )
 data class CancerTypeTranslationResponse (
     @SerializedName("Translation")
-    val translation: FluffyTranslationResponse
+    val translation: FluffyTranslationResponse?
 )
 
 
 data class FluffyTranslationResponse (
     @SerializedName("CancerTypeName")
-    val cancerTypeName: String
+    val cancerTypeName: String?
 )
 
 
 data class InterestResponse (
     @SerializedName("InterestId")
-    val interestID: Long,
+    val interestID: Long?,
 
     @SerializedName("LogoURL")
-    val logoURL: String,
+    val logoURL: String?,
 
     @SerializedName("Name")
-    val name: String,
+    val name: String?,
 
     @SerializedName("Translations")
-    val translations: List<DoctorInterestTranslationResponse>
+    val translations: List<DoctorInterestTranslationResponse>?
 )
 
 
 data class DoctorInterestTranslationResponse (
     @SerializedName("Translation")
-    val translation: TentacledTranslationResponse
+    val translation: TentacledTranslationResponse?
 )
 
 
 data class TentacledTranslationResponse (
     @SerializedName("Name")
-    val name: String
+    val name: String?
 )

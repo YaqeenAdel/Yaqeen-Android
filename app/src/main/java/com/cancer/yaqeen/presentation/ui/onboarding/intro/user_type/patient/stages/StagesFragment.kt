@@ -75,6 +75,9 @@ class StagesFragment : BaseFragment() {
                 stagesAdapter.submitList(
                     it.stages
                 )
+                stagesAdapter.currentList.firstOrNull()?.apply {
+                    selectStage(this)
+                }
             }
         }
     }
@@ -91,7 +94,7 @@ class StagesFragment : BaseFragment() {
     }
     private fun setupStagesAdapter() {
         stagesAdapter = StagesAdapter {
-
+            selectStage(it)
         }
 
         binding.rvStages.apply {
@@ -103,27 +106,34 @@ class StagesFragment : BaseFragment() {
             )
         }
 
-        stagesAdapter.submitList(
-            listOf(
-                Stage(
-                    id = 1, icon = "", stageName = "Stage", number = 1
-                ),
-                Stage(
-                    id = 2, icon = "", stageName = "Stage", number = 2
-                ),
-                Stage(
-                    id = 3, icon = "", stageName = "Stage", number = 3
-                ),
-                Stage(
-                    id = 4, icon = "", stageName = "Stage", number = 4
-                ),
-                Stage(
-                    id = 5, icon = "", stageName = "Stage", number = 5
-                ),
-                Stage(
-                    id = 6, icon = "", stageName = "Stage", number = 6
-                )
-            )
-        )
+//        stagesAdapter.submitList(
+//            listOf(
+//                Stage(
+//                    id = 1, icon = "", stageName = "Stage", number = 1
+//                ),
+//                Stage(
+//                    id = 2, icon = "", stageName = "Stage", number = 2
+//                ),
+//                Stage(
+//                    id = 3, icon = "", stageName = "Stage", number = 3
+//                ),
+//                Stage(
+//                    id = 4, icon = "", stageName = "Stage", number = 4
+//                ),
+//                Stage(
+//                    id = 5, icon = "", stageName = "Stage", number = 5
+//                ),
+//                Stage(
+//                    id = 6, icon = "", stageName = "Stage", number = 6
+//                )
+//            )
+//        )
+//        stagesAdapter.currentList.firstOrNull()?.apply {
+//            selectStage(this)
+//        }
+    }
+
+    private fun selectStage(it: Stage) {
+        viewModel.selectStage(it.id.toInt())
     }
 }

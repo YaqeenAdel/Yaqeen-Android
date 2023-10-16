@@ -27,28 +27,28 @@ class MappingResourcesRemoteAsModel: Mapper<ResourcesResponse, Resources> {
 class MappingStageRemoteAsModel: Mapper<CancerStageResponse, Stage> {
     override fun map(input: CancerStageResponse): Stage = input.run {
         Stage(
-            id = stageID,
-            number = 0,
-            icon = logoURL,
-            stageName = translations.firstOrNull()?.translation?.stageName ?: ""
+            id = stageID ?: -1,
+            number = stageID?.toInt() ?: 0,
+            icon = logoURL ?: "",
+            stageName = translations?.firstOrNull()?.translation?.stageName ?: ""
         )
     }
 }
 class MappingCancerTypeRemoteAsModel: Mapper<CancerTypeResponse, CancerType> {
     override fun map(input: CancerTypeResponse): CancerType = input.run {
         CancerType(
-            id = cancerID,
-            icon = logoURL,
-            typeName = translations.firstOrNull()?.translation?.cancerTypeName ?: ""
+            id = cancerID ?: -1,
+            icon = logoURL ?: "",
+            typeName = translations?.firstOrNull()?.translation?.cancerTypeName ?: ""
         )
     }
 }
 class MappingInterestRemoteAsModel: Mapper<InterestResponse, Module> {
     override fun map(input: InterestResponse): Module = input.run {
         Module(
-            id = interestID,
-            icon = logoURL,
-            moduleName = translations.firstOrNull()?.translation?.name ?: ""
+            id = interestID ?: -1,
+            icon = logoURL ?: "",
+            moduleName = translations?.firstOrNull()?.translation?.name ?: ""
         )
     }
 }

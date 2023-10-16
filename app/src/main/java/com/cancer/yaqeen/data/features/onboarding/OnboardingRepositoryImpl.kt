@@ -5,6 +5,7 @@ import com.cancer.yaqeen.data.network.base.DataState
 import com.cancer.yaqeen.data.network.base.flowStatus
 import com.cancer.yaqeen.data.features.onboarding.mappers.MappingResourcesRemoteAsModel
 import com.cancer.yaqeen.data.features.onboarding.models.Resources
+import com.cancer.yaqeen.data.features.onboarding.requests.UpdateProfileRequestBody
 import com.cancer.yaqeen.data.network.apis.YaqeenAPI
 import com.cancer.yaqeen.data.network.error.ErrorHandlerImpl
 import kotlinx.coroutines.flow.Flow
@@ -19,6 +20,13 @@ class OnboardingRepositoryImpl @Inject constructor(
         flowStatus {
             getResultRestAPI(MappingResourcesRemoteAsModel()){
                 apiService.getResources()
+            }
+        }
+
+    override suspend fun updateUserProfile(requestBody: UpdateProfileRequestBody): Flow<DataState<Boolean>> =
+        flowStatus {
+            getResultRestAPI {
+                apiService.updateUserProfile(requestBody)
             }
         }
 }

@@ -100,6 +100,7 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
             onboardingViewModel.viewStateLoading.collectLatest {
                 onboardingViewModel.viewStateResources.collectLatest {
 
+                    Log.d("TAG", "observeStates: $it")
                 }
             }
         }
