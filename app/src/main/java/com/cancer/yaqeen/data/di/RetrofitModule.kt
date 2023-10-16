@@ -4,11 +4,13 @@ import com.auth0.android.Auth0
 import com.auth0.android.request.DefaultClient
 import com.cancer.yaqeen.BuildConfig.AUTH_0_CLIENT_ID
 import com.cancer.yaqeen.BuildConfig.AUTH_0_DOMAIN
+import com.cancer.yaqeen.BuildConfig.BASE_URL
 import com.cancer.yaqeen.data.network.AUTH
 import com.cancer.yaqeen.data.network.DEFAULT
 import com.cancer.yaqeen.data.network.apis.Auth0API
 import com.cancer.yaqeen.data.network.apis.YaqeenAPI
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import dagger.Module
 import dagger.Provides
@@ -27,20 +29,20 @@ object RetrofitModule {
     @DEFAULT
     fun provideYaqeenRetrofit(httpClient: OkHttpClient): Retrofit.Builder =
         Retrofit.Builder()
-            .baseUrl("BASE_URL")
+            .baseUrl(BASE_URL)
             .client(httpClient)
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
-            .addConverterFactory(GsonConverterFactory.create(Gson()))
+            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().serializeNulls().create()))
 
     @Singleton
     @Provides
     @AUTH
     fun provideAuthRetrofit(httpClient: OkHttpClient): Retrofit.Builder =
         Retrofit.Builder()
-            .baseUrl("BASE_URL")
+            .baseUrl(BASE_URL)
             .client(httpClient)
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
-            .addConverterFactory(GsonConverterFactory.create(Gson()))
+            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().serializeNulls().create()))
 
     @Singleton
     @Provides
@@ -60,7 +62,7 @@ object RetrofitModule {
         )
 
         // Only enable network traffic logging on production environments!
-        auth0.networkingClient = DefaultClient(enableLogging = true)
+//        auth0.networkingClient = DefaultClient(enableLogging = true)
 
         return auth0
     }

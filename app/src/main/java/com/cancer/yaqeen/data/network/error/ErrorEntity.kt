@@ -1,30 +1,30 @@
 package com.cancer.yaqeen.data.network.error
 
 
-sealed class ErrorEntity(val errorMessage: String? = "") {
+sealed class ErrorEntity(val errorMessage: String = "", val errorResponse: ErrorResponse? = null) {
 
     sealed class ApiError(private val error: String): ErrorEntity(error) {
-        data class InternetConnection(val error: String) : ErrorEntity(error)
-
-        data class Network(val error: String) : ErrorEntity(error)
-
-        data class TimeOutNetwork(val error: String) : ErrorEntity(error)
-
-        data class BadHttpResponseNetwork(val error: String) : ErrorEntity(error)
-
-        data class BadResponseNetwork(val error: String) : ErrorEntity(error)
-
-        data class BadRequestNetwork(val error: String) : ErrorEntity(error)
+        object InternetConnection : ErrorEntity()
+        object Network : ErrorEntity()
+        object TimeOutNetwork : ErrorEntity()
+        object BadResponseNetwork : ErrorEntity()
+        object BadRequestNetwork : ErrorEntity()
 
         data class NotFound(val error: String) : ErrorEntity(error)
 
-        data class AccessDenied(val error: String) : ErrorEntity(error)
+        object AccessDenied : ErrorEntity()
 
-        data class ServiceUnavailable(val error: String) : ErrorEntity(error)
+        object ServiceUnavailable : ErrorEntity()
 
         data class Unknown(val error: String) : ErrorEntity(error)
 
-        data class ServerErrorResponse(val error: ErrorResponse) : ErrorEntity(error.errorMessage)
+        data class ServerErrorResponse(val error: ErrorResponse) : ErrorEntity(errorResponse = error)
+
+    }
+
+    sealed class GraphQlError(private val error: String): ErrorEntity(error) {
+        object ApolloNetworkException : ErrorEntity()
+        data class ApolloErrorResponse(val error: String) : ErrorEntity()
     }
 
     sealed class FileError(val error: String): ErrorEntity(error) {
@@ -34,12 +34,11 @@ sealed class ErrorEntity(val errorMessage: String? = "") {
         data class ReadError(val message: String):  FileError(message)
     }
 
-    sealed class DatabaseError(val error: String): ErrorEntity(error) {
-        data class Unknown(val message: String): ErrorEntity(message)
+    sealed class DatabaseError(val error: String = ""): ErrorEntity(error) {
+        object Unknown: ErrorEntity()
     }
 
 }
-
 sealed class ErrorPaging(val error: String? = null): Throwable() {
     data class NoDataAvailable(val eMessage: String? = null): ErrorPaging(eMessage)
     data class NoInternetConnection(val eMessage: String? = null): ErrorPaging(eMessage)

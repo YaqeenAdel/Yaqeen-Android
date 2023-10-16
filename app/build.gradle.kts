@@ -20,7 +20,7 @@ android {
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        manifestPlaceholders["auth0Domain"] =  "AUTH_0_DOMAIN"
+        manifestPlaceholders["auth0Domain"] =  "yaqeen.eu.auth0.com"
         manifestPlaceholders["auth0Scheme"] =  "demo"
     }
 
@@ -103,6 +103,8 @@ dependencies {
     implementation("com.intuit.ssp:ssp-android:1.0.6")
 
     implementation("com.makeramen:roundedimageview:2.3.0")
+
+    implementation("com.github.ybq:Android-SpinKit:1.4.0")
 
     // Lifecycle
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.1")

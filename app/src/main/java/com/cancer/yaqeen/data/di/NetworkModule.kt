@@ -54,7 +54,7 @@ object NetworkModule {
         loggingInterceptor: HttpLoggingInterceptor,
         sharedPrefUtil: SharedPrefEncryptionUtil,
         arrTrustManager: Array<TrustManager>,
-        sslSocketFactory: SSLSocketFactory,
+        sslSocketFactory: SSLSocketFactory
     ): OkHttpClient {
 
         val client = OkHttpClient.Builder()
@@ -73,7 +73,7 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideErrorHandler(@ApplicationContext context: Context) = ErrorHandlerImpl(context)
+    fun provideErrorHandler() = ErrorHandlerImpl()
 
 
     @Singleton

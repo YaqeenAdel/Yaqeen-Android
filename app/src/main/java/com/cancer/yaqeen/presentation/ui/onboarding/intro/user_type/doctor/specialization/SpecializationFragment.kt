@@ -7,23 +7,36 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.databinding.FragmentSelectUserTypeBinding
 import com.cancer.yaqeen.databinding.FragmentSpecializationBinding
+import com.cancer.yaqeen.presentation.base.BaseFragment
+import com.cancer.yaqeen.presentation.ui.onboarding.OnboardingViewModel
 import com.cancer.yaqeen.presentation.ui.onboarding.intro.user_type.SelectUserTypeFragmentDirections
 import com.cancer.yaqeen.presentation.util.autoCleared
+import com.cancer.yaqeen.presentation.util.selectItem
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import com.cancer.yaqeen.presentation.util.tryPopBackStack
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 
-class SpecializationFragment : Fragment() {
-
-
+@AndroidEntryPoint
+class SpecializationFragment : BaseFragment() {
 
     private var binding: FragmentSpecializationBinding by autoCleared()
 
     private lateinit var navController: NavController
+
+    private val viewModel: OnboardingViewModel by activityViewModels()
+
+    private lateinit var universityAutoCompleteAdapter: UniversityAutoCompleteAdapter
+    private lateinit var degreeAutoCompleteAdapter: UniversityAutoCompleteAdapter
+    private lateinit var medicalFieldAutoCompleteAdapter: UniversityAutoCompleteAdapter
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -41,7 +54,6 @@ class SpecializationFragment : Fragment() {
             navController.tryNavigate(
                 SpecializationFragmentDirections.actionSpecializationFragmentToModulesFragment()
             )
-
         }
 
         binding.tvBack.setOnClickListener {
@@ -52,36 +64,80 @@ class SpecializationFragment : Fragment() {
         setupDropDownSpecialization()
         setupDropDownDegree()
         setupDropDownMedicalField()
+
+        observeStates()
+    }
+    private fun observeStates() {
+        lifecycleScope {
+            viewModel.viewStateResources.collectLatest {
+//                stagesAdapter.submitList(
+//                    it.stages
+//                )
+            }
+        }
     }
 
     private fun setupDropDownSpecialization() {
-        val specializationList = arrayOf("Cairo", "Giza", "Alex")
+        universityAutoCompleteAdapter = UniversityAutoCompleteAdapter(
+            requireContext()
+        )
 
-        val adapter = ArrayAdapter<String>(requireContext(), R.layout.item_dropdown_spinner, specializationList)
-        binding.autoTvUniversity.setAdapter(adapter)
+        binding.autoTvUniversity.setAdapter(universityAutoCompleteAdapter)
+
+        universityAutoCompleteAdapter.setList(
+            listOf(
+                "Ain Shams", "Cairo", "Zagazig", "Alexandria", "Tanta", "Assuit", "Aswan"
+            )
+        )
 
         binding.autoTvUniversity.onItemClickListener =
-            AdapterView.OnItemClickListener { parent, view, position, id -> }
+            AdapterView.OnItemClickListener { parent, view, position, id ->
+                viewModel.selectUniversity(universityAutoCompleteAdapter.getItem(position))
+            }
+
+//        binding.autoTvUniversity.selectItem(2, universityAutoCompleteAdapter.getItem(2))
     }
 
     private fun setupDropDownDegree() {
-        val specializationList = arrayOf("BSC", "Master", "PHD")
+        degreeAutoCompleteAdapter = UniversityAutoCompleteAdapter(
+            requireContext()
+        )
 
-        val adapter = ArrayAdapter<String>(requireContext(), R.layout.item_dropdown_spinner, specializationList)
-        binding.autoTvDegree.setAdapter(adapter)
+        binding.autoTvDegree.setAdapter(degreeAutoCompleteAdapter)
+
+        degreeAutoCompleteAdapter.setList(
+            listOf(
+                "BSC", "Master", "PHD"
+            )
+        )
 
         binding.autoTvDegree.onItemClickListener =
-            AdapterView.OnItemClickListener { parent, view, position, id -> }
+            AdapterView.OnItemClickListener { parent, view, position, id ->
+                viewModel.selectDegree(degreeAutoCompleteAdapter.getItem(position))
+            }
+
+//        binding.autoTvDegree.selectItem(1, degreeAutoCompleteAdapter.getItem(1))
     }
 
     private fun setupDropDownMedicalField() {
-        val specializationList = arrayOf("Field 1", "Field 2", "Field 3")
+        medicalFieldAutoCompleteAdapter = UniversityAutoCompleteAdapter(
+            requireContext()
+        )
 
-        val adapter = ArrayAdapter<String>(requireContext(), R.layout.item_dropdown_spinner, specializationList)
-        binding.autoTvMedicalField.setAdapter(adapter)
+        binding.autoTvMedicalField.setAdapter(medicalFieldAutoCompleteAdapter)
+
+        medicalFieldAutoCompleteAdapter.setList(
+            listOf(
+                "Field 1", "Field 2", "Field 3"
+            )
+        )
 
         binding.autoTvMedicalField.onItemClickListener =
-            AdapterView.OnItemClickListener { parent, view, position, id -> }
+            AdapterView.OnItemClickListener { parent, view, position, id ->
+                viewModel.selectMedicalField(medicalFieldAutoCompleteAdapter.getItem(position))
+            }
+
+//        binding.autoTvMedicalField.selectItem(0, medicalFieldAutoCompleteAdapter.getItem(0))
     }
 
 }

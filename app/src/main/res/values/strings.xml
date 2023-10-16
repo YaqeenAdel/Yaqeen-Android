@@ -8,6 +8,7 @@
     <string name="explore_the_app">Explore the app</string>
     <string name="start_join">Start join</string>
     <string name="login">Login</string>
+    <string name="login_dialog">LOGIN</string>
     <string name="next">Next</string>
     <string name="please_select_your_user_type">Please select your user type</string>
     <string name="hey_tell_us_about_you">Hey! Tell us about you</string>
@@ -31,4 +32,15 @@
     <string name="university">University</string>
     <string name="degree">Degree</string>
     <string name="medical_field">Medical Field</string>
+
+    <string name="NoInternetConnection" translatable="false">No Internet Connection</string>
+    <string name="no_internet_connection">No internet connection, please check connection and try again</string>
+    <string name="timeout_exceeded">Timeout exceeded while waiting for loading, make sure you are connected to the internet</string>
+    <string name="error_occurred">error occurred, please try again</string>
+    <string name="token_expired_title">Authorization Token Expired</string>
+    <string name="token_expired_message">Your authorization token expired. You need to login again.</string>
+    <string name="un_authorized" translatable="false">un authorized</string>
+    <string name="missing_data">The data entered is incorrect</string>
+    <string name="missing_response">The response is incorrect</string>
+
 </resources>

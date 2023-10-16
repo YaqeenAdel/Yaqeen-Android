@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.cancer.yaqeen.data.features.onboarding.patient.models.CancerType
+import com.cancer.yaqeen.data.features.onboarding.models.CancerType
 import com.cancer.yaqeen.databinding.ItemCancerTypeBinding
 
 class CancerTypesAdapter(
@@ -52,6 +52,13 @@ class CancerTypesAdapter(
         }
     }
 
+    fun selectItem(id: Int){
+        val positionItem = currentList.indexOfFirst {
+            it.id.toInt() == id
+        }
+        notifyItemChangedByPosition(positionItem)
+    }
+
     inner class CancerTypesViewHolder(
         private val itemBinding: ItemCancerTypeBinding,
         onItemClick: (Int) -> Unit
@@ -61,12 +68,7 @@ class CancerTypesAdapter(
             itemBinding.btnCancerType.setOnClickListener {
                 onItemClick(adapterPosition)
 
-                selectedPosition = adapterPosition
-
-                notifyItemChanged(lastSelectedPosition)
-                notifyItemChanged(selectedPosition)
-
-                lastSelectedPosition = selectedPosition
+                notifyItemChangedByPosition(adapterPosition)
             }
         }
 
@@ -75,5 +77,14 @@ class CancerTypesAdapter(
             val isSelected = selectedPosition == position
             itemBinding.btnCancerType.isChecked = isSelected
         }
+    }
+
+    private fun notifyItemChangedByPosition(position: Int) {
+        selectedPosition = position
+
+        notifyItemChanged(lastSelectedPosition)
+        notifyItemChanged(selectedPosition)
+
+        lastSelectedPosition = selectedPosition
     }
 }

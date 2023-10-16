@@ -2,27 +2,38 @@ package com.cancer.yaqeen.presentation.ui.onboarding
 
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.cancer.yaqeen.R
+import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.databinding.FragmentOnBoardingBinding
+import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.ui.auth.AuthViewModel
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.autoScroll
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
-class OnBoardingFragment : Fragment(), OnClickListener {
+class OnBoardingFragment : BaseFragment(), OnClickListener {
 
     private var binding: FragmentOnBoardingBinding by autoCleared()
 
@@ -30,7 +41,7 @@ class OnBoardingFragment : Fragment(), OnClickListener {
 
     private lateinit var adapter: ViewPagerAdapter
 
-    private val authViewModel: AuthViewModel by viewModels()
+    private val onboardingViewModel: OnboardingViewModel by activityViewModels()
 
     private val handler = Handler()
     private var scrollPosition = 0
@@ -67,6 +78,60 @@ class OnBoardingFragment : Fragment(), OnClickListener {
 
         setupViewPager()
         setListener()
+
+        getResourcesData()
+
+        observeStates()
+    }
+
+    private fun getResourcesData(){
+        onboardingViewModel.getResources()
+    }
+
+    private fun observeStates() {
+        lifecycleScope {
+            onboardingViewModel.viewStateLoading.collectLatest {
+                onLoading(it)
+            }
+        }
+        lifecycleScope {
+            onboardingViewModel.viewStateError.collectLatest {
+                handleResponseError(it)
+            }
+        }
+        lifecycleScope {
+            onboardingViewModel.viewStateResources.collectLatest {
+                val user = onboardingViewModel.viewStateLoginSuccess.replayCache
+                if(user.isNotEmpty() && user.firstOrNull() != null) {
+                    navigateToUpdateProfile()
+                }
+            }
+        }
+        lifecycleScope {
+            onboardingViewModel.viewStateLoginSuccess.collectLatest {
+                Log.d("TAG", "observeStates: $it")
+                it?.let {
+                    val resources = onboardingViewModel.viewStateResources.replayCache
+                    if(resources.isNotEmpty() && resources.firstOrNull() != null) {
+                        navigateToUpdateProfile()
+                    }else{
+//                        getResourcesData()
+                    }
+                }
+
+            }
+        }
+    }
+
+    private fun handleResponseError(errorEntity: ErrorEntity?) {
+        val errorMessage = handleError(errorEntity)
+        displayErrorMessage(errorMessage)
+    }
+
+    private fun displayErrorMessage(errorMessage: String?) {
+        errorMessage?.let {
+            Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun setListener() {
@@ -134,6 +199,13 @@ class OnBoardingFragment : Fragment(), OnClickListener {
         handler.post(runnable)
     }
 
+    private fun navigateToUpdateProfile() {
+        removeCallbacks()
+        navController.tryNavigate(
+            OnBoardingFragmentDirections.actionOnBoardingFragmentToIntroFragment()
+        )
+    }
+
     private fun removeCallbacks(){
         binding.viewPager.removeCallbacks(runnable)
         handler.removeCallbacks(runnable)
@@ -144,13 +216,10 @@ class OnBoardingFragment : Fragment(), OnClickListener {
             R.id.tv_language -> {}
             R.id.btn_explore_app -> {}
             R.id.btn_join -> {
-                removeCallbacks()
-                navController.tryNavigate(
-                    OnBoardingFragmentDirections.actionOnBoardingFragmentToIntroFragment()
-                )
+//                navigateToUpdateProfile()
             }
             R.id.tv_login -> {
-                authViewModel.login(requireContext())
+                onboardingViewModel.login(requireContext())
             }
         }
     }

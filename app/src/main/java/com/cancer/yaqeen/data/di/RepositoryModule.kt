@@ -3,6 +3,7 @@ package com.cancer.yaqeen.data.di
 import android.content.Context
 import com.auth0.android.Auth0
 import com.cancer.yaqeen.data.features.auth.AuthRepositoryImpl
+import com.cancer.yaqeen.data.features.onboarding.OnboardingRepositoryImpl
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.data.network.apis.YaqeenAPI
 import com.cancer.yaqeen.data.network.error.ErrorHandlerImpl
@@ -23,5 +24,12 @@ object RepositoryModule {
         errorHandlerImpl: ErrorHandlerImpl,
         sharedPrefEncryptionUtil: SharedPrefEncryptionUtil
     ) = AuthRepositoryImpl(auth0, errorHandlerImpl, sharedPrefEncryptionUtil)
+    @Singleton
+    @Provides
+    fun provideOnboardingRepository(
+        apiService: YaqeenAPI,
+        errorHandlerImpl: ErrorHandlerImpl,
+        sharedPrefEncryptionUtil: SharedPrefEncryptionUtil
+    ) = OnboardingRepositoryImpl(apiService, errorHandlerImpl, sharedPrefEncryptionUtil)
 
 }

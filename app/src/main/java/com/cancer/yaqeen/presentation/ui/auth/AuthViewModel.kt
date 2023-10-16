@@ -21,7 +21,7 @@ class AuthViewModel @Inject constructor(
     fun login(context: Context){
         viewModelScope.launch {
             loginUseCase(context).onEach {
-
+                Log.d("TAG", "loginUseCase: ${it.data}")
             }.catch {
 
             }.launchIn(viewModelScope)

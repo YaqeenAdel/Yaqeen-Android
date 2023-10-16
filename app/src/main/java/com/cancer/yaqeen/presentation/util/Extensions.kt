@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.View
 import android.view.WindowManager
+import android.widget.AutoCompleteTextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
@@ -121,4 +122,11 @@ fun ViewPager2.autoScroll(interval: Long) {
     this.removeCallbacks(runnable)
 
     handler.post(runnable)
+}
+
+fun AutoCompleteTextView.selectItem(position: Int = 0, text: String = "") {
+    this.setText(text)
+    this.showDropDown()
+    this.listSelection = position
+    this.performCompletion()
 }

@@ -1,28 +1,19 @@
 package com.cancer.yaqeen.data.features.auth
 
 import android.content.Context
-import android.util.Log
-import android.widget.Toast
 import com.auth0.android.Auth0
 import com.auth0.android.authentication.AuthenticationException
-import com.auth0.android.callback.Callback
 import com.auth0.android.provider.WebAuthProvider
-import com.auth0.android.result.Credentials
 import com.cancer.yaqeen.BuildConfig.AUTH_0_SCHEMA
 import com.cancer.yaqeen.BuildConfig.AUTH_0_URL
-import com.cancer.yaqeen.R
-import com.cancer.yaqeen.data.base.BaseDataSource
-import com.cancer.yaqeen.data.base.Resource
-import com.cancer.yaqeen.data.base.flowResponseAPI
+import com.cancer.yaqeen.data.network.base.BaseDataSource
+import com.cancer.yaqeen.data.network.base.DataState
 import com.cancer.yaqeen.data.features.auth.mappers.MappingLoginRemoteAsUser
 import com.cancer.yaqeen.data.features.auth.models.User
-import com.cancer.yaqeen.data.features.auth.requests.LoginRequestBody
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil.Companion.PREF_USER
-import com.cancer.yaqeen.data.network.apis.YaqeenAPI
 import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.data.network.error.ErrorHandlerImpl
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -35,8 +26,8 @@ class AuthRepositoryImpl @Inject constructor(
     private val sharedPrefEncryptionUtil: SharedPrefEncryptionUtil
 ): BaseDataSource(errorHandler), IAuthRepository {
 
-    override suspend fun login(context: Context): Flow<Resource<User>> =
-        withContext(Dispatchers.Main){
+    override suspend fun login(context: Context): Flow<DataState<User>> =
+        withContext(Dispatchers.IO){
             try {
                 val credentials = WebAuthProvider.login(auth0)
                     .withScheme(AUTH_0_SCHEMA)
@@ -44,19 +35,47 @@ class AuthRepositoryImpl @Inject constructor(
                     .withAudience(AUTH_0_URL)
                     .await(context)
 
-                sharedPrefEncryptionUtil.setToken(credentials.accessToken)
+//                logout(context)
+                flow {
+                    val user = MappingLoginRemoteAsUser().map(credentials.user)
+                    sharedPrefEncryptionUtil.setToken(credentials.accessToken)
+                    sharedPrefEncryptionUtil.setModelData(user, PREF_USER)
+                    emit(
+                        DataState.Success(
+                            user
+                        )
+                    )
+                }
+
+            }catch (e: AuthenticationException){
                 flow {
                     emit(
-                        Resource.Success(
-                            MappingLoginRemoteAsUser().map(credentials.user)
+                        DataState.Error(
+                            ErrorEntity.ApiError.Network
                         )
+                    )
+                }
+            }
+        }
+
+    override suspend fun logout(context: Context): Flow<DataState<Boolean>> =
+        withContext(Dispatchers.IO){
+            try {
+                WebAuthProvider.logout(auth0)
+                    .withScheme(AUTH_0_SCHEMA)
+                    .await(context)
+
+//                sharedPrefEncryptionUtil.setToken("")
+                flow {
+                    emit(
+                        DataState.Success(true)
                     )
                 }
             }catch (e: AuthenticationException){
                 flow {
                     emit(
-                        Resource.Error(
-                            ErrorEntity.ApiError.Network("")
+                        DataState.Error(
+                            ErrorEntity.ApiError.Network
                         )
                     )
                 }

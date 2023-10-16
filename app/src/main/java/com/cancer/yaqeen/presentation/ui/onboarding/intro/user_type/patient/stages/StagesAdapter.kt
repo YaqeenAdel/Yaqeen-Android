@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.cancer.yaqeen.data.features.onboarding.patient.models.Stage
+import com.cancer.yaqeen.data.features.onboarding.models.Stage
 import com.cancer.yaqeen.databinding.ItemStageBinding
 
 class StagesAdapter(
@@ -53,6 +53,13 @@ class StagesAdapter(
         }
     }
 
+    fun selectItem(id: Int){
+        val positionItem = currentList.indexOfFirst {
+            it.id.toInt() == id
+        }
+        notifyItemChangedByPosition(positionItem)
+    }
+
     inner class StagesViewHolder(
         private val itemBinding: ItemStageBinding,
         onItemClick: (Int) -> Unit
@@ -62,12 +69,7 @@ class StagesAdapter(
             itemBinding.itemContainer.setOnClickListener {
                 onItemClick(adapterPosition)
 
-                selectedPosition = adapterPosition
-
-                notifyItemChanged(lastSelectedPosition)
-                notifyItemChanged(selectedPosition)
-
-                lastSelectedPosition = selectedPosition
+                notifyItemChangedByPosition(adapterPosition)
             }
         }
 
@@ -77,5 +79,14 @@ class StagesAdapter(
             val isSelected = selectedPosition == position
             itemBinding.viewSelected.visibility = if(isSelected) View.VISIBLE else View.INVISIBLE
         }
+    }
+
+    private fun notifyItemChangedByPosition(position: Int) {
+        selectedPosition = position
+
+        notifyItemChanged(lastSelectedPosition)
+        notifyItemChanged(selectedPosition)
+
+        lastSelectedPosition = selectedPosition
     }
 }
