@@ -2,6 +2,7 @@ package com.cancer.yaqeen.data.network.apis
 
 import com.cancer.yaqeen.data.features.auth.requests.LoginRequestBody
 import com.cancer.yaqeen.data.features.auth.responses.LoginRemote
+import com.cancer.yaqeen.data.features.onboarding.requests.UpdateInterestsUserRequestBody
 import com.cancer.yaqeen.data.features.onboarding.requests.UpdateProfileRequestBody
 import com.cancer.yaqeen.data.features.onboarding.responses.ResourcesResponse
 import com.cancer.yaqeen.data.features.onboarding.responses.UpdateProfileResponse
@@ -20,6 +21,11 @@ interface YaqeenAPI {
     @GET("resources")
     @Headers("isAuthorization: false")
     suspend fun getResources(): Response<ResourcesResponse>
+
+    @POST("me/interests")
+    suspend fun updateInterestsUser(
+        @Body requestBody: UpdateInterestsUserRequestBody
+    ): Response<Any>
 
     @PATCH("me")
     suspend fun updateUserProfile(

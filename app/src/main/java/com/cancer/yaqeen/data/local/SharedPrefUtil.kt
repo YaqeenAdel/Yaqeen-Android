@@ -11,6 +11,8 @@ class SharedPrefEncryptionUtil @Inject constructor(
 ) {
     companion object {
         const val PREF_TOKEN = "prefs-token"
+        const val PREF_REFRESH_TOKEN = "prefs-refresh-token"
+        const val PREF_TOKEN_TYPE = "prefs-token-type"
         const val PREF_USER = "prefs-user"
         const val PREF_SELECTED_LANGUAGE = "prefs-selected-language"
         const val PREF_HAS_SEEN_BOARDS = "prefs-has-seen-boards"
@@ -42,6 +44,24 @@ class SharedPrefEncryptionUtil @Inject constructor(
             .apply()
     fun getToken(): String =
         sharedPreferences.getString(PREF_TOKEN, "").toString()
+
+
+    fun setRefreshToken(refreshToken: String?) =
+        sharedPreferences
+            .edit()
+            .putString(PREF_REFRESH_TOKEN, refreshToken)
+            .apply()
+    fun getRefreshToken(): String =
+        sharedPreferences.getString(PREF_REFRESH_TOKEN, "").toString()
+
+
+    fun setTokenType(tokenType: String) =
+        sharedPreferences
+            .edit()
+            .putString(PREF_TOKEN_TYPE, tokenType)
+            .apply()
+    fun getTokenType(): String =
+        sharedPreferences.getString(PREF_TOKEN_TYPE, "").toString()
 
     var hasSeenBoards: Boolean
         get() = sharedPreferences.getBoolean(PREF_HAS_SEEN_BOARDS, false)

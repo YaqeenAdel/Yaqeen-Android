@@ -19,6 +19,7 @@ import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.databinding.FragmentSelectCancerTypeBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.ui.onboarding.OnboardingViewModel
+import com.cancer.yaqeen.presentation.ui.onboarding.terms_condition.TermsAndConditionFragmentDirections
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.dpToPx
 import com.cancer.yaqeen.presentation.util.recyclerview.VerticalMarginItemDecoration
@@ -57,9 +58,7 @@ class SelectCancerTypeFragment : BaseFragment() {
         setupCancerTypesAdapter()
 
         binding.tvNext.setOnClickListener {
-            navController.tryNavigate(
-                SelectCancerTypeFragmentDirections.actionSelectCancerTypeFragmentToStagesFragment()
-            )
+            viewModel.updateUserProfile()
         }
 
         binding.tvBack.setOnClickListener {
@@ -70,6 +69,11 @@ class SelectCancerTypeFragment : BaseFragment() {
     }
 
     private fun observeStates() {
+        lifecycleScope {
+            viewModel.viewStateLoading.collectLatest {
+                onLoading(it)
+            }
+        }
         lifecycleScope {
             viewModel.viewStateResources.collectLatest {
                 it?.let {
@@ -85,6 +89,15 @@ class SelectCancerTypeFragment : BaseFragment() {
                     }
                 }
 
+            }
+        }
+        lifecycleScope {
+            viewModel.viewStateUpdateProfileSuccess.collectLatest {
+                it?.let {
+                    navController.tryNavigate(
+                        SelectCancerTypeFragmentDirections.actionSelectCancerTypeFragmentToStagesFragment()
+                    )
+                }
             }
         }
     }

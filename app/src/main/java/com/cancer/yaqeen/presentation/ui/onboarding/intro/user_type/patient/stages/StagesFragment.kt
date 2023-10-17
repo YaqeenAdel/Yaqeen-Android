@@ -20,6 +20,7 @@ import com.cancer.yaqeen.databinding.FragmentStagesBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.ui.onboarding.OnboardingViewModel
 import com.cancer.yaqeen.presentation.ui.onboarding.intro.user_type.patient.cancer_type.CancerTypesAdapter
+import com.cancer.yaqeen.presentation.ui.onboarding.intro.user_type.patient.cancer_type.SelectCancerTypeFragmentDirections
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.dpToPx
 import com.cancer.yaqeen.presentation.util.recyclerview.HorizontalMarginItemDecoration
@@ -58,9 +59,7 @@ class StagesFragment : BaseFragment() {
         setupStagesAdapter()
 
         binding.tvNext.setOnClickListener {
-            navController.tryNavigate(
-                StagesFragmentDirections.actionStagesFragmentToModulesFragment()
-            )
+            viewModel.updateUserProfile()
         }
 
         binding.tvBack.setOnClickListener {
@@ -70,6 +69,11 @@ class StagesFragment : BaseFragment() {
         observeStates()
     }
     private fun observeStates() {
+        lifecycleScope {
+            viewModel.viewStateLoading.collectLatest {
+                onLoading(it)
+            }
+        }
         lifecycleScope {
             viewModel.viewStateResources.collectLatest {
                 it?.let {
@@ -83,6 +87,15 @@ class StagesFragment : BaseFragment() {
                         else
                             stagesAdapter.selectItem(stageId)
                     }
+                }
+            }
+        }
+        lifecycleScope {
+            viewModel.viewStateUpdateProfileSuccess.collectLatest {
+                it?.let {
+                    navController.tryNavigate(
+                        StagesFragmentDirections.actionStagesFragmentToModulesFragment()
+                    )
                 }
             }
         }

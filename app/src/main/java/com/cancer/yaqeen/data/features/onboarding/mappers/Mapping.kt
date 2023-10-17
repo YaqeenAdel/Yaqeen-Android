@@ -11,6 +11,7 @@ import com.cancer.yaqeen.data.features.auth.models.VerificationStatus
 import com.cancer.yaqeen.data.features.auth.responses.LoginRemote
 import com.cancer.yaqeen.data.features.onboarding.models.CancerType
 import com.cancer.yaqeen.data.features.onboarding.models.Module
+import com.cancer.yaqeen.data.features.onboarding.models.Photo
 import com.cancer.yaqeen.data.features.onboarding.models.Resources
 import com.cancer.yaqeen.data.features.onboarding.models.Stage
 import com.cancer.yaqeen.data.features.onboarding.responses.CancerStageResponse
@@ -18,6 +19,7 @@ import com.cancer.yaqeen.data.features.onboarding.responses.CancerTypeResponse
 import com.cancer.yaqeen.data.features.onboarding.responses.DoctorResponse
 import com.cancer.yaqeen.data.features.onboarding.responses.InterestResponse
 import com.cancer.yaqeen.data.features.onboarding.responses.PatientResponse
+import com.cancer.yaqeen.data.features.onboarding.responses.PhotoResponse
 import com.cancer.yaqeen.data.features.onboarding.responses.ResourcesResponse
 import com.cancer.yaqeen.data.features.onboarding.responses.SAggregateResponse
 import com.cancer.yaqeen.data.features.onboarding.responses.UserProfileResponse
@@ -30,7 +32,8 @@ class MappingResourcesRemoteAsModel: Mapper<ResourcesResponse, Resources> {
             stages = cancerStages.map { MappingStageRemoteAsModel().map(it) },
             cancerTypes = cancerTypes.map { MappingCancerTypeRemoteAsModel().map(it) },
             patientInterests = patientInterests.map { MappingInterestRemoteAsModel().map(it) },
-            doctorInterests = doctorInterests.map { MappingInterestRemoteAsModel().map(it) }
+            doctorInterests = doctorInterests.map { MappingInterestRemoteAsModel().map(it) },
+            photos = photos.map { MappingPhotoRemoteAsModel().map(it) }
         )
     }
 }
@@ -59,6 +62,13 @@ class MappingInterestRemoteAsModel: Mapper<InterestResponse, Module> {
             id = interestID ?: -1,
             icon = logoURL ?: "",
             moduleName = translations?.firstOrNull()?.translation?.name ?: ""
+        )
+    }
+}
+class MappingPhotoRemoteAsModel: Mapper<PhotoResponse, Photo> {
+    override fun map(input: PhotoResponse): Photo = input.run {
+        Photo(
+            photoURL = photoURL ?: "",
         )
     }
 }

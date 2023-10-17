@@ -8,28 +8,22 @@ import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.cancer.yaqeen.R
+import com.cancer.yaqeen.data.features.onboarding.models.Photo
 import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.databinding.FragmentOnBoardingBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
-import com.cancer.yaqeen.presentation.ui.auth.AuthViewModel
 import com.cancer.yaqeen.presentation.util.autoCleared
-import com.cancer.yaqeen.presentation.util.autoScroll
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
@@ -46,15 +40,9 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
     private val handler = Handler()
     private var scrollPosition = 0
 
-    val runnable = object : Runnable {
+    private val runnable = object : Runnable {
 
         override fun run() {
-
-            /**
-             * Calculate "scroll position" with
-             * adapter pages count and current
-             * value of scrollPosition.
-             */
             val count = adapter.itemCount
             binding.viewPager.setCurrentItem(scrollPosition++ % count, true)
 
@@ -76,7 +64,6 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
 
         navController = findNavController()
 
-        setupViewPager()
         setListener()
 
         getResourcesData()
@@ -101,6 +88,9 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
         }
         lifecycleScope {
             onboardingViewModel.viewStateResources.collectLatest {
+                it?.let {
+                    setupViewPager(it.photos)
+                }
                 val user = onboardingViewModel.viewStateLoginSuccess.replayCache
                 if(user.isNotEmpty() && user.firstOrNull() != null) {
                     navigateToUpdateProfile()
@@ -158,30 +148,27 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
         })
     }
 
-    private fun setupViewPager() {
-        val itemList = listOf(
-            R.drawable.ic_launcher_background,
-            R.drawable.ic_launcher_background,
-            R.drawable.ic_launcher_background
-        )
+    private fun setupViewPager(photos: List<Photo>) {
+        if(::adapter.isInitialized)
+            return
 
-        val pages = listOf<Fragment>(
-            PageFragment(),
-            PageFragment(),
-            PageFragment()
-        )
+        val pages = mutableListOf<Fragment>()
+
+        photos.onEach {
+            pages.add(PageFragment().apply {
+                arguments = bundleOf("photoURL" to it.photoURL)
+            })
+            binding.tabLayout.apply {
+                addTab(newTab())
+            }
+        }
 
         adapter =
-            ViewPagerAdapter(requireActivity().supportFragmentManager, lifecycle, pages, itemList)
+            ViewPagerAdapter(requireActivity().supportFragmentManager, lifecycle, pages, photos)
 
         binding.viewPager.apply {
             this.adapter = this@OnBoardingFragment.adapter
             clipToPadding = false
-        }
-        binding.tabLayout.apply {
-            addTab(newTab())
-            addTab(newTab())
-            addTab(newTab())
         }
 
         binding.viewPager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
@@ -219,6 +206,7 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
 //                navigateToUpdateProfile()
             }
             R.id.tv_login -> {
+                removeCallbacks()
                 onboardingViewModel.login(requireContext())
             }
         }

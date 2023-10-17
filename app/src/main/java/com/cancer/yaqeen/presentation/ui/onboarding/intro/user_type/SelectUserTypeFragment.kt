@@ -5,21 +5,26 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.auth.models.UserType
+import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.databinding.FragmentIntroBinding
 import com.cancer.yaqeen.databinding.FragmentSelectUserTypeBinding
+import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.ui.onboarding.OnboardingViewModel
+import com.cancer.yaqeen.presentation.ui.onboarding.terms_condition.TermsAndConditionFragmentDirections
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import com.cancer.yaqeen.presentation.util.tryPopBackStack
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
-class SelectUserTypeFragment : Fragment() {
+class SelectUserTypeFragment : BaseFragment() {
 
 
     private var binding: FragmentSelectUserTypeBinding by autoCleared()
@@ -50,18 +55,52 @@ class SelectUserTypeFragment : Fragment() {
         binding.tvNext.setOnClickListener {
             val isPatient = binding.btnPatient.isChecked
             viewModel.selectUser(isPatient)
-            if(isPatient)
-                navController.tryNavigate(
-                    SelectUserTypeFragmentDirections.actionSelectUserTypeFragmentToSelectCancerTypeFragment()
-                )
-            else
-                navController.tryNavigate(
-                    SelectUserTypeFragmentDirections.actionSelectUserTypeFragmentToSpecializationFragment()
-                )
+
+            viewModel.updateUserProfile()
         }
 
         binding.tvBack.setOnClickListener {
             navController.tryPopBackStack()
+        }
+        observeStates()
+    }
+    private fun observeStates() {
+        lifecycleScope {
+            viewModel.viewStateLoading.collectLatest {
+                onLoading(it)
+            }
+        }
+        lifecycleScope {
+            viewModel.viewStateError.collectLatest {
+                handleResponseError(it)
+            }
+        }
+        lifecycleScope {
+            viewModel.viewStateUpdateProfileSuccess.collectLatest {
+                it?.let {
+                    val isPatient = binding.btnPatient.isChecked
+                    viewModel.selectUser(isPatient)
+
+                    if(isPatient)
+                        navController.tryNavigate(
+                            SelectUserTypeFragmentDirections.actionSelectUserTypeFragmentToSelectCancerTypeFragment()
+                        )
+                    else
+                        navController.tryNavigate(
+                            SelectUserTypeFragmentDirections.actionSelectUserTypeFragmentToSpecializationFragment()
+                        )
+                }
+            }
+        }
+    }
+    private fun handleResponseError(errorEntity: ErrorEntity?) {
+        val errorMessage = handleError(errorEntity)
+        displayErrorMessage(errorMessage)
+    }
+
+    private fun displayErrorMessage(errorMessage: String?) {
+        errorMessage?.let {
+            Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
         }
     }
 

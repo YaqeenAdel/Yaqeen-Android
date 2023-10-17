@@ -26,7 +26,7 @@ class NetworkConnectionInterceptor @Inject constructor(
             .addHeader("Content-Type","application/json")
         if (isAuthorization) {
             builder
-                .addHeader("Authorization", "Bearer ${sharedPrefUtil.getToken()}")
+                .addHeader("Authorization", "${sharedPrefUtil.getTokenType()} ${sharedPrefUtil.getToken()}")
         }
         return chain.proceed(builder.build())
     }

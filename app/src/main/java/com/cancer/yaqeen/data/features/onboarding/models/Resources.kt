@@ -4,5 +4,6 @@ data class Resources(
     val stages: List<Stage>,
     val cancerTypes: List<CancerType>,
     val patientInterests: List<Module>,
-    val doctorInterests: List<Module>
+    val doctorInterests: List<Module>,
+    val photos: List<Photo>
 )

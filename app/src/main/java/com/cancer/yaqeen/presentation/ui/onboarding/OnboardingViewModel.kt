@@ -10,13 +10,18 @@ import com.cancer.yaqeen.data.features.auth.models.User
 import com.cancer.yaqeen.data.network.base.Status
 import com.cancer.yaqeen.data.features.auth.models.UserType
 import com.cancer.yaqeen.data.features.onboarding.models.Resources
+import com.cancer.yaqeen.data.features.onboarding.requests.UpdateInterestsUserRequestBody
+import com.cancer.yaqeen.data.features.onboarding.requests.UpdateInterestsUserRequestBuilder
 import com.cancer.yaqeen.data.features.onboarding.requests.UpdateProfileRequestBuilder
 import com.cancer.yaqeen.data.features.onboarding.responses.UpdateProfileResponse
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
+import com.cancer.yaqeen.data.network.base.DataState
 import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.domain.features.auth.login.usecases.LoginUseCase
+import com.cancer.yaqeen.domain.features.auth.login.usecases.LogoutUseCase
 import com.cancer.yaqeen.domain.features.onboarding.usecases.GetResourcesUseCase
 import com.cancer.yaqeen.domain.features.onboarding.usecases.GetUserProfileUseCase
+import com.cancer.yaqeen.domain.features.onboarding.usecases.UpdateInterestsUserUseCase
 import com.cancer.yaqeen.domain.features.onboarding.usecases.UpdateUserProfileUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,9 +37,11 @@ import javax.inject.Inject
 class OnboardingViewModel @Inject constructor(
     private val prefEncryptionUtil: SharedPrefEncryptionUtil,
     private val loginUseCase: LoginUseCase,
+    private val logoutUseCase: LogoutUseCase,
     private val getResourcesUseCase: GetResourcesUseCase,
     private val getUserProfileUseCase: GetUserProfileUseCase,
     private val updateUserProfileUseCase: UpdateUserProfileUseCase,
+    private val updateInterestsUserUseCase: UpdateInterestsUserUseCase,
 ) : ViewModel() {
 
 
@@ -65,7 +72,7 @@ class OnboardingViewModel @Inject constructor(
             getResourcesUseCase().onEach { response ->
                 _viewStateLoading.emit(response.loading)
                 when (response.status) {
-                    Status.ERROR -> _viewStateError.emit(response.errorEntity)
+                    Status.ERROR -> emitError(response.errorEntity)
                     Status.SUCCESS -> {
                         response.data?.let {
                             _viewStateResources.emit(it)
@@ -82,10 +89,29 @@ class OnboardingViewModel @Inject constructor(
         viewModelScope.launch {
             loginUseCase(context).onEach { response ->
                 when (response.status) {
-                    Status.ERROR -> _viewStateError.emit(response.errorEntity)
+                    Status.ERROR -> emitError(response.errorEntity)
                     Status.SUCCESS -> {
                         response.data?.let {
                             getProfile(it)
+                        }
+                    }
+
+                    else -> {}
+                }
+            }.catch {
+
+            }.launchIn(viewModelScope)
+        }
+    }
+
+    private fun logout(context: Context) {
+        viewModelScope.launch {
+            logoutUseCase(context).onEach { response ->
+                when (response.status) {
+                    Status.ERROR -> emitError(response.errorEntity)
+                    Status.SUCCESS -> {
+                        response.data?.let {
+
                         }
                     }
 
@@ -103,7 +129,7 @@ class OnboardingViewModel @Inject constructor(
 //                _viewStateLoading.emit(response.loading)
                 when (response.status) {
                     Status.ERROR -> {
-                        _viewStateError.emit(response.errorEntity)
+                        emitError(response.errorEntity)
                         _viewStateLoginSuccess.emit(user)
                         _viewStateLoginSuccess.emit(null)
                     }
@@ -160,7 +186,7 @@ class OnboardingViewModel @Inject constructor(
                 ).onEach { response ->
                     _viewStateLoading.emit(response.loading)
                     when (response.status) {
-                        Status.ERROR -> _viewStateError.emit(response.errorEntity)
+                        Status.ERROR -> emitError(response.errorEntity)
                         Status.SUCCESS -> {
                             Log.d("TAG", "updateUserProfile: ${response.data}")
                             response.data?.let {
@@ -174,6 +200,37 @@ class OnboardingViewModel @Inject constructor(
                 }.launchIn(viewModelScope)
             }
         }
+    }
+
+    fun updateInterestsUser(){
+        getUserProfile()?.run {
+            viewModelScope.launch {
+                updateInterestsUserUseCase(
+                    UpdateInterestsUserRequestBuilder(
+                        interestModuleId
+                    ).buildRequestBody()
+                ).onEach { response ->
+                    _viewStateLoading.emit(response.loading)
+                    when (response.status) {
+                        Status.ERROR -> emitError(response.errorEntity)
+                        Status.SUCCESS -> {
+                            Log.d("TAG", "updateInterestsUser: ${response.data}")
+                            response.data?.let {
+                                _viewStateUpdateProfileSuccess.emit(true)
+                                _viewStateUpdateProfileSuccess.emit(null)
+                            }
+                        }
+
+                        else -> {}
+                    }
+                }.launchIn(viewModelScope)
+            }
+        }
+    }
+
+    private suspend fun emitError(errorEntity: ErrorEntity?) {
+        _viewStateError.emit(errorEntity)
+        _viewStateError.emit(null)
     }
 
     private fun setProfileUser(

@@ -17,6 +17,7 @@ import com.cancer.yaqeen.databinding.FragmentSpecializationBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.ui.onboarding.OnboardingViewModel
 import com.cancer.yaqeen.presentation.ui.onboarding.intro.user_type.SelectUserTypeFragmentDirections
+import com.cancer.yaqeen.presentation.ui.onboarding.intro.user_type.modules.ModulesFragmentDirections
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.selectItem
 import com.cancer.yaqeen.presentation.util.tryNavigate
@@ -51,9 +52,7 @@ class SpecializationFragment : BaseFragment() {
         navController = findNavController()
 
         binding.tvNext.setOnClickListener {
-            navController.tryNavigate(
-                SpecializationFragmentDirections.actionSpecializationFragmentToModulesFragment()
-            )
+            viewModel.updateUserProfile()
         }
 
         binding.tvBack.setOnClickListener {
@@ -69,10 +68,24 @@ class SpecializationFragment : BaseFragment() {
     }
     private fun observeStates() {
         lifecycleScope {
+            viewModel.viewStateLoading.collectLatest {
+                onLoading(it)
+            }
+        }
+        lifecycleScope {
             viewModel.viewStateResources.collectLatest {
 //                stagesAdapter.submitList(
 //                    it.stages
 //                )
+            }
+        }
+        lifecycleScope {
+            viewModel.viewStateUpdateProfileSuccess.collectLatest {
+                it?.let {
+                    navController.tryNavigate(
+                        SpecializationFragmentDirections.actionSpecializationFragmentToModulesFragment()
+                    )
+                }
             }
         }
     }

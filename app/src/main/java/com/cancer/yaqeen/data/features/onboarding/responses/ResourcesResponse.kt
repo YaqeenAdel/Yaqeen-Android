@@ -13,7 +13,10 @@ data class ResourcesResponse (
     val patientInterests: List<InterestResponse>,
 
     @SerializedName("DoctorInterests")
-    val doctorInterests: List<InterestResponse>
+    val doctorInterests: List<InterestResponse>,
+
+    @SerializedName("Photos")
+    val photos: List<PhotoResponse>
 )
 
 data class CancerStageResponse (
@@ -90,4 +93,11 @@ data class DoctorInterestTranslationResponse (
 data class TentacledTranslationResponse (
     @SerializedName("Name")
     val name: String?
+)
+data class PhotoResponse (
+    @SerializedName("PhotoURL")
+    val photoURL: String?,
+
+    @SerializedName("Usage")
+    val usage: Long?
 )

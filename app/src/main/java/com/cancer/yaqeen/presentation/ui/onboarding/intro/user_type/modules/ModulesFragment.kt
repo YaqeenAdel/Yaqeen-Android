@@ -22,6 +22,7 @@ import com.cancer.yaqeen.databinding.FragmentStagesBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.ui.onboarding.OnboardingViewModel
 import com.cancer.yaqeen.presentation.ui.onboarding.intro.user_type.patient.stages.StagesAdapter
+import com.cancer.yaqeen.presentation.ui.onboarding.intro.user_type.patient.stages.StagesFragmentDirections
 import com.cancer.yaqeen.presentation.ui.onboarding.terms_condition.TermsAndConditionFragmentDirections
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.dpToPx
@@ -63,9 +64,7 @@ class ModulesFragment : BaseFragment() {
         setupModulesAdapter()
 
         binding.tvNext.setOnClickListener {
-            navController.tryNavigate(
-                ModulesFragmentDirections.actionModulesFragmentToTermsAndConditionFragment()
-            )
+            viewModel.updateInterestsUser()
         }
 
         binding.tvBack.setOnClickListener {
@@ -76,7 +75,11 @@ class ModulesFragment : BaseFragment() {
     }
     private fun observeStates() {
         lifecycleScope {
-
+            viewModel.viewStateLoading.collectLatest {
+                onLoading(it)
+            }
+        }
+        lifecycleScope {
             viewModel.viewStateResources.collectLatest {
                 it?.let {
                     val modules = when(viewModel.getUserTypeSelected()){
@@ -93,6 +96,15 @@ class ModulesFragment : BaseFragment() {
                     }
                 }
 
+            }
+        }
+        lifecycleScope {
+            viewModel.viewStateUpdateProfileSuccess.collectLatest {
+                it?.let {
+                    navController.tryNavigate(
+                        ModulesFragmentDirections.actionModulesFragmentToTermsAndConditionFragment()
+                    )
+                }
             }
         }
     }

@@ -7,6 +7,7 @@ import com.cancer.yaqeen.data.network.base.flowStatus
 import com.cancer.yaqeen.data.features.onboarding.mappers.MappingResourcesRemoteAsModel
 import com.cancer.yaqeen.data.features.onboarding.mappers.MappingUserProfileRemoteAsModel
 import com.cancer.yaqeen.data.features.onboarding.models.Resources
+import com.cancer.yaqeen.data.features.onboarding.requests.UpdateInterestsUserRequestBody
 import com.cancer.yaqeen.data.features.onboarding.requests.UpdateProfileRequestBody
 import com.cancer.yaqeen.data.features.onboarding.responses.UpdateProfileResponse
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
@@ -33,6 +34,13 @@ class OnboardingRepositoryImpl @Inject constructor(
         flowStatus {
             getResultRestAPI {
                 apiService.updateUserProfile(requestBody)
+            }
+        }
+
+    override suspend fun updateInterestsUser(requestBody: UpdateInterestsUserRequestBody): Flow<DataState<Any>> =
+        flowStatus {
+            getResultRestAPI {
+                apiService.updateInterestsUser(requestBody)
             }
         }
 

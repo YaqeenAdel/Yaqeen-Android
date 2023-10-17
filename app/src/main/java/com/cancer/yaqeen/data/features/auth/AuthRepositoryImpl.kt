@@ -35,10 +35,11 @@ class AuthRepositoryImpl @Inject constructor(
                     .withAudience(AUTH_0_URL)
                     .await(context)
 
-//                logout(context)
                 flow {
                     val user = MappingLoginRemoteAsUser().map(credentials.user)
                     sharedPrefEncryptionUtil.setToken(credentials.accessToken)
+                    sharedPrefEncryptionUtil.setRefreshToken(credentials.refreshToken)
+                    sharedPrefEncryptionUtil.setTokenType(credentials.type)
                     sharedPrefEncryptionUtil.setModelData(user, PREF_USER)
                     emit(
                         DataState.Success(
