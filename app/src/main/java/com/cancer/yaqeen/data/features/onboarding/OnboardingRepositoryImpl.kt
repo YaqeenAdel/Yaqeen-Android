@@ -26,7 +26,7 @@ class OnboardingRepositoryImpl @Inject constructor(
     override suspend fun getResources(): Flow<DataState<Resources>> =
         flowStatus {
             getResultRestAPI(MappingResourcesRemoteAsModel()){
-                apiService.getResources()
+                apiService.getResources(prefEncryptionUtil.selectedLanguage)
             }
         }
 

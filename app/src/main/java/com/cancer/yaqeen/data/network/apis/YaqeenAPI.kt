@@ -13,14 +13,17 @@ import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 interface YaqeenAPI {
     @POST("/api/MobileAuth/Login")
     suspend fun login(@Body requestBody: LoginRequestBody): Response<LoginRemote>
 
-    @GET("resources")
+    @GET("resources/{Lang}")
     @Headers("isAuthorization: false")
-    suspend fun getResources(): Response<ResourcesResponse>
+    suspend fun getResources(
+        @Path("Lang") lang: String
+    ): Response<ResourcesResponse>
 
     @POST("me/interests")
     suspend fun updateInterestsUser(
