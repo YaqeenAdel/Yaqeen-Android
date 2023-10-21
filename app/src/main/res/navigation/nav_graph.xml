@@ -110,6 +110,14 @@
     <fragment
         android:id="@+id/activationFragment"
         android:name="com.cancer.yaqeen.presentation.ui.onboarding.activation.ActivationFragment"
-        tools:layout="@layout/fragment_activation" />
+        tools:layout="@layout/fragment_activation" >
+        <action
+            android:id="@+id/action_activationFragment_to_profile_Fragment"
+            app:destination="@id/profile_Fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/profile_Fragment"
+        android:name="com.cancer.yaqeen.presentation.ui.profile.ProfileFragment"
+        tools:layout="@layout/fragment_profile" />
 
 </navigation>

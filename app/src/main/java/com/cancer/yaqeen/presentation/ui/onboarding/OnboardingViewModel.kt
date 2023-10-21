@@ -69,6 +69,7 @@ class OnboardingViewModel @Inject constructor(
 
     fun getResources() {
         viewModelScope.launch {
+
             getResourcesUseCase().onEach { response ->
                 _viewStateLoading.emit(response.loading)
                 when (response.status) {

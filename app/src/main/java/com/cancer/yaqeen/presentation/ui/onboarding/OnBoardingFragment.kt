@@ -99,7 +99,7 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
         }
         lifecycleScope {
             onboardingViewModel.viewStateLoginSuccess.collectLatest {
-                Log.d("TAG", "observeStates: $it")
+                Log.d("TAG", "observeLoginStates: $it")
                 it?.let {
                     val resources = onboardingViewModel.viewStateResources.replayCache
                     if(resources.isNotEmpty() && resources.firstOrNull() != null) {

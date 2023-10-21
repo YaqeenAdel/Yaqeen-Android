@@ -122,5 +122,6 @@ dependencies {
 
     //Auth 0
     implementation ("com.auth0.android:auth0:2.+")
+    implementation ("de.hdodenhof:circleimageview:3.1.0")
 
 }
