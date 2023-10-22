@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "153031879032",
+    "project_id": "yaqeen-864ac",
+    "storage_bucket": "yaqeen-864ac.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:153031879032:android:dfd495da7f83c0ffe8008d",
+        "android_client_info": {
+          "package_name": "com.cancer.yaqeen"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "153031879032-vl0jtqmo048thefte829tfutc56p3o8g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0idzZdK2f_ZZmFJG23s_FUfyTsoMaMys"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "153031879032-vl0jtqmo048thefte829tfutc56p3o8g.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "153031879032-5cqeosi48a329bdc1mp6912ipli6on0u.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.yaqeen.Yaqeen"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,7 +1,10 @@
 package com.cancer.yaqeen.presentation.util
 
 import android.content.Context
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.util.DisplayMetrics
+import com.cancer.yaqeen.data.features.onboarding.models.Language
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
@@ -12,7 +15,7 @@ fun dpToPx(dp: Float, context: Context): Int {
 }
 
 fun languageIsEnglish() =
-    Locale.getDefault().language.equals("en")
+    Locale.getDefault().language.equals(Language.ENGLISH.lang)
 
 
 fun String.formatTime12(): String {
@@ -27,4 +30,23 @@ fun String.formatTime12(): String {
     // Format the date using the output format
     return outputFormat.format(date)
 
+}
+
+
+fun updateConfiguration(localeCode: String? = null, resources: Resources, context: Context){
+    val contextWrapper: Context =
+        MyContextWrapper(context).wrap(localeCode ?: Locale.getDefault().language)
+    resources.updateConfiguration(
+        contextWrapper.resources.configuration,
+        contextWrapper.resources.displayMetrics
+    )
+}
+fun overrideLocale(localeCode: String? = null, resources: Resources) {
+    val local = Locale(
+        localeCode ?: Locale.getDefault().language
+    )
+    Locale.setDefault(local)
+    val newConfig = Configuration()
+    newConfig.setLocale(local)
+    resources.updateConfiguration(newConfig, resources.displayMetrics)
 }

@@ -1,6 +1,7 @@
 package com.cancer.yaqeen.data.local
 
 import android.content.SharedPreferences
+import com.cancer.yaqeen.data.features.onboarding.models.Language
 import com.google.gson.Gson
 import java.util.*
 import javax.inject.Inject
@@ -88,7 +89,7 @@ class SharedPrefEncryptionUtil @Inject constructor(
             edit.apply()
         }
 
-    fun selectedLanguageIsEnglish(): Boolean = selectedLanguage == Locale.ENGLISH.language
+    fun selectedLanguageIsEnglish(): Boolean = selectedLanguage == Language.ENGLISH.lang
 
 
     fun clearUserPreferenceStorage() {

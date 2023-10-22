@@ -31,6 +31,11 @@ class PageFragment : Fragment(){
         binding?.apply {
             bindImage(image, arguments?.getString("photoURL"))
         }
+    }
 
+    override fun onDestroy() {
+        super.onDestroy()
+
+        binding = null
     }
 }

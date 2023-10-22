@@ -10,12 +10,9 @@ import com.cancer.yaqeen.data.features.auth.models.User
 import com.cancer.yaqeen.data.network.base.Status
 import com.cancer.yaqeen.data.features.auth.models.UserType
 import com.cancer.yaqeen.data.features.onboarding.models.Resources
-import com.cancer.yaqeen.data.features.onboarding.requests.UpdateInterestsUserRequestBody
 import com.cancer.yaqeen.data.features.onboarding.requests.UpdateInterestsUserRequestBuilder
 import com.cancer.yaqeen.data.features.onboarding.requests.UpdateProfileRequestBuilder
-import com.cancer.yaqeen.data.features.onboarding.responses.UpdateProfileResponse
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
-import com.cancer.yaqeen.data.network.base.DataState
 import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.domain.features.auth.login.usecases.LoginUseCase
 import com.cancer.yaqeen.domain.features.auth.login.usecases.LogoutUseCase
@@ -57,6 +54,10 @@ class OnboardingViewModel @Inject constructor(
     val viewStateLoginSuccess = _viewStateLoginSuccess.asSharedFlow()
 
 
+    private val _viewStateUserDataCompleted = MutableStateFlow<Boolean?>(null)
+    val viewStateUserDataCompleted = _viewStateUserDataCompleted.asSharedFlow()
+
+
     private val _viewStateLoading = MutableStateFlow<Boolean>(false)
     val viewStateLoading = _viewStateLoading.asStateFlow()
 
@@ -66,6 +67,19 @@ class OnboardingViewModel @Inject constructor(
 
 
     private var userProfile: ObservableField<Profile> = ObservableField(Profile())
+
+    fun selectedLanguageIsEnglish() =
+        prefEncryptionUtil.selectedLanguageIsEnglish()
+    fun changeLanguage(lang: String): Boolean {
+        var isSameLanguage = true
+        viewModelScope.launch {
+            if(prefEncryptionUtil.selectedLanguage != lang) {
+                isSameLanguage = false
+                prefEncryptionUtil.selectedLanguage = lang
+            }
+        }
+        return isSameLanguage
+    }
 
     fun getResources() {
         viewModelScope.launch {
@@ -136,8 +150,13 @@ class OnboardingViewModel @Inject constructor(
 
                     Status.SUCCESS -> {
                         response.data?.let {
-                            _viewStateLoginSuccess.emit(it)
                             with(it) {
+                                if(patient?.cancerTypeID == null || patient.ageGroup == null || patient.cancerStageID == null
+                                    || doctor?.medicalField == null || doctor.degree == null || doctor.university == null){
+                                    _viewStateLoginSuccess.emit(it)
+                                }else{
+                                    _viewStateUserDataCompleted.emit(true)
+                                }
                                 setProfileUser(
                                     doctor == null,
                                     patient?.cancerTypeID,
@@ -306,4 +325,5 @@ class OnboardingViewModel @Inject constructor(
 
     fun getUserProfile(): Profile? =
         userProfile.get()
+
 }
