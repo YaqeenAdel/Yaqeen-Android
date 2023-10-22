@@ -10,14 +10,14 @@ import com.cancer.yaqeen.data.features.onboarding.models.Photo
 class ViewPagerAdapter(
     fragmentManager: FragmentManager,
     lifecycle: Lifecycle,
-    private val pages: List<Fragment> = listOf(),
-    private val itemList: List<Photo> = listOf()
+    private var pages: List<Fragment> = listOf()
 ) : FragmentStateAdapter(fragmentManager, lifecycle) {
 
     override fun getItemCount(): Int =
-        itemList.size
+        pages.size
 
 
     override fun createFragment(position: Int): Fragment =
         pages[position]
+
 }

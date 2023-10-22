@@ -7,7 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -15,15 +18,19 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.cancer.yaqeen.R
+import com.cancer.yaqeen.data.features.onboarding.models.Language
 import com.cancer.yaqeen.data.features.onboarding.models.Photo
 import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.databinding.FragmentOnBoardingBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
+import com.cancer.yaqeen.presentation.ui.MainActivity
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
+import kotlin.system.exitProcess
 
 
 @AndroidEntryPoint
@@ -49,6 +56,18 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
             handler.postDelayed(this, 3000)
         }
     }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                removeCallbacks()
+                requireActivity().finish()
+            }
+        }
+
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -69,6 +88,8 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
         getResourcesData()
 
         observeStates()
+
+        setupLanguageAutoCompleteAdapter()
     }
 
     private fun getResourcesData(){
@@ -111,6 +132,11 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
 
             }
         }
+        lifecycleScope {
+            onboardingViewModel.viewStateUserDataCompleted.collectLatest {
+                Log.d("TAG", "observeStates: $it")
+            }
+        }
     }
 
     private fun handleResponseError(errorEntity: ErrorEntity?) {
@@ -125,7 +151,6 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
     }
 
     private fun setListener() {
-        binding.tvLanguage.setOnClickListener(this)
         binding.btnExploreApp.setOnClickListener(this)
         binding.btnJoin.setOnClickListener(this)
         binding.tvLogin.setOnClickListener(this)
@@ -148,12 +173,49 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
         })
     }
 
-    private fun setupViewPager(photos: List<Photo>) {
-        if(::adapter.isInitialized)
-            return
+    private fun setupLanguageAutoCompleteAdapter() {
+        ArrayAdapter.createFromResource(
+            requireContext(),
+            R.array.languages_array,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            // Specify the layout to use when the list of choices appears.
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            // Apply the adapter to the spinner.
+            binding.spinnerLanguage.adapter = adapter
 
+        }
+        binding.spinnerLanguage.setSelection(
+            if (onboardingViewModel.selectedLanguageIsEnglish()) 0
+            else 1
+        )
+
+        binding.spinnerLanguage.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                val isSameLanguage = onboardingViewModel.changeLanguage(
+                    if (position == 0)
+                        Language.ENGLISH.lang
+                    else Language.ARABIC.lang
+                )
+                if(!isSameLanguage) {
+                    removeCallbacks()
+                    (requireActivity() as? MainActivity)?.changeLanguageByDestination(R.id.onBoardingFragment)
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+    }
+
+    private fun setupViewPager(photos: List<Photo>) {
         val pages = mutableListOf<Fragment>()
 
+        binding.tabLayout.removeAllTabs()
         photos.onEach {
             pages.add(PageFragment().apply {
                 arguments = bundleOf("photoURL" to it.photoURL)
@@ -162,9 +224,8 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
                 addTab(newTab())
             }
         }
-
         adapter =
-            ViewPagerAdapter(requireActivity().supportFragmentManager, lifecycle, pages, photos)
+            ViewPagerAdapter(childFragmentManager, lifecycle, pages)
 
         binding.viewPager.apply {
             this.adapter = this@OnBoardingFragment.adapter
@@ -186,6 +247,9 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
         handler.post(runnable)
     }
 
+
+
+
     private fun navigateToUpdateProfile() {
         removeCallbacks()
         navController.tryNavigate(
@@ -200,7 +264,6 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
 
     override fun onClick(v: View?) {
         when(v?.id){
-            R.id.tv_language -> {}
             R.id.btn_explore_app -> {}
             R.id.btn_join -> {
 //                navigateToUpdateProfile()

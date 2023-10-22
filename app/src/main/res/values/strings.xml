@@ -43,4 +43,9 @@
     <string name="missing_data">The data entered is incorrect</string>
     <string name="missing_response">The response is incorrect</string>
 
+
+    <string-array name="languages_array">
+        <item>English</item>
+        <item>Arabic</item>
+    </string-array>
 </resources>
