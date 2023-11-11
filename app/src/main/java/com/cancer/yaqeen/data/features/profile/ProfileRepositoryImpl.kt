@@ -16,8 +16,6 @@ import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil.Companion.PREF_USER
 import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.data.network.error.ErrorHandlerImpl
-import com.cancer.yaqeen.data.utils.Constants.AUTH_0_SCHEMA
-import com.cancer.yaqeen.data.utils.Constants.AUTH_0_URL
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
