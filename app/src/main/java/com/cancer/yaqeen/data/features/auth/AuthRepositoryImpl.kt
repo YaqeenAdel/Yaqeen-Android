@@ -1,11 +1,12 @@
 package com.cancer.yaqeen.data.features.auth
 
 import android.content.Context
+import android.util.Log
+import android.widget.Toast
 import com.auth0.android.Auth0
 import com.auth0.android.authentication.AuthenticationException
 import com.auth0.android.provider.WebAuthProvider
-import com.cancer.yaqeen.BuildConfig.AUTH_0_SCHEMA
-import com.cancer.yaqeen.BuildConfig.AUTH_0_URL
+
 import com.cancer.yaqeen.data.network.base.BaseDataSource
 import com.cancer.yaqeen.data.network.base.DataState
 import com.cancer.yaqeen.data.features.auth.mappers.MappingLoginRemoteAsUser
@@ -14,6 +15,8 @@ import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil.Companion.PREF_USER
 import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.data.network.error.ErrorHandlerImpl
+import com.cancer.yaqeen.data.utils.Constants.AUTH_0_SCHEMA
+import com.cancer.yaqeen.data.utils.Constants.AUTH_0_URL
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -36,6 +39,8 @@ class AuthRepositoryImpl @Inject constructor(
                     .await(context)
 
                 flow {
+                    Toast.makeText(context,"You Have Logged In Successfully ",Toast.LENGTH_SHORT).
+                            show()
                     val user = MappingLoginRemoteAsUser().map(credentials.user)
                     sharedPrefEncryptionUtil.setToken(credentials.accessToken)
                     sharedPrefEncryptionUtil.setRefreshToken(credentials.refreshToken)

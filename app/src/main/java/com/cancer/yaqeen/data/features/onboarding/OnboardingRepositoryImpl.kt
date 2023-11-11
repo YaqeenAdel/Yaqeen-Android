@@ -1,5 +1,6 @@
 package com.cancer.yaqeen.data.features.onboarding
 
+import android.util.Log
 import com.cancer.yaqeen.data.features.auth.models.User
 import com.cancer.yaqeen.data.network.base.BaseDataSource
 import com.cancer.yaqeen.data.network.base.DataState
@@ -26,6 +27,8 @@ class OnboardingRepositoryImpl @Inject constructor(
     override suspend fun getResources(): Flow<DataState<Resources>> =
         flowStatus {
             getResultRestAPI(MappingResourcesRemoteAsModel()){
+                Log.e("getResources","getResourcesData")
+
                 apiService.getResources(prefEncryptionUtil.selectedLanguage)
             }
         }

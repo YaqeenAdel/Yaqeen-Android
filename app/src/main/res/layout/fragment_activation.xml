@@ -24,6 +24,19 @@
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
+            android:id="@+id/iv_profile"
+            android:layout_width="@dimen/_48sdp"
+            android:layout_height="@dimen/_48sdp"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
+
+            android:layout_marginTop="@dimen/_24sdp"
+            android:padding="@dimen/_12sdp"
+            android:src="@drawable/baseline_sentiment_satisfied_alt_24"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/iv_icon"
