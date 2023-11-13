@@ -7,6 +7,9 @@
         android:left="@dimen/_12sdp"
         android:bottom="@dimen/_12sdp"
         android:top="@dimen/_12sdp"/>
-    <corners android:radius="@dimen/_8sdp"/>
-    <solid android:color="@color/silver_medal"/>
+    <corners android:radius="@dimen/_4sdp"/>
+    <solid android:color="@color/cold_white"/>
+
+    <stroke android:width="@dimen/_1sdp"
+        android:color="@color/primary_color"/>
 </shape>

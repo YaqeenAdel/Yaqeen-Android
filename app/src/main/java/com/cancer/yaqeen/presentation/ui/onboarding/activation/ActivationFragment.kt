@@ -1,5 +1,6 @@
 package com.cancer.yaqeen.presentation.ui.onboarding.activation
 
+import android.graphics.Paint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -29,31 +30,23 @@ class ActivationFragment : BaseFragment(), View.OnClickListener {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentActivationBinding.inflate(inflater, container, false)
-        return binding.root    }
+        return binding.root
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         navController = findNavController()
 
-        setListener()
+        binding.tvEdit.paintFlags = binding.tvEdit.paintFlags or Paint.UNDERLINE_TEXT_FLAG
 
-    }
-    private fun navigateToProfile() {
-         navController.tryNavigate(
-            ActivationFragmentDirections.actionActivationFragmentToProfileFragment()
-        )
-    }
-    private fun setListener() {
-        binding.ivProfile.setOnClickListener(this)
-
-
+        binding.toolbar.setNavigationOnClickListener {
+            navController.popBackStack()
+        }
     }
 
     override fun onClick(v: View?) {
-        when(v?.id){
 
-            R.id.iv_profile -> {navigateToProfile()}
-    }
     }
 
 

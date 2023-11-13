@@ -1,11 +1,17 @@
 package com.cancer.yaqeen.presentation.ui.onboarding.intro.user_type
 
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.ForegroundColorSpan
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -47,23 +53,63 @@ class SelectUserTypeFragment : BaseFragment() {
 
         navController = findNavController()
 
-        val isDoctor = viewModel.getUserProfile()?.userType == UserType.DOCTOR
+        updateUI()
 
-        binding.btnPatient.isChecked = !isDoctor
-        binding.btnDoctor.isChecked = isDoctor
+        setListener()
 
-        binding.tvNext.setOnClickListener {
+
+        observeStates()
+    }
+
+    private fun updateUI() {
+        changeCircleColorOfRadioButtons()
+
+        viewModel.getUserProfile()?.apply {
+            val isDoctor = userType == UserType.DOCTOR
+            binding.btnPatient.isChecked = !isDoctor
+            binding.btnDoctor.isChecked = isDoctor
+        }
+
+        val spannable = SpannableStringBuilder("1/4")
+        spannable.setSpan(ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.primary_color)), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        binding.tvPageNumber.text = spannable
+
+    }
+
+    private fun setListener(){
+        binding.btnNext.setOnClickListener {
             val isPatient = binding.btnPatient.isChecked
             viewModel.selectUser(isPatient)
 
             viewModel.updateUserProfile()
         }
 
-        binding.tvBack.setOnClickListener {
+        binding.toolbar.setNavigationOnClickListener {
+            navController.popBackStack()
+        }
+
+        binding.btnPrevious.setOnClickListener {
             navController.tryPopBackStack()
         }
-        observeStates()
     }
+
+    private fun changeCircleColorOfRadioButtons() {
+        val colorStateList = ColorStateList(
+            arrayOf(
+                intArrayOf(-android.R.attr.state_checked), // unchecked
+                intArrayOf(android.R.attr.state_checked)    // checked
+            ),
+            intArrayOf(
+                ContextCompat.getColor(requireContext(), R.color.light_black), // unchecked
+                ContextCompat.getColor(requireContext(), R.color.primary_color) // checked
+            )
+        )
+
+// Apply color state list to the radio button
+        binding.btnPatient.buttonTintList = colorStateList
+        binding.btnDoctor.buttonTintList = colorStateList
+    }
+
     private fun observeStates() {
         lifecycleScope {
             viewModel.viewStateLoading.collectLatest {

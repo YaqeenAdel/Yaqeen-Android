@@ -26,7 +26,7 @@
     <string name="terms_condition"><![CDATA[Terms & condition]]></string>
     <string name="accept">Accept</string>
     <string name="reject">Reject</string>
-    <string name="check_your_email">check your email</string>
+    <string name="check_your_email">Check Your Email</string>
     <string name="activation">Activation</string>
     <string name="resend_again">Resend again</string>
     <string name="university">University</string>
@@ -42,6 +42,12 @@
     <string name="un_authorized" translatable="false">un authorized</string>
     <string name="missing_data">The data entered is incorrect</string>
     <string name="missing_response">The response is incorrect</string>
+    <string name="activation_message">An account activation link has been sent to your email</string>
+    <string name="edit">Edit</string>
+    <string name="resend_activation_link">Resend Activation Link</string>
+    <string name="otp_verification">OTP Verification</string>
+    <string name="create_account">Create Account</string>
+    <string name="previous">Previous</string>
 
 
     <string-array name="languages_array">

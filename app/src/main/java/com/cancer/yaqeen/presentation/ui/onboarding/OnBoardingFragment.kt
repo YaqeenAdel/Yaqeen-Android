@@ -266,6 +266,8 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
         when(v?.id){
             R.id.btn_explore_app -> {}
             R.id.btn_join -> {
+                removeCallbacks()
+                navController.tryNavigate(R.id.selectUserTypeFragment)
 //                navigateToUpdateProfile()
             }
             R.id.tv_login -> {

@@ -5,6 +5,11 @@
 
     <data>
 
+        <import type="android.view.View" />
+
+        <variable
+            name="isSending"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -12,104 +17,177 @@
         android:layout_height="match_parent"
         tools:context=".presentation.ui.onboarding.activation.ActivationFragment">
 
-        <ImageView
-            android:id="@+id/iv_back"
-            android:layout_width="@dimen/_48sdp"
-            android:layout_height="@dimen/_48sdp"
-            android:layout_marginStart="@dimen/_8sdp"
-            android:layout_marginTop="@dimen/_24sdp"
-            android:padding="@dimen/_12sdp"
-            android:src="@drawable/arrow_back"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0"
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_16sdp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-        <ImageView
-            android:id="@+id/iv_profile"
-            android:layout_width="@dimen/_48sdp"
-            android:layout_height="@dimen/_48sdp"
-            android:layout_marginStart="@dimen/_8sdp"
-            android:layout_marginEnd="@dimen/_8sdp"
-
-            android:layout_marginTop="@dimen/_24sdp"
-            android:padding="@dimen/_12sdp"
-            android:src="@drawable/baseline_sentiment_satisfied_alt_24"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0"
-             app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginHorizontal="@dimen/_6sdp"
+            android:background="@color/white"
+            app:titleTextAppearance="@style/ToolbarTitleStyle"
+            app:title="@string/otp_verification"
+            app:titleTextColor="@color/light_black"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:titleCentered="true"/>
 
-        <ImageView
+        <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/iv_icon"
             android:layout_width="@dimen/_125sdp"
             android:layout_height="@dimen/_125sdp"
-            android:background="@drawable/background_circle_gray"
-            android:src="@drawable/message"
+            android:background="@color/cold_white"
+            app:riv_corner_radius="@dimen/_50sdp"
             app:riv_mutate_background="true"
-            android:padding="@dimen/_26sdp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/iv_back"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
             android:layout_marginHorizontal="@dimen/_4sdp"
-            android:layout_marginTop="@dimen/_80sdp"
+            android:layout_marginTop="@dimen/_50sdp"
             android:gravity="center"/>
 
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="@id/iv_icon"
+            app:layout_constraintEnd_toEndOf="@id/iv_icon"
+            app:layout_constraintTop_toTopOf="@id/iv_icon"
+            app:layout_constraintBottom_toBottomOf="@id/iv_icon"
+            android:layout_margin="@dimen/_24sdp"
+            android:src="@drawable/message"
+            app:tint="@color/primary_color"/>
+
         <TextView
-            android:id="@+id/tv_1"
+            android:id="@+id/tv_check_your_email"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_36sdp"
             android:layout_marginHorizontal="@dimen/_4sdp"
+            android:paddingVertical="@dimen/_4sdp"
             android:gravity="center"
-            android:textColor="@color/black"
+            android:textColor="@color/primary_color"
             android:text="@string/check_your_email"
-            android:textSize="@dimen/_12ssp"
+            android:textSize="@dimen/_16ssp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_icon" />
 
         <TextView
-            android:id="@+id/tv_2"
+            android:id="@+id/tv_activation_message"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_6sdp"
-            android:layout_marginHorizontal="@dimen/_4sdp"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:layout_marginHorizontal="@dimen/_12sdp"
             android:gravity="center"
-            android:textColor="@color/black"
-            android:text="@string/activation"
-            android:textSize="@dimen/_28ssp"
+            android:textColor="@color/xx_dark_gray"
+            android:text="@string/activation_message"
+            android:textSize="@dimen/_14ssp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_1" />
+            app:layout_constraintTop_toBottomOf="@id/tv_check_your_email" />
 
-        <TextView
-            android:id="@+id/tv_time"
+        <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/_8sdp"
-            android:layout_marginHorizontal="@dimen/_36sdp"
-            android:gravity="center|start"
-            android:textColor="@color/black"
-            android:text="Waiting 30sec"
-            android:textSize="@dimen/_12ssp"
-            app:layout_constraintVertical_bias="1"
+            android:layout_marginHorizontal="@dimen/_6sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:gravity="center"
+            android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/btn_resend_again"
-            app:layout_constraintTop_toBottomOf="@id/tv_2" />
+            app:layout_constraintTop_toBottomOf="@id/tv_activation_message">
+
+            <TextView
+                android:id="@+id/tv_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/light_black"
+                android:textSize="@dimen/_14ssp"
+                app:layout_constraintEnd_toStartOf="@id/tv_edit"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="Mail@websit.com" />
+
+            <TextView
+                android:id="@+id/tv_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:paddingVertical="@dimen/_4sdp"
+                android:text="@string/edit"
+                android:textColor="@color/primary_color"
+                android:textSize="@dimen/_14ssp"
+                app:layout_constraintBottom_toBottomOf="@id/tv_email"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_email"
+                app:layout_constraintTop_toTopOf="@id/tv_email" />
+
+        </LinearLayout>
+
 
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_resend_again"
+            style="@style/CustomMaterialButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            style="@style/CustomMaterialButtonStyle"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="@dimen/_18sdp"
+            android:visibility="@{isSending ? View.INVISIBLE : View.VISIBLE}"
             android:layout_marginHorizontal="@dimen/_28sdp"
-            android:paddingVertical="@dimen/_12sdp"
+            android:layout_marginBottom="@dimen/_18sdp"
+            android:paddingVertical="@dimen/_10sdp"
+            android:text="@string/resend_activation_link"
+            android:textColor="@color/light_black"
+            android:textSize="@dimen/_12ssp"
+            app:backgroundTint="@color/primary_color_30"
             app:cornerRadius="@dimen/_8sdp"
-            android:text="@string/resend_again"/>
+            app:layout_constraintVertical_bias="0.20"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/linearLayout" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:visibility="@{isSending ? View.VISIBLE : View.INVISIBLE}"
+            android:layout_marginHorizontal="@dimen/_6sdp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="@id/btn_resend_again"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/btn_resend_again">
+
+            <TextView
+                android:id="@+id/tv_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingVertical="@dimen/_4sdp"
+                tools:text="3sec"
+                android:textColor="@color/dark_gray"
+                android:textSize="@dimen/_14ssp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/tv_email"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_email"
+                app:layout_constraintTop_toTopOf="@id/tv_email" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:gravity="center"
+                android:textColor="@color/dark_gray"
+                android:textSize="@dimen/_14ssp"
+                android:text="@string/resend_activation_link"
+                app:layout_constraintEnd_toStartOf="@id/tv_edit"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
