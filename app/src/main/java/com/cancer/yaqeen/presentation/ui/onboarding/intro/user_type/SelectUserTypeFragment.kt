@@ -77,6 +77,10 @@ class SelectUserTypeFragment : BaseFragment() {
     }
 
     private fun setListener(){
+        binding.btnPrevious.setOnClickListener {
+            navController.tryPopBackStack()
+        }
+
         binding.btnNext.setOnClickListener {
             val isPatient = binding.btnPatient.isChecked
             viewModel.selectUser(isPatient)
@@ -86,10 +90,6 @@ class SelectUserTypeFragment : BaseFragment() {
 
         binding.toolbar.setNavigationOnClickListener {
             navController.popBackStack()
-        }
-
-        binding.btnPrevious.setOnClickListener {
-            navController.tryPopBackStack()
         }
     }
 

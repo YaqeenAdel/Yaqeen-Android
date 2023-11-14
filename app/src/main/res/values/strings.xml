@@ -48,6 +48,7 @@
     <string name="otp_verification">OTP Verification</string>
     <string name="create_account">Create Account</string>
     <string name="previous">Previous</string>
+    <string name="search">Search</string>
 
 
     <string-array name="languages_array">

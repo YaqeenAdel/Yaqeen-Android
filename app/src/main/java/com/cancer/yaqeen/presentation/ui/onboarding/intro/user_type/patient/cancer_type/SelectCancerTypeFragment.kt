@@ -1,12 +1,17 @@
 package com.cancer.yaqeen.presentation.ui.onboarding.intro.user_type.patient.cancer_type
 
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.ForegroundColorSpan
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -14,6 +19,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
+import com.cancer.yaqeen.data.features.auth.models.UserType
 import com.cancer.yaqeen.data.features.onboarding.models.CancerType
 import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.databinding.FragmentSelectCancerTypeBinding
@@ -57,15 +63,35 @@ class SelectCancerTypeFragment : BaseFragment() {
 
         setupCancerTypesAdapter()
 
-        binding.tvNext.setOnClickListener {
+        updateUI()
+
+        setListener()
+
+//        observeStates()
+    }
+
+    private fun setListener(){
+        binding.toolbar.setNavigationOnClickListener {
+            navController.popBackStack()
+        }
+
+        binding.btnNext.setOnClickListener {
             viewModel.updateUserProfile()
         }
 
-        binding.tvBack.setOnClickListener {
+        binding.btnPrevious.setOnClickListener {
             navController.tryPopBackStack()
         }
 
-        observeStates()
+        binding.autoTvSearchItems.addTextChangedListener {
+            cancerTypesAdapter.filter.filter(it.toString())
+        }
+    }
+    private fun updateUI() {
+        val spannable = SpannableStringBuilder("2/4")
+        spannable.setSpan(ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.primary_color)), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        binding.tvPageNumber.text = spannable
+
     }
 
     private fun observeStates() {
@@ -77,7 +103,7 @@ class SelectCancerTypeFragment : BaseFragment() {
         lifecycleScope {
             viewModel.viewStateResources.collectLatest {
                 it?.let {
-                    cancerTypesAdapter.submitList(
+                    cancerTypesAdapter.setList(
                         it.cancerTypes
                     )
                     cancerTypesAdapter.currentList.firstOrNull()?.apply {
@@ -127,28 +153,28 @@ class SelectCancerTypeFragment : BaseFragment() {
             )
         }
 
-//        cancerTypesAdapter.submitList(
-//            listOf(
-//                CancerType(
-//                    id = 1, icon = "", typeName = "Selection item"
-//                ),
-//                CancerType(
-//                    id = 2, icon = "", typeName = "Selection item"
-//                ),
-//                CancerType(
-//                    id = 3, icon = "", typeName = "Selection item"
-//                ),
-//                CancerType(
-//                    id = 4, icon = "", typeName = "Selection item"
-//                ),
-//                CancerType(
-//                    id = 5, icon = "", typeName = "Other "
-//                ),
-//            )
-//        )
-//        cancerTypesAdapter.currentList.firstOrNull()?.apply {
-//            selectCancerType(this)
-//        }
+        cancerTypesAdapter.setList(
+            listOf(
+                CancerType(
+                    id = 1, icon = "", typeName = "Selection item"
+                ),
+                CancerType(
+                    id = 2, icon = "", typeName = "Selection item"
+                ),
+                CancerType(
+                    id = 3, icon = "", typeName = "Selection item"
+                ),
+                CancerType(
+                    id = 4, icon = "", typeName = "Selection item"
+                ),
+                CancerType(
+                    id = 5, icon = "", typeName = "Other "
+                ),
+            )
+        )
+        cancerTypesAdapter.currentList.firstOrNull()?.apply {
+            selectCancerType(this)
+        }
 
     }
 

@@ -11,10 +11,12 @@
         android:id="@+id/btn_cancer_type"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_16sdp"
         tools:text="Selection item"
-        android:textColor="@color/black"
+        android:textColor="@color/light_black"
         android:textSize="@dimen/_14ssp"
-        app:buttonTint="@color/black"
+        android:drawableEnd="@drawable/info"
+        app:buttonTint="@color/light_black"
         android:background="@drawable/radio_button_background"/>
 
 </layout>
