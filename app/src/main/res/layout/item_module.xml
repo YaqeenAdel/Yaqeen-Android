@@ -7,12 +7,33 @@
 
     </data>
 
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_20sdp"
+        app:cardCornerRadius="@dimen/_12sdp"
+        app:strokeWidth="@dimen/_1sdp"
+        app:strokeColor="@color/primary_color">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/item_container"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:animateLayoutChanges="true">
+
+        <ImageView
+            android:id="@+id/radio_button"
+            android:layout_width="@dimen/_18sdp"
+            android:layout_height="@dimen/_18sdp"
+            android:src="@drawable/ic_uncheck_circle"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:layout_marginHorizontal="@dimen/_8sdp"
+            android:textColor="@color/light_black"
+            android:textSize="@dimen/_1ssp"
+            app:buttonTint="@color/light_black"/>
 
 
         <View
@@ -31,6 +52,7 @@
             android:id="@+id/view_unselected"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:visibility="invisible"
             android:animateLayoutChanges="true"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -49,9 +71,8 @@
             android:padding="@dimen/_10sdp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/radio_button"
             android:layout_marginHorizontal="@dimen/_24sdp"
-            android:layout_marginTop="@dimen/_20sdp"
             android:gravity="center"
             tools:text="1"
             android:textColor="@color/black"
@@ -59,18 +80,24 @@
 
         <TextView
             android:id="@+id/tv_module_name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_module_icon"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintVertical_bias="0"
-            android:layout_marginHorizontal="@dimen/_4sdp"
-            android:layout_marginVertical="@dimen/_12sdp"
-            android:gravity="center"
-            tools:text="Module"
-            android:textColor="@color/black"
+            android:layout_marginHorizontal="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:layout_marginBottom="@dimen/_6sdp"
+            android:minLines="2"
+            android:gravity="center|top"
+            tools:text="Connecting for consultant"
+            android:textColor="@color/primary_color"
             android:textSize="@dimen/_11ssp"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </com.google.android.material.card.MaterialCardView>
 </layout>

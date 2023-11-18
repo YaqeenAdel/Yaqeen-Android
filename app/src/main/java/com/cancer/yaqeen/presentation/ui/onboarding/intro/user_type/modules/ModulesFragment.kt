@@ -1,11 +1,15 @@
 package com.cancer.yaqeen.presentation.ui.onboarding.intro.user_type.modules
 
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.ForegroundColorSpan
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -63,16 +67,33 @@ class ModulesFragment : BaseFragment() {
 
         setupModulesAdapter()
 
-        binding.tvNext.setOnClickListener {
-            viewModel.updateInterestsUser()
-        }
+        updateUI()
 
-        binding.tvBack.setOnClickListener {
-            navController.tryPopBackStack()
-        }
+        setListener()
 
         observeStates()
     }
+
+    private fun setListener(){
+        binding.toolbar.setNavigationOnClickListener {
+            navController.popBackStack()
+        }
+
+        binding.btnNext.setOnClickListener {
+            viewModel.updateUserProfile()
+        }
+
+        binding.btnPrevious.setOnClickListener {
+            navController.tryPopBackStack()
+        }
+    }
+    private fun updateUI() {
+        val spannable = SpannableStringBuilder("4/4")
+        spannable.setSpan(ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.primary_color)), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        binding.tvPageNumber.text = spannable
+
+    }
+
     private fun observeStates() {
         lifecycleScope {
             viewModel.viewStateLoading.collectLatest {
@@ -122,30 +143,32 @@ class ModulesFragment : BaseFragment() {
     private fun setupModulesAdapter() {
         modulesAdapter = ModulesAdapter {
             selectInterestModule(it)
+            viewModel.updateUserProfile()
         }
 
         binding.rvModules.apply {
             adapter = modulesAdapter
-            addItemDecoration(
-                GridMarginItemDecoration(
-                    dpToPx(16f, requireContext())
-                )
-            )
+//            addItemDecoration(
+//                CenterGridMarginItemDecoration(
+//                    2,
+//                    dpToPx(1f, requireContext())
+//                )
+//            )
         }
 
 //        modulesAdapter.submitList(
 //            listOf(
 //                Module(
-//                    id = 1, moduleName = "Stage"
+//                    id = 1, moduleName = "Awareness"
 //                ),
 //                Module(
-//                    id = 2, moduleName = "Stage"
+//                    id = 2, moduleName = "Connecting for consultant"
 //                ),
 //                Module(
-//                    id = 3, moduleName = "Stage"
+//                    id = 3, moduleName = "Tracking Health"
 //                ),
 //                Module(
-//                    id = 4, moduleName = "Stage"
+//                    id = 4, moduleName = "Emotional support\n"
 //                )
 //            )
 //        )

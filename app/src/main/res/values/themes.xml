@@ -12,8 +12,19 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@color/white</item>
         <!-- Customize your theme here. -->
+
+        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
     </style>
 
+
+    <style name="AppBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/AppModalStyle</item>
+    </style>
+
+    <style name="AppModalStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/background_bottom_sheet</item>
+
+    </style>
 
 
     <style name="CustomMaterialButtonStyle" parent="Widget.MaterialComponents.Button">
@@ -53,6 +64,15 @@
         <item name="android:textSize">@dimen/_14ssp</item> <!-- Adjust text size as needed -->
         <item name="android:textStyle">bold</item> <!-- Adjust text style as needed -->
         <!-- Add more styling attributes as needed -->
+    </style>
+
+    <style name="Auth0YaqeenTheme" parent="Lock.Theme">
+        <item name="Auth0.HeaderLogo">@mipmap/ic_launcher</item>
+        <item name="Auth0.HeaderTitle">@string/app_name</item>
+        <item name="Auth0.HeaderTitleColor">@color/primary_color</item>
+        <item name="Auth0.HeaderBackground">@color/white</item>
+        <item name="Auth0.PrimaryColor">@color/teal_200</item>
+        <item name="Auth0.DarkPrimaryColor">@color/primary_color</item>
     </style>
 
 </resources>

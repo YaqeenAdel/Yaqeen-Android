@@ -7,6 +7,8 @@ import com.auth0.android.Auth0
 import com.auth0.android.authentication.AuthenticationException
 import com.auth0.android.provider.WebAuthProvider
 import com.cancer.yaqeen.BuildConfig
+import com.cancer.yaqeen.BuildConfig.AUTH_0_SCHEMA
+import com.cancer.yaqeen.BuildConfig.AUTH_0_URL
 
 import com.cancer.yaqeen.data.network.base.BaseDataSource
 import com.cancer.yaqeen.data.network.base.DataState
@@ -32,14 +34,14 @@ class AuthRepositoryImpl @Inject constructor(
         withContext(Dispatchers.IO){
             try {
                 val credentials = WebAuthProvider.login(auth0)
-                    .withScheme(BuildConfig.AUTH_0_SCHEMA)
+                    .withScheme(AUTH_0_SCHEMA)
                     .withScope("openid profile email read:current_user update:current_user_metadata")
-                    .withAudience(BuildConfig.AUTH_0_SCHEMA)
+                    .withAudience(AUTH_0_URL)
                     .await(context)
 
+                Log.d("TAG", "loginAuthenticationException1: $credentials")
+
                 flow {
-                    Toast.makeText(context,"You Have Logged In Successfully ",Toast.LENGTH_SHORT).
-                            show()
                     val user = MappingLoginRemoteAsUser().map(credentials.user)
                     sharedPrefEncryptionUtil.setToken(credentials.accessToken)
                     sharedPrefEncryptionUtil.setRefreshToken(credentials.refreshToken)
@@ -53,6 +55,16 @@ class AuthRepositoryImpl @Inject constructor(
                 }
 
             }catch (e: AuthenticationException){
+                Log.d("TAG", "loginAuthenticationException2: $e")
+                flow {
+                    emit(
+                        DataState.Error(
+                            ErrorEntity.ApiError.Network
+                        )
+                    )
+                }
+            }catch (e: Exception){
+                Log.d("TAG", "loginAuthenticationException3: $e")
                 flow {
                     emit(
                         DataState.Error(
@@ -67,7 +79,7 @@ class AuthRepositoryImpl @Inject constructor(
         withContext(Dispatchers.IO){
             try {
                 WebAuthProvider.logout(auth0)
-                    .withScheme(BuildConfig.AUTH_0_SCHEMA)
+                    .withScheme(AUTH_0_SCHEMA)
                     .await(context)
 
 //                sharedPrefEncryptionUtil.setToken("")

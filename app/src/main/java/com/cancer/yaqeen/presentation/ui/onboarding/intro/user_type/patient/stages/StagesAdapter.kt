@@ -1,13 +1,18 @@
 package com.cancer.yaqeen.presentation.ui.onboarding.intro.user_type.patient.stages
 
+import android.R
+import android.content.res.ColorStateList
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.cancer.yaqeen.data.features.onboarding.models.Stage
+import com.cancer.yaqeen.databinding.ItemCancerStageBinding
+import com.cancer.yaqeen.databinding.ItemCancerTypeBinding
 import com.cancer.yaqeen.databinding.ItemStageBinding
 
 class StagesAdapter(
@@ -15,8 +20,8 @@ class StagesAdapter(
 ) :
     ListAdapter<Stage, StagesAdapter.StagesViewHolder>(Companion) {
 
-    private var selectedPosition = 0
-    private var lastSelectedPosition = 0
+    private var selectedPosition = -1
+    private var lastSelectedPosition = -1
 
     companion object : DiffUtil.ItemCallback<Stage>() {
         override fun areItemsTheSame(
@@ -39,7 +44,7 @@ class StagesAdapter(
         viewType: Int
     ): StagesViewHolder {
         val binding =
-            ItemStageBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemCancerStageBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
         return StagesViewHolder(binding) {
             onItemClick(currentList[it])
@@ -61,12 +66,14 @@ class StagesAdapter(
     }
 
     inner class StagesViewHolder(
-        private val itemBinding: ItemStageBinding,
+        private val itemBinding: ItemCancerStageBinding,
         onItemClick: (Int) -> Unit
     ) : RecyclerView.ViewHolder(itemBinding.root) {
 
+        private val _context = itemBinding.root.context
+
         init {
-            itemBinding.itemContainer.setOnClickListener {
+            itemBinding.btnCancerStage.setOnClickListener {
                 onItemClick(adapterPosition)
 
                 notifyItemChangedByPosition(adapterPosition)
@@ -74,10 +81,29 @@ class StagesAdapter(
         }
 
         fun bind(position: Int, item: Stage) {
-            itemBinding.tvStageName.text = item.stageName
-            itemBinding.tvStageNo.text = item.number.toString()
+            itemBinding.btnCancerStage.text = item.stageName
+//            itemBinding.tvStageNo.text = item.number.toString()
             val isSelected = selectedPosition == position
-            itemBinding.viewSelected.visibility = if(isSelected) View.VISIBLE else View.INVISIBLE
+//            itemBinding.viewSelected.visibility = if(isSelected) View.VISIBLE else View.INVISIBLE
+            itemBinding.btnCancerStage.isChecked = isSelected
+            changeCircleColorOfRadioButton()
+            itemBinding.btnCancerStage.isSelected = true
+        }
+
+        private fun changeCircleColorOfRadioButton() {
+            val colorStateList = ColorStateList(
+                arrayOf(
+                    intArrayOf(-R.attr.state_checked), // unchecked
+                    intArrayOf(R.attr.state_checked)    // checked
+                ),
+                intArrayOf(
+                    ContextCompat.getColor(_context, com.cancer.yaqeen.R.color.light_black), // unchecked
+                    ContextCompat.getColor(_context, com.cancer.yaqeen.R.color.primary_color) // checked
+                )
+            )
+
+            // Apply color state list to the radio button
+            itemBinding.btnCancerStage.buttonTintList = colorStateList
         }
     }
 

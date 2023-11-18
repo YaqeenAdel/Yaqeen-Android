@@ -24,8 +24,8 @@ class CancerTypesAdapter(
 ) :
     ListAdapter<CancerType, CancerTypesAdapter.CancerTypesViewHolder>(Companion), Filterable {
 
-    private var selectedPosition = 0
-    private var lastSelectedPosition = 0
+    private var selectedPosition = -1
+    private var lastSelectedPosition = -1
 
     companion object : DiffUtil.ItemCallback<CancerType>() {
         override fun areItemsTheSame(
@@ -96,6 +96,7 @@ class CancerTypesAdapter(
             val isSelected = selectedPosition == position
             itemBinding.btnCancerType.isChecked = isSelected
             changeCircleColorOfRadioButton()
+            itemBinding.btnCancerType.isSelected = true
         }
 
         private fun changeCircleColorOfRadioButton() {

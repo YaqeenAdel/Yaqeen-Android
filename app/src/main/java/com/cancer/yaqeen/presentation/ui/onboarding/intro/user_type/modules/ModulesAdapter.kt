@@ -12,14 +12,15 @@ import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.onboarding.models.Module
 import com.cancer.yaqeen.databinding.ItemModuleBinding
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindImage
+import com.cancer.yaqeen.presentation.util.binding_adapters.bindResourceImage
 
 class ModulesAdapter(
     private val onItemClick: (Module) -> Unit
 ) :
     ListAdapter<Module, ModulesAdapter.ModulesViewHolder>(Companion) {
 
-    private var selectedPosition = 0
-    private var lastSelectedPosition = 0
+    private var selectedPosition = -1
+    private var lastSelectedPosition = -1
 
     companion object : DiffUtil.ItemCallback<Module>() {
         override fun areItemsTheSame(
@@ -81,17 +82,19 @@ class ModulesAdapter(
             bindImage(itemBinding.ivModuleIcon, item.icon)
             val isSelected = selectedPosition == position
             if(isSelected){
-                itemBinding.viewSelected.visibility = View.VISIBLE
-                itemBinding.viewUnselected.visibility = View.INVISIBLE
-                itemBinding.ivModuleIcon.setBackgroundColor(ContextCompat.getColor(itemBinding.viewSelected.context, R.color.silver_medal))
-                itemBinding.tvModuleName.setTextColor(ContextCompat.getColor(itemBinding.viewSelected.context, R.color.black))
+                bindResourceImage(itemBinding.radioButton, R.drawable.ic_check_circle)
+//                itemBinding.viewSelected.visibility = View.VISIBLE
+//                itemBinding.viewUnselected.visibility = View.INVISIBLE
+//                itemBinding.ivModuleIcon.setBackgroundColor(ContextCompat.getColor(itemBinding.viewSelected.context, R.color.silver_medal))
+//                itemBinding.tvModuleName.setTextColor(ContextCompat.getColor(itemBinding.viewSelected.context, R.color.black))
             }else {
-                itemBinding.viewSelected.visibility = View.INVISIBLE
-                itemBinding.viewUnselected.visibility = View.VISIBLE
-                val textViewColor: Int = itemBinding.tvModuleName.textColors.defaultColor
-                val imageViewColor: Int = itemBinding.ivModuleIcon.solidColor
-                itemBinding.tvModuleName.setTextColor(Color.argb(128, Color.red(textViewColor), Color.green(textViewColor), Color.blue(textViewColor)))
-                itemBinding.ivModuleIcon.setBackgroundColor(Color.argb(10, Color.red(imageViewColor), Color.green(imageViewColor), Color.blue(imageViewColor)))
+                bindResourceImage(itemBinding.radioButton, R.drawable.ic_uncheck_circle)
+//                itemBinding.viewSelected.visibility = View.INVISIBLE
+//                itemBinding.viewUnselected.visibility = View.VISIBLE
+//                val textViewColor: Int = itemBinding.tvModuleName.textColors.defaultColor
+//                val imageViewColor: Int = itemBinding.ivModuleIcon.solidColor
+//                itemBinding.tvModuleName.setTextColor(Color.argb(128, Color.red(textViewColor), Color.green(textViewColor), Color.blue(textViewColor)))
+//                itemBinding.ivModuleIcon.setBackgroundColor(Color.argb(10, Color.red(imageViewColor), Color.green(imageViewColor), Color.blue(imageViewColor)))
 
             }
         }

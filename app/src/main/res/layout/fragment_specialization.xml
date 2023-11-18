@@ -13,31 +13,68 @@
         android:background="@color/white"
         tools:context=".presentation.ui.onboarding.intro.user_type.doctor.specialization.SpecializationFragment">
 
-        <ImageView
-            android:id="@+id/iv_back"
-            android:layout_width="@dimen/_48sdp"
-            android:layout_height="@dimen/_48sdp"
-            android:padding="@dimen/_12sdp"
-            android:src="@drawable/arrow_back"
-            android:layout_marginStart="@dimen/_8sdp"
-            android:layout_marginTop="@dimen/_24sdp"
-            app:layout_constraintHorizontal_bias="0"
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_16sdp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginHorizontal="@dimen/_6sdp"
+            android:background="@color/white"
+            app:titleTextAppearance="@style/ToolbarTitleStyle"
+            app:title="@string/create_account"
+            app:titleTextColor="@color/light_black"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:titleCentered="true"/>
 
-        <ImageView
-            android:id="@+id/iv_logo"
-            android:layout_width="@dimen/_48sdp"
-            android:layout_height="@dimen/_48sdp"
-            android:layout_marginStart="@dimen/_8sdp"
-            android:background="@color/silver_medal"
+        <TextView
+            android:id="@+id/tv_page_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:layout_marginStart="@dimen/_16sdp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            android:textColor="@color/maiden_mist"
+            android:textSize="@dimen/_11ssp"
+            android:text="2/3"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginEnd="@dimen/_10sdp"
             app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintStart_toEndOf="@id/iv_back"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/iv_back"
-            app:layout_constraintTop_toTopOf="@id/iv_back"/>
+            app:layout_constraintStart_toEndOf="@id/tv_page_number"
+            app:layout_constraintEnd_toEndOf="@id/toolbar"
+            app:layout_constraintTop_toBottomOf="@id/tv_page_number"
+            android:orientation="horizontal">
 
+            <View
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_2sdp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/primary_color_30"
+                android:background="@drawable/background_view_selected_colored"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_2sdp"
+                android:layout_weight="1"
+                android:layout_marginStart="@dimen/_4sdp"
+                android:background="@drawable/background_view_selected_colored"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_2sdp"
+                android:layout_weight="1"
+                android:layout_marginStart="@dimen/_4sdp"
+                android:backgroundTint="@color/primary_color_30"
+                android:background="@drawable/background_view_selected_colored"/>
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tv_title"
@@ -45,14 +82,14 @@
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/iv_back"
-            android:layout_marginStart="@dimen/_32sdp"
+            app:layout_constraintTop_toBottomOf="@id/tv_page_number"
+            android:layout_marginStart="@dimen/_16sdp"
             android:layout_marginEnd="@dimen/_4sdp"
-            android:layout_marginTop="@dimen/_74sdp"
+            android:layout_marginTop="@dimen/_40sdp"
             android:gravity="center|start"
             android:textStyle="bold"
             android:text="@string/more_information_about_your_specialization"
-            android:textColor="@color/black"
+            android:textColor="@color/primary_color"
             android:textSize="@dimen/_18ssp"/>
 
 
@@ -63,21 +100,18 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="@string/university"
-            android:textColorHint="@color/black"
+            app:hintTextColor="@color/primary_color"
+            android:textColorHint="@color/x_dark_gray"
             app:boxBackgroundColor="@color/white"
-            app:boxCornerRadiusBottomEnd="@dimen/_12sdp"
-            app:boxCornerRadiusBottomStart="@dimen/_12sdp"
-            app:boxCornerRadiusTopEnd="@dimen/_12sdp"
-            app:boxCornerRadiusTopStart="@dimen/_12sdp"
-            android:layout_marginTop="@dimen/_36sdp"
-            android:layout_marginStart="@dimen/_32sdp"
-            android:layout_marginEnd="@dimen/_28sdp"
+            app:boxCornerRadiusBottomEnd="@dimen/_4sdp"
+            app:boxCornerRadiusBottomStart="@dimen/_4sdp"
+            app:boxCornerRadiusTopEnd="@dimen/_4sdp"
+            app:boxCornerRadiusTopStart="@dimen/_4sdp"
+            android:layout_marginTop="@dimen/_48sdp"
+            android:layout_marginHorizontal="@dimen/_16sdp"
             android:gravity="center|start"
-            app:boxStrokeWidth="@dimen/_1sdp"
-            app:boxStrokeColor="@color/black_transparent_10"
-            app:boxStrokeErrorColor="@color/red"
-            app:errorTextColor="@color/red"
-            app:endIconTint="@color/black"
+            app:boxStrokeColor="@color/weathered_stone"
+            app:endIconTint="@color/white"
             app:endIconDrawable="@drawable/spinner_icon"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toStartOf="parent"
@@ -88,11 +122,11 @@
                 android:id="@+id/auto_tv_university"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingVertical="@dimen/_16sdp"
+                android:paddingVertical="@dimen/_14sdp"
                 android:gravity="center|start"
                 android:maxLines="1"
-                android:textColor="@color/black"
-                android:textColorHint="@color/black"
+                android:textColor="@color/light_black"
+                android:textColorHint="@color/primary_color"
                 android:textSize="@dimen/_13ssp"
                 android:layout_weight="1"
                 android:inputType="none" />
@@ -106,21 +140,18 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="@string/degree"
-            android:textColorHint="@color/black"
+            app:hintTextColor="@color/primary_color"
+            android:textColorHint="@color/x_dark_gray"
             app:boxBackgroundColor="@color/white"
-            app:boxCornerRadiusBottomEnd="@dimen/_12sdp"
-            app:boxCornerRadiusBottomStart="@dimen/_12sdp"
-            app:boxCornerRadiusTopEnd="@dimen/_12sdp"
-            app:boxCornerRadiusTopStart="@dimen/_12sdp"
+            app:boxCornerRadiusBottomEnd="@dimen/_4sdp"
+            app:boxCornerRadiusBottomStart="@dimen/_4sdp"
+            app:boxCornerRadiusTopEnd="@dimen/_4sdp"
+            app:boxCornerRadiusTopStart="@dimen/_4sdp"
             android:layout_marginTop="@dimen/_6sdp"
-            android:layout_marginStart="@dimen/_32sdp"
-            android:layout_marginEnd="@dimen/_28sdp"
+            android:layout_marginHorizontal="@dimen/_16sdp"
             android:gravity="center|start"
-            app:boxStrokeWidth="@dimen/_1sdp"
-            app:boxStrokeColor="@color/black_transparent_10"
-            app:boxStrokeErrorColor="@color/red"
-            app:errorTextColor="@color/red"
-            app:endIconTint="@color/black"
+            app:boxStrokeColor="@color/weathered_stone"
+            app:endIconTint="@color/argent"
             app:endIconDrawable="@drawable/spinner_icon"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toStartOf="parent"
@@ -131,11 +162,11 @@
                 android:id="@+id/auto_tv_degree"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingVertical="@dimen/_16sdp"
+                android:paddingVertical="@dimen/_14sdp"
                 android:gravity="center|start"
                 android:maxLines="1"
-                android:textColor="@color/black"
-                android:textColorHint="@color/black"
+                android:textColor="@color/light_black"
+                android:textColorHint="@color/primary_color"
                 android:textSize="@dimen/_13ssp"
                 android:layout_weight="1"
                 android:inputType="none" />
@@ -149,21 +180,18 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="@string/medical_field"
-            android:textColorHint="@color/black"
+            app:hintTextColor="@color/primary_color"
+            android:textColorHint="@color/x_dark_gray"
             app:boxBackgroundColor="@color/white"
-            app:boxCornerRadiusBottomEnd="@dimen/_12sdp"
-            app:boxCornerRadiusBottomStart="@dimen/_12sdp"
-            app:boxCornerRadiusTopEnd="@dimen/_12sdp"
-            app:boxCornerRadiusTopStart="@dimen/_12sdp"
+            app:boxCornerRadiusBottomEnd="@dimen/_4sdp"
+            app:boxCornerRadiusBottomStart="@dimen/_4sdp"
+            app:boxCornerRadiusTopEnd="@dimen/_4sdp"
+            app:boxCornerRadiusTopStart="@dimen/_4sdp"
             android:layout_marginTop="@dimen/_6sdp"
-            android:layout_marginStart="@dimen/_32sdp"
-            android:layout_marginEnd="@dimen/_28sdp"
+            android:layout_marginHorizontal="@dimen/_16sdp"
             android:gravity="center|start"
-            app:boxStrokeWidth="@dimen/_1sdp"
-            app:boxStrokeColor="@color/black_transparent_10"
-            app:boxStrokeErrorColor="@color/red"
-            app:errorTextColor="@color/red"
-            app:endIconTint="@color/black"
+            app:boxStrokeColor="@color/weathered_stone"
+            app:endIconTint="@color/argent"
             app:endIconDrawable="@drawable/spinner_icon"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toStartOf="parent"
@@ -174,64 +202,183 @@
                 android:id="@+id/auto_tv_medical_field"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingVertical="@dimen/_16sdp"
+                android:paddingVertical="@dimen/_14sdp"
                 android:gravity="center|start"
                 android:maxLines="1"
-                android:textColor="@color/black"
-                android:textColorHint="@color/black"
+                android:textColor="@color/light_black"
+                android:textColorHint="@color/primary_color"
                 android:textSize="@dimen/_13ssp"
                 android:layout_weight="1"
                 android:inputType="none" />
         </com.google.android.material.textfield.TextInputLayout>
 
-
-
-        <com.google.android.material.progressindicator.LinearProgressIndicator
-            android:id="@+id/progress"
+        <RelativeLayout
+            android:id="@+id/medical_id_card_layout"
             android:layout_width="0dp"
-            android:layout_height="@dimen/_2sdp"
-            android:progress="40"
-            app:indicatorColor="@color/private_black"
-            app:layout_constraintBottom_toTopOf="@+id/tv_back"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/text_layout_medical_field"
-            android:layout_marginVertical="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginHorizontal="@dimen/_12sdp">
+
+            <LinearLayout
+                android:id="@+id/pick_medical_id_card_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_4sdp"
+                android:orientation="vertical"
+                android:background="@drawable/background_view_dash">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_8sdp"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:text="@string/medical_id_card"
+                    android:textColor="@color/x_dark_gray"
+                    android:textSize="@dimen/_13ssp"/>
+
+                <ImageView
+                    android:layout_width="@dimen/_48sdp"
+                    android:layout_height="@dimen/_48sdp"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:layout_marginBottom="@dimen/_40sdp"
+                    android:src="@drawable/ic_scan"
+                    android:layout_gravity="center"/>
+            </LinearLayout>
+
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_margin="@dimen/_4sdp"
+                app:cardCornerRadius="@dimen/_5sdp"
+                app:cardElevation="@dimen/_3sdp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tv_medical_id_card"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:layout_marginHorizontal="@dimen/_8sdp"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:textStyle="bold"
+                        android:text="@string/medical_id_card"
+                        android:textColor="@color/xx_dark_gray"
+                        android:textSize="@dimen/_8ssp"/>
+
+                    <com.makeramen.roundedimageview.RoundedImageView
+                        android:id="@+id/iv_medical_id_card"
+                        android:layout_width="@dimen/_48sdp"
+                        android:layout_height="@dimen/_48sdp"
+                        app:riv_corner_radius="@dimen/_6sdp"
+                        app:layout_constraintTop_toBottomOf="@id/tv_medical_id_card"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="@id/tv_medical_id_card"
+                        android:layout_marginVertical="@dimen/_8sdp"
+                        android:src="@color/gray"
+                        android:layout_gravity="center"/>
+
+                    <TextView
+                        android:id="@+id/tv_medical_id_card_name"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toEndOf="@id/iv_medical_id_card"
+                        app:layout_constraintEnd_toStartOf="@id/iv_trash"
+                        app:layout_constraintTop_toTopOf="@id/iv_medical_id_card"
+                        android:layout_marginHorizontal="@dimen/_8sdp"
+                        android:layout_marginTop="@dimen/_4sdp"
+                        android:text="Medical_ID_Card.jpg"
+                        android:textColor="@color/light_black"
+                        android:textSize="@dimen/_13ssp"/>
+
+                    <TextView
+                        android:id="@+id/tv_medical_id_card_info"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="@id/tv_medical_id_card_name"
+                        app:layout_constraintEnd_toEndOf="@id/tv_medical_id_card_name"
+                        app:layout_constraintBottom_toBottomOf="@id/iv_medical_id_card"
+                        app:layout_constraintTop_toBottomOf="@id/tv_medical_id_card_name"
+                        app:layout_constraintVertical_bias="1"
+                        android:layout_marginBottom="@dimen/_4sdp"
+                        android:layout_marginTop="@dimen/_2sdp"
+                        android:text="29 August, 2020 - 2MB"
+                        android:textColor="@color/x_dark_gray"
+                        android:textSize="@dimen/_11ssp"/>
+
+                    <ImageView
+                        android:id="@+id/iv_trash"
+                        android:layout_width="@dimen/_28sdp"
+                        android:layout_height="@dimen/_32sdp"
+                        android:padding="@dimen/_6sdp"
+                        android:src="@drawable/ic_trash"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/tv_medical_id_card_name"
+                        app:layout_constraintBottom_toBottomOf="@id/tv_medical_id_card_info"
+                        android:layout_marginEnd="@dimen/_4sdp"/>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.cardview.widget.CardView>
+
+        </RelativeLayout>
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_previous"
+            style="@style/CustomMaterialButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_16sdp"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_16sdp"
+            android:paddingVertical="@dimen/_10sdp"
+            android:text="@string/previous"
+            android:textColor="@color/primary_color"
+            android:textSize="@dimen/_13ssp"
+            app:backgroundTint="@color/super_silver2"
+            app:cornerRadius="@dimen/_4sdp"
+            app:icon="@drawable/ic_previous"
+            app:iconTint="@color/primary_color"
+            app:iconGravity="textStart"
+            app:iconPadding="@dimen/_12sdp"
             app:layout_constraintVertical_bias="1"
-            app:trackColor="@color/super_silver" />
-
-        <TextView
-            android:id="@+id/tv_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/Widget.Material3.Button.TextButton"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/medical_id_card_layout"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0"
-            android:layout_marginHorizontal="@dimen/_18sdp"
-            android:layout_marginBottom="@dimen/_14sdp"
-            android:paddingVertical="@dimen/_8sdp"
-            android:gravity="center"
-            android:text="@string/back"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_20ssp"/>
+            app:layout_constraintEnd_toStartOf="@id/btn_next"
+            app:layout_constraintStart_toStartOf="parent" />
 
-        <TextView
-            android:id="@+id/tv_next"
-            android:layout_width="wrap_content"
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_next"
+            style="@style/CustomMaterialButtonStyle"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            style="@style/Widget.Material3.Button.TextButton"
-            app:layout_constraintStart_toEndOf="@id/tv_back"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="1"
-            android:layout_marginHorizontal="@dimen/_18sdp"
-            android:layout_marginBottom="@dimen/_14sdp"
-            android:paddingVertical="@dimen/_8sdp"
-            android:gravity="center"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginEnd="@dimen/_16sdp"
+            android:paddingVertical="@dimen/_10sdp"
+            android:enabled="false"
             android:text="@string/next"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_20ssp"/>
-
+            android:textColor="@color/white"
+            android:textSize="@dimen/_13ssp"
+            app:icon="@drawable/ic_next"
+            app:iconTint="@color/white"
+            app:iconGravity="textEnd"
+            app:iconPadding="@dimen/_12sdp"
+            app:backgroundTint="@color/gray"
+            app:cornerRadius="@dimen/_4sdp"
+            app:layout_constraintVertical_bias="0.20"
+            app:layout_constraintBottom_toBottomOf="@id/btn_previous"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btn_previous"
+            app:layout_constraintTop_toTopOf="@id/btn_previous" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

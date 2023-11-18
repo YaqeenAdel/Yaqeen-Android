@@ -1,6 +1,7 @@
 package com.cancer.yaqeen.presentation.ui.onboarding.intro.user_type.doctor.specialization
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -18,6 +20,8 @@ import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.ui.onboarding.OnboardingViewModel
 import com.cancer.yaqeen.presentation.ui.onboarding.intro.user_type.SelectUserTypeFragmentDirections
 import com.cancer.yaqeen.presentation.ui.onboarding.intro.user_type.modules.ModulesFragmentDirections
+import com.cancer.yaqeen.presentation.util.Constants.REQUEST_UNIVERSITY_KEY
+import com.cancer.yaqeen.presentation.util.Constants.UNIVERSITY_NAME_KEY
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.selectItem
 import com.cancer.yaqeen.presentation.util.tryNavigate
@@ -38,6 +42,17 @@ class SpecializationFragment : BaseFragment() {
     private lateinit var degreeAutoCompleteAdapter: UniversityAutoCompleteAdapter
     private lateinit var medicalFieldAutoCompleteAdapter: UniversityAutoCompleteAdapter
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // Use the Kotlin extension in the fragment-ktx artifact.
+        setFragmentResultListener(REQUEST_UNIVERSITY_KEY) { requestKey, bundle ->
+            if(requestKey == REQUEST_UNIVERSITY_KEY) {
+                val universityName = bundle.getString(UNIVERSITY_NAME_KEY)
+                binding.autoTvUniversity.setText(universityName)
+            }
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -51,20 +66,41 @@ class SpecializationFragment : BaseFragment() {
 
         navController = findNavController()
 
-        binding.tvNext.setOnClickListener {
-            viewModel.updateUserProfile()
-        }
+        setListener()
 
-        binding.tvBack.setOnClickListener {
-            navController.tryPopBackStack()
-        }
-
-
-        setupDropDownSpecialization()
+//        setupDropDownSpecialization()
         setupDropDownDegree()
         setupDropDownMedicalField()
 
         observeStates()
+
+        getUniversities()
+
+    }
+
+    private fun getUniversities(){
+        viewModel.getUniversities("eg", "432237125")
+    }
+
+    private fun setListener() {
+
+        binding.toolbar.setNavigationOnClickListener {
+            navController.popBackStack()
+        }
+
+        binding.btnNext.setOnClickListener {
+            viewModel.updateUserProfile()
+        }
+
+        binding.btnPrevious.setOnClickListener {
+            navController.tryPopBackStack()
+        }
+
+        binding.autoTvUniversity.setOnClickListener {
+            navController.tryNavigate(
+                SpecializationFragmentDirections.actionSpecializationFragmentToUniversitiesFragment()
+            )
+        }
     }
     private fun observeStates() {
         lifecycleScope {
@@ -77,6 +113,18 @@ class SpecializationFragment : BaseFragment() {
 //                stagesAdapter.submitList(
 //                    it.stages
 //                )
+            }
+        }
+        lifecycleScope {
+            viewModel.viewStateUniversities.collectLatest { universities ->
+                val universityId = viewModel.getUserProfile()?.universityId
+                if(universityId != null){
+                    universities.firstOrNull{ university ->
+                        university.universityID.toString() == universityId
+                    }?.run {
+                        binding.autoTvUniversity.setText(universityName)
+                    }
+                }
             }
         }
         lifecycleScope {
@@ -105,6 +153,7 @@ class SpecializationFragment : BaseFragment() {
 
         binding.autoTvUniversity.onItemClickListener =
             AdapterView.OnItemClickListener { parent, view, position, id ->
+                Log.d("TAG", "setupDropDownSpecialization: $position")
                 viewModel.selectUniversity(universityAutoCompleteAdapter.getItem(position))
             }
 

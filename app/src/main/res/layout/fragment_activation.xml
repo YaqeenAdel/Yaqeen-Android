@@ -135,13 +135,13 @@
             style="@style/CustomMaterialButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:visibility="@{isSending ? View.INVISIBLE : View.VISIBLE}"
             android:layout_marginHorizontal="@dimen/_28sdp"
             android:layout_marginBottom="@dimen/_18sdp"
             android:paddingVertical="@dimen/_10sdp"
             android:text="@string/resend_activation_link"
             android:textColor="@color/light_black"
             android:textSize="@dimen/_12ssp"
+            android:visibility="invisible"
             app:backgroundTint="@color/primary_color_30"
             app:cornerRadius="@dimen/_8sdp"
             app:layout_constraintVertical_bias="0.20"
@@ -154,7 +154,6 @@
             android:id="@+id/linearLayout_time"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:visibility="@{isSending ? View.VISIBLE : View.INVISIBLE}"
             android:layout_marginHorizontal="@dimen/_6sdp"
             android:gravity="center"
             android:orientation="horizontal"
@@ -164,7 +163,7 @@
             app:layout_constraintTop_toTopOf="@id/btn_resend_again">
 
             <TextView
-                android:id="@+id/tv_time"
+                android:id="@+id/tv_expire_time_code"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingVertical="@dimen/_4sdp"

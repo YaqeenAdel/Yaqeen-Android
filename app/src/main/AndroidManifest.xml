@@ -37,6 +37,18 @@
                 <data android:host="yaqeen.app" />
             </intent-filter>
         </activity>
+
+        <!-- Classic -->
+        <activity
+            android:name="com.auth0.android.lock.LockActivity"
+            android:theme="@style/Auth0YaqeenTheme"
+            tools:replace="android:theme" />
+        <!-- Passwordless -->
+        <activity
+            android:name="com.auth0.android.lock.PasswordlessLockActivity"
+            android:theme="@style/Auth0YaqeenTheme"
+            tools:replace="android:theme" />
+
     </application>
 
 </manifest>

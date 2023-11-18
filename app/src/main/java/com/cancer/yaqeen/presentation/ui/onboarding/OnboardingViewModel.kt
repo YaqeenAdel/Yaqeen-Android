@@ -10,6 +10,7 @@ import com.cancer.yaqeen.data.features.auth.models.User
 import com.cancer.yaqeen.data.network.base.Status
 import com.cancer.yaqeen.data.features.auth.models.UserType
 import com.cancer.yaqeen.data.features.onboarding.models.Resources
+import com.cancer.yaqeen.data.features.onboarding.models.University
 import com.cancer.yaqeen.data.features.onboarding.requests.UpdateInterestsUserRequestBuilder
 import com.cancer.yaqeen.data.features.onboarding.requests.UpdateProfileRequestBuilder
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
@@ -17,6 +18,7 @@ import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.domain.features.auth.login.usecases.LoginUseCase
 import com.cancer.yaqeen.domain.features.auth.login.usecases.LogoutUseCase
 import com.cancer.yaqeen.domain.features.onboarding.usecases.GetResourcesUseCase
+import com.cancer.yaqeen.domain.features.onboarding.usecases.GetUniversitiesUseCase
 import com.cancer.yaqeen.domain.features.onboarding.usecases.GetUserProfileUseCase
 import com.cancer.yaqeen.domain.features.onboarding.usecases.UpdateInterestsUserUseCase
 import com.cancer.yaqeen.domain.features.onboarding.usecases.UpdateUserProfileUseCase
@@ -36,6 +38,7 @@ class OnboardingViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
     private val logoutUseCase: LogoutUseCase,
     private val getResourcesUseCase: GetResourcesUseCase,
+    private val getUniversitiesUseCase: GetUniversitiesUseCase,
     private val getUserProfileUseCase: GetUserProfileUseCase,
     private val updateUserProfileUseCase: UpdateUserProfileUseCase,
     private val updateInterestsUserUseCase: UpdateInterestsUserUseCase,
@@ -44,6 +47,10 @@ class OnboardingViewModel @Inject constructor(
 
     private val _viewStateResources = MutableStateFlow<Resources?>(null)
     val viewStateResources = _viewStateResources.asSharedFlow()
+
+
+    private val _viewStateUniversities = MutableStateFlow<List<University>>(listOf())
+    val viewStateUniversities = _viewStateUniversities.asSharedFlow()
 
 
     private val _viewStateUpdateProfileSuccess = MutableStateFlow<Boolean?>(null)
@@ -83,7 +90,6 @@ class OnboardingViewModel @Inject constructor(
 
     fun getResources() {
         viewModelScope.launch {
-
             getResourcesUseCase().onEach { response ->
                 _viewStateLoading.emit(response.loading)
                 when (response.status) {
@@ -91,6 +97,24 @@ class OnboardingViewModel @Inject constructor(
                     Status.SUCCESS -> {
                         response.data?.let {
                             _viewStateResources.emit(it)
+                        }
+                    }
+
+                    else -> {}
+                }
+            }.launchIn(viewModelScope)
+        }
+    }
+
+    fun getUniversities(countryCode: String, stateCode: String) {
+        viewModelScope.launch {
+            getUniversitiesUseCase(countryCode, stateCode).onEach { response ->
+                _viewStateLoading.emit(response.loading)
+                when (response.status) {
+                    Status.ERROR -> emitError(response.errorEntity)
+                    Status.SUCCESS -> {
+                        response.data?.let {
+                            _viewStateUniversities.emit(it)
                         }
                     }
 
@@ -326,5 +350,8 @@ class OnboardingViewModel @Inject constructor(
 
     fun getUserProfile(): Profile? =
         userProfile.get()
+
+    fun getUser(): User? =
+    prefEncryptionUtil.getModelData(SharedPrefEncryptionUtil.PREF_USER, User::class.java)
 
 }

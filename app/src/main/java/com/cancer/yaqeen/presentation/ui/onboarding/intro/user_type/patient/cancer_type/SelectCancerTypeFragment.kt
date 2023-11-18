@@ -67,7 +67,13 @@ class SelectCancerTypeFragment : BaseFragment() {
 
         setListener()
 
-//        observeStates()
+        observeStates()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        binding.autoTvSearchItems.setText("")
     }
 
     private fun setListener(){
@@ -142,6 +148,7 @@ class SelectCancerTypeFragment : BaseFragment() {
     private fun setupCancerTypesAdapter() {
         cancerTypesAdapter = CancerTypesAdapter {
             selectCancerType(it)
+            viewModel.updateUserProfile()
         }
 
         binding.rvCancerTypes.apply {
@@ -153,28 +160,28 @@ class SelectCancerTypeFragment : BaseFragment() {
             )
         }
 
-        cancerTypesAdapter.setList(
-            listOf(
-                CancerType(
-                    id = 1, icon = "", typeName = "Selection item"
-                ),
-                CancerType(
-                    id = 2, icon = "", typeName = "Selection item"
-                ),
-                CancerType(
-                    id = 3, icon = "", typeName = "Selection item"
-                ),
-                CancerType(
-                    id = 4, icon = "", typeName = "Selection item"
-                ),
-                CancerType(
-                    id = 5, icon = "", typeName = "Other "
-                ),
-            )
-        )
-        cancerTypesAdapter.currentList.firstOrNull()?.apply {
-            selectCancerType(this)
-        }
+//        cancerTypesAdapter.setList(
+//            listOf(
+//                CancerType(
+//                    id = 1, icon = "", typeName = "Selection item"
+//                ),
+//                CancerType(
+//                    id = 2, icon = "", typeName = "Selection item"
+//                ),
+//                CancerType(
+//                    id = 3, icon = "", typeName = "Selection item"
+//                ),
+//                CancerType(
+//                    id = 4, icon = "", typeName = "Selection item"
+//                ),
+//                CancerType(
+//                    id = 5, icon = "", typeName = "Other "
+//                ),
+//            )
+//        )
+//        cancerTypesAdapter.currentList.firstOrNull()?.apply {
+//            selectCancerType(this)
+//        }
 
     }
 

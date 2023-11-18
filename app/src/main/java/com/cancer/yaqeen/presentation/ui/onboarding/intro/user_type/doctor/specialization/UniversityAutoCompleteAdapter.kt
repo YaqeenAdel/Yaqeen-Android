@@ -9,13 +9,14 @@ import android.widget.ArrayAdapter
 import android.widget.Filter
 import android.widget.Filterable
 import androidx.recyclerview.widget.RecyclerView
+import com.cancer.yaqeen.data.features.onboarding.models.Module
 import com.cancer.yaqeen.databinding.ItemDropdownSpinnerBinding
 import java.util.*
 
 
 class UniversityAutoCompleteAdapter(
     context: Context,
-    private var items: List<String> = listOf()
+    private var items: List<String> = listOf(),
 ) :
     ArrayAdapter<String>(context, 0, items), Filterable {
     override fun getCount(): Int {
@@ -67,6 +68,7 @@ class UniversityAutoCompleteAdapter(
     inner class AutoCompleteViewHolder(
         val binding: ItemDropdownSpinnerBinding
     ) : RecyclerView.ViewHolder(binding.root) {
+
         fun bind(item: String) {
             binding.textItem = item
         }

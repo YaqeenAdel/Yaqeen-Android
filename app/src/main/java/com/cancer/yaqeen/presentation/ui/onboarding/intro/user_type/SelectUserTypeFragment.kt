@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -57,18 +58,17 @@ class SelectUserTypeFragment : BaseFragment() {
 
         setListener()
 
-
         observeStates()
     }
 
     private fun updateUI() {
         changeCircleColorOfRadioButtons()
 
-        viewModel.getUserProfile()?.apply {
-            val isDoctor = userType == UserType.DOCTOR
-            binding.btnPatient.isChecked = !isDoctor
-            binding.btnDoctor.isChecked = isDoctor
-        }
+//        viewModel.getUserProfile()?.apply {
+//            val isDoctor = userType == UserType.DOCTOR
+//            binding.btnPatient.isChecked = !isDoctor
+//            binding.btnDoctor.isChecked = isDoctor
+//        }
 
         val spannable = SpannableStringBuilder("1/4")
         spannable.setSpan(ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.primary_color)), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
@@ -88,9 +88,24 @@ class SelectUserTypeFragment : BaseFragment() {
             viewModel.updateUserProfile()
         }
 
+        binding.btnPatient.setOnClickListener {
+            selectUser(true)
+        }
+
+        binding.btnDoctor.setOnClickListener {
+            selectUser(false)
+        }
+
+
         binding.toolbar.setNavigationOnClickListener {
             navController.popBackStack()
         }
+    }
+
+    private fun selectUser(isPatient: Boolean){
+        viewModel.selectUser(isPatient)
+
+        viewModel.updateUserProfile()
     }
 
     private fun changeCircleColorOfRadioButtons() {

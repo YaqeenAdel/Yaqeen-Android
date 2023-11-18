@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <com.google.android.material.radiobutton.MaterialRadioButton
+        android:id="@+id/btn_university"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_16sdp"
+        tools:text="Selection item"
+        android:textColor="@color/light_black"
+        android:textSize="@dimen/_14ssp"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:singleLine="true"
+        app:buttonTint="@color/light_black"
+        android:background="@drawable/radio_button_background"/>
+
+</layout>

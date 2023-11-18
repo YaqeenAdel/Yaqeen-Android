@@ -46,4 +46,13 @@
         <item name="android:popupElevation">8dp</item>
     </style>
 
+    <!-- res/values/styles.xml -->
+    <style name="ToolbarTitleStyle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textColor">@color/light_black</item>
+        <item name="android:textSize">@dimen/_14ssp</item> <!-- Adjust text size as needed -->
+        <item name="android:textStyle">bold</item> <!-- Adjust text style as needed -->
+        <!-- Add more styling attributes as needed -->
+    </style>
+
+
 </resources>
