@@ -1,11 +1,16 @@
 package com.cancer.yaqeen.presentation.ui.onboarding.intro.user_type.patient.stages
 
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.ForegroundColorSpan
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -58,16 +63,33 @@ class StagesFragment : BaseFragment() {
 
         setupStagesAdapter()
 
-        binding.tvNext.setOnClickListener {
-            viewModel.updateUserProfile()
-        }
+        updateUI()
 
-        binding.tvBack.setOnClickListener {
-            navController.tryPopBackStack()
-        }
+        setListener()
 
         observeStates()
     }
+
+    private fun setListener(){
+        binding.toolbar.setNavigationOnClickListener {
+            navController.popBackStack()
+        }
+
+        binding.btnNext.setOnClickListener {
+            viewModel.updateUserProfile()
+        }
+
+        binding.btnPrevious.setOnClickListener {
+            navController.tryPopBackStack()
+        }
+    }
+    private fun updateUI() {
+        val spannable = SpannableStringBuilder("3/4")
+        spannable.setSpan(ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.primary_color)), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        binding.tvPageNumber.text = spannable
+
+    }
+
     private fun observeStates() {
         lifecycleScope {
             viewModel.viewStateLoading.collectLatest {
@@ -114,13 +136,14 @@ class StagesFragment : BaseFragment() {
     private fun setupStagesAdapter() {
         stagesAdapter = StagesAdapter {
             selectStage(it)
+            viewModel.updateUserProfile()
         }
 
         binding.rvStages.apply {
             adapter = stagesAdapter
             addItemDecoration(
-                HorizontalMarginItemDecoration(
-                    dpToPx(16f, requireContext())
+                VerticalMarginItemDecoration(
+                    dpToPx(15f, requireContext())
                 )
             )
         }

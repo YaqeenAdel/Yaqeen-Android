@@ -124,6 +124,8 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
                 it?.let {
                     val resources = onboardingViewModel.viewStateResources.replayCache
                     if(resources.isNotEmpty() && resources.firstOrNull() != null) {
+                        Toast.makeText(context,
+                            getString(R.string.you_have_logged_in_successfully),Toast.LENGTH_SHORT).show()
                         navigateToUpdateProfile()
                     }else{
 //                        getResourcesData()
@@ -248,8 +250,6 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
     }
 
 
-
-
     private fun navigateToUpdateProfile() {
         removeCallbacks()
         navController.tryNavigate(
@@ -266,6 +266,8 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
         when(v?.id){
             R.id.btn_explore_app -> {}
             R.id.btn_join -> {
+//                removeCallbacks()
+//                navController.tryNavigate(R.id.specializationFragment)
 //                navigateToUpdateProfile()
             }
             R.id.tv_login -> {

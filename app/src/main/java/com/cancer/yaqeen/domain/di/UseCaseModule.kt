@@ -6,6 +6,7 @@ import com.cancer.yaqeen.data.features.profile.ProfileRepositoryImpl
 import com.cancer.yaqeen.domain.features.auth.login.usecases.LoginUseCase
 import com.cancer.yaqeen.domain.features.auth.login.usecases.LogoutUseCase
 import com.cancer.yaqeen.domain.features.onboarding.usecases.GetResourcesUseCase
+import com.cancer.yaqeen.domain.features.onboarding.usecases.GetUniversitiesUseCase
 import com.cancer.yaqeen.domain.features.onboarding.usecases.GetUserProfileUseCase
 import com.cancer.yaqeen.domain.features.onboarding.usecases.UpdateInterestsUserUseCase
 import com.cancer.yaqeen.domain.features.onboarding.usecases.UpdateUserProfileUseCase
@@ -34,6 +35,11 @@ object UseCaseModule {
     @Provides
     fun provideGetResourcesUseCase(repository: OnboardingRepositoryImpl) =
         GetResourcesUseCase(repository)
+
+    @Singleton
+    @Provides
+    fun provideGetUniversitiesUseCase(repository: OnboardingRepositoryImpl) =
+        GetUniversitiesUseCase(repository)
 
     @Singleton
     @Provides

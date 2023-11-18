@@ -13,31 +13,84 @@
         android:background="@color/white"
         tools:context=".presentation.ui.onboarding.intro.user_type.SelectUserTypeFragment">
 
-        <ImageView
-            android:id="@+id/iv_back"
-            android:layout_width="@dimen/_48sdp"
-            android:layout_height="@dimen/_48sdp"
-            android:padding="@dimen/_12sdp"
-            android:src="@drawable/arrow_back"
-            android:layout_marginStart="@dimen/_8sdp"
-            android:layout_marginTop="@dimen/_24sdp"
-            app:layout_constraintHorizontal_bias="0"
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_16sdp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginHorizontal="@dimen/_6sdp"
+            android:background="@color/white"
+            app:titleTextAppearance="@style/ToolbarTitleStyle"
+            app:title="@string/create_account"
+            app:titleTextColor="@color/light_black"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:titleCentered="true"/>
 
-        <ImageView
-            android:id="@+id/iv_logo"
-            android:layout_width="@dimen/_48sdp"
-            android:layout_height="@dimen/_48sdp"
-            android:layout_marginStart="@dimen/_8sdp"
-            android:background="@color/silver_medal"
+        <TextView
+            android:id="@+id/tv_page_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:layout_marginStart="@dimen/_16sdp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            android:textColor="@color/maiden_mist"
+            android:textSize="@dimen/_11ssp"
+            android:text="1/4"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_6sdp"
+            android:layout_marginEnd="@dimen/_12sdp"
+            app:layout_constraintWidth_percent="0.7"
             app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintStart_toEndOf="@id/iv_back"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/iv_back"
-            app:layout_constraintTop_toTopOf="@id/iv_back"/>
+            app:layout_constraintStart_toEndOf="@id/tv_page_number"
+            app:layout_constraintEnd_toEndOf="@id/toolbar"
+            app:layout_constraintTop_toBottomOf="@id/tv_page_number"
+            android:orientation="horizontal">
 
+            <View
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_2sdp"
+                android:layout_weight="1"
+                android:background="@drawable/background_view_selected_colored"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_2sdp"
+                android:layout_weight="1"
+                android:layout_marginStart="@dimen/_4sdp"
+                android:backgroundTint="@color/primary_color_30"
+                android:background="@drawable/background_view_selected_colored"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_2sdp"
+                android:layout_weight="1"
+                android:layout_marginStart="@dimen/_4sdp"
+                android:backgroundTint="@color/primary_color_30"
+                android:background="@drawable/background_view_selected_colored"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_2sdp"
+                android:layout_weight="1"
+                android:layout_marginStart="@dimen/_4sdp"
+                android:backgroundTint="@color/primary_color_30"
+                android:background="@drawable/background_view_selected_colored"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_2sdp"
+                android:layout_weight="1"
+                android:layout_marginStart="@dimen/_4sdp"
+                android:backgroundTint="@color/primary_color_30"
+                android:background="@drawable/background_view_selected_colored"/>
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tv_title"
@@ -45,14 +98,14 @@
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/iv_back"
-            android:layout_marginStart="@dimen/_32sdp"
+            app:layout_constraintTop_toBottomOf="@id/tv_page_number"
+            android:layout_marginStart="@dimen/_16sdp"
             android:layout_marginEnd="@dimen/_4sdp"
-            android:layout_marginTop="@dimen/_74sdp"
+            android:layout_marginTop="@dimen/_64sdp"
             android:gravity="center|start"
             android:textStyle="bold"
             android:text="@string/please_select_your_user_type"
-            android:textColor="@color/black"
+            android:textColor="@color/primary_color"
             android:textSize="@dimen/_18ssp"/>
 
 
@@ -63,13 +116,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_title"
-            android:layout_marginStart="@dimen/_32sdp"
+            android:layout_marginStart="@dimen/_16sdp"
             android:layout_marginEnd="@dimen/_4sdp"
-            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_6sdp"
             android:gravity="center|start"
             android:text="Lorem ipsum dolor sit amet consectetur."
-            android:textColor="@color/black_transparent_30"
-            android:textSize="@dimen/_18ssp"/>
+            android:textColor="@color/xx_dark_gray"
+            android:textSize="@dimen/_14ssp"/>
 
         <RadioGroup
             android:id="@+id/rg_user_types"
@@ -78,19 +131,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_message"
-            android:layout_marginTop="@dimen/_32sdp"
-            android:layout_marginStart="@dimen/_32sdp"
-            android:layout_marginEnd="@dimen/_28sdp">
+            android:layout_marginTop="@dimen/_48sdp"
+            android:layout_marginHorizontal="@dimen/_16sdp">
 
             <com.google.android.material.radiobutton.MaterialRadioButton
                 android:id="@+id/btn_patient"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/patient"
-                android:textColor="@color/black"
+                android:textColor="@color/light_black"
                 android:textSize="@dimen/_14ssp"
-                android:checked="true"
-                app:buttonTint="@color/black"
+                app:buttonTint="@color/light_black"
                 android:drawableEnd="@drawable/info"
                 android:background="@drawable/radio_button_background"/>
 
@@ -99,9 +150,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/volunteer_doctor"
-                android:textColor="@color/black"
+                android:textColor="@color/light_black"
                 android:textSize="@dimen/_14ssp"
-                app:buttonTint="@color/black"
+                app:buttonTint="@color/light_black"
                 android:layout_marginTop="@dimen/_12sdp"
                 android:drawableEnd="@drawable/info"
                 android:background="@drawable/radio_button_background"/>
@@ -110,51 +161,47 @@
 
 
 
-        <com.google.android.material.progressindicator.LinearProgressIndicator
-            android:id="@+id/progress"
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_previous"
+            style="@style/CustomMaterialButtonStyle"
             android:layout_width="0dp"
-            android:layout_height="@dimen/_2sdp"
-            android:progress="25"
-            app:indicatorColor="@color/private_black"
-            app:layout_constraintBottom_toTopOf="@+id/tv_back"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/rg_user_types"
-            android:layout_marginVertical="@dimen/_12sdp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_16sdp"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_22sdp"
+            android:paddingVertical="@dimen/_10sdp"
+            android:text="@string/previous"
+            android:textColor="@color/primary_color"
+            android:textSize="@dimen/_13ssp"
+            app:backgroundTint="@color/super_silver2"
+            app:cornerRadius="@dimen/_4sdp"
+            android:visibility="gone"
             app:layout_constraintVertical_bias="1"
-            app:trackColor="@color/super_silver" />
-
-        <TextView
-            android:id="@+id/tv_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/Widget.Material3.Button.TextButton"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_next"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0"
-            android:layout_marginHorizontal="@dimen/_18sdp"
-            android:layout_marginBottom="@dimen/_14sdp"
-            android:paddingVertical="@dimen/_8sdp"
-            android:gravity="center"
-            android:text="@string/back"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_20ssp"/>
+            app:layout_constraintTop_toBottomOf="@id/rg_user_types" />
 
-        <TextView
-            android:id="@+id/tv_next"
-            android:layout_width="wrap_content"
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_next"
+            style="@style/CustomMaterialButtonStyle"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            style="@style/Widget.Material3.Button.TextButton"
-            app:layout_constraintStart_toEndOf="@id/tv_back"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="1"
-            android:layout_marginHorizontal="@dimen/_18sdp"
-            android:layout_marginBottom="@dimen/_14sdp"
-            android:paddingVertical="@dimen/_8sdp"
-            android:gravity="center"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginEnd="@dimen/_16sdp"
+            android:paddingVertical="@dimen/_10sdp"
             android:text="@string/next"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_20ssp"/>
+            android:textColor="@color/white"
+            android:textSize="@dimen/_13ssp"
+            app:backgroundTint="@color/primary_color"
+            app:cornerRadius="@dimen/_4sdp"
+            android:visibility="gone"
+            app:layout_constraintVertical_bias="0.20"
+            app:layout_constraintBottom_toBottomOf="@id/btn_previous"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btn_previous"
+            app:layout_constraintTop_toTopOf="@id/btn_previous" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

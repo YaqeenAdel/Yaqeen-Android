@@ -5,6 +5,7 @@ import com.cancer.yaqeen.data.features.auth.responses.LoginRemote
 import com.cancer.yaqeen.data.features.onboarding.requests.UpdateInterestsUserRequestBody
 import com.cancer.yaqeen.data.features.onboarding.requests.UpdateProfileRequestBody
 import com.cancer.yaqeen.data.features.onboarding.responses.ResourcesResponse
+import com.cancer.yaqeen.data.features.onboarding.responses.UniversitiesResponse
 import com.cancer.yaqeen.data.features.onboarding.responses.UpdateProfileResponse
 import com.cancer.yaqeen.data.features.onboarding.responses.UserProfileResponse
 import retrofit2.Response
@@ -25,6 +26,13 @@ interface YaqeenAPI {
     suspend fun getResources(
         @Query("lang") lang: String
     ): Response<ResourcesResponse>
+
+    @GET("universities/{CountryCode}/{StateCode}")
+    @Headers("isAuthorization: false")
+    suspend fun getUniversities(
+        @Path("CountryCode") countryCode: String,
+        @Path("StateCode") stateCode: String,
+    ): Response<UniversitiesResponse>
 
     @POST("me/interests")
     suspend fun updateInterestsUser(

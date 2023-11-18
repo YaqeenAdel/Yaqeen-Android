@@ -54,6 +54,11 @@ fun NavController.tryNavigate(directions: NavDirections) =
         navigate(directions)
     } catch (_: Exception) {}
 
+fun NavController.tryNavigateUp() =
+    try {
+        navigateUp()
+    } catch (_: Exception) {}
+
 
 fun NavController.tryNavigate(
     resId: Int,
@@ -129,4 +134,10 @@ fun AutoCompleteTextView.selectItem(position: Int = 0, text: String = "") {
     this.showDropDown()
     this.listSelection = position
     this.performCompletion()
+}
+fun Long.formatMilliseconds(): String {
+    val totalSeconds = this / 1000
+    val minutes = totalSeconds / 60
+    val seconds = totalSeconds % 60
+    return "$minutes:$seconds"
 }

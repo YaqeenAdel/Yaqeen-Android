@@ -113,7 +113,7 @@ open class BaseFragment constructor(private val showBottomMenu: Boolean) : Fragm
             requireActivity().findNavController(R.id.activity_main_nav_host_fragment)
         findNavController
             .tryNavigate(
-                R.id.loginFragment,
+                R.id.splashFragment,
                 null,
                 NavOptions.Builder().setPopUpTo(R.id.nav_graph, true).build()
             )

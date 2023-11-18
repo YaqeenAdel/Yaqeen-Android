@@ -122,6 +122,9 @@ dependencies {
 
     //Auth 0
     implementation ("com.auth0.android:auth0:2.+")
+    implementation ("com.auth0.android:lock:2.0.0")
+
+
     implementation ("de.hdodenhof:circleimageview:3.1.0")
 
 }

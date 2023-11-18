@@ -12,147 +12,184 @@
         android:layout_height="match_parent"
         android:background="@color/white"
         tools:context=".presentation.ui.onboarding.intro.user_type.modules.ModulesFragment">
-        <ImageView
-            android:id="@+id/iv_back"
-            android:layout_width="@dimen/_48sdp"
-            android:layout_height="@dimen/_48sdp"
-            android:layout_marginStart="@dimen/_8sdp"
-            android:layout_marginTop="@dimen/_24sdp"
-            android:padding="@dimen/_12sdp"
-            android:src="@drawable/arrow_back"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/iv_logo"
-            android:layout_width="@dimen/_48sdp"
-            android:layout_height="@dimen/_48sdp"
-            android:layout_marginStart="@dimen/_8sdp"
-            android:background="@color/silver_medal"
-            app:layout_constraintBottom_toBottomOf="@id/iv_back"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintStart_toEndOf="@id/iv_back"
-            app:layout_constraintTop_toTopOf="@id/iv_back" />
-
-
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/scrollView"
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginBottom="@dimen/_12sdp"
-            app:layout_constraintBottom_toTopOf="@+id/progress"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_16sdp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/iv_back">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginHorizontal="@dimen/_6sdp"
+            android:background="@color/white"
+            app:titleTextAppearance="@style/ToolbarTitleStyle"
+            app:title="@string/create_account"
+            app:titleTextColor="@color/light_black"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:titleCentered="true"/>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/tv_page_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:layout_marginStart="@dimen/_16sdp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            android:textColor="@color/maiden_mist"
+            android:textSize="@dimen/_11ssp"
+            android:text="4/4"/>
 
-
-
-                <TextView
-                    android:id="@+id/tv_title"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_32sdp"
-                    android:layout_marginTop="@dimen/_74sdp"
-                    android:layout_marginEnd="@dimen/_4sdp"
-                    android:gravity="center|start"
-                    android:text="@string/select_module_you_interest"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_18ssp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-
-                <TextView
-                    android:id="@+id/tv_message"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_32sdp"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:layout_marginEnd="@dimen/_4sdp"
-                    android:gravity="center|start"
-                    android:text="Lorem ipsum dolor sit amet consectetur."
-                    android:textColor="@color/black_transparent_30"
-                    android:textSize="@dimen/_18ssp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_title" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_modules"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_32sdp"
-                    android:layout_marginTop="@dimen/_32sdp"
-                    android:nestedScrollingEnabled="false"
-                    android:saveEnabled="false"
-                    android:orientation="vertical"
-                    app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_message"
-                    app:spanCount="2"
-                    tools:itemCount="4"
-                    tools:listitem="@layout/item_module" />
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </androidx.core.widget.NestedScrollView>
-        <com.google.android.material.progressindicator.LinearProgressIndicator
-            android:id="@+id/progress"
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="@dimen/_2sdp"
-            android:progress="65"
-            app:indicatorColor="@color/private_black"
-            app:layout_constraintBottom_toTopOf="@+id/tv_back"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginVertical="@dimen/_12sdp"
-            app:layout_constraintVertical_bias="1"
-            app:trackColor="@color/super_silver" />
-
-        <TextView
-            android:id="@+id/tv_back"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/Widget.Material3.Button.TextButton"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="@dimen/_6sdp"
+            android:layout_marginEnd="@dimen/_12sdp"
+            app:layout_constraintWidth_percent="0.7"
             app:layout_constraintHorizontal_bias="0"
-            android:layout_marginHorizontal="@dimen/_18sdp"
-            android:layout_marginBottom="@dimen/_14sdp"
-            android:paddingVertical="@dimen/_8sdp"
-            android:gravity="center"
-            android:text="@string/back"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_20ssp"/>
+            app:layout_constraintStart_toEndOf="@id/tv_page_number"
+            app:layout_constraintEnd_toEndOf="@id/toolbar"
+            app:layout_constraintTop_toBottomOf="@id/tv_page_number"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_2sdp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/primary_color_30"
+                android:background="@drawable/background_view_selected_colored"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_2sdp"
+                android:layout_weight="1"
+                android:layout_marginStart="@dimen/_4sdp"
+                android:backgroundTint="@color/primary_color_30"
+                android:background="@drawable/background_view_selected_colored"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_2sdp"
+                android:layout_weight="1"
+                android:layout_marginStart="@dimen/_4sdp"
+                android:backgroundTint="@color/primary_color_30"
+                android:background="@drawable/background_view_selected_colored"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_2sdp"
+                android:layout_weight="1"
+                android:layout_marginStart="@dimen/_4sdp"
+                android:background="@drawable/background_view_selected_colored"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_2sdp"
+                android:layout_weight="1"
+                android:layout_marginStart="@dimen/_4sdp"
+                android:backgroundTint="@color/primary_color_30"
+                android:background="@drawable/background_view_selected_colored"/>
+        </LinearLayout>
+
 
         <TextView
-            android:id="@+id/tv_next"
-            android:layout_width="wrap_content"
+            android:id="@+id/tv_title"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            style="@style/Widget.Material3.Button.TextButton"
-            app:layout_constraintStart_toEndOf="@id/tv_back"
+            android:layout_marginStart="@dimen/_16sdp"
+            android:layout_marginTop="@dimen/_64sdp"
+            android:layout_marginEnd="@dimen/_4sdp"
+            android:gravity="center|start"
+            android:text="@string/select_module_you_interest"
+            android:textColor="@color/primary_color"
+            android:textSize="@dimen/_18ssp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_page_number" />
+
+        <TextView
+            android:id="@+id/tv_message"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_title"
+            android:layout_marginStart="@dimen/_16sdp"
+            android:layout_marginEnd="@dimen/_4sdp"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:gravity="center|start"
+            android:text="Lorem ipsum dolor sit amet ."
+            android:textColor="@color/xx_dark_gray"
+            android:textSize="@dimen/_14ssp"/>
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_modules"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="@dimen/_24sdp"
+            android:layout_marginTop="@dimen/_32sdp"
+            android:nestedScrollingEnabled="false"
+            android:saveEnabled="false"
+            android:orientation="vertical"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="1"
-            android:layout_marginHorizontal="@dimen/_18sdp"
-            android:layout_marginBottom="@dimen/_14sdp"
-            android:paddingVertical="@dimen/_8sdp"
-            android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@id/tv_message"
+            app:spanCount="2"
+            tools:itemCount="4"
+            tools:listitem="@layout/item_module" />
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_previous"
+            style="@style/CustomMaterialButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_16sdp"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_16sdp"
+            android:paddingVertical="@dimen/_10sdp"
+            android:text="@string/previous"
+            android:textColor="@color/primary_color"
+            android:textSize="@dimen/_13ssp"
+            app:backgroundTint="@color/super_silver2"
+            app:cornerRadius="@dimen/_4sdp"
+            app:icon="@drawable/ic_previous"
+            app:iconTint="@color/primary_color"
+            app:iconGravity="textStart"
+            app:iconPadding="@dimen/_12sdp"
+            app:layout_constraintVertical_bias="1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_next"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_next"
+            style="@style/CustomMaterialButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginEnd="@dimen/_16sdp"
+            android:paddingVertical="@dimen/_10sdp"
             android:text="@string/next"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_20ssp"/>
+            android:textColor="@color/white"
+            android:textSize="@dimen/_13ssp"
+            app:backgroundTint="@color/primary_color"
+            app:cornerRadius="@dimen/_4sdp"
+            android:visibility="invisible"
+            app:layout_constraintVertical_bias="0.20"
+            app:layout_constraintBottom_toBottomOf="@id/btn_previous"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btn_previous"
+            app:layout_constraintTop_toTopOf="@id/btn_previous" />
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

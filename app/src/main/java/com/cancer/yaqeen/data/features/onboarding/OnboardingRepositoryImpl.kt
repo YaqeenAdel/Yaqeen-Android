@@ -6,10 +6,13 @@ import com.cancer.yaqeen.data.network.base.BaseDataSource
 import com.cancer.yaqeen.data.network.base.DataState
 import com.cancer.yaqeen.data.network.base.flowStatus
 import com.cancer.yaqeen.data.features.onboarding.mappers.MappingResourcesRemoteAsModel
+import com.cancer.yaqeen.data.features.onboarding.mappers.MappingUniversitiesRemoteAsModel
 import com.cancer.yaqeen.data.features.onboarding.mappers.MappingUserProfileRemoteAsModel
 import com.cancer.yaqeen.data.features.onboarding.models.Resources
+import com.cancer.yaqeen.data.features.onboarding.models.University
 import com.cancer.yaqeen.data.features.onboarding.requests.UpdateInterestsUserRequestBody
 import com.cancer.yaqeen.data.features.onboarding.requests.UpdateProfileRequestBody
+import com.cancer.yaqeen.data.features.onboarding.responses.UniversityResponse
 import com.cancer.yaqeen.data.features.onboarding.responses.UpdateProfileResponse
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil.Companion.PREF_USER
@@ -27,9 +30,14 @@ class OnboardingRepositoryImpl @Inject constructor(
     override suspend fun getResources(): Flow<DataState<Resources>> =
         flowStatus {
             getResultRestAPI(MappingResourcesRemoteAsModel()){
-                Log.e("getResources","getResourcesData")
-
                 apiService.getResources(prefEncryptionUtil.selectedLanguage)
+            }
+        }
+
+    override suspend fun getUniversities(countryCode: String, stateCode: String): Flow<DataState<List<University>>> =
+        flowStatus {
+            getResultRestAPI(MappingUniversitiesRemoteAsModel()){
+                apiService.getUniversities(countryCode, stateCode)
             }
         }
 

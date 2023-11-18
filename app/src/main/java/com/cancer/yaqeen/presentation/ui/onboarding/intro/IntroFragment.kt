@@ -12,6 +12,7 @@ import com.cancer.yaqeen.databinding.FragmentIntroBinding
 import com.cancer.yaqeen.databinding.FragmentSplashBinding
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.tryNavigate
+import com.cancer.yaqeen.presentation.util.tryPopBackStack
 
 class IntroFragment : Fragment() {
 
@@ -33,10 +34,20 @@ class IntroFragment : Fragment() {
 
         navController = findNavController()
 
-        binding.tvNext.setOnClickListener {
+
+        setListener()
+
+    }
+
+    private fun setListener(){
+        binding.btnStart.setOnClickListener {
             navController.tryNavigate(
                 IntroFragmentDirections.actionIntroFragmentToSelectUserTypeFragment()
             )
+        }
+
+        binding.toolbar.setNavigationOnClickListener {
+            navController.popBackStack()
         }
     }
 

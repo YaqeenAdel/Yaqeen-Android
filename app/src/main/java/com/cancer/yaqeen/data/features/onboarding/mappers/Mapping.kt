@@ -14,6 +14,7 @@ import com.cancer.yaqeen.data.features.onboarding.models.Module
 import com.cancer.yaqeen.data.features.onboarding.models.Photo
 import com.cancer.yaqeen.data.features.onboarding.models.Resources
 import com.cancer.yaqeen.data.features.onboarding.models.Stage
+import com.cancer.yaqeen.data.features.onboarding.models.University
 import com.cancer.yaqeen.data.features.onboarding.responses.CancerStageResponse
 import com.cancer.yaqeen.data.features.onboarding.responses.CancerTypeResponse
 import com.cancer.yaqeen.data.features.onboarding.responses.DoctorResponse
@@ -22,6 +23,7 @@ import com.cancer.yaqeen.data.features.onboarding.responses.PatientResponse
 import com.cancer.yaqeen.data.features.onboarding.responses.PhotoResponse
 import com.cancer.yaqeen.data.features.onboarding.responses.ResourcesResponse
 import com.cancer.yaqeen.data.features.onboarding.responses.SAggregateResponse
+import com.cancer.yaqeen.data.features.onboarding.responses.UniversitiesResponse
 import com.cancer.yaqeen.data.features.onboarding.responses.UserProfileResponse
 import com.cancer.yaqeen.data.features.onboarding.responses.VerificationStatusResponse
 
@@ -72,6 +74,19 @@ class MappingPhotoRemoteAsModel: Mapper<PhotoResponse, Photo> {
         )
     }
 }
+
+
+class MappingUniversitiesRemoteAsModel: Mapper<UniversitiesResponse, List<University>> {
+    override fun map(input: UniversitiesResponse): List<University> = input.universities?.map {
+        it.run {
+            University(
+                universityID = universityID ?: 0,
+                universityName = universityName ?: "",
+            )
+        }
+    } ?: listOf()
+}
+
 class MappingUserProfileRemoteAsModel(val user: User?): Mapper<UserProfileResponse, User?> {
     override fun map(input: UserProfileResponse): User? = input.users?.firstOrNull()?.run {
         User(
