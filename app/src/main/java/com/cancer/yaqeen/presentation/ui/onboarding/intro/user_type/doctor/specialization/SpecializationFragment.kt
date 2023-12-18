@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
@@ -23,6 +24,8 @@ import com.cancer.yaqeen.presentation.ui.onboarding.intro.user_type.modules.Modu
 import com.cancer.yaqeen.presentation.util.Constants.REQUEST_UNIVERSITY_KEY
 import com.cancer.yaqeen.presentation.util.Constants.UNIVERSITY_NAME_KEY
 import com.cancer.yaqeen.presentation.util.autoCleared
+import com.cancer.yaqeen.presentation.util.disable
+import com.cancer.yaqeen.presentation.util.enable
 import com.cancer.yaqeen.presentation.util.selectItem
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import com.cancer.yaqeen.presentation.util.tryPopBackStack
@@ -101,7 +104,28 @@ class SpecializationFragment : BaseFragment() {
                 SpecializationFragmentDirections.actionSpecializationFragmentToUniversitiesFragment()
             )
         }
+        binding.autoTvUniversity.addTextChangedListener {
+            checkDataInput()
+        }
+        binding.autoTvDegree.addTextChangedListener {
+            checkDataInput()
+        }
+        binding.autoTvMedicalField.addTextChangedListener {
+            checkDataInput()
+        }
     }
+
+    private fun checkDataInput() {
+        val university = binding.autoTvUniversity.text.toString()
+        val degree = binding.autoTvDegree.text.toString()
+        val medicalField = binding.autoTvMedicalField.text.toString()
+
+        if(university.isNotEmpty() && degree.isNotEmpty() && medicalField.isNotEmpty())
+            binding.btnNext.enable()
+        else
+            binding.btnNext.disable()
+    }
+
     private fun observeStates() {
         lifecycleScope {
             viewModel.viewStateLoading.collectLatest {
@@ -138,32 +162,33 @@ class SpecializationFragment : BaseFragment() {
         }
     }
 
-    private fun setupDropDownSpecialization() {
-        universityAutoCompleteAdapter = UniversityAutoCompleteAdapter(
-            requireContext()
-        )
-
-        binding.autoTvUniversity.setAdapter(universityAutoCompleteAdapter)
-
-        universityAutoCompleteAdapter.setList(
-            listOf(
-                "Ain Shams", "Cairo", "Zagazig", "Alexandria", "Tanta", "Assuit", "Aswan"
-            )
-        )
-
-        binding.autoTvUniversity.onItemClickListener =
-            AdapterView.OnItemClickListener { parent, view, position, id ->
-                Log.d("TAG", "setupDropDownSpecialization: $position")
-                viewModel.selectUniversity(universityAutoCompleteAdapter.getItem(position))
-            }
-
-//        binding.autoTvUniversity.selectItem(2, universityAutoCompleteAdapter.getItem(2))
-    }
+//    private fun setupDropDownSpecialization() {
+//        universityAutoCompleteAdapter = UniversityAutoCompleteAdapter(
+//            requireContext()
+//        )
+//
+//        binding.autoTvUniversity.setAdapter(universityAutoCompleteAdapter)
+//
+//        universityAutoCompleteAdapter.setList(
+//            listOf(
+//                "Ain Shams", "Cairo", "Zagazig", "Alexandria", "Tanta", "Assuit", "Aswan"
+//            )
+//        )
+//
+//        binding.autoTvUniversity.onItemClickListener =
+//            AdapterView.OnItemClickListener { parent, view, position, id ->
+//                Log.d("TAG", "setupDropDownSpecialization: $position")
+//                viewModel.selectUniversity(universityAutoCompleteAdapter.getItem(position))
+//            }
+//
+////        binding.autoTvUniversity.selectItem(2, universityAutoCompleteAdapter.getItem(2))
+//    }
 
     private fun setupDropDownDegree() {
-        degreeAutoCompleteAdapter = UniversityAutoCompleteAdapter(
-            requireContext()
-        )
+        degreeAutoCompleteAdapter = UniversityAutoCompleteAdapter(requireContext()){
+            viewModel.selectDegree(it)
+            binding.autoTvDegree.setText(it)
+        }
 
         binding.autoTvDegree.setAdapter(degreeAutoCompleteAdapter)
 
@@ -173,18 +198,15 @@ class SpecializationFragment : BaseFragment() {
             )
         )
 
-        binding.autoTvDegree.onItemClickListener =
-            AdapterView.OnItemClickListener { parent, view, position, id ->
-                viewModel.selectDegree(degreeAutoCompleteAdapter.getItem(position))
-            }
 
 //        binding.autoTvDegree.selectItem(1, degreeAutoCompleteAdapter.getItem(1))
     }
 
     private fun setupDropDownMedicalField() {
-        medicalFieldAutoCompleteAdapter = UniversityAutoCompleteAdapter(
-            requireContext()
-        )
+        medicalFieldAutoCompleteAdapter = UniversityAutoCompleteAdapter(requireContext()){
+            viewModel.selectMedicalField(it)
+            binding.autoTvMedicalField.setText(it)
+        }
 
         binding.autoTvMedicalField.setAdapter(medicalFieldAutoCompleteAdapter)
 
@@ -193,11 +215,6 @@ class SpecializationFragment : BaseFragment() {
                 "Field 1", "Field 2", "Field 3"
             )
         )
-
-        binding.autoTvMedicalField.onItemClickListener =
-            AdapterView.OnItemClickListener { parent, view, position, id ->
-                viewModel.selectMedicalField(medicalFieldAutoCompleteAdapter.getItem(position))
-            }
 
 //        binding.autoTvMedicalField.selectItem(0, medicalFieldAutoCompleteAdapter.getItem(0))
     }

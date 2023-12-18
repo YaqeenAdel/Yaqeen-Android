@@ -21,8 +21,8 @@
 
         <ImageView
             android:id="@+id/iv_app_logo"
-            android:layout_width="@dimen/_100sdp"
-            android:layout_height="@dimen/_100sdp"
+            android:layout_width="@dimen/_120sdp"
+            android:layout_height="@dimen/_120sdp"
             android:src="@mipmap/ic_launcher"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -41,7 +41,7 @@
             android:layout_marginTop="@dimen/_6sdp"
             android:gravity="center"
             android:textSize="@dimen/_28ssp"
-            android:textColor="@color/primary_color"
+            android:textColor="@color/rose_penk"
             android:textStyle="bold"
             android:textAllCaps="true"
             android:layout_gravity="center"

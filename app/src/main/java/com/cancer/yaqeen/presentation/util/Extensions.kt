@@ -37,13 +37,13 @@ fun Fragment.disableTouch() {
     )
 }
 
-fun View.enable(color: Int = R.color.purple_700){
+fun View.enable(color: Int = R.color.primary_color){
     isEnabled = true
     backgroundTintList =
         ContextCompat.getColorStateList(context, color)
 }
 
-fun View.disable(color: Int = R.color.silver_medal){
+fun View.disable(color: Int = R.color.gray){
     isEnabled = false
     backgroundTintList =
         ContextCompat.getColorStateList(context, color)
