@@ -13,13 +13,14 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/header_background"
              tools:context=".presentation.ui.onboarding.OnBoardingFragment">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/header_parent_layout"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_150sdp"
+                android:background="@color/header_background"
+
+                android:layout_height="@dimen/_120sdp"
                  app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -33,15 +34,16 @@
                     android:layout_marginVertical="@dimen/_18sdp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:contentDescription="Logo Header " />
 
                 <ImageView
-                    android:id="@+id/imageView"
+                    android:id="@+id/iv_calender"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/_5sdp"
-                    android:layout_marginHorizontal="@dimen/_24sdp"
+                    android:layout_marginHorizontal="@dimen/_20sdp"
                     android:layout_marginVertical="@dimen/_18sdp"
+                    android:padding="@dimen/_5sdp"
                     android:src="@drawable/ic_calender"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/iv_header_logo" />
@@ -57,16 +59,15 @@
                     android:textColor="@color/text_black"
                     android:textSize="@dimen/_11ssp"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="@+id/imageView"
-                    app:layout_constraintStart_toEndOf="@+id/imageView"
-                    app:layout_constraintTop_toTopOf="@+id/imageView" />
+                    app:layout_constraintBottom_toBottomOf="@+id/iv_calender"
+                    app:layout_constraintStart_toEndOf="@+id/iv_calender"
+                    app:layout_constraintTop_toTopOf="@+id/iv_calender" />
 
                 <TextView
                     android:id="@+id/tv_see_all_calender"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_24sdp"
-                    android:drawableEnd="@drawable/right_arrow"
+                    android:layout_marginHorizontal="@dimen/_20sdp"
                     android:gravity="center"
                     android:paddingVertical="@dimen/_4sdp"
                     android:drawablePadding="@dimen/_10sdp"
@@ -75,8 +76,18 @@
                     android:textSize="@dimen/_12ssp"
                     app:layout_constraintBottom_toBottomOf="@+id/tv_current_day_date"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/tv_current_day_date" />
+                    app:layout_constraintTop_toTopOf="@+id/tv_current_day_date"
+                    app:drawableEndCompat="@drawable/right_arrow" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    />
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+
             <com.google.android.material.textfield.MaterialAutoCompleteTextView
                 android:id="@+id/tv_search_atricles"
                 android:layout_width="0dp"
@@ -94,10 +105,36 @@
                 android:paddingVertical="@dimen/_10sdp"
                 android:textColor="@color/light_black"
                 android:textColorHint="@color/crow_black_blue"
-                 android:textSize="@dimen/_12ssp"
+                android:textSize="@dimen/_12ssp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/header_parent_layout" />
+
+            <TextView
+                android:id="@+id/tv_recommended_articles"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_4sdp"
+                android:gravity="center"
+                android:paddingVertical="@dimen/_4sdp"
+                android:text="@string/recommended_articles"
+                android:layout_margin="@dimen/_20sdp"
+                android:textColor="@color/text_black"
+                android:textSize="@dimen/_16ssp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_search_atricles" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_20sdp"
+                tools:itemCount="5"
+                tools:listitem="@layout/item_article"
+                android:layout_marginHorizontal="@dimen/_4sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_recommended_articles" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </layout>

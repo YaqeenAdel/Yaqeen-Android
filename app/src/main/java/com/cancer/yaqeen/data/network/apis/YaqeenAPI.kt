@@ -6,7 +6,6 @@ import com.cancer.yaqeen.data.features.onboarding.requests.UpdateInterestsUserRe
 import com.cancer.yaqeen.data.features.onboarding.requests.UpdateProfileRequestBody
 import com.cancer.yaqeen.data.features.onboarding.responses.ResourcesResponse
 import com.cancer.yaqeen.data.features.onboarding.responses.UniversitiesResponse
-import com.cancer.yaqeen.data.features.onboarding.responses.UpdateProfileResponse
 import com.cancer.yaqeen.data.features.onboarding.responses.UserProfileResponse
 import retrofit2.Response
 import retrofit2.http.Body
@@ -46,5 +45,7 @@ interface YaqeenAPI {
 
     @GET("me")
     suspend fun getUserProfile(): Response<UserProfileResponse>
+    @GET("me")
+    suspend fun getHomeArticles(): Response<UserProfileResponse>
 
 }

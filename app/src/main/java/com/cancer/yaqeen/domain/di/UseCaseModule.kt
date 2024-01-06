@@ -1,7 +1,7 @@
 package com.cancer.yaqeen.domain.di
 
 import com.cancer.yaqeen.data.features.auth.AuthRepositoryImpl
-import com.cancer.yaqeen.data.features.onboarding.OnboardingRepositoryImpl
+import com.cancer.yaqeen.data.features.onboarding.HomeRepositoryImpl
 import com.cancer.yaqeen.data.features.profile.ProfileRepositoryImpl
 import com.cancer.yaqeen.domain.features.auth.login.usecases.LoginUseCase
 import com.cancer.yaqeen.domain.features.auth.login.usecases.LogoutUseCase
@@ -33,27 +33,27 @@ object UseCaseModule {
 
     @Singleton
     @Provides
-    fun provideGetResourcesUseCase(repository: OnboardingRepositoryImpl) =
+    fun provideGetResourcesUseCase(repository: HomeRepositoryImpl) =
         GetResourcesUseCase(repository)
 
     @Singleton
     @Provides
-    fun provideGetUniversitiesUseCase(repository: OnboardingRepositoryImpl) =
+    fun provideGetUniversitiesUseCase(repository: HomeRepositoryImpl) =
         GetUniversitiesUseCase(repository)
 
     @Singleton
     @Provides
-    fun provideUpdateUserProfileUseCase(repository: OnboardingRepositoryImpl) =
+    fun provideUpdateUserProfileUseCase(repository: HomeRepositoryImpl) =
         UpdateUserProfileUseCase(repository)
 
     @Singleton
     @Provides
-    fun provideUpdateInterestsUserUseCase(repository: OnboardingRepositoryImpl) =
+    fun provideUpdateInterestsUserUseCase(repository: HomeRepositoryImpl) =
         UpdateInterestsUserUseCase(repository)
 
     @Singleton
     @Provides
-    fun provideGetUserProfileUseCase(repository: OnboardingRepositoryImpl) =
+    fun provideGetUserProfileUseCase(repository: HomeRepositoryImpl) =
         GetUserProfileUseCase(repository)
     @Singleton
     @Provides

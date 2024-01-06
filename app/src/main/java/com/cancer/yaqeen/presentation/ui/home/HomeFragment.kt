@@ -2,42 +2,28 @@ package com.cancer.yaqeen.presentation.ui.home
 
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.core.os.bundleOf
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import androidx.viewpager2.widget.ViewPager2
 import com.cancer.yaqeen.R
-import com.cancer.yaqeen.data.features.onboarding.models.Language
-import com.cancer.yaqeen.data.features.onboarding.models.Photo
 import com.cancer.yaqeen.data.network.error.ErrorEntity
-import com.cancer.yaqeen.databinding.FragmentOnBoardingBinding
+import com.cancer.yaqeen.databinding.FragmentHomeBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
-import com.cancer.yaqeen.presentation.ui.MainActivity
 import com.cancer.yaqeen.presentation.ui.onboarding.OnboardingViewModel
 import com.cancer.yaqeen.presentation.util.autoCleared
-import com.cancer.yaqeen.presentation.util.tryNavigate
-import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collectLatest
-import kotlin.system.exitProcess
 
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment(), OnClickListener {
 
-    private var binding: FragmentOnBoardingBinding by autoCleared()
+    private var binding: FragmentHomeBinding by autoCleared()
 
     private lateinit var navController: NavController
 
@@ -65,7 +51,7 @@ class HomeFragment : BaseFragment(), OnClickListener {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        binding = FragmentOnBoardingBinding.inflate(inflater, container, false)
+        binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
 
