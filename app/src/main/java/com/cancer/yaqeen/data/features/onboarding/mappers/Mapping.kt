@@ -88,24 +88,25 @@ class MappingUniversitiesRemoteAsModel: Mapper<UniversitiesResponse, List<Univer
 }
 
 class MappingUserProfileRemoteAsModel(val user: User?): Mapper<UserProfileResponse, User?> {
-    override fun map(input: UserProfileResponse): User? = input.users?.firstOrNull()?.run {
-        User(
-            id = user?.id,
-            name = user?.name,
-            nickname = user?.nickname,
-            pictureURL = user?.pictureURL,
-            familyName = user?.familyName,
-
-            gender = gender,
-            doctor = MappingDoctorRemoteAsModel().map(doctor),
-            agreedTerms = agreedTerms,
-            isEmailVerified = isEmailVerified,
-            questionsAggregate = MappingSAggregateRemoteAsModel().map(questionsAggregate),
-            firstName = firstName,
-            lastName = lastName,
-            patient = MappingPatientRemoteAsModel().map(patient),
-            email = email
-        )
+    override fun map(input: UserProfileResponse): User? = input.users?.let {
+        it.firstOrNull()?.run {
+            User(
+                id = user?.id,
+                name = user?.name,
+                nickname = user?.nickname,
+                pictureURL = user?.pictureURL,
+                familyName = user?.familyName,
+                gender = gender,
+                doctor = MappingDoctorRemoteAsModel().map(doctor),
+                agreedTerms = agreedTerms,
+                isEmailVerified = isEmailVerified,
+                questionsAggregate = MappingSAggregateRemoteAsModel().map(questionsAggregate),
+                firstName = firstName,
+                lastName = lastName,
+                patient = MappingPatientRemoteAsModel().map(patient),
+                email = email
+            )
+        } ?: User()
     }
 }
 class MappingPatientRemoteAsModel: Mapper<PatientResponse?, Patient?> {

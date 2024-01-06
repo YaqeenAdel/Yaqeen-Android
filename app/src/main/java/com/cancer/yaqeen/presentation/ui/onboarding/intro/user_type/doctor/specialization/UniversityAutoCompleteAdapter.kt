@@ -10,6 +10,7 @@ import android.widget.Filter
 import android.widget.Filterable
 import androidx.recyclerview.widget.RecyclerView
 import com.cancer.yaqeen.data.features.onboarding.models.Module
+import com.cancer.yaqeen.data.features.onboarding.models.University
 import com.cancer.yaqeen.databinding.ItemDropdownSpinnerBinding
 import java.util.*
 
@@ -17,6 +18,7 @@ import java.util.*
 class UniversityAutoCompleteAdapter(
     context: Context,
     private var items: List<String> = listOf(),
+    private val onItemClick: (String) -> Unit
 ) :
     ArrayAdapter<String>(context, 0, items), Filterable {
     override fun getCount(): Int {
@@ -42,35 +44,39 @@ class UniversityAutoCompleteAdapter(
     }
 
 
-    override fun getFilter(): Filter {
-        return object : Filter() {
-            override fun publishResults(charSequence: CharSequence?, filterResults: FilterResults) {
-                if (filterResults.values != null)
-                    items = filterResults.values as List<String>
-                notifyDataSetChanged()
-            }
-            override fun performFiltering(charSequence: CharSequence?): FilterResults {
-                val queryString = charSequence?.toString()?.toLowerCase(Locale.ROOT)
-                val filterResults = FilterResults()
-                filterResults.values = if (queryString == null || queryString.isEmpty())
-                    items
-                else
-                    items.filter {
-                        it.trim().toLowerCase(Locale.ROOT).startsWith(queryString) ||
-                                it.trim().toLowerCase(Locale.ROOT)
-                                    .startsWith(queryString)
-                    }
-
-                return filterResults
-            }
-        }
-    }
+//    override fun getFilter(): Filter {
+//        return object : Filter() {
+//            override fun publishResults(charSequence: CharSequence?, filterResults: FilterResults) {
+//                if (filterResults.values != null)
+//                    items = filterResults.values as List<String>
+//                notifyDataSetChanged()
+//            }
+//            override fun performFiltering(charSequence: CharSequence?): FilterResults {
+//                val queryString = charSequence?.toString()?.toLowerCase(Locale.ROOT)
+//                val filterResults = FilterResults()
+//                filterResults.values = if (queryString == null || queryString.isEmpty())
+//                    items
+//                else
+//                    items.filter {
+//                        it.trim().toLowerCase(Locale.ROOT).startsWith(queryString) ||
+//                                it.trim().toLowerCase(Locale.ROOT)
+//                                    .startsWith(queryString)
+//                    }
+//
+//                return filterResults
+//            }
+//        }
+//    }
     inner class AutoCompleteViewHolder(
         val binding: ItemDropdownSpinnerBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: String) {
             binding.textItem = item
+
+            binding.item.setOnClickListener {
+                onItemClick(item)
+            }
         }
     }
 }

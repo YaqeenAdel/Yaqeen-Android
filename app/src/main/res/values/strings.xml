@@ -60,6 +60,9 @@
     <string name="medical_id_card">Medical ID Card</string>
     <string name="select_university">Select University</string>
     <string name="you_have_logged_in_successfully">You Have Logged In Successfully</string>
+    <string name="sign_in">Sign In</string>
+    <string name="continue_as_a_guest">Continue As A Guest</string>
+    <string name="don_t_have_account">Don’t have account?</string>
 
 
     <string-array name="languages_array">
