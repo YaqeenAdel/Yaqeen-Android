@@ -351,7 +351,7 @@ class OnboardingViewModel @Inject constructor(
     fun getUserProfile(): Profile? =
         userProfile.get()
 
-    fun getUser(): User? =
+     fun getUser(): User? =
     prefEncryptionUtil.getModelData(SharedPrefEncryptionUtil.PREF_USER, User::class.java)
 
 }

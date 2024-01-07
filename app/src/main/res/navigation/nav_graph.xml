@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_onBoardingFragment_to_introFragment"
             app:destination="@id/introFragment" />
+        <action
+            android:id="@+id/action_onBoardingFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
     </fragment>
     <fragment
         android:id="@+id/introFragment"
@@ -30,6 +33,12 @@
         <action
             android:id="@+id/action_introFragment_to_selectUserTypeFragment"
             app:destination="@id/selectUserTypeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.home.HomeFragment"
+        tools:layout="@layout/fragment_home" >
+
     </fragment>
     <fragment
         android:id="@+id/selectUserTypeFragment"
@@ -66,6 +75,7 @@
             android:id="@+id/action_modulesFragment_to_termsAndConditionFragment"
             app:destination="@id/termsAndConditionFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/specializationFragment"
         android:name="com.cancer.yaqeen.presentation.ui.onboarding.intro.user_type.doctor.specialization.SpecializationFragment"

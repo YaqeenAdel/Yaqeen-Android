@@ -2,9 +2,12 @@ package com.cancer.yaqeen.domain.di
 
 import com.cancer.yaqeen.data.features.auth.AuthRepositoryImpl
 import com.cancer.yaqeen.data.features.onboarding.HomeRepositoryImpl
+import com.cancer.yaqeen.data.features.onboarding.IOnboardingRepository
+import com.cancer.yaqeen.data.features.onboarding.OnboardingRepositoryImpl
 import com.cancer.yaqeen.data.features.profile.ProfileRepositoryImpl
 import com.cancer.yaqeen.domain.features.auth.login.usecases.LoginUseCase
 import com.cancer.yaqeen.domain.features.auth.login.usecases.LogoutUseCase
+import com.cancer.yaqeen.domain.features.home.articles.usecases.GetArticlesUseCase
 import com.cancer.yaqeen.domain.features.onboarding.usecases.GetResourcesUseCase
 import com.cancer.yaqeen.domain.features.onboarding.usecases.GetUniversitiesUseCase
 import com.cancer.yaqeen.domain.features.onboarding.usecases.GetUserProfileUseCase
@@ -33,31 +36,36 @@ object UseCaseModule {
 
     @Singleton
     @Provides
-    fun provideGetResourcesUseCase(repository: HomeRepositoryImpl) =
+    fun provideGetResourcesUseCase(repository: OnboardingRepositoryImpl) =
         GetResourcesUseCase(repository)
 
     @Singleton
     @Provides
-    fun provideGetUniversitiesUseCase(repository: HomeRepositoryImpl) =
+    fun provideGetUniversitiesUseCase(repository: OnboardingRepositoryImpl) =
         GetUniversitiesUseCase(repository)
 
     @Singleton
     @Provides
-    fun provideUpdateUserProfileUseCase(repository: HomeRepositoryImpl) =
+    fun provideUpdateUserProfileUseCase(repository: OnboardingRepositoryImpl) =
         UpdateUserProfileUseCase(repository)
 
     @Singleton
     @Provides
-    fun provideUpdateInterestsUserUseCase(repository: HomeRepositoryImpl) =
+    fun provideUpdateInterestsUserUseCase(repository: OnboardingRepositoryImpl) =
         UpdateInterestsUserUseCase(repository)
 
     @Singleton
     @Provides
-    fun provideGetUserProfileUseCase(repository: HomeRepositoryImpl) =
+    fun provideGetUserProfileUseCase(repository: OnboardingRepositoryImpl) =
         GetUserProfileUseCase(repository)
     @Singleton
     @Provides
     fun provideGetProfileUseCase(repository: ProfileRepositoryImpl) =
         GetProfileUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideGetArticleUseCase(repository: HomeRepositoryImpl) =
+        GetArticlesUseCase(repository)
+
 
 }

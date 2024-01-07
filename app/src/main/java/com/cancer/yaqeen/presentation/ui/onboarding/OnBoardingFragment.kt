@@ -250,7 +250,12 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
 //
 //        handler.post(runnable)
 //    }
+    private fun navigateToHomeAsGuest(){
+        navController.tryNavigate(
+            OnBoardingFragmentDirections.actionOnBoardingFragmentToHomeFragment()
 
+        )
+    }
 
     private fun navigateToUpdateProfile() {
 //        removeCallbacks()
@@ -266,7 +271,9 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
 
     override fun onClick(v: View?) {
         when(v?.id){
-            R.id.btn_continue -> {}
+            R.id.btn_continue -> {
+                navigateToHomeAsGuest()
+            }
             R.id.btn_create_account -> {
                 onboardingViewModel.login(requireContext())
             }
