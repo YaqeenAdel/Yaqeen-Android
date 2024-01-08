@@ -74,17 +74,15 @@ class ArticlesAdapter(
         fun bind(position: Int, item: Article) {
             itemBinding.tvArticleHeadline.text = item.Translations.get(0).Translation.Title
             Glide.with(_context).load(item.Translations.get(0).Translation.Thumbnail).centerInside().into(itemBinding.ivArticleImage)
-
+            itemBinding.tvArticleDate.text=item.CreatedDate.split('T').first()
         }
 
      }
 
     private fun notifyItemChangedByPosition(position: Int) {
         selectedPosition = position
-
         notifyItemChanged(lastSelectedPosition)
         notifyItemChanged(selectedPosition)
-
         lastSelectedPosition = selectedPosition
     }
 
