@@ -131,7 +131,7 @@ class ModulesFragment : BaseFragment() {
             viewModel.viewStateUpdateProfileSuccess.collectLatest {
                 it?.let {
                     navController.tryNavigate(
-                        ModulesFragmentDirections.actionModulesFragmentToTermsAndConditionFragment()
+                        ModulesFragmentDirections.actionModulesFragmentToHomeFragment()
                     )
                 }
             }
