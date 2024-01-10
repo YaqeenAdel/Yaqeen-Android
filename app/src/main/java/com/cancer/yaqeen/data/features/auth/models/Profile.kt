@@ -1,7 +1,7 @@
 package com.cancer.yaqeen.data.features.auth.models
 
 data class Profile(
-    var userType: UserType? = null,
+    var userType: UserType? = UserType.PATIENT,
     var cancerTypeId: Int? = null,
     var stageId: Int? = null,
     var interestModuleId: Int? = null,

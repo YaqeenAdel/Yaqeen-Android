@@ -149,6 +149,7 @@
                 android:id="@+id/btn_doctor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:text="@string/volunteer_doctor"
                 android:textColor="@color/light_black"
                 android:textSize="@dimen/_14ssp"

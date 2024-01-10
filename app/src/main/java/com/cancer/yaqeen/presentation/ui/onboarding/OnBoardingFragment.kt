@@ -154,10 +154,9 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
     }
 
     private fun setListener() {
-        binding.btnContinue.setOnClickListener(this)
-        binding.btnSignIn.setOnClickListener(this)
-        binding.tvDoNotHaveAccount.setOnClickListener(this)
-        binding.btnCreateAccount.setOnClickListener(this)
+        binding.btnContinueAsGuest.setOnClickListener(this)
+        binding.btnLogin.setOnClickListener(this)
+        binding.btnSignup.setOnClickListener(this)
 
 //        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 //            override fun onTabSelected(tab: TabLayout.Tab?) {
@@ -271,14 +270,13 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
 
     override fun onClick(v: View?) {
         when(v?.id){
-            R.id.btn_continue -> {
+            R.id.btn_continue_as_guest -> {
                 navigateToHomeAsGuest()
             }
-            R.id.btn_create_account -> {
+            R.id.btn_signup -> {
                 onboardingViewModel.login(requireContext())
             }
-            R.id.tv_do_not_have_account -> {}
-            R.id.btn_sign_in -> {
+            R.id.btn_login -> {
 //                removeCallbacks()
                 onboardingViewModel.login(requireContext())
             }

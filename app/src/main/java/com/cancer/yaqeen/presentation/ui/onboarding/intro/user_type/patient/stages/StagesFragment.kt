@@ -84,7 +84,7 @@ class StagesFragment : BaseFragment() {
         }
     }
     private fun updateUI() {
-        val spannable = SpannableStringBuilder("3/4")
+        val spannable = SpannableStringBuilder("2/3")
         spannable.setSpan(ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.primary_color)), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         binding.tvPageNumber.text = spannable
 

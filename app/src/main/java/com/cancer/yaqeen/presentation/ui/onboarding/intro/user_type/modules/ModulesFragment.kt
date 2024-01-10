@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -29,6 +30,7 @@ import com.cancer.yaqeen.presentation.ui.onboarding.intro.user_type.patient.stag
 import com.cancer.yaqeen.presentation.ui.onboarding.intro.user_type.patient.stages.StagesFragmentDirections
 import com.cancer.yaqeen.presentation.ui.onboarding.terms_condition.TermsAndConditionFragmentDirections
 import com.cancer.yaqeen.presentation.util.autoCleared
+import com.cancer.yaqeen.presentation.util.changeVisibility
 import com.cancer.yaqeen.presentation.util.dpToPx
 import com.cancer.yaqeen.presentation.util.recyclerview.CenterGridMarginItemDecoration
 import com.cancer.yaqeen.presentation.util.recyclerview.GridMarginItemDecoration
@@ -74,21 +76,27 @@ class ModulesFragment : BaseFragment() {
         observeStates()
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        binding.autoTvSearchItems.setText("")
+    }
+
     private fun setListener(){
         binding.toolbar.setNavigationOnClickListener {
             navController.popBackStack()
         }
 
-        binding.btnNext.setOnClickListener {
+        binding.btnFinish.setOnClickListener {
             viewModel.updateUserProfile()
         }
 
-        binding.btnPrevious.setOnClickListener {
-            navController.tryPopBackStack()
+        binding.autoTvSearchItems.addTextChangedListener {
+            modulesAdapter.filter.filter(it.toString())
         }
     }
     private fun updateUI() {
-        val spannable = SpannableStringBuilder("4/4")
+        val spannable = SpannableStringBuilder("3/3")
         spannable.setSpan(ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.primary_color)), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         binding.tvPageNumber.text = spannable
 
@@ -107,7 +115,7 @@ class ModulesFragment : BaseFragment() {
                         UserType.PATIENT -> it.patientInterests
                         UserType.DOCTOR -> it.doctorInterests
                     }
-                    modulesAdapter.submitList(modules)
+                    modulesAdapter.setList(modules)
                     modulesAdapter.currentList.firstOrNull()?.apply {
                         val interestModuleId = viewModel.getUserProfile()?.interestModuleId
                         if(interestModuleId == null)
@@ -123,7 +131,7 @@ class ModulesFragment : BaseFragment() {
             viewModel.viewStateUpdateProfileSuccess.collectLatest {
                 it?.let {
                     navController.tryNavigate(
-                        ModulesFragmentDirections.actionModulesFragmentToTermsAndConditionFragment()
+                        ModulesFragmentDirections.actionModulesFragmentToHomeFragment()
                     )
                 }
             }
@@ -143,7 +151,13 @@ class ModulesFragment : BaseFragment() {
     private fun setupModulesAdapter() {
         modulesAdapter = ModulesAdapter {
             selectInterestModule(it)
-            viewModel.updateUserProfile()
+//            viewModel.updateUserProfile()
+
+            if (it.selected){
+                binding.btnFinish.changeVisibility(show = true)
+            }else {
+                binding.btnFinish.changeVisibility(show = !modulesAdapter.allItemsUnSelected(), isGone = true)
+            }
         }
 
         binding.rvModules.apply {
@@ -156,25 +170,6 @@ class ModulesFragment : BaseFragment() {
 //            )
         }
 
-//        modulesAdapter.submitList(
-//            listOf(
-//                Module(
-//                    id = 1, moduleName = "Awareness"
-//                ),
-//                Module(
-//                    id = 2, moduleName = "Connecting for consultant"
-//                ),
-//                Module(
-//                    id = 3, moduleName = "Tracking Health"
-//                ),
-//                Module(
-//                    id = 4, moduleName = "Emotional support\n"
-//                )
-//            )
-//        )
-//        modulesAdapter.currentList.firstOrNull()?.apply {
-//            selectInterestModule(this)
-//        }
     }
 
     private fun selectInterestModule(it: Module) {

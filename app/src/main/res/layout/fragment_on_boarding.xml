@@ -13,16 +13,128 @@
             android:background="@color/white"
             tools:context=".presentation.ui.onboarding.OnBoardingFragment">
 
-            <ImageView
+            <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/iv_app_logo"
-                android:layout_width="@dimen/_80sdp"
-                android:layout_height="@dimen/_80sdp"
-                android:src="@mipmap/ic_launcher"
-                android:layout_marginTop="@dimen/_48sdp"
+                android:layout_width="@dimen/_180sdp"
+                android:layout_height="@dimen/_180sdp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="@dimen/_32sdp"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/on_boarding" />
 
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintVertical_bias="1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/iv_app_logo"
+                android:layout_marginHorizontal="@dimen/_24sdp"
+                android:paddingVertical="@dimen/_8sdp"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textSize="@dimen/_13ssp"
+                android:text="@string/on_boarding_title"
+                android:textColor="@color/black"/>
+
+
+            <TextView
+                android:id="@+id/tv_message"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintVertical_bias="1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_title"
+                android:layout_marginHorizontal="@dimen/_18sdp"
+                android:paddingVertical="@dimen/_8sdp"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:gravity="start"
+                android:textSize="@dimen/_13ssp"
+                android:text="@string/on_boarding_message"
+                android:textColor="@color/black"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_bottom"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:elevation="@dimen/_16sdp"
+        android:shadowColor="@color/black"
+        android:outlineSpotShadowColor="@color/black"
+        app:cardUseCompatPadding="true"
+        android:background="@drawable/background_view_top_radius"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_login"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            style="@style/CustomMaterialButtonStrokeStyle"
+            app:strokeWidth="@dimen/_1sdp"
+            app:strokeColor="@color/gray"
+            app:layout_constraintVertical_bias="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_signup"
+            app:layout_constraintBottom_toTopOf="@id/btn_continue_as_guest"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="@dimen/_18sdp"
+            android:layout_marginBottom="@dimen/_12sdp"
+            android:layout_marginEnd="@dimen/_6sdp"
+            android:layout_marginStart="@dimen/_14sdp"
+            android:paddingVertical="@dimen/_12sdp"
+            app:cornerRadius="@dimen/_8sdp"
+            android:textSize="@dimen/_14ssp"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
+            android:text="@string/log_in"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_signup"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            style="@style/CustomMaterialButtonStyle"
+            app:backgroundTint="@color/primary_color"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btn_login"
+            app:layout_constraintBottom_toBottomOf="@id/btn_login"
+            app:layout_constraintTop_toTopOf="@id/btn_login"
+            android:layout_marginStart="@dimen/_6sdp"
+            android:layout_marginEnd="@dimen/_14sdp"
+            android:paddingVertical="@dimen/_12sdp"
+            app:cornerRadius="@dimen/_8sdp"
+            android:textSize="@dimen/_14ssp"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:text="@string/sign_up"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_continue_as_guest"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            style="@style/CustomMaterialButtonStrokeStyle"
+            app:strokeWidth="@dimen/_1sdp"
+            app:strokeColor="@color/light_gray"
+            app:layout_constraintVertical_bias="1"
+            app:layout_constraintStart_toStartOf="@id/btn_login"
+            app:layout_constraintEnd_toEndOf="@id/btn_signup"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginVertical="@dimen/_12sdp"
+            android:paddingVertical="@dimen/_12sdp"
+            app:cornerRadius="@dimen/_8sdp"
+            android:textSize="@dimen/_14ssp"
+            android:textAllCaps="false"
+            android:textColor="@color/medium_gray"
+            android:text="@string/skip"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_sign_in"
@@ -36,6 +148,7 @@
                 android:textColor="@color/light_black"
                 android:textSize="@dimen/_13ssp"
                 android:textAllCaps="false"
+                android:visibility="gone"
                 style="@style/Widget.MaterialComponents.TextView"
                 app:backgroundTint="@color/primary_color_30"
                 app:cornerRadius="@dimen/_8sdp"
@@ -61,6 +174,7 @@
                 android:textStyle="normal"
                 app:backgroundTint="@color/white"
                 app:cornerRadius="@dimen/_8sdp"
+                android:visibility="gone"
                 app:layout_constraintBottom_toTopOf="@+id/tv_do_not_have_account"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -72,6 +186,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintVertical_bias="1"
+                android:visibility="gone"
                 app:layout_constraintBottom_toTopOf="@+id/btn_create_account"
                 app:layout_constraintEnd_toEndOf="@id/btn_continue"
                 app:layout_constraintStart_toStartOf="@id/btn_continue"
@@ -94,6 +209,7 @@
                 android:textSize="@dimen/_12ssp"
                 android:textStyle="normal"
                 android:textAllCaps="false"
+                android:visibility="gone"
                 app:backgroundTint="@color/primary_color"
                 app:cornerRadius="@dimen/_8sdp"
                 app:layout_constraintVertical_bias="1"
@@ -106,6 +222,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"
+                android:visibility="gone"
                 android:layout_marginBottom="@dimen/_48sdp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
