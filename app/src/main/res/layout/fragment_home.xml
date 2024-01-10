@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+             tools:context=".presentation.ui.onboarding.OnBoardingFragment">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/header_parent_layout"
+                android:layout_width="match_parent"
+                android:background="@color/header_background"
+
+                android:layout_height="@dimen/_120sdp"
+                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/iv_header_logo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/header_logo"
+                    android:layout_marginHorizontal="@dimen/_24sdp"
+                    android:layout_marginVertical="@dimen/_18sdp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:contentDescription="Logo Header " />
+
+                <ImageView
+                    android:id="@+id/iv_calender"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_20sdp"
+                    android:layout_marginVertical="@dimen/_18sdp"
+                    android:padding="@dimen/_5sdp"
+                    android:src="@drawable/ic_calender"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/iv_header_logo" />
+
+                <TextView
+                    android:id="@+id/tv_current_day_date"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_4sdp"
+                    android:gravity="center"
+                    android:paddingVertical="@dimen/_4sdp"
+                    android:text="1 Jan 2024"
+                    android:textColor="@color/text_black"
+                    android:textSize="@dimen/_11ssp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/iv_calender"
+                    app:layout_constraintStart_toEndOf="@+id/iv_calender"
+                    app:layout_constraintTop_toTopOf="@+id/iv_calender" />
+
+                <TextView
+                    android:id="@+id/tv_see_all_calender"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_20sdp"
+                    android:gravity="center"
+                    android:paddingVertical="@dimen/_4sdp"
+                    android:drawablePadding="@dimen/_10sdp"
+                    android:text="@string/see_all"
+                    android:textColor="@color/primary_color"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_current_day_date"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tv_current_day_date"
+                    app:drawableEndCompat="@drawable/right_arrow" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/tv_search_atricles"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_16sdp"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:background="@drawable/background_view_auto_search_2"
+                android:drawableStart="@drawable/ic_search"
+                android:drawablePadding="@dimen/_8sdp"
+                android:drawableTint="@color/primary_color"
+                android:hint="@string/search"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:paddingHorizontal="@dimen/_8sdp"
+                android:paddingVertical="@dimen/_10sdp"
+                android:textColor="@color/light_black"
+                android:textColorHint="@color/crow_black_blue"
+                android:textSize="@dimen/_12ssp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/header_parent_layout" />
+
+            <TextView
+                android:id="@+id/tv_recommended_articles"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_4sdp"
+                android:gravity="center"
+                android:paddingVertical="@dimen/_4sdp"
+                android:text="@string/recommended_articles"
+                android:layout_margin="@dimen/_20sdp"
+                android:textColor="@color/text_black"
+                android:textSize="@dimen/_16ssp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_search_atricles" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_articles"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_20sdp"
+                tools:itemCount="5"
+                tools:listitem="@layout/item_article"
+                android:layout_marginHorizontal="@dimen/_4sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_recommended_articles" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</layout>

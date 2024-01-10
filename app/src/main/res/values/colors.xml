@@ -4,10 +4,13 @@
     <color name="purple_500">#B5EDDA</color>
     <color name="purple_700">#7CDFBD</color>
     <color name="teal_200">#FF03DAC5</color>
+    <color name="header_background">#F1F8FF</color>
     <color name="teal_700">#1BAFB7</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="white_50">#80FFFFFF</color>
+    <color name="text_black">#090A0A</color>
+
 
     <color name="black_transparent_30">#4D000000</color>
     <color name="black_transparent_20">#33000000</color>

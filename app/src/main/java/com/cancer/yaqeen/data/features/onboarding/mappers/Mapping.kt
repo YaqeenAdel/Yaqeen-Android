@@ -1,6 +1,5 @@
 package com.cancer.yaqeen.data.features.onboarding.mappers
 
-import com.auth0.android.result.UserProfile
 import com.cancer.yaqeen.data.base.Mapper
 import com.cancer.yaqeen.data.features.auth.models.Aggregate
 import com.cancer.yaqeen.data.features.auth.models.Doctor

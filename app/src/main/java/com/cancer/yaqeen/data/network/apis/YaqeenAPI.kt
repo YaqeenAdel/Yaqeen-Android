@@ -2,11 +2,11 @@ package com.cancer.yaqeen.data.network.apis
 
 import com.cancer.yaqeen.data.features.auth.requests.LoginRequestBody
 import com.cancer.yaqeen.data.features.auth.responses.LoginRemote
+import com.cancer.yaqeen.data.features.home.responses.HomeArticlesResponse
 import com.cancer.yaqeen.data.features.onboarding.requests.UpdateInterestsUserRequestBody
 import com.cancer.yaqeen.data.features.onboarding.requests.UpdateProfileRequestBody
 import com.cancer.yaqeen.data.features.onboarding.responses.ResourcesResponse
 import com.cancer.yaqeen.data.features.onboarding.responses.UniversitiesResponse
-import com.cancer.yaqeen.data.features.onboarding.responses.UpdateProfileResponse
 import com.cancer.yaqeen.data.features.onboarding.responses.UserProfileResponse
 import retrofit2.Response
 import retrofit2.http.Body
@@ -46,5 +46,8 @@ interface YaqeenAPI {
 
     @GET("me")
     suspend fun getUserProfile(): Response<UserProfileResponse>
+    @GET("content/articles")
+    @Headers("isAuthorization: false")
+    suspend fun getHomeArticles(): Response<HomeArticlesResponse>
 
 }
