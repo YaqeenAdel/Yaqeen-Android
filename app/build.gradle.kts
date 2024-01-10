@@ -106,6 +106,8 @@ dependencies {
 
     implementation("com.github.ybq:Android-SpinKit:1.4.0")
 
+    implementation("com.airbnb.android:lottie:3.4.0")
+
     // Lifecycle
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")

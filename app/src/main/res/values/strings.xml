@@ -8,6 +8,7 @@
     <string name="explore_the_app">Explore the app</string>
     <string name="start_join">Start join</string>
     <string name="login">Login</string>
+    <string name="log_in">Log in</string>
     <string name="login_dialog">LOGIN</string>
     <string name="next">Next</string>
     <string name="please_select_your_user_type">Please select your user type</string>
@@ -58,6 +59,16 @@
     <string name="sign_in">Sign In</string>
     <string name="continue_as_a_guest">Continue As A Guest</string>
     <string name="don_t_have_account">Don’t have account?</string>
+    <string name="on_boarding_title">Explore trusted articles to learn more about your condition</string>
+    <string name="on_boarding_message">" Discover helpful tips for recovery, Empower your healing journey with reliable information and practical advice."</string>
+    <string name="sign_up">Sign up</string>
+    <string name="specify_your_type_of_cancer">Specify your type of cancer.</string>
+    <string name="search_type_of_cancer">Search Type of Cancer</string>
+    <string name="search_type_of_interest">Search Type of Interest</string>
+    <string name="specify_your_cancer_stage">Specify your cancer stage.</string>
+    <string name="interest">interest?</string>
+    <string name="select_all_categories_you_interest">Select all categories you interest.</string>
+    <string name="finish">Finish</string>
 
 
     <string-array name="languages_array">

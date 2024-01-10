@@ -8,12 +8,13 @@
     </data>
 
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/_20sdp"
-        app:cardCornerRadius="@dimen/_12sdp"
+        app:cardCornerRadius="@dimen/_4sdp"
         app:strokeWidth="@dimen/_1sdp"
-        app:strokeColor="@color/primary_color">
+        app:strokeColor="@color/light_gray">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/item_container"
@@ -21,20 +22,6 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:animateLayoutChanges="true">
-
-        <ImageView
-            android:id="@+id/radio_button"
-            android:layout_width="@dimen/_18sdp"
-            android:layout_height="@dimen/_18sdp"
-            android:src="@drawable/ic_uncheck_circle"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="@dimen/_8sdp"
-            android:layout_marginHorizontal="@dimen/_8sdp"
-            android:textColor="@color/light_black"
-            android:textSize="@dimen/_1ssp"
-            app:buttonTint="@color/light_black"/>
-
 
         <View
             android:id="@+id/view_selected"
@@ -64,15 +51,17 @@
             android:id="@+id/iv_module_icon"
             android:layout_width="@dimen/_54sdp"
             android:layout_height="@dimen/_54sdp"
-            android:background="@color/silver_medal"
+            android:background="@color/light_gray"
             app:riv_oval="true"
             app:riv_tile_mode="clamp"
+            android:src="@drawable/ic_interest"
             app:riv_mutate_background="true"
             android:padding="@dimen/_10sdp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/radio_button"
+            app:layout_constraintTop_toTopOf="parent"
             android:layout_marginHorizontal="@dimen/_24sdp"
+            android:layout_marginTop="@dimen/_18sdp"
             android:gravity="center"
             tools:text="1"
             android:textColor="@color/black"
@@ -85,16 +74,31 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_module_icon"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintVertical_bias="0"
             android:layout_marginHorizontal="@dimen/_10sdp"
-            android:layout_marginTop="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_6sdp"
             android:layout_marginBottom="@dimen/_6sdp"
             android:minLines="2"
             android:gravity="center|top"
             tools:text="Connecting for consultant"
-            android:textColor="@color/primary_color"
+            android:textColor="@color/light_black"
             android:textSize="@dimen/_11ssp"/>
+
+        <ImageView
+            android:id="@+id/radio_button"
+            android:layout_width="@dimen/_18sdp"
+            android:layout_height="@dimen/_18sdp"
+            android:src="@drawable/ic_uncheck_circle"
+            app:layout_constraintTop_toBottomOf="@id/tv_module_name"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0"
+            android:layout_marginBottom="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_18sdp"
+            android:layout_marginHorizontal="@dimen/_8sdp"
+            android:textColor="@color/light_black"
+            android:textSize="@dimen/_1ssp"
+            app:buttonTint="@color/light_black"/>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -39,12 +39,12 @@
             app:layout_constraintTop_toBottomOf="@id/toolbar"
             android:textColor="@color/maiden_mist"
             android:textSize="@dimen/_11ssp"
-            android:text="4/4"/>
+            android:text="3/3"/>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_6sdp"
+            android:layout_marginStart="@dimen/_8sdp"
             android:layout_marginEnd="@dimen/_12sdp"
             app:layout_constraintWidth_percent="0.7"
             app:layout_constraintHorizontal_bias="0"
@@ -64,7 +64,7 @@
                 android:layout_width="0dp"
                 android:layout_height="@dimen/_2sdp"
                 android:layout_weight="1"
-                android:layout_marginStart="@dimen/_4sdp"
+                android:layout_marginStart="@dimen/_8sdp"
                 android:backgroundTint="@color/primary_color_30"
                 android:background="@drawable/background_view_selected_colored"/>
 
@@ -72,14 +72,14 @@
                 android:layout_width="0dp"
                 android:layout_height="@dimen/_2sdp"
                 android:layout_weight="1"
-                android:layout_marginStart="@dimen/_4sdp"
-                android:backgroundTint="@color/primary_color_30"
+                android:layout_marginStart="@dimen/_8sdp"
                 android:background="@drawable/background_view_selected_colored"/>
 
             <View
                 android:layout_width="0dp"
                 android:layout_height="@dimen/_2sdp"
                 android:layout_weight="1"
+                android:visibility="gone"
                 android:layout_marginStart="@dimen/_4sdp"
                 android:background="@drawable/background_view_selected_colored"/>
 
@@ -87,6 +87,7 @@
                 android:layout_width="0dp"
                 android:layout_height="@dimen/_2sdp"
                 android:layout_weight="1"
+                android:visibility="gone"
                 android:layout_marginStart="@dimen/_4sdp"
                 android:backgroundTint="@color/primary_color_30"
                 android:background="@drawable/background_view_selected_colored"/>
@@ -101,7 +102,7 @@
             android:layout_marginTop="@dimen/_64sdp"
             android:layout_marginEnd="@dimen/_4sdp"
             android:gravity="center|start"
-            android:text="@string/select_module_you_interest"
+            android:text="@string/interest"
             android:textColor="@color/primary_color"
             android:textSize="@dimen/_18ssp"
             android:textStyle="bold"
@@ -121,17 +122,37 @@
             android:layout_marginEnd="@dimen/_4sdp"
             android:layout_marginTop="@dimen/_6sdp"
             android:gravity="center|start"
-            android:text="Lorem ipsum dolor sit amet ."
+            android:text="@string/select_all_categories_you_interest"
             android:textColor="@color/xx_dark_gray"
             android:textSize="@dimen/_14ssp"/>
 
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+            android:id="@+id/auto_tv_search_items"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_view_auto_search"
+            android:drawableStart="@drawable/baseline_search_24"
+            android:drawablePadding="@dimen/_4sdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_message"
+            android:paddingVertical="@dimen/_10sdp"
+            android:paddingHorizontal="@dimen/_8sdp"
+            android:layout_marginHorizontal="@dimen/_16sdp"
+            android:layout_marginTop="@dimen/_32sdp"
+            android:textColorHint="@color/crow_black_blue"
+            android:textColor="@color/light_black"
+            android:textSize="@dimen/_12ssp"
+            android:hint="@string/search_type_of_interest"
+            android:imeOptions="actionSearch"
+            android:inputType="text" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_modules"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginHorizontal="@dimen/_24sdp"
-            android:layout_marginTop="@dimen/_32sdp"
+            android:layout_marginHorizontal="@dimen/_16sdp"
+            android:layout_marginTop="@dimen/_24sdp"
             android:nestedScrollingEnabled="false"
             android:saveEnabled="false"
             android:orientation="vertical"
@@ -139,55 +160,29 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_message"
+            app:layout_constraintTop_toBottomOf="@id/auto_tv_search_items"
             app:spanCount="2"
             tools:itemCount="4"
             tools:listitem="@layout/item_module" />
 
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_previous"
+            android:id="@+id/btn_finish"
             style="@style/CustomMaterialButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_16sdp"
-            android:layout_marginEnd="@dimen/_10sdp"
-            android:layout_marginBottom="@dimen/_16sdp"
-            android:paddingVertical="@dimen/_10sdp"
-            android:text="@string/previous"
-            android:textColor="@color/primary_color"
-            android:textSize="@dimen/_13ssp"
-            app:backgroundTint="@color/super_silver2"
-            app:cornerRadius="@dimen/_4sdp"
-            app:icon="@drawable/ic_previous"
-            app:iconTint="@color/primary_color"
-            app:iconGravity="textStart"
-            app:iconPadding="@dimen/_12sdp"
-            app:layout_constraintVertical_bias="1"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/btn_next"
-            app:layout_constraintStart_toStartOf="parent" />
-
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_next"
-            style="@style/CustomMaterialButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_10sdp"
-            android:layout_marginEnd="@dimen/_16sdp"
-            android:paddingVertical="@dimen/_10sdp"
-            android:text="@string/next"
+            android:visibility="gone"
+            android:layout_marginHorizontal="@dimen/_8sdp"
+            android:paddingVertical="@dimen/_12sdp"
+            android:text="@string/finish"
             android:textColor="@color/white"
             android:textSize="@dimen/_13ssp"
             app:backgroundTint="@color/primary_color"
             app:cornerRadius="@dimen/_4sdp"
-            android:visibility="invisible"
-            app:layout_constraintVertical_bias="0.20"
-            app:layout_constraintBottom_toBottomOf="@id/btn_previous"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/btn_previous"
-            app:layout_constraintTop_toTopOf="@id/btn_previous" />
+            android:layout_marginBottom="@dimen/_16sdp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
 
 

@@ -42,7 +42,7 @@ class IntroFragment : Fragment() {
     private fun setListener(){
         binding.btnStart.setOnClickListener {
             navController.tryNavigate(
-                IntroFragmentDirections.actionIntroFragmentToSelectUserTypeFragment()
+                IntroFragmentDirections.actionIntroFragmentToSelectCancerTypeFragment()
             )
         }
 
