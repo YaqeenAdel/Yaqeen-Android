@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_6sdp"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:background="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:title="@string/register_medication"
+            app:titleCentered="true"
+            app:titleTextAppearance="@style/ToolbarTitleStyle"
+            app:titleTextColor="@color/light_black" />
+
+        <TextView
+            android:id="@+id/tv_page_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_16sdp"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:textColor="@color/maiden_mist"
+            android:textSize="@dimen/_11ssp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            tools:text="3/3" />
+
+        <LinearLayout
+            android:id="@+id/steps_tab_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_4sdp"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="@id/toolbar"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="@id/tv_page_number"
+            app:layout_constraintTop_toBottomOf="@id/tv_page_number">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_2sdp"
+                android:layout_weight="1"
+                android:background="@drawable/background_view_selected_colored"
+                android:backgroundTint="@color/primary_color_30" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_2sdp"
+                android:layout_marginStart="@dimen/_4sdp"
+                android:layout_weight="1"
+                android:background="@drawable/background_view_selected_colored"
+                android:backgroundTint="@color/primary_color_30" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_2sdp"
+                android:layout_marginStart="@dimen/_4sdp"
+                android:layout_weight="1"
+                android:background="@drawable/background_view_selected_colored" />
+
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/medication_container"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_40sdp"
+            android:padding="@dimen/_8sdp"
+            app:layout_constraintEnd_toEndOf="@id/steps_tab_layout"
+            app:layout_constraintStart_toStartOf="@id/steps_tab_layout"
+            app:layout_constraintTop_toBottomOf="@id/tv_page_number">
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/iv_medication_img"
+                android:layout_width="@dimen/_48sdp"
+                android:layout_height="@dimen/_48sdp"
+                android:src="@color/gray"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:riv_corner_radius="@dimen/_4sdp" />
+
+            <TextView
+                android:id="@+id/tv_medication_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_marginTop="@dimen/_2sdp"
+                android:textColor="@color/light_black"
+                app:layout_constraintStart_toEndOf="@id/iv_medication_img"
+                app:layout_constraintTop_toTopOf="@id/iv_medication_img"
+                tools:text="CINNARIZINE 75 MG 20 CAP" />
+
+            <TextView
+                android:id="@+id/tv_medication_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_marginBottom="@dimen/_2sdp"
+                android:textColor="@color/x_dark_gray"
+                app:layout_constraintBottom_toBottomOf="@id/iv_medication_img"
+                app:layout_constraintStart_toEndOf="@id/iv_medication_img"
+                tools:text="دواء لقصور الدورة الدموية" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TableLayout
+            android:id="@+id/table_medication_details"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_16sdp"
+            app:layout_constraintEnd_toEndOf="@id/medication_container"
+            app:layout_constraintStart_toStartOf="@id/medication_container"
+            app:layout_constraintTop_toBottomOf="@id/medication_container">
+
+            <TableRow
+                android:background="@color/light_gray"
+                android:paddingHorizontal="@dimen/_4sdp"
+                android:paddingVertical="@dimen/_6sdp"
+                android:weightSum="2">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/amount" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    tools:text="X 2 Capsule" />
+
+            </TableRow>
+
+            <TableRow
+                android:paddingHorizontal="@dimen/_4sdp"
+                android:paddingVertical="@dimen/_6sdp"
+                android:weightSum="2">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/period" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    tools:text="7 days" />
+
+            </TableRow>
+
+            <!-- TODO: other rows source to be determined later -->
+            <TableRow
+                android:background="@color/light_gray"
+                android:paddingHorizontal="@dimen/_4sdp"
+                android:paddingVertical="@dimen/_6sdp"
+                android:weightSum="2">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/amount" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    tools:text="X 2 Capsule" />
+
+            </TableRow>
+
+
+        </TableLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_previous"
+            style="@style/CustomMaterialButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_16sdp"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_16sdp"
+            android:paddingVertical="@dimen/_10sdp"
+            android:text="@string/previous"
+            android:textColor="@color/primary_color"
+            android:textSize="@dimen/_13ssp"
+            app:backgroundTint="@color/light_gray"
+            app:cornerRadius="@dimen/_4sdp"
+            app:icon="@drawable/ic_previous"
+            app:iconGravity="textStart"
+            app:iconPadding="@dimen/_12sdp"
+            app:iconTint="@color/primary_color"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_confirm"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_confirm"
+            style="@style/CustomMaterialButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginEnd="@dimen/_16sdp"
+            android:paddingVertical="@dimen/_10sdp"
+            android:text="@string/confirm"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_13ssp"
+            app:backgroundTint="@color/primary_color"
+            app:cornerRadius="@dimen/_4sdp"
+            app:icon="@drawable/ic_next"
+            app:iconGravity="textEnd"
+            app:iconPadding="@dimen/_12sdp"
+            app:iconTint="@color/white"
+            app:layout_constraintBottom_toBottomOf="@id/btn_previous"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btn_previous"
+            app:layout_constraintTop_toTopOf="@id/btn_previous" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_8sdp"
         app:cardCornerRadius="@dimen/_4sdp">
+        <!-- TODO: stroke and dim source to be determined later -->
         <!--
         Stroke source to be determined later
         app:strokeColor="@color/primary_color"
