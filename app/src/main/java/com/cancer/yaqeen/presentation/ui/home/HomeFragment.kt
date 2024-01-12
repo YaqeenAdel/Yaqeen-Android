@@ -83,7 +83,7 @@ class HomeFragment : BaseFragment(), OnClickListener {
             adapter = articlesAdapter
             addItemDecoration(
                 VerticalMarginItemDecoration(
-                    dpToPx(15f, requireContext())
+                    dpToPx(12f, requireContext())
                 )
             )
         }

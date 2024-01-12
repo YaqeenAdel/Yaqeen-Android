@@ -7,7 +7,7 @@
 
     </data>
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -52,28 +52,29 @@
                     android:id="@+id/tv_current_day_date"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_4sdp"
-                    android:gravity="center"
+                    android:layout_marginHorizontal="@dimen/_2sdp"
+                    android:gravity="center|start"
                     android:paddingVertical="@dimen/_4sdp"
-                    android:text="1 Jan 2024"
                     android:textColor="@color/text_black"
-                    android:textSize="@dimen/_11ssp"
+                    android:textSize="@dimen/_10ssp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="@+id/iv_calender"
+                    app:layout_constraintEnd_toStartOf="@+id/tv_see_all_calender"
                     app:layout_constraintStart_toEndOf="@+id/iv_calender"
-                    app:layout_constraintTop_toTopOf="@+id/iv_calender" />
+                    app:layout_constraintTop_toTopOf="@+id/iv_calender"
+                    tools:text="1 Jan 2024" />
 
                 <TextView
                     android:id="@+id/tv_see_all_calender"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_20sdp"
+                    android:layout_marginHorizontal="@dimen/_22sdp"
                     android:gravity="center"
                     android:paddingVertical="@dimen/_4sdp"
-                    android:drawablePadding="@dimen/_10sdp"
+                    android:drawablePadding="@dimen/_8sdp"
                     android:text="@string/see_all"
                     android:textColor="@color/primary_color"
-                    android:textSize="@dimen/_12ssp"
+                    android:textSize="@dimen/_10ssp"
                     app:layout_constraintBottom_toBottomOf="@+id/tv_current_day_date"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/tv_current_day_date"
@@ -92,20 +93,19 @@
                 android:id="@+id/tv_search_atricles"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_16sdp"
-                android:layout_marginTop="@dimen/_16sdp"
+                android:layout_marginHorizontal="@dimen/_14sdp"
+                android:layout_marginTop="@dimen/_24sdp"
                 android:background="@drawable/background_view_auto_search_2"
                 android:drawableStart="@drawable/ic_search"
-                android:drawablePadding="@dimen/_8sdp"
-                android:drawableTint="@color/primary_color"
+                android:drawablePadding="@dimen/_10sdp"
                 android:hint="@string/search"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
-                android:paddingHorizontal="@dimen/_8sdp"
+                android:paddingHorizontal="@dimen/_12sdp"
                 android:paddingVertical="@dimen/_10sdp"
                 android:textColor="@color/light_black"
-                android:textColorHint="@color/crow_black_blue"
-                android:textSize="@dimen/_12ssp"
+                android:textColorHint="@color/dark_gray"
+                android:textSize="@dimen/_13ssp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/header_parent_layout" />
@@ -114,11 +114,10 @@
                 android:id="@+id/tv_recommended_articles"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_4sdp"
                 android:gravity="center"
                 android:paddingVertical="@dimen/_4sdp"
                 android:text="@string/recommended_articles"
-                android:layout_margin="@dimen/_20sdp"
+                android:layout_margin="@dimen/_14sdp"
                 android:textColor="@color/text_black"
                 android:textSize="@dimen/_16ssp"
                 android:textStyle="bold"
@@ -129,13 +128,12 @@
                 android:id="@+id/rv_articles"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/_20sdp"
                 tools:itemCount="5"
                 tools:listitem="@layout/item_article"
-                android:layout_marginHorizontal="@dimen/_4sdp"
+                android:layout_marginHorizontal="@dimen/_14sdp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_recommended_articles" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 </layout>
