@@ -31,6 +31,7 @@ import com.cancer.yaqeen.presentation.ui.onboarding.intro.user_type.doctor.speci
 import com.cancer.yaqeen.presentation.ui.onboarding.intro.user_type.doctor.specialization.university.UniversitiesAdapter
 import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.autoCleared
+import com.cancer.yaqeen.presentation.util.changeVisibility
 import com.cancer.yaqeen.presentation.util.dpToPx
 import com.cancer.yaqeen.presentation.util.recyclerview.HorizontalMarginItemDecoration
 import com.cancer.yaqeen.presentation.util.recyclerview.VerticalMarginItemDecoration
@@ -69,6 +70,9 @@ class HomeFragment : BaseFragment(), OnClickListener {
         setupAdapters()
         observeStates()
         getArticles()
+
+        binding.groupProfile.changeVisibility(show = true, isGone = false)
+        binding.groupGuest.changeVisibility(show = false, isGone = false)
     }
 
     private fun setupAdapters(){
@@ -77,8 +81,10 @@ class HomeFragment : BaseFragment(), OnClickListener {
     }
 
     private fun setupArticlesAdapter() {
-        articlesAdapter = ArticlesAdapter() {
-
+        articlesAdapter = ArticlesAdapter {
+            navController.tryNavigate(
+                HomeFragmentDirections.actionHomeFragmentToArticleDetailsFragment()
+            )
         }
         binding.rvArticles.apply {
             adapter = articlesAdapter

@@ -43,10 +43,10 @@
 
                 <ImageView
                     android:id="@+id/iv_article_bookmark"
-                    android:layout_width="@dimen/_15sdp"
-                    android:layout_height="@dimen/_15sdp"
-                    android:layout_margin="@dimen/_4sdp"
-                    android:src="@drawable/ic_bookmark" />
+                    android:layout_width="@dimen/_18sdp"
+                    android:layout_height="@dimen/_18sdp"
+                    android:layout_margin="@dimen/_2sdp"
+                    android:src="@drawable/ic_bookmark_unchecked" />
             </com.google.android.material.card.MaterialCardView>
 
 <!--            <com.google.android.material.card.MaterialCardView-->
@@ -95,9 +95,10 @@
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card_category"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                 app:cardCornerRadius="@dimen/_30sdp"
-                android:backgroundTint="@color/primary_color"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="@dimen/_30sdp"
+                android:backgroundTint="@color/gray"
+                tools:backgroundTint="@color/primary_color"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -105,7 +106,7 @@
                     android:id="@+id/tv_category_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/therapy_treatment"
+                    tools:text="@string/therapy_treatment"
                     android:textSize="@dimen/_10ssp"
                     android:layout_marginHorizontal="@dimen/_8sdp"
                     android:layout_marginVertical="@dimen/_4sdp"

@@ -51,6 +51,9 @@
         android:name="com.cancer.yaqeen.presentation.ui.home.HomeFragment"
         tools:layout="@layout/fragment_home" >
 
+        <action
+            android:id="@+id/action_homeFragment_to_articleDetailsFragment"
+            app:destination="@id/articleDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/selectUserTypeFragment"
@@ -129,5 +132,9 @@
         android:id="@+id/universitiesFragment"
         android:name="com.cancer.yaqeen.presentation.ui.onboarding.intro.user_type.doctor.specialization.university.UniversitiesFragment"
         tools:layout="@layout/fragment_universities" />
+    <fragment
+        android:id="@+id/articleDetailsFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.home.article_details.ArticleDetailsFragment"
+        tools:layout="@layout/fragment_article_details" />
 
 </navigation>
