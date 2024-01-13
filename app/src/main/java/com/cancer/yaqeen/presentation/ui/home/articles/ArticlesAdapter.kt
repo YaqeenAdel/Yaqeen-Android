@@ -11,15 +11,12 @@ import com.bumptech.glide.Glide
 import com.cancer.yaqeen.data.features.home.responses.Article
 import com.cancer.yaqeen.data.features.onboarding.models.University
 import com.cancer.yaqeen.databinding.ItemArticleBinding
+import com.cancer.yaqeen.presentation.util.changeVisibility
 
 class ArticlesAdapter(
-    private var items: List<Article> = listOf(),
     private val onItemClick: (Article) -> Unit
 ) :
     ListAdapter<Article, ArticlesAdapter.ArticlesViewHolder>(Companion), Filterable {
-
-    private var selectedPosition = -1
-    private var lastSelectedPosition = -1
 
     companion object : DiffUtil.ItemCallback<Article>() {
         override fun areItemsTheSame(
@@ -44,9 +41,7 @@ class ArticlesAdapter(
         val binding =
             ItemArticleBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
-        return ArticlesViewHolder(binding) {
-            onItemClick(currentList[it])
-        }
+        return ArticlesViewHolder(binding)
     }
 
     fun setList(list: List<Article>?) {
@@ -64,8 +59,7 @@ class ArticlesAdapter(
 
 
     inner class ArticlesViewHolder(
-        private val itemBinding: ItemArticleBinding,
-        onItemClick: (Int) -> Unit
+        private val itemBinding: ItemArticleBinding
     ) : RecyclerView.ViewHolder(itemBinding.root) {
 
         private val _context = itemBinding.root.context
@@ -73,18 +67,19 @@ class ArticlesAdapter(
 
         fun bind(position: Int, item: Article) {
             itemBinding.tvArticleHeadline.text = item.Translations.get(0).Translation.Title
-            Glide.with(_context).load(item.Translations.get(0).Translation.Thumbnail).centerInside().into(itemBinding.ivArticleImage)
+//            Glide.with(_context).load(item.Translations.get(0).Translation.Thumbnail).centerInside().into(itemBinding.ivArticleImage)
             itemBinding.tvArticleDate.text=item.CreatedDate.split('T').first()
+
+            itemBinding.articleImageUrl = item.Translations.get(0).Translation.Thumbnail
+
+            itemBinding.view.changeVisibility(show = (position + 1) < itemCount, isGone = false)
+
+            itemBinding.itemContainer.setOnClickListener {
+                onItemClick(item)
+            }
         }
 
      }
-
-    private fun notifyItemChangedByPosition(position: Int) {
-        selectedPosition = position
-        notifyItemChanged(lastSelectedPosition)
-        notifyItemChanged(selectedPosition)
-        lastSelectedPosition = selectedPosition
-    }
 
     override fun getFilter(): Filter {
         TODO("Not yet implemented")

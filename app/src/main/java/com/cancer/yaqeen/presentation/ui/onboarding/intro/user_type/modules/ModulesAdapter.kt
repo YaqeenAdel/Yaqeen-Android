@@ -56,7 +56,7 @@ class ModulesAdapter(
     override fun onBindViewHolder(holder: ModulesViewHolder, position: Int) {
         val item = currentList[position]
         item?.let {
-            holder.bind(position, it)
+            holder.bind(it)
         }
     }
     fun setList(list: List<Module>?) {
@@ -83,33 +83,25 @@ class ModulesAdapter(
     ) : RecyclerView.ViewHolder(itemBinding.root) {
 
 
-        fun bind(position: Int, item: Module) {
+        private val _context = itemBinding.root.context
+
+        fun bind(item: Module) {
             itemBinding.tvModuleName.text = item.moduleName
             bindImage(itemBinding.ivModuleIcon, item.icon)
-//            val isSelected = selectedPosition == position
             if(item.selected){
                 bindResourceImage(itemBinding.radioButton, R.drawable.ic_checked)
-//                itemBinding.viewSelected.visibility = View.VISIBLE
-//                itemBinding.viewUnselected.visibility = View.INVISIBLE
                 itemBinding.cardContainer.strokeColor =
-                    ContextCompat.getColor(itemBinding.viewSelected.context, R.color.primary_color)
-                itemBinding.itemContainer.setBackgroundColor(ContextCompat.getColor(itemBinding.viewSelected.context, R.color.primary_color_30))
-                itemBinding.ivModuleIcon.setBackgroundColor(ContextCompat.getColor(itemBinding.viewSelected.context, R.color.white))
-                itemBinding.tvModuleName.setTextColor(ContextCompat.getColor(itemBinding.viewSelected.context, R.color.primary_color))
+                    ContextCompat.getColor(_context, R.color.primary_color)
+//                itemBinding.itemContainer.setBackgroundColor(ContextCompat.getColor(_context, R.color.primary_color_30))
+                itemBinding.ivModuleIcon.setBackgroundColor(ContextCompat.getColor(_context, R.color.white))
+//                itemBinding.tvModuleName.setTextColor(ContextCompat.getColor(_context, R.color.primary_color))
             }else {
                 bindResourceImage(itemBinding.radioButton, R.drawable.ic_uncheck_circle)
-//                itemBinding.viewSelected.visibility = View.INVISIBLE
-//                itemBinding.viewUnselected.visibility = View.VISIBLE
                 itemBinding.cardContainer.strokeColor =
-                    ContextCompat.getColor(itemBinding.viewSelected.context, R.color.light_gray)
-                itemBinding.itemContainer.setBackgroundColor(ContextCompat.getColor(itemBinding.viewSelected.context, R.color.white))
-                itemBinding.ivModuleIcon.setBackgroundColor(ContextCompat.getColor(itemBinding.viewSelected.context, R.color.light_gray))
-                itemBinding.tvModuleName.setTextColor(ContextCompat.getColor(itemBinding.viewSelected.context, R.color.light_black))
-//                val textViewColor: Int = itemBinding.tvModuleName.textColors.defaultColor
-//                val imageViewColor: Int = itemBinding.ivModuleIcon.solidColor
-//                itemBinding.tvModuleName.setTextColor(Color.argb(128, Color.red(textViewColor), Color.green(textViewColor), Color.blue(textViewColor)))
-//                itemBinding.ivModuleIcon.setBackgroundColor(Color.argb(10, Color.red(imageViewColor), Color.green(imageViewColor), Color.blue(imageViewColor)))
-
+                    ContextCompat.getColor(_context, R.color.light_gray)
+//                itemBinding.itemContainer.setBackgroundColor(ContextCompat.getColor(_context, R.color.white))
+                itemBinding.ivModuleIcon.setBackgroundColor(ContextCompat.getColor(_context, R.color.light_gray))
+//                itemBinding.tvModuleName.setTextColor(ContextCompat.getColor(_context, R.color.light_black))
             }
 
             itemBinding.itemContainer.setOnClickListener {

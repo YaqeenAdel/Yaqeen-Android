@@ -12,6 +12,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResult
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
@@ -20,6 +21,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cancer.yaqeen.R
+import com.cancer.yaqeen.data.features.home.models.Time
 import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.databinding.FragmentHomeBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
@@ -30,6 +32,7 @@ import com.cancer.yaqeen.presentation.ui.onboarding.intro.user_type.doctor.speci
 import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.dpToPx
+import com.cancer.yaqeen.presentation.util.recyclerview.HorizontalMarginItemDecoration
 import com.cancer.yaqeen.presentation.util.recyclerview.VerticalMarginItemDecoration
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import com.cancer.yaqeen.presentation.util.tryNavigateUp
@@ -46,12 +49,9 @@ class HomeFragment : BaseFragment(), OnClickListener {
     private lateinit var navController: NavController
 
     private lateinit var articlesAdapter: ArticlesAdapter
+    private lateinit var timesAdapter: TimesAdapter
 
-    private val homeViewModel: HomeViewModel by activityViewModels()
-
-    private val handler = Handler()
-    private var scrollPosition = 0
-
+    private val homeViewModel: HomeViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -66,19 +66,20 @@ class HomeFragment : BaseFragment(), OnClickListener {
         super.onViewCreated(view, savedInstanceState)
 
         navController = findNavController()
-        setupArticlesAdapter()
-        getArticles()
+        setupAdapters()
         observeStates()
-
-
+        getArticles()
     }
+
+    private fun setupAdapters(){
+        setupArticlesAdapter()
+        setupTimesAdapter()
+    }
+
     private fun setupArticlesAdapter() {
-        articlesAdapter = ArticlesAdapter(emptyList()) {
+        articlesAdapter = ArticlesAdapter() {
 
         }
-        val llm = LinearLayoutManager(requireContext())
-        llm.orientation = LinearLayoutManager.VERTICAL
-        binding.rvArticles.setLayoutManager(llm)
         binding.rvArticles.apply {
             adapter = articlesAdapter
             addItemDecoration(
@@ -87,33 +88,28 @@ class HomeFragment : BaseFragment(), OnClickListener {
                 )
             )
         }
+    }
 
-//        universitiesAdapter.setList(
-//            listOf(
-//                University(
-//                    universityID = 1, universityName = "Ain Shams"
-//                ),
-//                University(
-//                    universityID = 2, universityName = "Cairo"
-//                ),
-//                University(
-//                    universityID = 3, universityName = "Zagazig"
-//                ),
-//                University(
-//                    universityID = 4, universityName = "Alexandria"
-//                ),
-//                University(
-//                    universityID = 5, universityName = "Tanta"
-//                ),
-//                University(
-//                    universityID = 6, universityName = "Assuit"
-//                ),
-//                University(
-//                    universityID = 7, universityName = "Aswan"
-//                ),
-//            )
-//        )
+    private fun setupTimesAdapter() {
+        timesAdapter = TimesAdapter {
 
+        }
+        binding.rvTimes.apply {
+            adapter = timesAdapter
+        }
+
+        timesAdapter.submitList(
+            listOf(
+                Time(1, "9:00"),
+                Time(2, "10:00"),
+                Time(3, "11:00"),
+                Time(4, "12:00"),
+                Time(5, "1:00"),
+                Time(6, "2:00"),
+                Time(7, "3:00"),
+                Time(8, "4:00")
+            )
+        )
     }
 
     private fun observeStates() {
@@ -141,22 +137,13 @@ class HomeFragment : BaseFragment(), OnClickListener {
     }
 
 
-
-
     private fun getArticles(){
         homeViewModel.getArticles()
     }
+
     override fun onClick(v: View?) {
         when(v?.id){
-            R.id.btn_explore_app -> {}
-            R.id.btn_join -> {
-//                removeCallbacks()
-//                navController.tryNavigate(R.id.specializationFragment)
-//                navigateToUpdateProfile()
-            }
-            R.id.tv_login -> {
-
-            }
+            R.id.tv_see_all_calender -> {}
         }
     }
 

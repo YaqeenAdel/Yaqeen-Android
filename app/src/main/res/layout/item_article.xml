@@ -5,9 +5,14 @@
 
     <data>
 
+        <variable
+            name="article_image_url"
+            type="String" />
+
     </data>
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/item_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -17,7 +22,8 @@
                 android:layout_height="@dimen/_90sdp"
                 app:riv_corner_radius="@dimen/_10sdp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/header_logo"
+                app:imageUrl="@{article_image_url}"
+                tools:src="@drawable/header_logo"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/card_category"/>
 
