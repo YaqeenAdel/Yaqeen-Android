@@ -20,12 +20,12 @@
                 android:id="@+id/iv_article_image"
                 android:layout_width="@dimen/_90sdp"
                 android:layout_height="@dimen/_90sdp"
-                app:riv_corner_radius="@dimen/_10sdp"
                 android:scaleType="centerCrop"
                 app:imageUrl="@{article_image_url}"
-                tools:src="@drawable/header_logo"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/card_category"/>
+                app:layout_constraintTop_toTopOf="@id/card_category"
+                app:riv_corner_radius="@dimen/_10sdp"
+                tools:src="@drawable/header_logo" />
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card_article_bookmark"
@@ -49,49 +49,7 @@
                     android:src="@drawable/ic_bookmark_unchecked" />
             </com.google.android.material.card.MaterialCardView>
 
-<!--            <com.google.android.material.card.MaterialCardView-->
-<!--                android:id="@+id/card_article_image"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginTop="@dimen/_8sdp"-->
-<!--                app:cardCornerRadius="@dimen/_10sdp"-->
-<!--                app:layout_constraintBottom_toBottomOf="@+id/view"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent">-->
 
-<!--                <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="match_parent">-->
-
-<!--                    <ImageView-->
-<!--                        android:id="@+id/iv_article_image"-->
-<!--                        android:layout_width="@dimen/_100sdp"-->
-<!--                        android:layout_height="@dimen/_100sdp"-->
-<!--                        android:src="@drawable/header_logo"-->
-<!--                        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                        app:layout_constraintEnd_toEndOf="parent"-->
-<!--                        app:layout_constraintStart_toStartOf="parent"-->
-<!--                        app:layout_constraintTop_toTopOf="parent" />-->
-
-<!--                    <com.google.android.material.card.MaterialCardView-->
-<!--                        android:id="@+id/card_article_bookmark"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_margin="@dimen/_6sdp"-->
-<!--                        app:cardCornerRadius="@dimen/_4sdp"-->
-<!--                        app:layout_constraintEnd_toEndOf="parent"-->
-<!--                        app:layout_constraintTop_toTopOf="parent">-->
-
-<!--                        <ImageView-->
-<!--                            android:id="@+id/iv_article_bookmark"-->
-<!--                            android:layout_width="@dimen/_15sdp"-->
-<!--                            android:layout_height="@dimen/_15sdp"-->
-<!--                            android:layout_margin="@dimen/_3sdp"-->
-<!--                            android:src="@drawable/ic_bookmark" />-->
-<!--                    </com.google.android.material.card.MaterialCardView>-->
-<!--                </androidx.constraintlayout.widget.ConstraintLayout>-->
-
-<!--            </com.google.android.material.card.MaterialCardView>-->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card_category"
                 android:layout_width="wrap_content"

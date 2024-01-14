@@ -141,3 +141,22 @@ fun Long.formatMilliseconds(): String {
     val seconds = totalSeconds % 60
     return "$minutes:$seconds"
 }
+
+fun String.detectLanguage(): String {
+    // Regular expression to match Arabic characters
+    val arabicRegex = "\\p{InArabic}"
+
+    // Regular expression to match English characters
+    val englishRegex = "\\p{InBasicLatin}"
+
+    // Check if the text contains Arabic or English characters
+    val containsArabic = contains(Regex(arabicRegex))
+    val containsEnglish = contains(Regex(englishRegex))
+
+    // Determine the language based on the presence of Arabic or English characters
+    return when {
+        containsArabic && !containsEnglish -> "ar"
+        containsEnglish && !containsArabic -> "en"
+        else -> "unknown"
+    }
+}

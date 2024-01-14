@@ -66,11 +66,11 @@ class SplashFragment : BaseFragment() {
                     }, 6000)
                 }else if(isLogged){
                     navController.navigate(
-                        SplashFragmentDirections.actionSplashFragmentToOnBoardingFragment()
+                        SplashFragmentDirections.actionSplashFragmentToHomeFragment()
                     )
                 }else {
                     navController.navigate(
-                        SplashFragmentDirections.actionSplashFragmentToHomeFragment()
+                        SplashFragmentDirections.actionSplashFragmentToOnBoardingFragment()
                     )
                 }
             }

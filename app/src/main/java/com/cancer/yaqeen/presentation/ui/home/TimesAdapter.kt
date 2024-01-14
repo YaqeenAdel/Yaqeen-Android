@@ -60,11 +60,12 @@ class TimesAdapter(
     }
 
 
-    fun selectItem(id: Int){
+    fun selectItem(id: Int): Int{
         val positionItem = currentList.indexOfFirst {
             it.id == id
         }
         notifyItemChangedByPosition(positionItem)
+        return positionItem
     }
 
 
@@ -89,11 +90,11 @@ class TimesAdapter(
                 itemBinding.itemContainer.backgroundTintList = ContextCompat.getColorStateList(_context, android.R.color.transparent)
             }
 
-            itemBinding.itemContainer.setOnClickListener {
-                onItemClick(item)
-
-                notifyItemChangedByPosition(position)
-            }
+//            itemBinding.itemContainer.setOnClickListener {
+//                onItemClick(item)
+//
+//                notifyItemChangedByPosition(position)
+//            }
         }
 
      }

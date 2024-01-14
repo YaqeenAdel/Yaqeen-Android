@@ -2,6 +2,8 @@ package com.cancer.yaqeen.data.network.apis
 
 import com.cancer.yaqeen.data.features.auth.requests.LoginRequestBody
 import com.cancer.yaqeen.data.features.auth.responses.LoginRemote
+import com.cancer.yaqeen.data.features.home.requests.AddArticleToFavouriteRequest
+import com.cancer.yaqeen.data.features.home.responses.AddArticleToFavouriteResponse
 import com.cancer.yaqeen.data.features.home.responses.HomeArticlesResponse
 import com.cancer.yaqeen.data.features.onboarding.requests.UpdateInterestsUserRequestBody
 import com.cancer.yaqeen.data.features.onboarding.requests.UpdateProfileRequestBody
@@ -48,6 +50,14 @@ interface YaqeenAPI {
     suspend fun getUserProfile(): Response<UserProfileResponse>
     @GET("content/articles")
     @Headers("isAuthorization: false")
-    suspend fun getHomeArticles(): Response<HomeArticlesResponse>
+    suspend fun getHomeArticles(
+        @Query("lang") lang: String,
+        @Query("search") searchQuery: String,
+    ): Response<HomeArticlesResponse>
+
+    @POST("bookmarks")
+    suspend fun addArticleToFavourite(
+        @Body requestBody: AddArticleToFavouriteRequest
+    ): Response<AddArticleToFavouriteResponse>
 
 }

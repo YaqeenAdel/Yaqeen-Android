@@ -7,6 +7,7 @@ import android.util.DisplayMetrics
 import com.cancer.yaqeen.data.features.onboarding.models.Language
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.floor
 import kotlin.math.roundToInt
 
 
@@ -49,4 +50,10 @@ fun overrideLocale(localeCode: String? = null, resources: Resources) {
     val newConfig = Configuration()
     newConfig.setLocale(local)
     resources.updateConfiguration(newConfig, resources.displayMetrics)
+}
+fun convertMilliSecondsToDate(milliseconds: Long, pattern: String = "yyyy-MM-dd"): String {
+    val timestamp = Date(milliseconds)
+
+    val dateFormat = SimpleDateFormat(pattern, Locale.getDefault())
+    return dateFormat.format(timestamp)
 }

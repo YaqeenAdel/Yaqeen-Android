@@ -1,9 +1,15 @@
-package com.cancer.yaqeen.data.features.onboarding
+package com.cancer.yaqeen.data.features.home
 
 import android.util.Log
 import com.bumptech.glide.load.engine.Resource
 import com.cancer.yaqeen.data.features.home.IHomeRepository
+import com.cancer.yaqeen.data.features.home.mappers.MappingAddArticleToFavouriteRemoteAsUIModel
+import com.cancer.yaqeen.data.features.home.mappers.MappingArticlesRemoteAsModel
+import com.cancer.yaqeen.data.features.home.models.Article
+import com.cancer.yaqeen.data.features.home.requests.AddArticleToFavouriteRequest
+import com.cancer.yaqeen.data.features.home.requests.RemoveArticleFromFavouriteRequest
 import com.cancer.yaqeen.data.features.home.responses.HomeArticlesResponse
+import com.cancer.yaqeen.data.features.onboarding.mappers.MappingResourcesRemoteAsModel
 import com.cancer.yaqeen.data.network.base.BaseDataSource
 import com.cancer.yaqeen.data.network.base.DataState
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
@@ -21,12 +27,19 @@ class HomeRepositoryImpl @Inject constructor(
 ): BaseDataSource(errorHandler), IHomeRepository {
 
 
-
-    override suspend fun getHomeArticles(): Flow<DataState<HomeArticlesResponse>> {
-        return flow <DataState<HomeArticlesResponse>>{
-            val articlesResponse = apiService.getHomeArticles()
-             emit(DataState.Success(data = articlesResponse.body()))
+    override suspend fun getHomeArticles(searchQuery: String): Flow<DataState<List<Article>>> =
+        flowStatus {
+            getResultRestAPI(MappingArticlesRemoteAsModel()){
+                apiService.getHomeArticles(prefEncryptionUtil.selectedLanguage, "%$searchQuery%")
+            }
         }
-    }
+
+    override suspend fun addArticleToFavourite(request: AddArticleToFavouriteRequest): Flow<DataState<Boolean>> =
+        flowStatus {
+            getResultRestAPI(MappingAddArticleToFavouriteRemoteAsUIModel()){
+                apiService.addArticleToFavourite(request)
+            }
+        }
+
 
 }

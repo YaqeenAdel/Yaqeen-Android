@@ -4,47 +4,53 @@ import com.google.gson.annotations.SerializedName
 
 data class HomeArticlesResponse(
     @SerializedName("Articles")
-    val Articles: List<Article>
+    val articles: List<ArticleResponse>?
 )
-data class Article(
+data class ArticleResponse(
     @SerializedName("AssignedTo")
-    val AssignedTo: Any,
+    val assignedTo: Any?,
     @SerializedName("Attachments")
-    val Attachments: List<Any>,
+    val attachments: List<Any>?,
     @SerializedName("AuthorUserId")
-    val AuthorUserId: String,
+    val authorUserID: String?,
     @SerializedName("ContentId")
-    val ContentId: Int,
+    val contentID: Int?,
     @SerializedName("CreatedDate")
-    val CreatedDate: String,
+    val createdDate: String?,
     @SerializedName("Phase")
-    val Phase: String,
+    val phase: String?,
     @SerializedName("Tags")
-    val Tags: List<Tag>,
+    val tags: List<TagResponse>?,
     @SerializedName("Translations")
-    val Translations: List<Translation>,
+    val translations: List<TranslationResponse>?,
     @SerializedName("UpdatedAt")
-    val UpdatedAt: String,
+    val updatedAt: String?,
     @SerializedName("Visibility")
-    val Visibility: String
+    val visibility: String?,
+    @SerializedName("IsFavorite")
+    val isFavorite: String?
 )
-data class Tag(
+data class TagResponse(
     @SerializedName("InterestId")
-    val InterestId: String
+    val interestID: String?,
+    @SerializedName("BackgroundColor")
+    val backgroundColor: String?,
+    @SerializedName("TextColor")
+    val textColor: String?,
 )
-data class Translation(
+data class TranslationResponse(
     @SerializedName("Language")
-    val Language: String,
+    val language: String?,
     @SerializedName("Translation")
-    val Translation: TranslationX
+    val translationDetails: TranslationDetailsResponse?
 )
-data class TranslationX(
+data class TranslationDetailsResponse(
     @SerializedName("Description")
-    val Description: String,
+    val description: String?,
     @SerializedName("Link")
-    val Link: String,
+    val link: String?,
     @SerializedName("Thumbnail")
-    val Thumbnail: String,
+    val thumbnail: String?,
     @SerializedName("Title")
-    val Title: String
+    val title: String?
 )

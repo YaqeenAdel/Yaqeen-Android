@@ -30,10 +30,7 @@
             app:destination="@id/introFragment" />
         <action
             android:id="@+id/action_onBoardingFragment_to_homeFragment"
-            app:destination="@id/homeFragment"
-            app:launchSingleTop="true"
-            app:popUpTo="@id/nav_graph"
-            app:popUpToInclusive="true" />
+            app:destination="@id/homeFragment" />
     </fragment>
     <fragment
         android:id="@+id/introFragment"
@@ -135,6 +132,13 @@
     <fragment
         android:id="@+id/articleDetailsFragment"
         android:name="com.cancer.yaqeen.presentation.ui.home.article_details.ArticleDetailsFragment"
-        tools:layout="@layout/fragment_article_details" />
+        tools:layout="@layout/fragment_article_details">
+
+        <argument
+            android:name="article"
+            app:argType="com.cancer.yaqeen.data.features.home.models.Article"
+            app:nullable="false"/>
+
+    </fragment>
 
 </navigation>

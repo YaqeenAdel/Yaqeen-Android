@@ -1,12 +1,12 @@
 package com.cancer.yaqeen.domain.di
 
 import com.cancer.yaqeen.data.features.auth.AuthRepositoryImpl
-import com.cancer.yaqeen.data.features.onboarding.HomeRepositoryImpl
-import com.cancer.yaqeen.data.features.onboarding.IOnboardingRepository
+import com.cancer.yaqeen.data.features.home.HomeRepositoryImpl
 import com.cancer.yaqeen.data.features.onboarding.OnboardingRepositoryImpl
 import com.cancer.yaqeen.data.features.profile.ProfileRepositoryImpl
 import com.cancer.yaqeen.domain.features.auth.login.usecases.LoginUseCase
 import com.cancer.yaqeen.domain.features.auth.login.usecases.LogoutUseCase
+import com.cancer.yaqeen.domain.features.home.articles.usecases.AddArticleToFavouriteUseCase
 import com.cancer.yaqeen.domain.features.home.articles.usecases.GetArticlesUseCase
 import com.cancer.yaqeen.domain.features.onboarding.usecases.GetResourcesUseCase
 import com.cancer.yaqeen.domain.features.onboarding.usecases.GetUniversitiesUseCase
@@ -66,6 +66,10 @@ object UseCaseModule {
     @Provides
     fun provideGetArticleUseCase(repository: HomeRepositoryImpl) =
         GetArticlesUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideAddArticleToFavouriteUseCase(repository: HomeRepositoryImpl) =
+        AddArticleToFavouriteUseCase(repository)
 
 
 }

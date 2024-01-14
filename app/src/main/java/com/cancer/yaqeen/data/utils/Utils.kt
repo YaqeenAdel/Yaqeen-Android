@@ -104,17 +104,30 @@ fun Float.calculatePriceAfterDiscount(discountPercentage: Float): Float {
     return this - discountAmount
 }
 
-fun Long.formatDate(): String {
-    val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+fun Long.formatDate(pattern: String = "dd MMM yyyy"): String {
+    val dateFormat = SimpleDateFormat(pattern)
     val date = Date(this)
     return dateFormat.format(date)
 }
 
-fun String.formatIsoDate(): String {
-    val inputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+fun String.formatDate(): String {
+    val inputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
     val outputDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
     val inputDate = inputDateFormat.parse(this)
     return outputDateFormat.format(inputDate)
 
+}
+fun convertMillisecondsToTime(milliseconds: Long, pattern: String = "hh:mm a"): String {
+    val currentTimestamp = System.currentTimeMillis()
+    val timestamp = Date(milliseconds)
+
+    val dateFormat = SimpleDateFormat(pattern, Locale.getDefault())
+    return dateFormat.format(timestamp)
+}
+
+fun getTodayDate(): String {
+    val currentTimestamp = System.currentTimeMillis()
+
+    return currentTimestamp.formatDate()
 }

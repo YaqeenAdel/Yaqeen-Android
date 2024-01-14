@@ -14,7 +14,7 @@ class MyWebViewClient(private val onProgressChanged: (Boolean) -> Unit): WebView
     }
 
     override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-        if(request?.url.toString().indexOf("https://www.webmd.com/diabetes/diabetes-types-insulin") > -1 ) return false
+        if(request?.url.toString().indexOf("") > -1 ) return false
 
 
 //        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
