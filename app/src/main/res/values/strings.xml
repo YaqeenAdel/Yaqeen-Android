@@ -74,6 +74,11 @@
     <string name="interest">interest?</string>
     <string name="select_all_categories_you_interest">Select all categories you interest.</string>
     <string name="finish">Finish</string>
+    <string name="notifications">Notifications</string>
+    <string name="register_medication">Register Medication</string>
+    <string name="confirm">Confirm</string>
+    <string name="amount">Amount</string>
+    <string name="period">Period</string>
 
 
     <string-array name="languages_array">
