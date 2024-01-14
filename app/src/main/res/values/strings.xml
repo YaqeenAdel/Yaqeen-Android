@@ -79,6 +79,10 @@
     <string name="confirm">Confirm</string>
     <string name="amount">Amount</string>
     <string name="period">Period</string>
+    <string name="title_home">Home</string>
+    <string name="treatment">Treatment</string>
+    <string name="notification">Notification</string>
+    <string name="more">More</string>
 
 
     <string-array name="languages_array">

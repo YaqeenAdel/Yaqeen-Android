@@ -31,7 +31,7 @@ import kotlinx.coroutines.flow.collectLatest
 
 
 @AndroidEntryPoint
-class HomeFragment : BaseFragment(), OnClickListener {
+class HomeFragment : BaseFragment(showBottomMenu = true), OnClickListener {
 
     private var binding: FragmentHomeBinding by autoCleared()
 

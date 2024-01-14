@@ -37,7 +37,7 @@ open class BaseFragment constructor(private val showBottomMenu: Boolean) : Fragm
 
     override fun onStart() {
         super.onStart()
-//        (requireActivity() as MainActivity).displayBottomMenu(showBottomMenu)
+        (requireActivity() as MainActivity).displayBottomMenu(showBottomMenu)
 
     }
 
