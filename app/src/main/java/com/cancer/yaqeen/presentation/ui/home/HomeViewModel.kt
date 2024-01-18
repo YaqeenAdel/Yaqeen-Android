@@ -6,13 +6,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cancer.yaqeen.data.features.auth.models.User
 import com.cancer.yaqeen.data.features.home.models.Article
+import com.cancer.yaqeen.data.features.home.models.Bookmark
 import com.cancer.yaqeen.data.features.home.requests.AddArticleToFavouriteRequest
-import com.cancer.yaqeen.data.features.home.requests.RemoveArticleFromFavouriteRequest
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.data.network.base.Status
 import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.domain.features.home.articles.usecases.AddArticleToFavouriteUseCase
 import com.cancer.yaqeen.domain.features.home.articles.usecases.GetArticlesUseCase
+import com.cancer.yaqeen.domain.features.home.articles.usecases.GetBookmarkedArticlesUseCase
 import com.cancer.yaqeen.domain.features.onboarding.usecases.GetUserProfileUseCase
 import com.cancer.yaqeen.presentation.util.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,6 +30,7 @@ class HomeViewModel @Inject constructor(
     private val prefEncryptionUtil: SharedPrefEncryptionUtil,
      private val getUserProfileUseCase: GetUserProfileUseCase,
     private val getArticlesUseCase: GetArticlesUseCase,
+    private val getBookmarkedArticlesUseCase: GetBookmarkedArticlesUseCase,
     private val addArticleToFavouriteUseCase: AddArticleToFavouriteUseCase,
 //    private val removeArticleFromFavouriteUseCase: RemoveArticleFromFavouriteUseCase,
 ) : ViewModel() {
@@ -37,6 +39,9 @@ class HomeViewModel @Inject constructor(
 
     private val _viewStateArticles = MutableStateFlow<List<Article>>(listOf())
     val viewStateArticles = _viewStateArticles.asStateFlow()
+
+    private val _viewStateBookmarkedArticles = MutableStateFlow<List<Bookmark>>(listOf())
+    val viewStateBookmarkedArticles = _viewStateBookmarkedArticles.asStateFlow()
 
     private val _viewStateUser = MutableStateFlow<Pair<User?, Boolean>>(null to false)
     val viewStateUser = _viewStateUser.asStateFlow()
@@ -59,13 +64,61 @@ class HomeViewModel @Inject constructor(
                     Status.ERROR -> emitError(response.errorEntity)
                     Status.SUCCESS -> {
                         response.data?.let {
-                            _viewStateArticles.emit(it)
+                            val bookmarkedArticles = _viewStateBookmarkedArticles.value
+                            val articles = injectBookmarkIdsToArticles(it, bookmarkedArticles)
+                            _viewStateArticles.emit(articles)
                         }
                     }
                     else -> {}
                 }
             }.launchIn(viewModelScope)
         }
+    }
+
+    fun getBookmarkedArticles() {
+        viewModelScope.launch {
+            getBookmarkedArticlesUseCase().onEach { response ->
+//                _viewStateLoading.emit(response.loading)
+                when (response.status) {
+//                    Status.ERROR -> emitError(response.errorEntity)
+                    Status.SUCCESS -> {
+                        response.data?.let {
+                            val articles = injectBookmarkIdsToArticles(_viewStateArticles.value, it)
+                            if (articles.isNotEmpty()){
+                                _viewStateArticles.emit(articles)
+                            }
+                            _viewStateBookmarkedArticles.emit(it)
+                        }
+                    }
+                    else -> {}
+                }
+            }.launchIn(viewModelScope)
+        }
+    }
+
+    private fun injectBookmarkIdsToArticles(
+        articles: List<Article>,
+        bookmarkedArticles: List<Bookmark>
+    ): List<Article> {
+        if (articles.isNotEmpty() && bookmarkedArticles.isNotEmpty()) {
+            bookmarkedArticles.sortedBy { it.contentID }.onEach { bookmarkedArticle ->
+                articles.sortedBy { it.contentID }.first {
+                    it.contentID == bookmarkedArticle.contentID
+                }.apply {
+                    bookmarkID = bookmarkedArticle.bookmarkID
+                    isFavorite = true
+                }
+//
+//                articles.binarySearch() { article ->
+//                    String.CASE_INSENSITIVE_ORDER.compare(
+//                        article.contentID.toString(),
+//                        bookmarkedArticle.contentID.toString()
+//                    )
+//                    article.contentID
+//                }
+            }
+        }
+        return articles
     }
 
     fun getUserInfo(){

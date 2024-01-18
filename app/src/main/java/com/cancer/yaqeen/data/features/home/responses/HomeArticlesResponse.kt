@@ -17,27 +17,43 @@ data class ArticleResponse(
     val contentID: Int?,
     @SerializedName("CreatedDate")
     val createdDate: String?,
-    @SerializedName("Phase")
-    val phase: String?,
-    @SerializedName("Tags")
-    val tags: List<TagResponse>?,
-    @SerializedName("Translations")
-    val translations: List<TranslationResponse>?,
     @SerializedName("UpdatedAt")
     val updatedAt: String?,
+    @SerializedName("Phase")
+    val phase: String?,
     @SerializedName("Visibility")
     val visibility: String?,
-    @SerializedName("IsFavorite")
-    val isFavorite: String?
+    @SerializedName("Interests")
+    val interests: List<InterestElementResponse>?,
+    @SerializedName("Translations")
+    val translations: List<TranslationResponse>?
 )
-data class TagResponse(
+data class InterestElementResponse (
+    @SerializedName("Interest")
+    val interest: InterestResponse?
+)
+
+data class InterestResponse(
     @SerializedName("InterestId")
-    val interestID: String?,
-    @SerializedName("BackgroundColor")
-    val backgroundColor: String?,
-    @SerializedName("TextColor")
-    val textColor: String?,
+    val interestID: Int?,
+    @SerializedName("Translations")
+    val translations: List<InterestTranslationResponse>?,
+    @SerializedName("StyleBackgroundColorHex")
+    val styleBackgroundColorHex: String?,
+    @SerializedName("StyleForegroundColorHex")
+    val styleForegroundColorHex: String?
 )
+data class InterestTranslationResponse (
+    @SerializedName("Language")
+    val language: String?,
+    @SerializedName("Translation")
+    val translation: PurpleTranslation?
+)
+data class PurpleTranslation (
+    @SerializedName("Name")
+    val name: String?
+)
+
 data class TranslationResponse(
     @SerializedName("Language")
     val language: String?,

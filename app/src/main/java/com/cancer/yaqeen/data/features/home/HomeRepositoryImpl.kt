@@ -5,7 +5,9 @@ import com.bumptech.glide.load.engine.Resource
 import com.cancer.yaqeen.data.features.home.IHomeRepository
 import com.cancer.yaqeen.data.features.home.mappers.MappingAddArticleToFavouriteRemoteAsUIModel
 import com.cancer.yaqeen.data.features.home.mappers.MappingArticlesRemoteAsModel
+import com.cancer.yaqeen.data.features.home.mappers.MappingBookmarkedArticlesRemoteAsModel
 import com.cancer.yaqeen.data.features.home.models.Article
+import com.cancer.yaqeen.data.features.home.models.Bookmark
 import com.cancer.yaqeen.data.features.home.requests.AddArticleToFavouriteRequest
 import com.cancer.yaqeen.data.features.home.requests.RemoveArticleFromFavouriteRequest
 import com.cancer.yaqeen.data.features.home.responses.HomeArticlesResponse
@@ -31,6 +33,13 @@ class HomeRepositoryImpl @Inject constructor(
         flowStatus {
             getResultRestAPI(MappingArticlesRemoteAsModel()){
                 apiService.getHomeArticles(prefEncryptionUtil.selectedLanguage, "%$searchQuery%")
+            }
+        }
+
+    override suspend fun getBookmarkedArticles(): Flow<DataState<List<Bookmark>>> =
+        flowStatus {
+            getResultRestAPI(MappingBookmarkedArticlesRemoteAsModel()){
+                apiService.getBookmarkedArticles()
             }
         }
 

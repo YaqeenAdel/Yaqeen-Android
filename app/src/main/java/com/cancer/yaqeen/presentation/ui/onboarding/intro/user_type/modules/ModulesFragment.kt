@@ -88,7 +88,7 @@ class ModulesFragment : BaseFragment() {
         }
 
         binding.btnFinish.setOnClickListener {
-            viewModel.updateUserProfile()
+            viewModel.updateUserProfile(true)
         }
 
         binding.autoTvSearchItems.addTextChangedListener {

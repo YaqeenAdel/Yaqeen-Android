@@ -4,6 +4,7 @@ import com.cancer.yaqeen.data.features.auth.requests.LoginRequestBody
 import com.cancer.yaqeen.data.features.auth.responses.LoginRemote
 import com.cancer.yaqeen.data.features.home.requests.AddArticleToFavouriteRequest
 import com.cancer.yaqeen.data.features.home.responses.AddArticleToFavouriteResponse
+import com.cancer.yaqeen.data.features.home.responses.BookmarkedArticlesResponse
 import com.cancer.yaqeen.data.features.home.responses.HomeArticlesResponse
 import com.cancer.yaqeen.data.features.onboarding.requests.UpdateInterestsUserRequestBody
 import com.cancer.yaqeen.data.features.onboarding.requests.UpdateProfileRequestBody
@@ -55,9 +56,13 @@ interface YaqeenAPI {
         @Query("search") searchQuery: String,
     ): Response<HomeArticlesResponse>
 
+    @GET("bookmarks")
+    suspend fun getBookmarkedArticles(): Response<BookmarkedArticlesResponse>
+
     @POST("bookmarks")
     suspend fun addArticleToFavourite(
         @Body requestBody: AddArticleToFavouriteRequest
     ): Response<AddArticleToFavouriteResponse>
+
 
 }

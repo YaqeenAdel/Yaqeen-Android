@@ -207,7 +207,8 @@ class OnboardingViewModel @Inject constructor(
     }
 
 
-    fun updateUserProfile() {
+    fun updateUserProfile(isLoggedIn: Boolean = false) {
+        prefEncryptionUtil.isLogged = isLoggedIn
         getUserProfile()?.run {
             viewModelScope.launch {
                 updateUserProfileUseCase(

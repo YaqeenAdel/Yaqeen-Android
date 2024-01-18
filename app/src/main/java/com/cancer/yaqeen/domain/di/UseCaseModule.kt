@@ -8,6 +8,7 @@ import com.cancer.yaqeen.domain.features.auth.login.usecases.LoginUseCase
 import com.cancer.yaqeen.domain.features.auth.login.usecases.LogoutUseCase
 import com.cancer.yaqeen.domain.features.home.articles.usecases.AddArticleToFavouriteUseCase
 import com.cancer.yaqeen.domain.features.home.articles.usecases.GetArticlesUseCase
+import com.cancer.yaqeen.domain.features.home.articles.usecases.GetBookmarkedArticlesUseCase
 import com.cancer.yaqeen.domain.features.onboarding.usecases.GetResourcesUseCase
 import com.cancer.yaqeen.domain.features.onboarding.usecases.GetUniversitiesUseCase
 import com.cancer.yaqeen.domain.features.onboarding.usecases.GetUserProfileUseCase
@@ -70,6 +71,10 @@ object UseCaseModule {
     @Provides
     fun provideAddArticleToFavouriteUseCase(repository: HomeRepositoryImpl) =
         AddArticleToFavouriteUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideGetBookmarkedArticlesUseCase(repository: HomeRepositoryImpl) =
+        GetBookmarkedArticlesUseCase(repository)
 
 
 }

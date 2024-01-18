@@ -9,21 +9,22 @@ data class Article(
 //    val attachments: List<Any>,
     val authorUserID: String,
     val contentID: Int,
+    var bookmarkID: Int? = null,
     val createdDate: String,
     val phase: String,
-    val tags: List<Tag>,
+    val interests: List<Interest>,
     val description: String,
     val link: String,
     val thumbnail: String,
     val title: String,
     val updatedAt: String,
     val visibility: Boolean,
-    var isFavorite: Boolean
+    var isFavorite: Boolean = false
 ): Parcelable
 
-@Parcelize
-data class Tag(
-    val interestID: String,
-    val backgroundColor: String,
-    val textColor: String,
-): Parcelable
+//@Parcelize
+//data class Tag(
+//    val interestID: String,
+//    val backgroundColor: String,
+//    val textColor: String,
+//): Parcelable

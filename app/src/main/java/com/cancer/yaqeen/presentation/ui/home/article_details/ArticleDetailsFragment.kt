@@ -63,10 +63,10 @@ class ArticleDetailsFragment : BaseFragment() {
     private fun setArticleDetails() {
         article.run {
             binding.tvArticleHeadline.text = title
-            binding.tvCategoryName.text = tags.firstOrNull()?.interestID ?: ""
+            binding.tvCategoryName.text = interests.firstOrNull()?.interestName
             binding.cardCategory.backgroundTintList =
-                ColorStateList.valueOf(Color.parseColor(tags.firstOrNull()?.backgroundColor))
-            binding.tvCategoryName.setTextColor(ColorStateList.valueOf(Color.parseColor(tags.firstOrNull()?.textColor)))
+                ColorStateList.valueOf(Color.parseColor(interests.firstOrNull()?.backgroundColor))
+            binding.tvCategoryName.setTextColor(ColorStateList.valueOf(Color.parseColor(interests.firstOrNull()?.textColor)))
             binding.tvArticleWriter.text = "by/ $authorUserID"
 
             setupWebView(link)

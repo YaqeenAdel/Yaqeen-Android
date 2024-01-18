@@ -73,10 +73,10 @@ class ArticlesAdapter(
             itemBinding.articleImageUrl = item.thumbnail
             itemBinding.tvArticleHeadline.text = item.title
             itemBinding.tvArticleDate.text = item.createdDate
-            itemBinding.tvCategoryName.text = item.tags.firstOrNull()?.interestID ?: ""
+            itemBinding.tvCategoryName.text = item.interests.firstOrNull()?.interestName
             itemBinding.cardCategory.backgroundTintList =
-                ColorStateList.valueOf(Color.parseColor(item.tags.firstOrNull()?.backgroundColor))
-            itemBinding.tvCategoryName.setTextColor(ColorStateList.valueOf(Color.parseColor(item.tags.firstOrNull()?.textColor)))
+                ColorStateList.valueOf(Color.parseColor(item.interests.firstOrNull()?.backgroundColor))
+            itemBinding.tvCategoryName.setTextColor(ColorStateList.valueOf(Color.parseColor(item.interests.firstOrNull()?.textColor)))
 
             itemBinding.view.changeVisibility(show = (position + 1) < itemCount, isGone = false)
             bindResourceImage(

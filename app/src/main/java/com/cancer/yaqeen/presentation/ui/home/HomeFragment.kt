@@ -59,6 +59,9 @@ class HomeFragment : BaseFragment(showBottomMenu = true), OnClickListener {
         observeStates()
 
         setListener()
+
+
+        homeViewModel.getBookmarkedArticles()
     }
 
     override fun onResume() {
