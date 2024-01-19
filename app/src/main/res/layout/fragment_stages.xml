@@ -45,8 +45,8 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_8sdp"
-            android:layout_marginEnd="@dimen/_12sdp"
+            android:layout_marginStart="@dimen/_16sdp"
+            android:layout_marginEnd="@dimen/_16sdp"
             app:layout_constraintWidth_percent="0.7"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toEndOf="@id/tv_page_number"
@@ -65,14 +65,14 @@
                 android:layout_width="0dp"
                 android:layout_height="@dimen/_2sdp"
                 android:layout_weight="1"
-                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_marginStart="@dimen/_16sdp"
                 android:background="@drawable/background_view_selected_colored"/>
 
             <View
                 android:layout_width="0dp"
                 android:layout_height="@dimen/_2sdp"
                 android:layout_weight="1"
-                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_marginStart="@dimen/_16sdp"
                 android:backgroundTint="@color/primary_color_30"
                 android:background="@drawable/background_view_selected_colored"/>
 
@@ -104,9 +104,9 @@
             app:layout_constraintTop_toBottomOf="@id/tv_page_number"
             android:layout_marginStart="@dimen/_16sdp"
             android:layout_marginEnd="@dimen/_4sdp"
-            android:layout_marginTop="@dimen/_64sdp"
+            android:layout_marginTop="@dimen/_28sdp"
+            android:fontFamily="sans-serif-medium"
             android:gravity="center|start"
-            android:textStyle="bold"
             android:text="@string/at_any_stage_of_cancer"
             android:textColor="@color/primary_color"
             android:textSize="@dimen/_18ssp"/>
@@ -122,10 +122,11 @@
             android:layout_marginStart="@dimen/_16sdp"
             android:layout_marginEnd="@dimen/_4sdp"
             android:layout_marginTop="@dimen/_6sdp"
+            android:fontFamily="sans-serif"
             android:gravity="center|start"
             android:text="@string/specify_your_cancer_stage"
             android:textColor="@color/xx_dark_gray"
-            android:textSize="@dimen/_14ssp"/>
+            android:textSize="@dimen/_15ssp"/>
 
 
 
@@ -133,7 +134,7 @@
             android:id="@+id/rv_stages"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="@dimen/_32sdp"
+            android:layout_marginTop="@dimen/_48sdp"
             android:nestedScrollingEnabled="false"
             android:saveEnabled="false"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

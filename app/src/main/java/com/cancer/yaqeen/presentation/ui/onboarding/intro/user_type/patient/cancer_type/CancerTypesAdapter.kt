@@ -95,6 +95,14 @@ class CancerTypesAdapter(
             itemBinding.btnCancerType.text = item.typeName
             val isSelected = selectedPosition == position
             itemBinding.btnCancerType.isChecked = isSelected
+
+            val colorId = if (isSelected)
+                com.cancer.yaqeen.R.color.primary_color
+            else
+                com.cancer.yaqeen.R.color.light_black
+
+            itemBinding.btnCancerType.setTextColor(ContextCompat.getColor(_context, colorId))
+
             changeCircleColorOfRadioButton()
             itemBinding.btnCancerType.isSelected = true
         }

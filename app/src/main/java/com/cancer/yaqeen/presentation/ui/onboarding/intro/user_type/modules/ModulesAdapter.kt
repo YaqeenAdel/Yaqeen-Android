@@ -1,5 +1,6 @@
 package com.cancer.yaqeen.presentation.ui.onboarding.intro.user_type.modules
 
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -88,21 +89,26 @@ class ModulesAdapter(
         fun bind(item: Module) {
             itemBinding.tvModuleName.text = item.moduleName
             bindImage(itemBinding.ivModuleIcon, item.icon)
+            itemBinding.btnInterest.isChecked = item.selected
+
             if(item.selected){
                 bindResourceImage(itemBinding.radioButton, R.drawable.ic_checked)
                 itemBinding.cardContainer.strokeColor =
                     ContextCompat.getColor(_context, R.color.primary_color)
-//                itemBinding.itemContainer.setBackgroundColor(ContextCompat.getColor(_context, R.color.primary_color_30))
-                itemBinding.ivModuleIcon.setBackgroundColor(ContextCompat.getColor(_context, R.color.white))
+                itemBinding.itemContainer.setBackgroundColor(ContextCompat.getColor(_context, R.color.header_background))
+                itemBinding.ivModuleIcon.setBackgroundColor(ContextCompat.getColor(_context, R.color.light_gray))
 //                itemBinding.tvModuleName.setTextColor(ContextCompat.getColor(_context, R.color.primary_color))
             }else {
                 bindResourceImage(itemBinding.radioButton, R.drawable.ic_uncheck_circle)
                 itemBinding.cardContainer.strokeColor =
                     ContextCompat.getColor(_context, R.color.light_gray)
-//                itemBinding.itemContainer.setBackgroundColor(ContextCompat.getColor(_context, R.color.white))
+                itemBinding.itemContainer.setBackgroundColor(ContextCompat.getColor(_context, R.color.white))
                 itemBinding.ivModuleIcon.setBackgroundColor(ContextCompat.getColor(_context, R.color.light_gray))
 //                itemBinding.tvModuleName.setTextColor(ContextCompat.getColor(_context, R.color.light_black))
             }
+
+            changeCircleColorOfRadioButton()
+            itemBinding.btnInterest.isSelected = true
 
             itemBinding.itemContainer.setOnClickListener {
                 item.selected = !item.selected
@@ -110,6 +116,21 @@ class ModulesAdapter(
                 notifyItemChanged(adapterPosition)
             }
 
+        }
+        private fun changeCircleColorOfRadioButton() {
+            val colorStateList = ColorStateList(
+                arrayOf(
+                    intArrayOf(-android.R.attr.state_checked), // unchecked
+                    intArrayOf(android.R.attr.state_checked)    // checked
+                ),
+                intArrayOf(
+                    ContextCompat.getColor(_context, R.color.light_black), // unchecked
+                    ContextCompat.getColor(_context, R.color.primary_color) // checked
+                )
+            )
+
+            // Apply color state list to the radio button
+            itemBinding.btnInterest.buttonTintList = colorStateList
         }
     }
 

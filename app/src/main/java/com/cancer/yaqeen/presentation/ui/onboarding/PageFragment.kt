@@ -30,6 +30,8 @@ class PageFragment : Fragment(){
 
         binding?.apply {
             bindImage(image, arguments?.getString("photoURL"))
+            tvTitle.text = "Explore trusted articles to learn more about your condition"
+            tvInfo.text = " Discover helpful tips for recovery, Empower your healing journey with reliable information and practical advice."
         }
     }
 

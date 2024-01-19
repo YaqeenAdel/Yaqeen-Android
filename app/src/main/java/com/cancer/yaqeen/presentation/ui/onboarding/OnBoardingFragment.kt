@@ -21,6 +21,7 @@ import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.onboarding.models.Language
 import com.cancer.yaqeen.data.features.onboarding.models.Photo
 import com.cancer.yaqeen.data.network.error.ErrorEntity
+import com.cancer.yaqeen.databinding.FragmentNewOnBoardingBinding
 import com.cancer.yaqeen.databinding.FragmentOnBoardingBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.ui.MainActivity
@@ -36,32 +37,32 @@ import kotlin.system.exitProcess
 @AndroidEntryPoint
 class OnBoardingFragment : BaseFragment(), OnClickListener {
 
-    private var binding: FragmentOnBoardingBinding by autoCleared()
+    private var binding: FragmentNewOnBoardingBinding by autoCleared()
 
     private lateinit var navController: NavController
 
-//    private lateinit var adapter: ViewPagerAdapter
+    private lateinit var adapter: ViewPagerAdapter
 
     private val onboardingViewModel: OnboardingViewModel by activityViewModels()
 
-//    private val handler = Handler()
-//    private var scrollPosition = 0
-//
-//    private val runnable = object : Runnable {
-//
-//        override fun run() {
-//            val count = adapter.itemCount
-//            binding.viewPager.setCurrentItem(scrollPosition++ % count, true)
-//
-//            handler.postDelayed(this, 3000)
-//        }
-//    }
+    private val handler = Handler()
+    private var scrollPosition = 0
+
+    private val runnable = object : Runnable {
+
+        override fun run() {
+            val count = adapter.itemCount
+            binding.viewPager.setCurrentItem(scrollPosition++ % count, true)
+
+            handler.postDelayed(this, 3000)
+        }
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-//                removeCallbacks()
+                removeCallbacks()
                 requireActivity().finish()
             }
         }
@@ -74,7 +75,7 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        binding = FragmentOnBoardingBinding.inflate(inflater, container, false)
+        binding = FragmentNewOnBoardingBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -89,7 +90,7 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
 
         observeStates()
 
-        setupLanguageAutoCompleteAdapter()
+//        setupLanguageAutoCompleteAdapter()
     }
 
     private fun getResourcesData(){
@@ -110,7 +111,7 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
         lifecycleScope {
             onboardingViewModel.viewStateResources.collectLatest {
                 it?.let {
-//                    setupViewPager(it.photos)
+                    setupViewPager(it.photos)
                 }
                 val user = onboardingViewModel.viewStateLoginSuccess.replayCache
                 if(user.isNotEmpty() && user.firstOrNull() != null) {
@@ -120,13 +121,11 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
         }
         lifecycleScope {
             onboardingViewModel.viewStateLoginSuccess.collectLatest {
-                Log.d("TAG", "observeLoginStates: $it")
                 it?.let {
                     val resources = onboardingViewModel.viewStateResources.replayCache
-                    Log.d("TAG", "observeLoginStates: $it / $resources")
                     if(resources.isNotEmpty() && resources.firstOrNull() != null) {
-                        Toast.makeText(context,
-                            getString(R.string.you_have_logged_in_successfully),Toast.LENGTH_SHORT).show()
+//                        Toast.makeText(context,
+//                            getString(R.string.you_have_logged_in_successfully),Toast.LENGTH_SHORT).show()
                         navigateToUpdateProfile()
                     }else{
 //                        getResourcesData()
@@ -154,101 +153,101 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
     }
 
     private fun setListener() {
-        binding.btnContinueAsGuest.setOnClickListener(this)
+        binding.tvSkip.setOnClickListener(this)
         binding.btnLogin.setOnClickListener(this)
         binding.btnSignup.setOnClickListener(this)
 
-//        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-//            override fun onTabSelected(tab: TabLayout.Tab?) {
-//                tab?.let {
-//                    binding.viewPager.currentItem = tab.position
-//                }
-//            }
-//            override fun onTabUnselected(tab: TabLayout.Tab?) {}
-//            override fun onTabReselected(tab: TabLayout.Tab?) {}
-//        })
-//
-//        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-//            override fun onPageSelected(position: Int) {
-//                super.onPageSelected(position)
-//                binding.tabLayout.selectTab(binding.tabLayout.getTabAt(position))
-//            }
-//        })
-    }
-
-    private fun setupLanguageAutoCompleteAdapter() {
-        ArrayAdapter.createFromResource(
-            requireContext(),
-            R.array.languages_array,
-            R.layout.simple_spinner_item
-        ).also { adapter ->
-            // Specify the layout to use when the list of choices appears.
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            // Apply the adapter to the spinner.
-            binding.spinnerLanguage.adapter = adapter
-
-        }
-        binding.spinnerLanguage.setSelection(
-            if (onboardingViewModel.selectedLanguageIsEnglish()) 0
-            else 1
-        )
-
-        binding.spinnerLanguage.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                val isSameLanguage = onboardingViewModel.changeLanguage(
-                    if (position == 0)
-                        Language.ENGLISH.lang
-                    else Language.ARABIC.lang
-                )
-                if(!isSameLanguage) {
-//                    removeCallbacks()
-                    (requireActivity() as? MainActivity)?.changeLanguageByDestination(R.id.onBoardingFragment)
+        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                tab?.let {
+                    binding.viewPager.currentItem = tab.position
                 }
             }
+            override fun onTabUnselected(tab: TabLayout.Tab?) {}
+            override fun onTabReselected(tab: TabLayout.Tab?) {}
+        })
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-        }
+        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                binding.tabLayout.selectTab(binding.tabLayout.getTabAt(position))
+            }
+        })
     }
 
-//    private fun setupViewPager(photos: List<Photo>) {
-//        val pages = mutableListOf<Fragment>()
+//    private fun setupLanguageAutoCompleteAdapter() {
+//        ArrayAdapter.createFromResource(
+//            requireContext(),
+//            R.array.languages_array,
+//            R.layout.simple_spinner_item
+//        ).also { adapter ->
+//            // Specify the layout to use when the list of choices appears.
+//            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+//            // Apply the adapter to the spinner.
+//            binding.spinnerLanguage.adapter = adapter
 //
-//        binding.tabLayout.removeAllTabs()
-//        photos.onEach {
-//            pages.add(PageFragment().apply {
-//                arguments = bundleOf("photoURL" to it.photoURL)
-//            })
-//            binding.tabLayout.apply {
-//                addTab(newTab())
-//            }
 //        }
-//        adapter =
-//            ViewPagerAdapter(childFragmentManager, lifecycle, pages)
+//        binding.spinnerLanguage.setSelection(
+//            if (onboardingViewModel.selectedLanguageIsEnglish()) 0
+//            else 1
+//        )
 //
-//        binding.viewPager.apply {
-//            this.adapter = this@OnBoardingFragment.adapter
-//            clipToPadding = false
-//        }
-//
-//        binding.viewPager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
-//            override fun onPageSelected(position: Int) {
-//                scrollPosition = position + 1
-//            }
-//            override fun onPageScrollStateChanged(state: Int) {}
-//            override fun onPageScrolled(
+//        binding.spinnerLanguage.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+//            override fun onItemSelected(
+//                parent: AdapterView<*>?,
+//                view: View?,
 //                position: Int,
-//                positionOffset: Float,
-//                positionOffsetPixels: Int
-//            ) {}
-//        })
+//                id: Long
+//            ) {
+//                val isSameLanguage = onboardingViewModel.changeLanguage(
+//                    if (position == 0)
+//                        Language.ENGLISH.lang
+//                    else Language.ARABIC.lang
+//                )
+//                if(!isSameLanguage) {
+////                    removeCallbacks()
+//                    (requireActivity() as? MainActivity)?.changeLanguageByDestination(R.id.onBoardingFragment)
+//                }
+//            }
 //
-//        handler.post(runnable)
+//            override fun onNothingSelected(parent: AdapterView<*>?) {}
+//        }
 //    }
+
+    private fun setupViewPager(photos: List<Photo>) {
+        val pages = mutableListOf<Fragment>()
+
+        binding.tabLayout.removeAllTabs()
+        photos.onEach {
+            pages.add(PageFragment().apply {
+                arguments = bundleOf("photoURL" to it.photoURL)
+            })
+            binding.tabLayout.apply {
+                addTab(newTab())
+            }
+        }
+        adapter =
+            ViewPagerAdapter(childFragmentManager, lifecycle, pages)
+
+        binding.viewPager.apply {
+            this.adapter = this@OnBoardingFragment.adapter
+            clipToPadding = false
+        }
+
+        binding.viewPager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                scrollPosition = position + 1
+            }
+            override fun onPageScrollStateChanged(state: Int) {}
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {}
+        })
+
+        handler.post(runnable)
+    }
     private fun navigateToHomeAsGuest(){
         navController.tryNavigate(
             OnBoardingFragmentDirections.actionOnBoardingFragmentToHomeFragment()
@@ -257,27 +256,29 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
     }
 
     private fun navigateToUpdateProfile() {
-//        removeCallbacks()
+        removeCallbacks()
         navController.tryNavigate(
             OnBoardingFragmentDirections.actionOnBoardingFragmentToIntroFragment()
         )
     }
 
-//    private fun removeCallbacks(){
-//        binding.viewPager.removeCallbacks(runnable)
-//        handler.removeCallbacks(runnable)
-//    }
+    private fun removeCallbacks(){
+        binding.viewPager.removeCallbacks(runnable)
+        handler.removeCallbacks(runnable)
+    }
 
     override fun onClick(v: View?) {
         when(v?.id){
-            R.id.btn_continue_as_guest -> {
+            R.id.tv_skip -> {
+                removeCallbacks()
                 navigateToHomeAsGuest()
             }
             R.id.btn_signup -> {
+                removeCallbacks()
                 onboardingViewModel.login(requireContext())
             }
             R.id.btn_login -> {
-//                removeCallbacks()
+                removeCallbacks()
                 onboardingViewModel.login(requireContext())
             }
         }

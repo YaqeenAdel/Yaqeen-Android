@@ -23,6 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_16sdp"
+            android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -40,6 +41,7 @@
             android:layout_height="@dimen/_125sdp"
             android:background="@color/cold_white"
             app:riv_corner_radius="@dimen/_50sdp"
+            app:riv_oval="true"
             app:riv_mutate_background="true"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -55,9 +57,10 @@
             app:layout_constraintEnd_toEndOf="@id/iv_icon"
             app:layout_constraintTop_toTopOf="@id/iv_icon"
             app:layout_constraintBottom_toBottomOf="@id/iv_icon"
-            android:layout_margin="@dimen/_24sdp"
-            android:src="@drawable/message"
-            app:tint="@color/primary_color"/>
+            android:layout_marginVertical="@dimen/_24sdp"
+            android:layout_marginStart="@dimen/_24sdp"
+            android:layout_marginEnd="@dimen/_18sdp"
+            android:src="@drawable/ic_activation"/>
 
         <TextView
             android:id="@+id/tv_check_your_email"

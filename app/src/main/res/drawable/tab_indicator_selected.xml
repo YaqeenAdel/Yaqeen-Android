@@ -3,9 +3,9 @@
     android:shape="rectangle">
 
 
-    <size android:height="@dimen/_9sdp"/>
-    <solid android:color="@color/black"/>
+    <size android:height="@dimen/_7sdp" android:width="@dimen/_64sdp"/>
+    <solid android:color="@color/primary_color"/>
     <stroke
-        android:width="@dimen/_4sdp"
+        android:width="@dimen/_5sdp"
         android:color="@android:color/transparent" />
 </shape>

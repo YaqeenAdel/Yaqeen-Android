@@ -156,18 +156,18 @@ class ModulesFragment : BaseFragment() {
             if (it.selected){
                 binding.btnFinish.changeVisibility(show = true)
             }else {
-                binding.btnFinish.changeVisibility(show = !modulesAdapter.allItemsUnSelected(), isGone = true)
+                binding.btnFinish.changeVisibility(show = !modulesAdapter.allItemsUnSelected(), isGone = false)
             }
         }
 
         binding.rvModules.apply {
             adapter = modulesAdapter
-//            addItemDecoration(
-//                CenterGridMarginItemDecoration(
-//                    2,
-//                    dpToPx(1f, requireContext())
-//                )
-//            )
+            addItemDecoration(
+                CenterGridMarginItemDecoration(
+                    2,
+                    dpToPx(1f, requireContext())
+                )
+            )
         }
 
     }

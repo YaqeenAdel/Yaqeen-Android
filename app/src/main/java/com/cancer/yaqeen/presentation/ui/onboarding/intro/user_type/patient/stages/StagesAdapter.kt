@@ -84,6 +84,14 @@ class StagesAdapter(
             itemBinding.btnCancerStage.text = item.stageName
 //            itemBinding.tvStageNo.text = item.number.toString()
             val isSelected = selectedPosition == position
+
+            val colorId = if (isSelected)
+                com.cancer.yaqeen.R.color.primary_color
+            else
+                com.cancer.yaqeen.R.color.light_black
+
+            itemBinding.btnCancerStage.setTextColor(ContextCompat.getColor(_context, colorId))
+
 //            itemBinding.viewSelected.visibility = if(isSelected) View.VISIBLE else View.INVISIBLE
             itemBinding.btnCancerStage.isChecked = isSelected
             changeCircleColorOfRadioButton()
