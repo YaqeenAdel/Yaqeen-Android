@@ -75,8 +75,15 @@
         <item name="Auth0.DarkPrimaryColor">@color/primary_color</item>
     </style>
 
-    <style name="BottomNavigationView" parent="@style/TextAppearance.AppCompat.Caption">
-        <item name="android:textSize">11sp</item>
+    <style name="TextInActiveBottomNavigation" parent="@style/TextAppearance.AppCompat.Title">
+        <item name="android:textSize">12sp</item>
         <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textColor">@color/xx_dark_gray</item>
+    </style>
+
+    <style name="TextActiveBottomNavigation" parent="@style/TextAppearance.AppCompat.Title">
+        <item name="android:textSize">12sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textColor">@color/primary_color</item>
     </style>
 </resources>

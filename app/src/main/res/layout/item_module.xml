@@ -60,11 +60,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/btn_interest"
-            android:layout_marginHorizontal="@dimen/_24sdp"
-            android:gravity="center"
-            tools:text="1"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_16ssp"/>
+            android:layout_marginHorizontal="@dimen/_24sdp"/>
 
         <TextView
             android:id="@+id/tv_module_name"

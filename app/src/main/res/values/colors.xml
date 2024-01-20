@@ -26,6 +26,9 @@
     <color name="mercury">#ECECEC</color>
     <color name="red">#F40F0F</color>
     <color name="primary_color">#1BAFB7</color>
+    <color name="primary_color_3">#081BAFB7</color>
+    <color name="primary_color_10">#1A1BAFB7</color>
+    <color name="primary_color_20">#331BAFB7</color>
     <color name="primary_color_30">#C7F1F3</color>
     <color name="primary_color_60">#B5EDDA</color>
     <color name="primary_color_80">#7CDFBD</color>
@@ -53,4 +56,5 @@
     <color name="argent">#888888</color>
     <color name="rose_penk">#FF66C4</color>
     <color name="sweet_escape">#9747FF</color>
+    <color name="nero">#242424</color>
 </resources>

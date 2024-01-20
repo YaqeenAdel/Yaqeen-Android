@@ -112,7 +112,7 @@ fun Long.formatDate(pattern: String = "dd MMM yyyy"): String {
 
 fun String.formatDate(): String {
     val inputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
-    val outputDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    val outputDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
     val inputDate = inputDateFormat.parse(this)
     return outputDateFormat.format(inputDate)

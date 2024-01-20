@@ -1,4 +1,4 @@
-package com.cancer.yaqeen.presentation.ui.home
+package com.cancer.yaqeen.presentation.ui.main.home
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -7,13 +7,14 @@ import androidx.lifecycle.viewModelScope
 import com.cancer.yaqeen.data.features.auth.models.User
 import com.cancer.yaqeen.data.features.home.models.Article
 import com.cancer.yaqeen.data.features.home.models.Bookmark
-import com.cancer.yaqeen.data.features.home.requests.AddArticleToFavouriteRequest
+import com.cancer.yaqeen.data.features.home.requests.BookmarkArticleRequest
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.data.network.base.Status
 import com.cancer.yaqeen.data.network.error.ErrorEntity
-import com.cancer.yaqeen.domain.features.home.articles.usecases.AddArticleToFavouriteUseCase
+import com.cancer.yaqeen.domain.features.home.articles.usecases.BookmarkArticleUseCase
 import com.cancer.yaqeen.domain.features.home.articles.usecases.GetArticlesUseCase
 import com.cancer.yaqeen.domain.features.home.articles.usecases.GetBookmarkedArticlesUseCase
+import com.cancer.yaqeen.domain.features.home.articles.usecases.UnBookmarkArticleUseCase
 import com.cancer.yaqeen.domain.features.onboarding.usecases.GetUserProfileUseCase
 import com.cancer.yaqeen.presentation.util.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,10 +29,11 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val prefEncryptionUtil: SharedPrefEncryptionUtil,
-     private val getUserProfileUseCase: GetUserProfileUseCase,
+    private val getUserProfileUseCase: GetUserProfileUseCase,
     private val getArticlesUseCase: GetArticlesUseCase,
     private val getBookmarkedArticlesUseCase: GetBookmarkedArticlesUseCase,
-    private val addArticleToFavouriteUseCase: AddArticleToFavouriteUseCase,
+    private val bookmarkArticleUseCase: BookmarkArticleUseCase,
+    private val unBookmarkArticleUseCase: UnBookmarkArticleUseCase,
 //    private val removeArticleFromFavouriteUseCase: RemoveArticleFromFavouriteUseCase,
 ) : ViewModel() {
 
@@ -146,8 +148,8 @@ class HomeViewModel @Inject constructor(
 
     private fun addArticleToFavourite(article: Article) {
         viewModelJob = viewModelScope.launch {
-            addArticleToFavouriteUseCase(
-                AddArticleToFavouriteRequest(article.contentID)
+            bookmarkArticleUseCase(
+                BookmarkArticleRequest(article.contentID)
             ).collect { response ->
                 _viewStateLoading.emit(response.loading)
                 when (response.status) {
@@ -163,23 +165,23 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun removeArticleFromFavourite(article: Article) {
-//        viewModelJob = viewModelScope.launch {
-//            removeArticleFromFavouriteUseCase(
-//                RemoveArticleFromFavouriteRequest(article.contentID)
-//            ).collect { response ->
-//                _viewStateLoading.emit(response.loading)
-//                when (response.status) {
-//                    Status.ERROR -> emitError(response.errorEntity)
-//                    Status.SUCCESS -> {
-//                        if (response.data == true)
-//                            _viewStateFavouriteStatusArticle.emit(article to false)
-//
-//                        _viewStateFavouriteStatusArticle.emit(null)
-//                    }
-//                    else -> {}
-//                }
-//            }
-//        }
+        viewModelJob = viewModelScope.launch {
+            unBookmarkArticleUseCase(
+                article.bookmarkID ?: 0
+            ).collect { response ->
+                _viewStateLoading.emit(response.loading)
+                when (response.status) {
+                    Status.ERROR -> emitError(response.errorEntity)
+                    Status.SUCCESS -> {
+                        if (response.data == true)
+                            _viewStateFavouriteStatusArticle.postValue(article to false)
+
+                        _viewStateFavouriteStatusArticle.postValue(null)
+                    }
+                    else -> {}
+                }
+            }
+        }
     }
 
     private suspend fun emitError(errorEntity: ErrorEntity?) {

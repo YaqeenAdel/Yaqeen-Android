@@ -1,4 +1,4 @@
-package com.cancer.yaqeen.presentation.ui.home.article_details
+package com.cancer.yaqeen.presentation.ui.main.home.article_details
 
 import android.content.res.ColorStateList
 import android.graphics.Color
@@ -9,10 +9,12 @@ import android.view.ViewGroup
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.cancer.yaqeen.R
 import com.cancer.yaqeen.databinding.FragmentArticleDetailsBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.util.MyWebViewClient
 import com.cancer.yaqeen.presentation.util.autoCleared
+import com.cancer.yaqeen.presentation.util.binding_adapters.bindResourceImage
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -53,7 +55,7 @@ class ArticleDetailsFragment : BaseFragment() {
             navController.popBackStack()
         }
 
-        binding.ivAddBookmark.setOnClickListener {
+        binding.ivArticleBookmark.setOnClickListener {
 
         }
         binding.ivShare.setOnClickListener {
@@ -63,11 +65,16 @@ class ArticleDetailsFragment : BaseFragment() {
     private fun setArticleDetails() {
         article.run {
             binding.tvArticleHeadline.text = title
-            binding.tvCategoryName.text = interests.firstOrNull()?.interestName
+            binding.tvInterestName.text = interests.firstOrNull()?.interestName
             binding.cardCategory.backgroundTintList =
                 ColorStateList.valueOf(Color.parseColor(interests.firstOrNull()?.backgroundColor))
-            binding.tvCategoryName.setTextColor(ColorStateList.valueOf(Color.parseColor(interests.firstOrNull()?.textColor)))
+            binding.tvInterestName.setTextColor(ColorStateList.valueOf(Color.parseColor(interests.firstOrNull()?.textColor)))
             binding.tvArticleWriter.text = "by/ $authorUserID"
+
+            bindResourceImage(
+                binding.ivArticleBookmark,
+                if(isFavorite) R.drawable.ic_bookmark_checked else R.drawable.ic_bookmark_unchecked
+            )
 
             setupWebView(link)
         }

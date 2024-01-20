@@ -45,7 +45,7 @@
     </fragment>
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.cancer.yaqeen.presentation.ui.home.HomeFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.main.home.HomeFragment"
         tools:layout="@layout/fragment_home" >
 
         <action
@@ -131,7 +131,7 @@
         tools:layout="@layout/fragment_universities" />
     <fragment
         android:id="@+id/articleDetailsFragment"
-        android:name="com.cancer.yaqeen.presentation.ui.home.article_details.ArticleDetailsFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.main.home.article_details.ArticleDetailsFragment"
         tools:layout="@layout/fragment_article_details">
 
         <argument
@@ -140,5 +140,9 @@
             app:nullable="false"/>
 
     </fragment>
+    <fragment
+        android:id="@+id/moreFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.main.more.MoreFragment"
+        tools:layout="@layout/fragment_more" />
 
 </navigation>

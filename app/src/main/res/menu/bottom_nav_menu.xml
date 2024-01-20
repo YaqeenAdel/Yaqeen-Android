@@ -7,15 +7,14 @@
         android:title="@string/title_home" />
 
     <item
+        android:id="@+id/searchFragment"
+        android:icon="@drawable/ic_search"
+        android:title="@string/search" />
+
+    <item
         android:id="@+id/treatmentFragment"
         android:icon="@drawable/ic_treatment"
         android:title="@string/treatment" />
-
-    <item
-        android:id="@+id/notificationFragment"
-        android:icon="@drawable/ic_notification"
-        android:title="@string/notification" />
-
     <item
         android:id="@+id/moreFragment"
         android:icon="@drawable/ic_more"

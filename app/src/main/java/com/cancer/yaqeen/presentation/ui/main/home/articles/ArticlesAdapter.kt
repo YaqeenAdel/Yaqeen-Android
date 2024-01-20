@@ -1,4 +1,4 @@
-package com.cancer.yaqeen.presentation.ui.home.articles
+package com.cancer.yaqeen.presentation.ui.main.home.articles
 
 import android.content.res.ColorStateList
 import android.graphics.Color
@@ -73,10 +73,10 @@ class ArticlesAdapter(
             itemBinding.articleImageUrl = item.thumbnail
             itemBinding.tvArticleHeadline.text = item.title
             itemBinding.tvArticleDate.text = item.createdDate
-            itemBinding.tvCategoryName.text = item.interests.firstOrNull()?.interestName
+            itemBinding.tvInterestName.text = item.interests.firstOrNull()?.interestName
             itemBinding.cardCategory.backgroundTintList =
                 ColorStateList.valueOf(Color.parseColor(item.interests.firstOrNull()?.backgroundColor))
-            itemBinding.tvCategoryName.setTextColor(ColorStateList.valueOf(Color.parseColor(item.interests.firstOrNull()?.textColor)))
+            itemBinding.tvInterestName.setTextColor(ColorStateList.valueOf(Color.parseColor(item.interests.firstOrNull()?.textColor)))
 
             itemBinding.view.changeVisibility(show = (position + 1) < itemCount, isGone = false)
             bindResourceImage(

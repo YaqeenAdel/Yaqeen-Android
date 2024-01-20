@@ -1,4 +1,4 @@
-package com.cancer.yaqeen.presentation.ui.home
+package com.cancer.yaqeen.presentation.ui.main.home
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,7 +18,7 @@ import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.data.utils.getTodayDate
 import com.cancer.yaqeen.databinding.FragmentHomeBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
-import com.cancer.yaqeen.presentation.ui.home.articles.ArticlesAdapter
+import com.cancer.yaqeen.presentation.ui.main.home.articles.ArticlesAdapter
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindImage
 import com.cancer.yaqeen.presentation.util.changeVisibility

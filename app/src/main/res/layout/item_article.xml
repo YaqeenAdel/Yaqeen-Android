@@ -24,7 +24,7 @@
                 app:imageUrl="@{article_image_url}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/card_category"
-                app:riv_corner_radius="@dimen/_10sdp"
+                app:riv_corner_radius="@dimen/_8sdp"
                 tools:src="@drawable/header_logo" />
 
             <com.google.android.material.card.MaterialCardView
@@ -54,21 +54,50 @@
                 android:id="@+id/card_category"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="@dimen/_30sdp"
-                android:backgroundTint="@color/gray"
-                tools:backgroundTint="@color/primary_color"
+                android:backgroundTint="@color/white"
+                app:cardCornerRadius="@dimen/_16sdp"
+                app:cardElevation="@null"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                app:strokeColor="@color/medium_gray"
+                app:strokeWidth="@dimen/_1sdp">
 
-                <TextView
-                    android:id="@+id/tv_category_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:text="@string/therapy_treatment"
-                    android:textSize="@dimen/_10ssp"
-                    android:layout_marginHorizontal="@dimen/_8sdp"
-                    android:layout_marginVertical="@dimen/_4sdp"
-                    android:textColor="@color/white" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.makeramen.roundedimageview.RoundedImageView
+                        android:id="@+id/iv_interest_icon"
+                        android:layout_width="@dimen/_24sdp"
+                        android:layout_height="@dimen/_24sdp"
+                        android:layout_marginVertical="@dimen/_4sdp"
+                        android:layout_marginStart="@dimen/_8sdp"
+                        android:background="@color/light_gray"
+                        android:padding="@dimen/_4sdp"
+                        android:src="@drawable/ic_interest"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:riv_mutate_background="true"
+                        app:riv_oval="true"
+                        app:riv_tile_mode="clamp" />
+
+                    <TextView
+                        android:id="@+id/tv_interest_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_8sdp"
+                        android:layout_marginVertical="@dimen/_4sdp"
+                        android:fontFamily="sans-serif"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_10ssp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/iv_interest_icon"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="@string/therapy_treatment" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
             <TextView
                 android:id="@+id/tv_article_headline"
@@ -80,6 +109,7 @@
                 tools:text="Common Skin Bacteria May Prevent Skin Cancer In Long Term."
                 android:textColor="@color/black"
                 android:textSize="@dimen/_14ssp"
+                android:fontFamily="sans-serif-medium"
                 app:layout_constraintEnd_toStartOf="@+id/iv_article_image"
                 app:layout_constraintStart_toStartOf="@id/card_category"
                 app:layout_constraintTop_toBottomOf="@+id/card_category" />

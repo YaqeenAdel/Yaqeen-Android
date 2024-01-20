@@ -9,15 +9,13 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-             tools:context=".presentation.ui.onboarding.OnBoardingFragment">
+            android:layout_height="wrap_content">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/header_parent_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:elevation="@dimen/_2sdp"
-                android:background="@color/header_background"
+                android:background="@color/primary_color_3"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -36,8 +34,8 @@
                     android:src="@drawable/logo_launcher"
                     android:scaleType="fitXY"
                     app:layout_constraintHorizontal_bias="0.42"
-                    android:layout_marginTop="@dimen/_16sdp"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginTop="@dimen/_18sdp"
+                    android:layout_marginStart="@dimen/_16sdp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     android:contentDescription="Logo Header" />
@@ -48,14 +46,12 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/rose_penk"
                     android:textSize="@dimen/_16ssp"
-                    android:textStyle="bold"
+                    android:fontFamily="sans-serif-medium"
                     android:textAllCaps="true"
                     android:text="@string/app_name"
                     android:paddingVertical="@dimen/_4sdp"
-                    android:layout_marginStart="@dimen/_6sdp"
-                    app:layout_constraintHorizontal_bias="0"
                     app:layout_constraintBottom_toBottomOf="@+id/iv_header_logo"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/imageView"
                     app:layout_constraintStart_toEndOf="@+id/iv_header_logo"
                     app:layout_constraintTop_toTopOf="@+id/iv_header_logo" />
 
@@ -63,8 +59,8 @@
                     android:id="@+id/group_profile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:constraint_referenced_ids="iv_profile_pic,tv_name_user"
-                    android:visibility="gone"/>
+                    app:constraint_referenced_ids="iv_profile_pic,tv_welcome_back,tv_name_user"
+                    android:visibility="invisible"/>
 
 
                 <com.makeramen.roundedimageview.RoundedImageView
@@ -83,25 +79,51 @@
                     android:layout_marginTop="@dimen/_18sdp"/>
 
                 <TextView
+                    android:id="@+id/tv_welcome_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    android:gravity="center|start"
+                    android:paddingVertical="@dimen/_4sdp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_10ssp"
+                    android:fontFamily="sans-serif"
+                    app:layout_constraintBottom_toBottomOf="@+id/iv_profile_pic"
+                    app:layout_constraintStart_toEndOf="@+id/iv_profile_pic"
+                    app:layout_constraintTop_toTopOf="@+id/iv_profile_pic"
+                    android:text="@string/welcome_back" />
+                <TextView
                     android:id="@+id/tv_name_user"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_8sdp"
-                    android:layout_marginEnd="@dimen/_18sdp"
+                    android:layout_marginStart="@dimen/_6sdp"
+                    android:layout_marginEnd="@dimen/_3sdp"
                     android:singleLine="true"
                     android:ellipsize="marquee"
                     android:focusable="true"
                     android:marqueeRepeatLimit="marquee_forever"
                     android:gravity="center|start"
                     android:paddingVertical="@dimen/_4sdp"
-                    android:textColor="@color/text_black"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/_14ssp"
                     android:fontFamily="sans-serif-medium"
-                    app:layout_constraintBottom_toBottomOf="@+id/iv_profile_pic"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_welcome_back"
+                    app:layout_constraintEnd_toStartOf="@id/imageView"
+                    app:layout_constraintStart_toEndOf="@+id/tv_welcome_back"
+                    app:layout_constraintTop_toTopOf="@+id/tv_welcome_back"
+                    tools:text="Emad" />
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_18sdp"
+                    android:padding="@dimen/_5sdp"
+                    android:src="@drawable/ic_group"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/iv_profile_pic"
-                    app:layout_constraintTop_toTopOf="@+id/iv_profile_pic"
-                    tools:text="Welcome Back Emad" />
+                    app:layout_constraintStart_toEndOf="@id/tv_name_user"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_name_user"
+                    app:layout_constraintTop_toTopOf="@id/tv_name_user" />
 
                 <ImageView
                     android:id="@+id/iv_calender"
@@ -141,6 +163,7 @@
                     android:text="@string/see_all"
                     android:textColor="@color/primary_color"
                     android:textSize="@dimen/_10ssp"
+                    android:fontFamily="sans-serif"
                     app:layout_constraintBottom_toBottomOf="@+id/tv_current_day_date"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/tv_current_day_date"
@@ -152,6 +175,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:orientation="horizontal"
+                    android:visibility="invisible"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:listitem="@layout/item_time"
                     app:layout_constraintStart_toStartOf="@id/iv_calender"
@@ -177,6 +201,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_14sdp"
                 android:layout_marginTop="@dimen/_24sdp"
+                android:visibility="gone"
                 android:background="@drawable/background_view_auto_search_2"
                 android:drawableStart="@drawable/ic_search"
                 android:drawablePadding="@dimen/_10sdp"
@@ -199,10 +224,11 @@
                 android:gravity="center"
                 android:paddingVertical="@dimen/_4sdp"
                 android:text="@string/recommended_articles"
-                android:layout_margin="@dimen/_14sdp"
-                android:textColor="@color/text_black"
-                android:textSize="@dimen/_16ssp"
-                android:textStyle="bold"
+                android:layout_marginTop="@dimen/_24sdp"
+                android:layout_marginStart="@dimen/_14sdp"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_14ssp"
+                android:fontFamily="sans-serif-medium"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/edit_text_search" />
 
@@ -214,6 +240,7 @@
                 tools:listitem="@layout/item_article"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 android:orientation="vertical"
+                android:layout_marginTop="@dimen/_4sdp"
                 android:layout_marginHorizontal="@dimen/_14sdp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

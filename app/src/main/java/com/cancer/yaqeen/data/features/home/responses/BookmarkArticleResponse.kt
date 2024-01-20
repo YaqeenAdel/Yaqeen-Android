@@ -3,12 +3,12 @@ package com.cancer.yaqeen.data.features.home.responses
 import com.google.gson.annotations.SerializedName
 
 
-data class AddArticleToFavouriteResponse (
+data class BookmarkArticleResponse (
     @SerializedName("insert_Bookmarks_one")
-    val bookmark: InsertBookmarksOne?
+    val bookmark: InsertBookmarksOneResponse?
 )
 
-data class InsertBookmarksOne (
+data class InsertBookmarksOneResponse (
     @SerializedName("BookmarkId")
     val bookmarkID: Long?,
 

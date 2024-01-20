@@ -2,7 +2,7 @@ package com.cancer.yaqeen.data.features.home.requests
 
 import com.google.gson.annotations.SerializedName
 
-data class AddArticleToFavouriteRequest(
+data class BookmarkArticleRequest(
     @SerializedName("contentId")
     val articleId: Int
 )

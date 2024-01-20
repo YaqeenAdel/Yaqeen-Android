@@ -4,12 +4,13 @@ import com.cancer.yaqeen.data.base.Mapper
 import com.cancer.yaqeen.data.features.home.models.Article
 import com.cancer.yaqeen.data.features.home.models.Bookmark
 import com.cancer.yaqeen.data.features.home.models.Interest
-import com.cancer.yaqeen.data.features.home.responses.AddArticleToFavouriteResponse
+import com.cancer.yaqeen.data.features.home.responses.BookmarkArticleResponse
 import com.cancer.yaqeen.data.features.home.responses.ArticleResponse
 import com.cancer.yaqeen.data.features.home.responses.BookmarkResponse
 import com.cancer.yaqeen.data.features.home.responses.BookmarkedArticlesResponse
 import com.cancer.yaqeen.data.features.home.responses.HomeArticlesResponse
 import com.cancer.yaqeen.data.features.home.responses.InterestResponse
+import com.cancer.yaqeen.data.features.home.responses.UnBookmarkArticleResponse
 import com.cancer.yaqeen.data.utils.formatDate
 
 
@@ -49,16 +50,23 @@ class MappingInterestRemoteAsModel : Mapper<InterestResponse, Interest> {
         Interest(
             interestID = interestID ?: 0,
             interestName = translations?.firstOrNull()?.translation?.name ?: "",
-            backgroundColor = if (styleBackgroundColorHex == null) "#D2D4DA" else "#$styleBackgroundColorHex",
-            textColor = if (styleForegroundColorHex == null) "#FFFFFFFF" else "#$styleForegroundColorHex"
+            backgroundColor = if (styleBackgroundColorHex == null) "#FFFFFFFF" else "#$styleBackgroundColorHex",
+            textColor = if (styleForegroundColorHex == null) "#FF000000" else "#$styleForegroundColorHex"
         )
     }
 }
 
-class MappingAddArticleToFavouriteRemoteAsUIModel :
-    Mapper<AddArticleToFavouriteResponse, Boolean> {
-    override fun map(input: AddArticleToFavouriteResponse): Boolean {
+class MappingBookmarkArticleRemoteAsUIModel :
+    Mapper<BookmarkArticleResponse, Boolean> {
+    override fun map(input: BookmarkArticleResponse): Boolean {
         return input.bookmark != null
+    }
+}
+
+class MappingUnBookmarkArticleRemoteAsUIModel :
+    Mapper<UnBookmarkArticleResponse, Boolean> {
+    override fun map(input: UnBookmarkArticleResponse): Boolean {
+        return input.unBookmark != null
     }
 }
 

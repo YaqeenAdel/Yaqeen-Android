@@ -1,4 +1,4 @@
-package com.cancer.yaqeen.presentation.ui.home
+package com.cancer.yaqeen.presentation.ui.main.home
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
