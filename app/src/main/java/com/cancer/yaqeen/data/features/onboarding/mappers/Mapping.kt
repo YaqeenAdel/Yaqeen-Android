@@ -70,6 +70,8 @@ class MappingPhotoRemoteAsModel: Mapper<PhotoResponse, Photo> {
     override fun map(input: PhotoResponse): Photo = input.run {
         Photo(
             photoURL = photoURL ?: "",
+            title = "Explore trusted articles to learn more about your condition",
+            body = " Discover helpful tips for recovery, Empower your healing journey with reliable information and practical advice."
         )
     }
 }

@@ -42,7 +42,7 @@ class HomeViewModel @Inject constructor(
     private val _viewStateArticles = MutableStateFlow<List<Article>>(listOf())
     val viewStateArticles = _viewStateArticles.asStateFlow()
 
-    private val _viewStateBookmarkedArticles = MutableStateFlow<List<Bookmark>>(listOf())
+    private val _viewStateBookmarkedArticles = MutableStateFlow<List<Article>>(listOf())
     val viewStateBookmarkedArticles = _viewStateBookmarkedArticles.asStateFlow()
 
     private val _viewStateUser = MutableStateFlow<Pair<User?, Boolean>>(null to false)
@@ -98,9 +98,26 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun getSavedArticles() {
+        viewModelScope.launch {
+            getBookmarkedArticlesUseCase().onEach { response ->
+                _viewStateLoading.emit(response.loading)
+                when (response.status) {
+                    Status.ERROR -> emitError(response.errorEntity)
+                    Status.SUCCESS -> {
+                        response.data?.let {
+                            _viewStateArticles.emit(it)
+                        }
+                    }
+                    else -> {}
+                }
+            }.launchIn(viewModelScope)
+        }
+    }
+
     private fun injectBookmarkIdsToArticles(
         articles: List<Article>,
-        bookmarkedArticles: List<Bookmark>
+        bookmarkedArticles: List<Article>
     ): List<Article> {
         if (articles.isNotEmpty() && bookmarkedArticles.isNotEmpty()) {
             bookmarkedArticles.sortedBy { it.contentID }.onEach { bookmarkedArticle ->
@@ -175,8 +192,6 @@ class HomeViewModel @Inject constructor(
                     Status.SUCCESS -> {
                         if (response.data == true)
                             _viewStateFavouriteStatusArticle.postValue(article to false)
-
-                        _viewStateFavouriteStatusArticle.postValue(null)
                     }
                     else -> {}
                 }

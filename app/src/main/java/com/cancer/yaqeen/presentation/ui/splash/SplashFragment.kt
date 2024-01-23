@@ -66,7 +66,7 @@ class SplashFragment : BaseFragment() {
                     }, 6000)
                 }else if(isLogged){
                     navController.navigate(
-                        SplashFragmentDirections.actionSplashFragmentToHomeFragment()
+                        SplashFragmentDirections.actionSplashFragmentToQuoteFragment()
                     )
                 }else {
                     navController.navigate(

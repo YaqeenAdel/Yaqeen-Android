@@ -3,19 +3,26 @@ package com.cancer.yaqeen.presentation.ui.main.home.article_details
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.cancer.yaqeen.R
+import com.cancer.yaqeen.data.features.home.models.Article
+import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.databinding.FragmentArticleDetailsBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
+import com.cancer.yaqeen.presentation.ui.main.home.HomeViewModel
 import com.cancer.yaqeen.presentation.util.MyWebViewClient
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindResourceImage
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 
 
 @AndroidEntryPoint
@@ -25,10 +32,16 @@ class ArticleDetailsFragment : BaseFragment() {
 
     private lateinit var navController: NavController
 
+    private val homeViewModel: HomeViewModel by viewModels()
+
     private val args: ArticleDetailsFragmentArgs by navArgs()
 
     private val article by lazy {
         args.article
+    }
+
+    private val isSaved by lazy {
+        args.isSaved
     }
 
     override fun onCreateView(
@@ -48,6 +61,8 @@ class ArticleDetailsFragment : BaseFragment() {
         setArticleDetails()
 
         setListener()
+
+        observeStates()
     }
 
     private fun setListener(){
@@ -56,24 +71,26 @@ class ArticleDetailsFragment : BaseFragment() {
         }
 
         binding.ivArticleBookmark.setOnClickListener {
-
+            if (homeViewModel.userIsLoggedIn())
+                homeViewModel.changeFavouriteStatusArticle(article)
         }
         binding.ivShare.setOnClickListener {
 
         }
     }
+
     private fun setArticleDetails() {
         article.run {
             binding.tvArticleHeadline.text = title
             binding.tvInterestName.text = interests.firstOrNull()?.interestName
             binding.cardCategory.backgroundTintList =
-                ColorStateList.valueOf(Color.parseColor(interests.firstOrNull()?.backgroundColor))
-            binding.tvInterestName.setTextColor(ColorStateList.valueOf(Color.parseColor(interests.firstOrNull()?.textColor)))
+                ColorStateList.valueOf(Color.parseColor(interests.firstOrNull()?.backgroundColor ?: "#FFFFFFFF"))
+            binding.tvInterestName.setTextColor(ColorStateList.valueOf(Color.parseColor(interests.firstOrNull()?.textColor ?: "#FF000000")))
             binding.tvArticleWriter.text = "by/ $authorUserID"
 
             bindResourceImage(
                 binding.ivArticleBookmark,
-                if(isFavorite) R.drawable.ic_bookmark_checked else R.drawable.ic_bookmark_unchecked
+                if(isFavorite || isSaved) R.drawable.ic_bookmark_checked else R.drawable.ic_bookmark_unchecked
             )
 
             setupWebView(link)
@@ -93,4 +110,45 @@ class ArticleDetailsFragment : BaseFragment() {
         binding.webView.loadUrl(link)
     }
 
+    private fun observeStates() {
+        lifecycleScope {
+            homeViewModel.viewStateLoading.collectLatest {
+                onLoading(it)
+            }
+        }
+        lifecycleScope {
+            homeViewModel.viewStateError.collectLatest {
+                handleResponseError(it)
+            }
+        }
+
+        lifecycleScope {
+            homeViewModel.viewStateFavouriteStatusArticle.observe(viewLifecycleOwner) { favouriteStatusArticle ->
+                handleItemUI(favouriteStatusArticle)
+            }
+        }
+    }
+
+    private fun handleResponseError(errorEntity: ErrorEntity?) {
+        val errorMessage = handleError(errorEntity)
+        displayErrorMessage(errorMessage)
+    }
+
+    private fun displayErrorMessage(errorMessage: String?) {
+        errorMessage?.let {
+            Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun handleItemUI(favouriteStatusArticle: Pair<Article, Boolean>?) {
+        favouriteStatusArticle?.let {
+            val (_, isFavorite) = favouriteStatusArticle
+            article.isFavorite = isFavorite
+
+            bindResourceImage(
+                binding.ivArticleBookmark,
+                if(isFavorite) R.drawable.ic_bookmark_checked else R.drawable.ic_bookmark_unchecked
+            )
+        }
+    }
 }

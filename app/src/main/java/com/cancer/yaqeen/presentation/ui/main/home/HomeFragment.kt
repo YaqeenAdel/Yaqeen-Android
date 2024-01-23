@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
+import android.view.animation.DecelerateInterpolator
 import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
@@ -26,6 +27,11 @@ import com.cancer.yaqeen.presentation.util.detectLanguage
 import com.cancer.yaqeen.presentation.util.dpToPx
 import com.cancer.yaqeen.presentation.util.recyclerview.VerticalMarginItemDecoration
 import com.cancer.yaqeen.presentation.util.tryNavigate
+import com.yuyakaido.android.cardstackview.CardStackLayoutManager
+import com.yuyakaido.android.cardstackview.Direction
+import com.yuyakaido.android.cardstackview.Duration
+import com.yuyakaido.android.cardstackview.RewindAnimationSetting
+import com.yuyakaido.android.cardstackview.StackFrom
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
@@ -88,7 +94,7 @@ class HomeFragment : BaseFragment(showBottomMenu = true), OnClickListener {
         articlesAdapter = ArticlesAdapter(
             onItemClick = {
                 navController.tryNavigate(
-                    HomeFragmentDirections.actionHomeFragmentToArticleDetailsFragment(it)
+                    HomeFragmentDirections.actionHomeFragmentToArticleDetailsFragment(it, false)
                 )
             },
             onFavouriteArticleClick = {
@@ -110,9 +116,19 @@ class HomeFragment : BaseFragment(showBottomMenu = true), OnClickListener {
         timesAdapter = TimesAdapter {
 
         }
-        binding.rvTimes.apply {
-            adapter = timesAdapter
+        val setting = RewindAnimationSetting.Builder()
+            .setDirection(Direction.Bottom)
+            .setDuration(Duration.Normal.duration)
+            .setInterpolator(DecelerateInterpolator())
+            .build()
+        val cardStackLayoutManager = CardStackLayoutManager(requireContext())
+        cardStackLayoutManager.setRewindAnimationSetting(setting)
+        cardStackLayoutManager.setStackFrom(StackFrom.None)
+        binding.rvTreatments.apply {
+            layoutManager = cardStackLayoutManager
+            adapter = articlesAdapter
         }
+        binding.rvTreatments.swipe()
 
         timesAdapter.submitList(
             listOf(
@@ -149,7 +165,7 @@ class HomeFragment : BaseFragment(showBottomMenu = true), OnClickListener {
     private fun selectItem(itemId: Int) {
         val selectItemPosition = timesAdapter.selectItem(itemId)
         if(selectItemPosition >= 2)
-            binding.rvTimes.scrollToPosition(selectItemPosition - 2)
+            binding.rvTreatments.scrollToPosition(selectItemPosition - 2)
     }
 
     private fun observeStates() {

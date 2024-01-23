@@ -6,5 +6,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Photo(
-    val photoURL: String
+    val photoURL: String,
+    val title: String,
+    val body: String
 )

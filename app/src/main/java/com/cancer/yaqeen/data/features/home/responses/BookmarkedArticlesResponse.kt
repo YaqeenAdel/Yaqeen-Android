@@ -4,13 +4,20 @@ import com.google.gson.annotations.SerializedName
 
 data class BookmarkedArticlesResponse(
     @SerializedName("Bookmarks")
-    val bookmarks: List<BookmarkResponse>?
+    val bookmarks: List<SavedArticleResponse>?
 )
 
-data class BookmarkResponse (
+data class SavedArticleResponse (
     @SerializedName("BookmarkId")
     val bookmarkID: Int?,
-
     @SerializedName("ContentId")
-    val contentID: Int?
+    val contentID: Int?,
+    @SerializedName("CreatedDate")
+    val createdDate: String?,
+    @SerializedName("Content")
+    val content: ContentResponse?
+)
+data class ContentResponse (
+    @SerializedName("Translations")
+    val translations: List<TranslationResponse>?
 )

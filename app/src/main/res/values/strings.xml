@@ -91,6 +91,10 @@
     <string name="account_setting">Account Setting</string>
     <string name="help">Help</string>
     <string name="log_out">Log Out</string>
+    <string name="english">English</string>
+    <string name="arabic">Arabic</string>
+    <string name="close">Close</string>
+    <string name="to_be_able_to_use_the_feature_you_must_log_in">To be able to use the feature, you must log in</string>
 
 
     <string-array name="languages_array">

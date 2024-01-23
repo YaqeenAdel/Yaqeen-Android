@@ -8,6 +8,6 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GetBookmarkedArticlesUseCase @Inject constructor(private val repository: IHomeRepository) {
-    suspend operator fun invoke(): Flow<DataState<List<Bookmark>>> =
+    suspend operator fun invoke(): Flow<DataState<List<Article>>> =
         repository.getBookmarkedArticles()
 }

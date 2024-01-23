@@ -16,6 +16,7 @@ import com.cancer.yaqeen.presentation.util.binding_adapters.bindResourceImage
 import com.cancer.yaqeen.presentation.util.changeVisibility
 
 class ArticlesAdapter(
+    private val saved: Boolean = false,
     private var articles: MutableList<Article> = arrayListOf(),
     private val onItemClick: (Article) -> Unit,
     private val onFavouriteArticleClick: (Article) -> Unit,
@@ -75,13 +76,13 @@ class ArticlesAdapter(
             itemBinding.tvArticleDate.text = item.createdDate
             itemBinding.tvInterestName.text = item.interests.firstOrNull()?.interestName
             itemBinding.cardCategory.backgroundTintList =
-                ColorStateList.valueOf(Color.parseColor(item.interests.firstOrNull()?.backgroundColor))
-            itemBinding.tvInterestName.setTextColor(ColorStateList.valueOf(Color.parseColor(item.interests.firstOrNull()?.textColor)))
+                ColorStateList.valueOf(Color.parseColor(item.interests.firstOrNull()?.backgroundColor ?: "#FFFFFFFF"))
+            itemBinding.tvInterestName.setTextColor(ColorStateList.valueOf(Color.parseColor(item.interests.firstOrNull()?.textColor ?: "#FF000000")))
 
             itemBinding.view.changeVisibility(show = (position + 1) < itemCount, isGone = false)
             bindResourceImage(
                 itemBinding.ivArticleBookmark,
-                if(item.isFavorite) R.drawable.ic_bookmark_checked else R.drawable.ic_bookmark_unchecked
+                if(item.isFavorite || saved) R.drawable.ic_bookmark_checked else R.drawable.ic_bookmark_unchecked
             )
 
             itemBinding.itemContainer.setOnClickListener {

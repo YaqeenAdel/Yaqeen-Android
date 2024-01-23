@@ -3,6 +3,7 @@ package com.cancer.yaqeen.data.features.home
 import com.cancer.yaqeen.data.features.home.mappers.MappingBookmarkArticleRemoteAsUIModel
 import com.cancer.yaqeen.data.features.home.mappers.MappingArticlesRemoteAsModel
 import com.cancer.yaqeen.data.features.home.mappers.MappingBookmarkedArticlesRemoteAsModel
+import com.cancer.yaqeen.data.features.home.mappers.MappingSavedArticlesRemoteAsModel
 import com.cancer.yaqeen.data.features.home.mappers.MappingUnBookmarkArticleRemoteAsUIModel
 import com.cancer.yaqeen.data.features.home.models.Article
 import com.cancer.yaqeen.data.features.home.models.Bookmark
@@ -30,9 +31,9 @@ class HomeRepositoryImpl @Inject constructor(
             }
         }
 
-    override suspend fun getBookmarkedArticles(): Flow<DataState<List<Bookmark>>> =
+    override suspend fun getBookmarkedArticles(): Flow<DataState<List<Article>>> =
         flowStatus {
-            getResultRestAPI(MappingBookmarkedArticlesRemoteAsModel()){
+            getResultRestAPI(MappingSavedArticlesRemoteAsModel()){
                 apiService.getBookmarkedArticles()
             }
         }

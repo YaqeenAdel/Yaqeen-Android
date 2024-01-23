@@ -15,7 +15,7 @@
                 android:id="@+id/header_parent_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/primary_color_3"
+                android:background="@drawable/background_gradient_view2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -24,13 +24,14 @@
                     android:id="@+id/group_guest"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:constraint_referenced_ids="iv_header_logo,tv_app_name"
-                    android:visibility="visible"/>
+                    app:constraint_referenced_ids="iv_header_logo,tv_app_name,text_view"
+                    android:visibility="invisible"/>
 
                 <ImageView
                     android:id="@+id/iv_header_logo"
                     android:layout_width="@dimen/_37sdp"
                     android:layout_height="@dimen/_35sdp"
+                    android:visibility="invisible"
                     android:src="@drawable/logo_launcher"
                     android:scaleType="fitXY"
                     app:layout_constraintHorizontal_bias="0.42"
@@ -44,6 +45,7 @@
                     android:id="@+id/tv_app_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:visibility="invisible"
                     android:textColor="@color/rose_penk"
                     android:textSize="@dimen/_16ssp"
                     android:fontFamily="sans-serif-medium"
@@ -67,12 +69,12 @@
                     android:id="@+id/iv_profile_pic"
                     android:layout_width="@dimen/_38sdp"
                     android:layout_height="@dimen/_38sdp"
+                    android:visibility="invisible"
                     app:riv_oval="true"
                     app:riv_tile_mode="clamp"
                     android:scaleType="fitXY"
                     app:riv_border_color="@color/primary_color"
                     app:riv_border_width="@dimen/_2sdp"
-                    android:src="@drawable/com_auth0_lock_ic_social_linkedin"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     android:layout_marginStart="@dimen/_20sdp"
@@ -82,6 +84,7 @@
                     android:id="@+id/tv_welcome_back"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:visibility="invisible"
                     android:layout_marginStart="@dimen/_8sdp"
                     android:gravity="center|start"
                     android:paddingVertical="@dimen/_4sdp"
@@ -96,6 +99,7 @@
                     android:id="@+id/tv_name_user"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:visibility="invisible"
                     android:layout_marginStart="@dimen/_6sdp"
                     android:layout_marginEnd="@dimen/_3sdp"
                     android:singleLine="true"
@@ -169,19 +173,42 @@
                     app:layout_constraintTop_toTopOf="@+id/tv_current_day_date"
                     app:drawableEndCompat="@drawable/right_arrow" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_times"
+                <com.yuyakaido.android.cardstackview.CardStackView
+                    android:id="@+id/rv_treatments"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:orientation="horizontal"
-                    android:visibility="invisible"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:listitem="@layout/item_time"
+                    android:layout_height="0dp"
+                    android:visibility="gone"
+                    android:layout_marginTop="@dimen/_14sdp"
                     app:layout_constraintStart_toStartOf="@id/iv_calender"
                     app:layout_constraintEnd_toEndOf="@id/tv_see_all_calender"
                     app:layout_constraintTop_toBottomOf="@id/tv_current_day_date"
                     app:layout_constraintBottom_toBottomOf="parent" />
+
+
+                <TextView
+                    android:id="@+id/text_view"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background_view_primary_color"
+                    android:gravity="center"
+                    android:paddingTop="@dimen/_10sdp"
+                    android:paddingBottom="@dimen/_17sdp"
+                    android:paddingEnd="@dimen/_14sdp"
+                    android:paddingStart="@dimen/_18sdp"
+                    android:text="@string/to_be_able_to_use_the_feature_you_must_log_in"
+                    android:layout_marginTop="@dimen/_14sdp"
+                    android:textColor="@color/info"
+                    android:textSize="@dimen/_14ssp"
+                    android:letterSpacing="0.09"
+                    android:fontFamily="sans-serif"
+                    android:minLines="2"
+                    android:drawablePadding="@dimen/_20sdp"
+                    android:visibility="invisible"
+                    app:layout_constraintStart_toStartOf="@id/iv_calender"
+                    app:layout_constraintEnd_toEndOf="@id/tv_see_all_calender"
+                    app:layout_constraintTop_toBottomOf="@id/tv_current_day_date"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:drawableStartCompat="@drawable/message_circle"   />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.core.widget.NestedScrollView

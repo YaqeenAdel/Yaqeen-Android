@@ -6,10 +6,10 @@ import com.cancer.yaqeen.data.features.home.models.Bookmark
 import com.cancer.yaqeen.data.features.home.models.Interest
 import com.cancer.yaqeen.data.features.home.responses.BookmarkArticleResponse
 import com.cancer.yaqeen.data.features.home.responses.ArticleResponse
-import com.cancer.yaqeen.data.features.home.responses.BookmarkResponse
 import com.cancer.yaqeen.data.features.home.responses.BookmarkedArticlesResponse
 import com.cancer.yaqeen.data.features.home.responses.HomeArticlesResponse
 import com.cancer.yaqeen.data.features.home.responses.InterestResponse
+import com.cancer.yaqeen.data.features.home.responses.SavedArticleResponse
 import com.cancer.yaqeen.data.features.home.responses.UnBookmarkArticleResponse
 import com.cancer.yaqeen.data.utils.formatDate
 
@@ -79,11 +79,38 @@ class MappingBookmarkedArticlesRemoteAsModel : Mapper<BookmarkedArticlesResponse
 }
 
 
-class MappingBookmarkRemoteAsModel : Mapper<BookmarkResponse, Bookmark> {
-    override fun map(input: BookmarkResponse): Bookmark = input.run {
+class MappingBookmarkRemoteAsModel : Mapper<SavedArticleResponse, Bookmark> {
+    override fun map(input: SavedArticleResponse): Bookmark = input.run {
         Bookmark(
             bookmarkID = bookmarkID ?: -1,
             contentID = contentID ?: -1
+        )
+    }
+}
+
+class MappingSavedArticlesRemoteAsModel : Mapper<BookmarkedArticlesResponse, List<Article>> {
+    override fun map(input: BookmarkedArticlesResponse): List<Article> = input.run {
+        bookmarks?.map {
+            MappingSavedArticleRemoteAsModel().map(it)
+        }
+    } ?: listOf()
+}
+
+class MappingSavedArticleRemoteAsModel : Mapper<SavedArticleResponse, Article> {
+    override fun map(input: SavedArticleResponse): Article = input.run {
+        Article(
+            authorUserID = "",
+            bookmarkID = bookmarkID ?: -1,
+            contentID = contentID ?: -1,
+            createdDate = createdDate?.formatDate() ?: "",
+            phase = "",
+            interests = listOf(),
+            description = content?.translations?.firstOrNull()?.translationDetails?.description ?: "",
+            link = content?.translations?.firstOrNull()?.translationDetails?.link ?: "",
+            thumbnail = content?.translations?.firstOrNull()?.translationDetails?.thumbnail ?: "",
+            title = content?.translations?.firstOrNull()?.translationDetails?.title ?: "",
+            updatedAt = "",
+            visibility = false
         )
     }
 }

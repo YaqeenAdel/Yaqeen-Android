@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:background="@drawable/background_bottom_sheet"
         android:fitsSystemWindows="true"
-        tools:context=".presentation.ui.onboarding.intro.user_type.doctor.specialization.university.UniversitiesFragment">
+        tools:context=".presentation.ui.auth.intro.user_type.doctor.specialization.university.UniversitiesFragment">
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/scrollView"
