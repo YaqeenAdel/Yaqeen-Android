@@ -77,10 +77,11 @@ class SplashFragment : BaseFragment() {
         }
     }
     private fun checkNotificationPermission(){
+        //TODO: Will replace != with ==
         if (PermissionChecker.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.POST_NOTIFICATIONS
-            ) == PermissionChecker.PERMISSION_GRANTED){
+            ) != PermissionChecker.PERMISSION_GRANTED){
             checkUserInfo()
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
