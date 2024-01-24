@@ -86,8 +86,8 @@ class MoreFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
     private fun handleUI(userInfo: Pair<User?, Boolean>) {
         val (user, isLogged) = userInfo
 
-//        binding.groupProfile.changeVisibility(show = isLogged, isGone = false)
-//        binding.groupGuest.changeVisibility(show = !isLogged, isGone = false)
+        binding.cardProfile.changeVisibility(show = isLogged, isGone = true)
+        binding.groupGuest.changeVisibility(show = !isLogged, isGone = true)
 
 
         binding.tvNameUser.text = user?.name ?: ""

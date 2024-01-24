@@ -213,9 +213,7 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
         binding.tabLayout.removeAllTabs()
         photos.onEach {
             pages.add(PageFragment().apply {
-                arguments = bundleOf("photoURL" to it.photoURL)
-                arguments = bundleOf("title" to it.title)
-                arguments = bundleOf("body" to it.body)
+                arguments = bundleOf("photoURL" to it.photoURL , "title" to it.title, "body" to it.body)
             })
             binding.tabLayout.apply {
                 addTab(newTab())

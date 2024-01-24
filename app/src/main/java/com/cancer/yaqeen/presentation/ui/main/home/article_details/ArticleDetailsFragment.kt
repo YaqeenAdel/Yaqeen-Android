@@ -2,6 +2,7 @@ package com.cancer.yaqeen.presentation.ui.main.home.article_details
 
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.graphics.Paint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -81,12 +82,14 @@ class ArticleDetailsFragment : BaseFragment() {
 
     private fun setArticleDetails() {
         article.run {
+            createUnderLine()
             binding.tvArticleHeadline.text = title
             binding.tvInterestName.text = interests.firstOrNull()?.interestName
+            binding.tvArticleLink.text = link
             binding.cardCategory.backgroundTintList =
                 ColorStateList.valueOf(Color.parseColor(interests.firstOrNull()?.backgroundColor ?: "#FFFFFFFF"))
             binding.tvInterestName.setTextColor(ColorStateList.valueOf(Color.parseColor(interests.firstOrNull()?.textColor ?: "#FF000000")))
-            binding.tvArticleWriter.text = "by/ $authorUserID"
+            binding.tvArticleWriter.text = "by/ "
 
             bindResourceImage(
                 binding.ivArticleBookmark,
@@ -95,6 +98,22 @@ class ArticleDetailsFragment : BaseFragment() {
 
             setupWebView(link)
         }
+    }
+
+    private fun createUnderLine(){
+        val paint = Paint()
+
+        paint.color = resources.getColor(android.R.color.black)
+
+        paint.style = Paint.Style.STROKE
+
+        paint.strokeWidth = 2f
+
+        binding.tvArticleLink.paintFlags = binding.tvArticleLink.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+
+        binding.tvArticleLink.setTextColor(resources.getColor(android.R.color.black))
+
+        binding.tvArticleLink.setLayerType(View.LAYER_TYPE_SOFTWARE, paint)
     }
 
     private fun setupWebView(link: String) {

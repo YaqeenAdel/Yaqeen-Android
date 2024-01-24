@@ -10,6 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         tools:context=".presentation.ui.main.more.MoreFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,9 +22,51 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/group_guest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="iv_header_logo,tv_app_name"
+            android:visibility="invisible"/>
+
+        <ImageView
+            android:id="@+id/iv_header_logo"
+            android:layout_width="@dimen/_37sdp"
+            android:layout_height="@dimen/_35sdp"
+            android:visibility="invisible"
+            android:src="@drawable/logo_launcher"
+            android:scaleType="fitXY"
+            app:layout_constraintHorizontal_bias="0.42"
+            android:layout_marginVertical="@dimen/_18sdp"
+            android:layout_marginStart="@dimen/_16sdp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="Logo Header" />
+
+        <TextView
+            android:id="@+id/tv_app_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_48sdp"
+            android:visibility="invisible"
+            android:textColor="@color/rose_penk"
+            android:textSize="@dimen/_16ssp"
+            android:fontFamily="sans-serif-medium"
+            android:textAllCaps="true"
+            android:text="@string/app_name"
+            android:paddingVertical="@dimen/_4sdp"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_header_logo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_header_logo"
+            app:layout_constraintTop_toTopOf="@+id/iv_header_logo" />
+
         <androidx.cardview.widget.CardView
+            android:id="@+id/card_profile"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"

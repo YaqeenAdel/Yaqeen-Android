@@ -95,6 +95,11 @@
     <string name="arabic">Arabic</string>
     <string name="close">Close</string>
     <string name="to_be_able_to_use_the_feature_you_must_log_in">To be able to use the feature, you must log in</string>
+    <string name="treatment_reminder">Treatment Reminder</string>
+    <string name="choose_your_treatment_categories">Choose Your Treatment Categories</string>
+    <string name="medications">Medications</string>
+    <string name="routine_tests">Routine Tests</string>
+    <string name="medical_reminder">Medical Reminder</string>
 
 
     <string-array name="languages_array">

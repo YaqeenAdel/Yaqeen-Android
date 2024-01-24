@@ -16,7 +16,7 @@
             android:layout_width="@dimen/_180sdp"
             android:layout_height="@dimen/_180sdp"
             android:layout_marginTop="@dimen/_4sdp"
-            android:background="@color/light_gray"
+            android:src="@color/light_gray"
             android:scaleType="center"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
