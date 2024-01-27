@@ -179,6 +179,52 @@
     <fragment
         android:id="@+id/treatmentFragment"
         android:name="com.cancer.yaqeen.presentation.ui.main.treatment.TreatmentFragment"
-        tools:layout="@layout/fragment_treatment" />
+        tools:layout="@layout/fragment_treatment" >
+        <action
+            android:id="@+id/action_treatmentFragment_to_medicationsFragment"
+            app:destination="@id/medicationsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/medicationsFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.main.treatment.medications.MedicationsFragment"
+        tools:layout="@layout/fragment_medications" >
+        <action
+            android:id="@+id/action_medicationsFragment_to_strengthFragment"
+            app:destination="@id/strengthFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/strengthFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.main.treatment.medications.strength.StrengthFragment"
+        tools:layout="@layout/fragment_strength" >
+        <action
+            android:id="@+id/action_strengthFragment_to_chooseTimeFragment"
+            app:destination="@id/chooseTimeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chooseTimeFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.main.treatment.medications.strength.choose_time.ChooseTimeFragment"
+        tools:layout="@layout/fragment_choose_time" >
+        <action
+            android:id="@+id/action_chooseTimeFragment_to_medicationConfirmationFragment"
+            app:destination="@id/medicationConfirmationFragment" />
+        <action
+            android:id="@+id/action_chooseTimeFragment_to_calendarFragment"
+            app:destination="@id/calendarFragment" />
+        <action
+            android:id="@+id/action_chooseTimeFragment_to_timeFragment"
+            app:destination="@id/timeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/medicationConfirmationFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.main.treatment.medications.strength.choose_time.confirmation.MedicationConfirmationFragment"
+        tools:layout="@layout/fragment_medication_confirmation" />
+    <dialog
+        android:id="@+id/calendarFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.main.treatment.medications.strength.choose_time.CalendarFragment"
+        tools:layout="@layout/fragment_calendar" />
+    <dialog
+        android:id="@+id/timeFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.main.treatment.medications.strength.choose_time.TimeFragment"
+        tools:layout="@layout/fragment_time" />
 
 </navigation>

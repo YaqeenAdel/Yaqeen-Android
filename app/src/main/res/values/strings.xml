@@ -100,6 +100,27 @@
     <string name="medications">Medications</string>
     <string name="routine_tests">Routine Tests</string>
     <string name="medical_reminder">Medical Reminder</string>
+    <string name="name_of_medication">Name of Medication</string>
+    <string name="medication_type">Medication Type</string>
+    <string name="name_of_the_capsule">Name of the capsule</string>
+    <string name="specify_the_medication_type">Specify the Medication Type</string>
+    <string name="on_boarding_title_1">Explore trusted articles to learn more about your condition</string>
+    <string name="on_boarding_body_1">" Discover helpful tips for recovery, Empower your healing journey with reliable information and practical advice."</string>
+
+    <string name="on_boarding_title_2">Logging  a medical log of your symptoms is essential.</string>
+    <string name="on_boarding_body_2">"Tracking your feelings can enhance your understanding of your health condition, providing valuable insights for better management."</string>
+    <string name="medication_s_track">Medication’s Track</string>
+    <string name="strength">Strength</string>
+    <string name="how_many_capsules_of_a_certain_strength_should_be_taken_at_once">How many capsules of a certain strength should be taken at once?</string>
+    <string name="unit">Unit</string>
+    <string name="choose_units">Choose Units</string>
+    <string name="what_time_would_you_consume_this">What time would you consume this?</string>
+    <string name="start_from">Start From</string>
+    <string name="time">Time</string>
+    <string name="note">Note</string>
+    <string name="choose_days">Choose Days</string>
+    <string name="review">Review</string>
+    <string name="notes">Notes</string>
 
 
     <string-array name="languages_array">
