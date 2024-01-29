@@ -121,6 +121,19 @@
     <string name="choose_days">Choose Days</string>
     <string name="review">Review</string>
     <string name="notes">Notes</string>
+    <string name="hour">Hour</string>
+    <string name="days">Days</string>
+    <string name="reminder">Reminder</string>
+    <string name="minute">Minute</string>
+    <string name="am">AM</string>
+    <string name="pm">PM</string>
+    <string name="capsule">Capsule</string>
+    <string name="pills">Pills</string>
+    <string name="liquid">Liquid</string>
+    <string name="injection">Injection</string>
+    <string name="add">Add</string>
+    <string name="history_s_medications">History’s Medications</string>
+    <string name="specific_days_of_the_week">Specific Days of the week</string>
 
 
     <string-array name="languages_array">

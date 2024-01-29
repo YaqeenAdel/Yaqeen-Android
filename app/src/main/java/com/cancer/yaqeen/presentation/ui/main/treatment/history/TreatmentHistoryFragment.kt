@@ -1,49 +1,41 @@
-package com.cancer.yaqeen.presentation.ui.main.treatment
+package com.cancer.yaqeen.presentation.ui.main.treatment.history
 
 import android.os.Bundle
-import android.text.Spannable
-import android.text.SpannableStringBuilder
-import android.text.style.ForegroundColorSpan
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.DecelerateInterpolator
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.models.Time
 import com.cancer.yaqeen.data.utils.getTodayDate
-import com.cancer.yaqeen.databinding.FragmentMoreBinding
 import com.cancer.yaqeen.databinding.FragmentTreatmentBinding
+import com.cancer.yaqeen.databinding.FragmentTreatmentHistoryBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
-import com.cancer.yaqeen.presentation.ui.MainActivity
-import com.cancer.yaqeen.presentation.ui.main.more.MoreFragmentDirections
+import com.cancer.yaqeen.presentation.ui.main.treatment.TimesAdapter
+import com.cancer.yaqeen.presentation.ui.main.treatment.add.TreatmentFragmentDirections
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.tryNavigate
-import com.yuyakaido.android.cardstackview.CardStackLayoutManager
-import com.yuyakaido.android.cardstackview.Direction
-import com.yuyakaido.android.cardstackview.Duration
-import com.yuyakaido.android.cardstackview.RewindAnimationSetting
-import com.yuyakaido.android.cardstackview.StackFrom
+import com.google.android.material.button.MaterialButton
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class TreatmentFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
+class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
 
-    private var binding: FragmentTreatmentBinding by autoCleared()
+    private var binding: FragmentTreatmentHistoryBinding by autoCleared()
 
     private lateinit var navController: NavController
 
     private lateinit var timesAdapter: TimesAdapter
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = FragmentTreatmentBinding.inflate(inflater, container, false)
+        binding = FragmentTreatmentHistoryBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -53,7 +45,6 @@ class TreatmentFragment : BaseFragment(showBottomMenu = true), View.OnClickListe
         navController = findNavController()
 
         setListener()
-        updateUI()
 
         setupTimesAdapter()
 
@@ -69,16 +60,14 @@ class TreatmentFragment : BaseFragment(showBottomMenu = true), View.OnClickListe
         binding.toolbar.setNavigationOnClickListener {
             navController.popBackStack()
         }
+        binding.btnAdd.setOnClickListener(this)
         binding.btnMedications.setOnClickListener(this)
         binding.btnSymptoms.setOnClickListener(this)
+        binding.btnRoutineTests.setOnClickListener(this)
+        binding.btnMedicalReminder.setOnClickListener(this)
 
     }
-    private fun updateUI() {
-        val spannable = SpannableStringBuilder("1/3")
-        spannable.setSpan(ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.primary_color)), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        binding.tvPageNumber.text = spannable
 
-    }
 
     private fun setupTimesAdapter() {
         timesAdapter = TimesAdapter {
@@ -126,17 +115,51 @@ class TreatmentFragment : BaseFragment(showBottomMenu = true), View.OnClickListe
             binding.rvTimes.scrollToPosition(selectItemPosition - 2)
     }
 
+    private fun MaterialButton.updateUI() {
+        resetUI()
+        updateButtonUI(R.color.light_black, R.color.cold_white, R.color.primary_color)
+    }
+
+    private fun resetUI() {
+        binding.btnMedications.updateButtonUI()
+        binding.btnSymptoms.updateButtonUI()
+        binding.btnRoutineTests.updateButtonUI()
+        binding.btnMedicalReminder.updateButtonUI()
+    }
+
+    private fun MaterialButton.updateButtonUI(textColorId: Int = R.color.dark_gray, backgroundColorId: Int = R.color.light_gray, iconColorId: Int = R.color.medium_gray) {
+        val context = requireContext()
+        setTextColor(ContextCompat.getColor(context, textColorId))
+        backgroundTintList = ContextCompat.getColorStateList(context, backgroundColorId)
+        iconTint = ContextCompat.getColorStateList(context, iconColorId)
+    }
+
+    private fun TextView.updateUI(text: String) {
+        this.text = text
+    }
+
     override fun onClick(v: View?) {
         when(v?.id){
-            R.id.btn_medications -> {
+            R.id.btn_add -> {
                 navController.tryNavigate(
-                    TreatmentFragmentDirections.actionTreatmentFragmentToMedicationsFragment()
+                    TreatmentHistoryFragmentDirections.actionTreatmentHistoryFragmentToTreatmentFragment()
                 )
             }
+            R.id.btn_medications -> {
+                binding.btnMedications.updateUI()
+                binding.tvMedicationsHistory.updateUI(getString(R.string.history_s_medications))
+            }
             R.id.btn_symptoms -> {
-//                navController.tryNavigate(
-//
-//                )
+                binding.btnSymptoms.updateUI()
+                binding.tvMedicationsHistory.updateUI(getString(R.string.history_s_medications))
+            }
+            R.id.btn_routine_tests -> {
+                binding.btnRoutineTests.updateUI()
+                binding.tvMedicationsHistory.updateUI(getString(R.string.history_s_medications))
+            }
+            R.id.btn_medical_reminder -> {
+                binding.btnMedicalReminder.updateUI()
+                binding.tvMedicationsHistory.updateUI(getString(R.string.history_s_medications))
             }
         }
     }

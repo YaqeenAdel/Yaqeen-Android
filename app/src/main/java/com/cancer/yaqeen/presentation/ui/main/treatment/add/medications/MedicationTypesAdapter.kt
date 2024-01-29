@@ -1,4 +1,4 @@
-package com.cancer.yaqeen.presentation.ui.main.treatment.medications
+package com.cancer.yaqeen.presentation.ui.main.treatment.add.medications
 
 import android.R
 import android.content.res.ColorStateList
@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.cancer.yaqeen.data.features.home.models.MedicationType
 import com.cancer.yaqeen.databinding.ItemMedicationTypeBinding
+import com.cancer.yaqeen.presentation.util.binding_adapters.bindResourceImage
 
 class MedicationTypesAdapter(
     private val onItemClick: (MedicationType) -> Unit
@@ -70,7 +71,7 @@ class MedicationTypesAdapter(
 
         fun bind(position: Int, item: MedicationType) {
             itemBinding.tvMedicationType.text = item.name
-            itemBinding.medicalTypeUrl = item.url
+            bindResourceImage(itemBinding.ivMedication, item.iconResId)
             val isSelected = selectedPosition == position
             itemBinding.btnMedication.isChecked = isSelected
 

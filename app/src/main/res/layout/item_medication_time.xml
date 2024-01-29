@@ -43,6 +43,7 @@
             android:layout_marginVertical="@dimen/_4sdp"
             android:layout_marginEnd="@dimen/_8sdp"
             android:rotation="180"
+            android:clickable="false"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/tv_medication_time"

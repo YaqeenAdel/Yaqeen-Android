@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        tools:context=".presentation.ui.main.treatment.medications.strength.choose_time.confirmation.MedicationConfirmationFragment">
+        tools:context=".presentation.ui.main.treatment.add.medications.strength.choose_time.select_time.confirmation.MedicationConfirmationFragment">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
@@ -130,7 +130,7 @@
             android:layout_height="wrap_content"
             android:paddingVertical="@dimen/_2sdp"
             android:gravity="center|start"
-            android:text="Amount"
+            android:text="@string/amount"
             android:textColor="@color/black"
             android:textSize="@dimen/_10ssp"
             android:fontFamily="sans-serif"
@@ -171,7 +171,7 @@
             android:layout_height="wrap_content"
             android:paddingVertical="@dimen/_2sdp"
             android:gravity="center|start"
-            android:text="Days"
+            android:text="@string/days"
             android:textColor="@color/black"
             android:textSize="@dimen/_10ssp"
             android:fontFamily="sans-serif"
@@ -212,7 +212,7 @@
             android:layout_height="wrap_content"
             android:paddingVertical="@dimen/_2sdp"
             android:gravity="center|start"
-            android:text="Start from"
+            android:text="@string/start_from"
             android:textColor="@color/black"
             android:textSize="@dimen/_10ssp"
             android:fontFamily="sans-serif"
@@ -253,7 +253,7 @@
             android:layout_height="wrap_content"
             android:paddingVertical="@dimen/_2sdp"
             android:gravity="center|start"
-            android:text="Reminder"
+            android:text="@string/reminder"
             android:textColor="@color/black"
             android:textSize="@dimen/_10ssp"
             android:fontFamily="sans-serif"

@@ -78,6 +78,8 @@ class HomeViewModel @Inject constructor(
     }
 
     fun getBookmarkedArticles() {
+        if (!prefEncryptionUtil.isLogged)
+            return
         viewModelScope.launch {
             getBookmarkedArticlesUseCase().onEach { response ->
 //                _viewStateLoading.emit(response.loading)

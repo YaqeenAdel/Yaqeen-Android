@@ -1,16 +1,18 @@
-package com.cancer.yaqeen.presentation.ui.main.treatment.medications.strength.choose_time.confirmation
+package com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.strength.choose_time.select_time.confirmation
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.databinding.FragmentChooseTimeBinding
 import com.cancer.yaqeen.databinding.FragmentMedicationConfirmationBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
+import com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.MedicationsViewModel
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.tryPopBackStack
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -18,11 +20,13 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class MedicationConfirmationFragment : BottomSheetDialogFragment() {
+class MedicationConfirmationFragment : BaseFragment() {
 
     private var binding: FragmentMedicationConfirmationBinding by autoCleared()
 
     private lateinit var navController: NavController
+
+    private val medicationsViewModel: MedicationsViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,10 +43,6 @@ class MedicationConfirmationFragment : BottomSheetDialogFragment() {
         navController = findNavController()
 
         setListener()
-    }
-
-    override fun getTheme(): Int {
-        return R.style.AppBottomSheetDialogTheme
     }
 
     private fun setListener() {

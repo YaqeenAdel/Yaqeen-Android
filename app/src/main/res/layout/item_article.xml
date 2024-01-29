@@ -67,20 +67,29 @@
                     android:layout_height="wrap_content">
 
                     <com.makeramen.roundedimageview.RoundedImageView
-                        android:id="@+id/iv_interest_icon"
+                        android:id="@+id/iv_interest_background"
                         android:layout_width="@dimen/_24sdp"
                         android:layout_height="@dimen/_24sdp"
                         android:layout_marginVertical="@dimen/_4sdp"
                         android:layout_marginStart="@dimen/_8sdp"
                         android:background="@color/light_gray"
-                        android:padding="@dimen/_4sdp"
-                        android:src="@drawable/ic_interest"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:riv_mutate_background="true"
                         app:riv_oval="true"
                         app:riv_tile_mode="clamp" />
+
+                    <ImageView
+                        android:id="@+id/iv_interest_icon"
+                        android:layout_width="@dimen/_24sdp"
+                        android:layout_height="@dimen/_24sdp"
+                        android:padding="@dimen/_4sdp"
+                        android:src="@drawable/ic_interest"
+                        app:layout_constraintBottom_toBottomOf="@id/iv_interest_background"
+                        app:layout_constraintStart_toStartOf="@id/iv_interest_background"
+                        app:layout_constraintEnd_toEndOf="@id/iv_interest_background"
+                        app:layout_constraintTop_toTopOf="@id/iv_interest_background" />
 
                     <TextView
                         android:id="@+id/tv_interest_name"
@@ -89,11 +98,11 @@
                         android:layout_marginHorizontal="@dimen/_8sdp"
                         android:layout_marginVertical="@dimen/_4sdp"
                         android:fontFamily="sans-serif"
-                        android:textColor="@color/black"
+                        android:textColor="@color/text_black2"
                         android:textSize="@dimen/_10ssp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/iv_interest_icon"
+                        app:layout_constraintStart_toEndOf="@id/iv_interest_background"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:text="@string/therapy_treatment" />
 

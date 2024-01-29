@@ -1,4 +1,4 @@
-package com.cancer.yaqeen.presentation.ui.main.treatment.medications.strength
+package com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.strength
 
 import android.os.Bundle
 import android.text.Spannable
@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
@@ -18,7 +19,8 @@ import com.cancer.yaqeen.data.features.home.models.UnitType
 import com.cancer.yaqeen.databinding.FragmentMedicationsBinding
 import com.cancer.yaqeen.databinding.FragmentStrengthBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
-import com.cancer.yaqeen.presentation.ui.main.treatment.medications.MedicationTypesAdapter
+import com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.MedicationTypesAdapter
+import com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.MedicationsViewModel
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.disable
 import com.cancer.yaqeen.presentation.util.dpToPx
@@ -35,6 +37,8 @@ class StrengthFragment : BaseFragment() {
     private lateinit var navController: NavController
 
     private lateinit var unitTypesAdapter: UnitTypesAdapter
+
+    private val medicationsViewModel: MedicationsViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -108,18 +112,6 @@ class StrengthFragment : BaseFragment() {
                 ),
                 UnitType(
                     id = 4, name = "%"
-                ),
-                UnitType(
-                    id = 5, name = "%%"
-                ),
-                UnitType(
-                    id = 6, name = "%%%"
-                ),
-                UnitType(
-                    id = 7, name = "%%%%"
-                ),
-                UnitType(
-                    id = 8, name = "%%%%%"
                 )
             )
         )

@@ -104,11 +104,11 @@ class ModulesFragment : BaseFragment() {
                     }
                     modulesAdapter.setList(modules)
                     modulesAdapter.currentList.firstOrNull()?.apply {
-                        val interestModuleId = viewModel.getUserProfile()?.interestModuleId
-                        if(interestModuleId == null)
+                        val interestModuleIds = viewModel.getUserProfile()?.interestModuleIds
+                        if(interestModuleIds == null)
                             selectInterestModule(this)
                         else
-                            modulesAdapter.selectItem(interestModuleId)
+                            modulesAdapter.selectItems(interestModuleIds)
                     }
                 }
 
@@ -159,7 +159,7 @@ class ModulesFragment : BaseFragment() {
 
     }
 
-    private fun selectInterestModule(it: Module) {
-        viewModel.selectInterestModule(it.id.toInt())
+    private fun selectInterestModule(module: Module) {
+        viewModel.selectInterestModule(module)
     }
 }

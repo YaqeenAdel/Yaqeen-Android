@@ -1,4 +1,4 @@
-package com.cancer.yaqeen.presentation.ui.main.treatment.medications.strength.choose_time
+package com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.strength.choose_time
 
 import android.os.Bundle
 import android.text.Spannable
@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
@@ -16,7 +17,7 @@ import com.cancer.yaqeen.data.features.home.models.Day
 import com.cancer.yaqeen.data.features.home.models.Time
 import com.cancer.yaqeen.databinding.FragmentChooseTimeBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
-import com.cancer.yaqeen.presentation.ui.main.treatment.medications.strength.StrengthFragmentDirections
+import com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.MedicationsViewModel
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.changeVisibility
 import com.cancer.yaqeen.presentation.util.disable
@@ -36,6 +37,8 @@ class ChooseTimeFragment : BaseFragment() {
     private lateinit var medicationTimesAdapter: MedicationTimesAdapter
 
     private lateinit var daysAdapter: DaysAdapter
+
+    private val medicationsViewModel: MedicationsViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -73,7 +76,7 @@ class ChooseTimeFragment : BaseFragment() {
 
         binding.btnNext.setOnClickListener {
             navController.tryNavigate(
-                ChooseTimeFragmentDirections.actionChooseTimeFragmentToMedicationConfirmationFragment()
+                ChooseTimeFragmentDirections.actionChooseTimeFragmentToSelectTimeFragment()
             )
         }
         binding.editTextStartFrom.setOnClickListener {
@@ -125,8 +128,10 @@ class ChooseTimeFragment : BaseFragment() {
     private fun setupMedicationTimesAdapter() {
         medicationTimesAdapter = MedicationTimesAdapter {
             val specificDaysIsNotSelected = checkStrengthData(it)
-
-
+            if (specificDaysIsNotSelected)
+                navController.tryNavigate(
+                    ChooseTimeFragmentDirections.actionChooseTimeFragmentToSelectTimeFragment()
+                )
         }
 
         binding.rvTimes.apply {

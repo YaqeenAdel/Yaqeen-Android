@@ -13,7 +13,7 @@
         android:fitsSystemWindows="true"
         android:background="@drawable/background_bottom_sheet"
         android:backgroundTint="@color/white"
-        tools:context=".presentation.ui.main.treatment.medications.strength.choose_time.CalendarFragment">
+        tools:context=".presentation.ui.main.treatment.add.medications.strength.choose_time.CalendarFragment">
 
         <CalendarView
             android:id="@+id/calendar_view"

@@ -1,4 +1,4 @@
-package com.cancer.yaqeen.presentation.ui.main.treatment.medications.strength
+package com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.strength
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

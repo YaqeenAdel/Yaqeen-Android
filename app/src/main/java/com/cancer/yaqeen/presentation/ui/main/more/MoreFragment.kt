@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
@@ -20,6 +21,7 @@ import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindImage
 import com.cancer.yaqeen.presentation.util.changeVisibility
 import com.cancer.yaqeen.presentation.util.tryNavigate
+import com.google.android.material.button.MaterialButton
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -89,12 +91,21 @@ class MoreFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
         binding.groupProfile.changeVisibility(show = isLogged, isGone = true)
         binding.groupGuest.changeVisibility(show = !isLogged, isGone = true)
 
-        binding.btnSavedArticles.isEnabled = isLogged
-        binding.btnLogOut.isEnabled = isLogged
+        binding.btnSavedArticles.updateButtonUI(isLogged)
+        binding.ivSavedArticles.updateButtonUI(isLogged)
+        binding.viewSavedArticles.updateButtonUI(isLogged)
+        binding.btnLogOut.updateButtonUI(isLogged)
+        binding.ivLogOut.updateButtonUI(isLogged)
+        binding.viewLogOut.updateButtonUI(isLogged)
 
         binding.tvNameUser.text = user?.name ?: ""
         binding.tvEmailUser.text = user?.email ?: ""
         bindImage(binding.ivProfilePic, user?.pictureURL)
+    }
+
+    private fun View.updateButtonUI(isLogged: Boolean) {
+        isEnabled = isLogged
+        alpha = if (isLogged) 1.0f else 0.5f
     }
 
     override fun onClick(v: View?) {

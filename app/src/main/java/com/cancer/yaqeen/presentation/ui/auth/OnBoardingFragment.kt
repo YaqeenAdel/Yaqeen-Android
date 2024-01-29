@@ -45,10 +45,12 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
     private val runnable = object : Runnable {
 
         override fun run() {
-            val count = adapter.itemCount
-            binding.viewPager.setCurrentItem(scrollPosition++ % count, true)
+            try {
+                val count = adapter.itemCount
+                binding.viewPager.setCurrentItem(scrollPosition++ % count, true)
 
-            handler.postDelayed(this, 3000)
+                handler.postDelayed(this, 3000)
+            }catch (_: Exception){}
         }
     }
     override fun onCreate(savedInstanceState: Bundle?) {

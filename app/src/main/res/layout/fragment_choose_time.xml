@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        tools:context=".presentation.ui.main.treatment.medications.strength.choose_time.ChooseTimeFragment">
+        tools:context=".presentation.ui.main.treatment.add.medications.strength.choose_time.ChooseTimeFragment">
 
 
         <com.google.android.material.appbar.MaterialToolbar
@@ -110,7 +110,6 @@
             android:id="@+id/scrollView"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginBottom="@dimen/_32sdp"
             app:layout_constraintStart_toStartOf="@id/tv_strength"
             app:layout_constraintEnd_toEndOf="@id/tv_strength"
             app:layout_constraintTop_toBottomOf="@id/tv_strength"
@@ -258,6 +257,7 @@
                     app:endIconMode="clear_text"
                     app:endIconTint="@color/x_dark_gray"
                     android:layout_marginTop="@dimen/_14sdp"
+                    android:layout_marginBottom="@dimen/_12sdp"
                     app:boxCornerRadiusTopEnd="@dimen/_8sdp"
                     app:boxCornerRadiusTopStart="@dimen/_8sdp"
                     app:boxCornerRadiusBottomStart="@dimen/_8sdp"

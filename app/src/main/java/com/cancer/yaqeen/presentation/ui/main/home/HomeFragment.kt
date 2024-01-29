@@ -74,7 +74,7 @@ class HomeFragment : BaseFragment(showBottomMenu = true), OnClickListener {
 
         binding.tvCurrentDayDate.text = getTodayDate()
 
-        getArticles(binding.editTextSearch.text.toString())
+        homeViewModel.getArticles()
         homeViewModel.getUserInfo()
     }
 

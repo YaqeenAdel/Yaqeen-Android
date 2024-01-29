@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        tools:context=".presentation.ui.main.treatment.medications.MedicationsFragment">
+        tools:context=".presentation.ui.main.treatment.add.medications.MedicationsFragment">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
@@ -165,7 +165,7 @@
             android:id="@+id/rv_medication_types"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginVertical="@dimen/_8sdp"
+            android:layout_marginTop="@dimen/_8sdp"
             android:nestedScrollingEnabled="false"
             android:saveEnabled="false"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

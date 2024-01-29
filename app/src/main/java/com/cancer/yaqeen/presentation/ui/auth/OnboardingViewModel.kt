@@ -9,6 +9,7 @@ import com.cancer.yaqeen.data.features.auth.models.Profile
 import com.cancer.yaqeen.data.features.auth.models.User
 import com.cancer.yaqeen.data.network.base.Status
 import com.cancer.yaqeen.data.features.auth.models.UserType
+import com.cancer.yaqeen.data.features.onboarding.models.Module
 import com.cancer.yaqeen.data.features.onboarding.models.Resources
 import com.cancer.yaqeen.data.features.onboarding.models.University
 import com.cancer.yaqeen.data.features.onboarding.requests.UpdateInterestsUserRequestBuilder
@@ -211,23 +212,18 @@ class OnboardingViewModel @Inject constructor(
 
     fun updateUserProfile(isLoggedIn: Boolean = false) {
         prefEncryptionUtil.isLogged = isLoggedIn
+        val user = getUser()
         getUserProfile()?.run {
             viewModelScope.launch {
                 updateUserProfileUseCase(
-
                     UpdateProfileRequestBuilder(
-                        isPatient = userType == UserType.PATIENT,
-                        agreedTerms = true,
-//                        aggregateCountDoctor = 0,
-                        degreeIDDoctor = degreeId,
-                        medicalFieldIDDoctor = medicalFieldId,
-                        universityIDDoctor = universityId,
-//                        verificationNotesDoctor = "",
-//                        verifierUserIDDoctor = 0,
-                        ageGroupPatient = 2,
+                        firstName = user?.firstName ?: "",
+                        lastName = user?.lastName ?: "",
+                        gender = user?.gender ?: "",
+                        interestModuleIds ?: listOf(0),
+                        ageGroupPatient = 1,
                         cancerStageIDPatient = stageId,
-                        cancerTypeIDPatient = cancerTypeId,
-//                        questionsAggregateCount = 0
+                        cancerTypeIDPatient = cancerTypeId
                     ).buildRequestBody()
 
                 ).onEach { response ->
@@ -249,31 +245,31 @@ class OnboardingViewModel @Inject constructor(
         }
     }
 
-    fun updateInterestsUser(){
-        getUserProfile()?.run {
-            viewModelScope.launch {
-                updateInterestsUserUseCase(
-                    UpdateInterestsUserRequestBuilder(
-                        interestModuleId
-                    ).buildRequestBody()
-                ).onEach { response ->
-                    _viewStateLoading.emit(response.loading)
-                    when (response.status) {
-                        Status.ERROR -> emitError(response.errorEntity)
-                        Status.SUCCESS -> {
-                            Log.d("TAG", "updateInterestsUser: ${response.data}")
-                            response.data?.let {
-                                _viewStateUpdateProfileSuccess.emit(true)
-                                _viewStateUpdateProfileSuccess.emit(null)
-                            }
-                        }
-
-                        else -> {}
-                    }
-                }.launchIn(viewModelScope)
-            }
-        }
-    }
+//    fun updateInterestsUser(){
+//        getUserProfile()?.run {
+//            viewModelScope.launch {
+//                updateInterestsUserUseCase(
+//                    UpdateInterestsUserRequestBuilder(
+//                        interestModuleIds
+//                    ).buildRequestBody()
+//                ).onEach { response ->
+//                    _viewStateLoading.emit(response.loading)
+//                    when (response.status) {
+//                        Status.ERROR -> emitError(response.errorEntity)
+//                        Status.SUCCESS -> {
+//                            Log.d("TAG", "updateInterestsUser: ${response.data}")
+//                            response.data?.let {
+//                                _viewStateUpdateProfileSuccess.emit(true)
+//                                _viewStateUpdateProfileSuccess.emit(null)
+//                            }
+//                        }
+//
+//                        else -> {}
+//                    }
+//                }.launchIn(viewModelScope)
+//            }
+//        }
+//    }
 
     private suspend fun emitError(errorEntity: ErrorEntity?) {
         _viewStateError.emit(errorEntity)
@@ -298,7 +294,7 @@ class OnboardingViewModel @Inject constructor(
                     UserType.DOCTOR,
                 cancerTypeId = cancerTypeID,
                 stageId = cancerStageID,
-                interestModuleId = ageGroup,
+                interestModuleIds = arrayListOf(),
                 universityId = university,
                 degreeId = degree,
                 medicalFieldId = medicalField,
@@ -331,10 +327,15 @@ class OnboardingViewModel @Inject constructor(
             it.stageId = stageId
         }
 
-    fun selectInterestModule(interestModuleId: Int) =
+    fun selectInterestModule(module: Module){
         userProfile.get()?.also {
-            it.interestModuleId = interestModuleId
+            val id = module.id
+            if (module.selected)
+                it.interestModuleIds?.add(id)
+            else
+                it.interestModuleIds?.remove(id)
         }
+    }
 
     fun selectUniversity(universityId: String) =
         userProfile.get()?.also {

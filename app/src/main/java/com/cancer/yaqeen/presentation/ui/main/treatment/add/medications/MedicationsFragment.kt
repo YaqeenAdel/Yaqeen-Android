@@ -1,4 +1,4 @@
-package com.cancer.yaqeen.presentation.ui.main.treatment.medications
+package com.cancer.yaqeen.presentation.ui.main.treatment.add.medications
 
 import android.content.res.ColorStateList
 import android.graphics.Color
@@ -12,6 +12,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
@@ -20,6 +22,7 @@ import com.cancer.yaqeen.databinding.FragmentMedicationsBinding
 import com.cancer.yaqeen.databinding.FragmentStagesBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.ui.auth.intro.user_type.patient.stages.StagesAdapter
+import com.cancer.yaqeen.presentation.ui.main.home.HomeViewModel
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.disable
 import com.cancer.yaqeen.presentation.util.dpToPx
@@ -37,6 +40,9 @@ class MedicationsFragment : BaseFragment() {
     private lateinit var navController: NavController
 
     private lateinit var medicationTypesAdapter: MedicationTypesAdapter
+
+    private val medicationsViewModel: MedicationsViewModel by activityViewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -97,28 +103,16 @@ class MedicationsFragment : BaseFragment() {
         medicationTypesAdapter.submitList(
             listOf(
                 MedicationType(
-                    id = 1, name = "Capsule", url = ""
+                    id = 1, name = getString(R.string.capsule), iconResId = R.drawable.ic_capsule
                 ),
                 MedicationType(
-                    id = 2, name = "Pills", url = ""
+                    id = 2, name = getString(R.string.pills), iconResId = R.drawable.ic_pills
                 ),
                 MedicationType(
-                    id = 3, name = "Liquid", url = ""
+                    id = 3, name = getString(R.string.liquid), iconResId = R.drawable.ic_liquid
                 ),
                 MedicationType(
-                    id = 4, name = "Injection", url = ""
-                ),
-                MedicationType(
-                    id = 5, name = "Injection 2", url = ""
-                ),
-                MedicationType(
-                    id = 6, name = "Injection 3", url = ""
-                ),
-                MedicationType(
-                    id = 7, name = "Injection 4", url = ""
-                ),
-                MedicationType(
-                    id = 8, name = "Injection 5", url = ""
+                    id = 4, name = getString(R.string.injection), iconResId = R.drawable.ic_injection
                 )
             )
         )
