@@ -33,6 +33,11 @@ class MoreViewModel @Inject constructor(
             _viewStateUser.emit(user to isLoggedIn)
         }
     }
+    fun getUser(): User? =
+        prefEncryptionUtil.getModelData(
+            SharedPrefEncryptionUtil.PREF_USER,
+            User::class.java
+        )
 
     fun userIsLoggedIn() =
         prefEncryptionUtil.isLogged

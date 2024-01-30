@@ -35,17 +35,6 @@ class SpecializationFragment : BaseFragment() {
     private lateinit var degreeAutoCompleteAdapter: UniversityAutoCompleteAdapter
     private lateinit var medicalFieldAutoCompleteAdapter: UniversityAutoCompleteAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        // Use the Kotlin extension in the fragment-ktx artifact.
-        setFragmentResultListener(REQUEST_UNIVERSITY_KEY) { requestKey, bundle ->
-            if(requestKey == REQUEST_UNIVERSITY_KEY) {
-                val universityName = bundle.getString(UNIVERSITY_NAME_KEY)
-                binding.autoTvUniversity.setText(universityName)
-            }
-        }
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -56,6 +45,13 @@ class SpecializationFragment : BaseFragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        setFragmentResultListener(REQUEST_UNIVERSITY_KEY) { requestKey, bundle ->
+            if(requestKey == REQUEST_UNIVERSITY_KEY) {
+                val universityName = bundle.getString(UNIVERSITY_NAME_KEY)
+                binding.autoTvUniversity.setText(universityName)
+            }
+        }
 
         navController = findNavController()
 

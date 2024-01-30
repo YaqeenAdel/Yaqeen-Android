@@ -14,6 +14,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
+import com.cancer.yaqeen.data.features.home.models.MedicationTrack
 import com.cancer.yaqeen.data.features.home.models.MedicationType
 import com.cancer.yaqeen.data.features.home.models.UnitType
 import com.cancer.yaqeen.databinding.FragmentMedicationsBinding
@@ -60,15 +61,37 @@ class StrengthFragment : BaseFragment() {
 
         setListener()
 
-        binding.toolbar.title = "CINNARIZINE"
-        binding.tvMedicationType.text = "Capsule"
     }
+
+    override fun onResume() {
+        super.onResume()
+
+        val medicationTrack = medicationsViewModel.getMedicationTrack()
+        updateUI(medicationTrack)
+    }
+
+    private fun updateUI(medicationTrack: MedicationTrack?) {
+        medicationTrack?.run {
+            if (medicationAmount?.isNotEmpty() == true)
+                binding.editTextCount.setText(medicationAmount)
+            binding.toolbar.title = medicationName
+            binding.tvMedicationType.text = medicationType?.name ?: ""
+            unitType?.run {
+                unitTypesAdapter.selectItem(id)
+            }
+        }
+
+        checkStrengthData()
+    }
+
     private fun setListener(){
         binding.toolbar.setNavigationOnClickListener {
             navController.popBackStack()
         }
 
         binding.btnNext.setOnClickListener {
+            val medicationAmount = getMedicationAmount()
+            medicationsViewModel.selectUnitType(unitTypesAdapter.getItemSelected(), medicationAmount.trim())
             navController.tryNavigate(
                 StrengthFragmentDirections.actionStrengthFragmentToChooseTimeFragment()
             )
@@ -118,12 +141,12 @@ class StrengthFragment : BaseFragment() {
     }
 
     private fun checkStrengthData() {
-        val count = binding.editTextCount.text.toString()
+        val medicationAmount = getMedicationAmount()
 
         val textColorId: Int
         val backgroundColorId: Int
 
-        if(count.isNotEmpty() && unitTypesAdapter.anyItemIsSelected()) {
+        if(medicationAmount.isNotEmpty() && medicationAmount != "0" && unitTypesAdapter.anyItemIsSelected()) {
             binding.btnNext.enable()
             textColorId = R.color.white
             backgroundColorId = R.color.primary_color
@@ -140,4 +163,6 @@ class StrengthFragment : BaseFragment() {
         binding.btnNext.iconTint = ContextCompat.getColorStateList(requireContext(), textColorId)
 
     }
+
+    private fun getMedicationAmount() = binding.editTextCount.text.toString()
 }

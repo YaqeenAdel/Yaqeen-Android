@@ -5,27 +5,28 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
-import com.cancer.yaqeen.data.features.home.models.Time
-import com.cancer.yaqeen.databinding.FragmentMedicationConfirmationBinding
+import com.cancer.yaqeen.data.features.home.models.MedicationTrack
+import com.cancer.yaqeen.data.features.home.models.ReminderTime
 import com.cancer.yaqeen.databinding.FragmentSelectTimeBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.MedicationsViewModel
-import com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.strength.choose_time.ChooseTimeFragmentDirections
+import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.changeVisibility
+import com.cancer.yaqeen.presentation.util.convertMilliSecondsToDate
 import com.cancer.yaqeen.presentation.util.disable
 import com.cancer.yaqeen.presentation.util.enable
 import com.cancer.yaqeen.presentation.util.tryNavigate
-import com.cancer.yaqeen.presentation.util.tryPopBackStack
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -37,6 +38,7 @@ class SelectTimeFragment : BaseFragment() {
     private lateinit var navController: NavController
 
     private val medicationsViewModel: MedicationsViewModel by activityViewModels()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,20 +52,71 @@ class SelectTimeFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+        setFragmentResultListener(Constants.REQUEST_DATE_KEY) { requestKey, bundle ->
+            if(requestKey == Constants.REQUEST_DATE_KEY) {
+                val date = bundle.getLong(Constants.DATE_SELECTED_KEY)
+                binding.editTextStartFrom.setText(convertMilliSecondsToDate(date))
+                medicationsViewModel.selectStartDate(date)
+
+                checkTimeData()
+            }
+        }
+
+        setFragmentResultListener(Constants.REQUEST_REMINDER_TIME_KEY) { requestKey, bundle ->
+            if(requestKey == Constants.REQUEST_REMINDER_TIME_KEY) {
+                val reminderTime: ReminderTime? = bundle.getParcelable(Constants.REMINDER_TIME_KEY)
+                reminderTime?.run {
+                    binding.editTextTime.setText(text)
+                }
+                medicationsViewModel.selectReminderTime(reminderTime)
+
+                checkTimeData()
+            }
+        }
+
         navController = findNavController()
 
         setListener()
 
         updateUI()
-
-        changeCircleColorOfRadioButton()
-
-        binding.editTextSpecificDays.setText("Saturday, Monday and Wednesday")
-
-
-        binding.toolbar.title = "CINNARIZINE"
-        binding.tvMedicationType.text = "Capsule 5 Mg"
     }
+
+    override fun onResume() {
+        super.onResume()
+
+        val medicationTrack = medicationsViewModel.getMedicationTrack()
+        updateUI(medicationTrack)
+    }
+
+    private fun updateUI(medicationTrack: MedicationTrack?) {
+        medicationTrack?.run {
+
+            changeCircleColorOfRadioButton()
+
+            if (startDate != null)
+                binding.editTextStartFrom.setText(convertMilliSecondsToDate(startDate!!))
+            if (reminderTime?.text?.isNotEmpty() == true)
+                binding.editTextTime.setText(reminderTime!!.text)
+            if (notes?.isNotEmpty() == true)
+                binding.editTextNote.setText(notes)
+
+            binding.toolbar.title = medicationName
+            binding.tvMedicationType.text = medicationType?.name ?: ""
+
+            val specificDaysIsNotSelected = periodTime?.id != 5
+            binding.itemMedicationTime.container.changeVisibility(specificDaysIsNotSelected)
+            binding.textLayoutSpecificDays.changeVisibility(!specificDaysIsNotSelected)
+
+            if(specificDaysIsNotSelected)
+                binding.itemMedicationTime.tvMedicationTime.text = periodTime?.time ?: ""
+            else
+                binding.editTextSpecificDays.setText(specificDays?.joinToString { it.name } ?: "")
+        }
+
+        checkTimeData()
+    }
+
 
     private fun setListener() {
         binding.toolbar.setNavigationOnClickListener {
@@ -71,6 +124,8 @@ class SelectTimeFragment : BaseFragment() {
         }
 
         binding.btnNext.setOnClickListener {
+            val notes = binding.editTextNote.text.toString().trim()
+            medicationsViewModel.selectNotes(notes = notes)
             navController.tryNavigate(
                 SelectTimeFragmentDirections.actionSelectTimeFragmentToMedicationConfirmationFragment()
             )
@@ -86,6 +141,10 @@ class SelectTimeFragment : BaseFragment() {
                 SelectTimeFragmentDirections.actionSelectTimeFragmentToTimeFragment()
             )
         }
+
+        binding.editTextNote.addTextChangedListener {
+            checkTimeData()
+        }
     }
 
     private fun updateUI() {
@@ -96,7 +155,6 @@ class SelectTimeFragment : BaseFragment() {
 
     private fun changeCircleColorOfRadioButton() {
         binding.itemMedicationTime.btnMedication.isChecked = true
-        binding.itemMedicationTime.tvMedicationTime.text = "Every Day"
 
         val colorStateList = ColorStateList(
             arrayOf(
@@ -114,14 +172,15 @@ class SelectTimeFragment : BaseFragment() {
     }
 
 
-    private fun checkStrengthData(): Boolean {
+    private fun checkTimeData(): Boolean {
         val date = binding.editTextStartFrom.text.toString()
         val time = binding.editTextTime.text.toString()
+        val notes = binding.editTextNote.text.toString()
 
         val textColorId: Int
         val backgroundColorId: Int
 
-        if(date.isNotEmpty() && time.isNotEmpty()) {
+        if(date.isNotEmpty() && time.isNotEmpty() && notes.isNotEmpty()) {
             binding.btnNext.enable()
             textColorId = R.color.white
             backgroundColorId = R.color.primary_color

@@ -14,6 +14,8 @@ import com.cancer.yaqeen.databinding.FragmentMedicationConfirmationBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.MedicationsViewModel
 import com.cancer.yaqeen.presentation.util.autoCleared
+import com.cancer.yaqeen.presentation.util.binding_adapters.bindResourceImage
+import com.cancer.yaqeen.presentation.util.convertMilliSecondsToDate
 import com.cancer.yaqeen.presentation.util.tryPopBackStack
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -43,6 +45,24 @@ class MedicationConfirmationFragment : BaseFragment() {
         navController = findNavController()
 
         setListener()
+
+        updateUI()
+    }
+
+    private fun updateUI() {
+        val medicationTrack = medicationsViewModel.getMedicationTrack()
+
+        medicationTrack?.run {
+            binding.tvMedicationName.text = medicationName ?: ""
+            binding.tvMedicationDetails.text = "${medicationType?.name ?: ""}, ${medicationAmount ?: ""} ${unitType?.name ?: ""}"
+            medicationType?.apply { bindResourceImage(binding.ivMedicationType, iconResId) }
+            binding.tvNotesVal.text = notes ?: ""
+            binding.tvAmountVal.text = "${medicationAmount ?: ""} ${medicationType?.name ?: ""}"
+            binding.tvDaysVal.text = if (specificDays.isNullOrEmpty()) periodTime?.time ?: "" else specificDays!!.joinToString { it.name }
+            binding.tvStartFromVal.text = startDate?.let { convertMilliSecondsToDate(it) } ?: ""
+            binding.tvTimeVal.text = reminderTime?.run { text } ?: ""
+
+        }
     }
 
     private fun setListener() {

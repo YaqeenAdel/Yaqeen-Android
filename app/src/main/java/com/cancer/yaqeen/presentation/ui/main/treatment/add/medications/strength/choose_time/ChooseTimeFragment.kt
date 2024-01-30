@@ -4,22 +4,27 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.models.Day
+import com.cancer.yaqeen.data.features.home.models.MedicationTrack
+import com.cancer.yaqeen.data.features.home.models.ReminderTime
 import com.cancer.yaqeen.data.features.home.models.Time
 import com.cancer.yaqeen.databinding.FragmentChooseTimeBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.MedicationsViewModel
+import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.changeVisibility
+import com.cancer.yaqeen.presentation.util.convertMilliSecondsToDate
 import com.cancer.yaqeen.presentation.util.disable
 import com.cancer.yaqeen.presentation.util.dpToPx
 import com.cancer.yaqeen.presentation.util.enable
@@ -40,6 +45,10 @@ class ChooseTimeFragment : BaseFragment() {
 
     private val medicationsViewModel: MedicationsViewModel by activityViewModels()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -52,6 +61,28 @@ class ChooseTimeFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setFragmentResultListener(Constants.REQUEST_DATE_KEY) { requestKey, bundle ->
+            if(requestKey == Constants.REQUEST_DATE_KEY) {
+                val date = bundle.getLong(Constants.DATE_SELECTED_KEY)
+                binding.editTextStartFrom.setText(convertMilliSecondsToDate(date))
+                medicationsViewModel.selectStartDate(date)
+
+                checkPeriodTimeData()
+            }
+        }
+
+        setFragmentResultListener(Constants.REQUEST_REMINDER_TIME_KEY) { requestKey, bundle ->
+            if(requestKey == Constants.REQUEST_REMINDER_TIME_KEY) {
+                val reminderTime: ReminderTime? = bundle.getParcelable(Constants.REMINDER_TIME_KEY)
+                reminderTime?.run {
+                    binding.editTextTime.setText(text)
+                }
+                medicationsViewModel.selectReminderTime(reminderTime)
+
+                checkPeriodTimeData()
+            }
+        }
+
         navController = findNavController()
 
         setupAdapters()
@@ -60,8 +91,34 @@ class ChooseTimeFragment : BaseFragment() {
 
         setListener()
 
-        binding.toolbar.title = "CINNARIZINE"
-        binding.tvMedicationType.text = "Capsule 5 Mg"
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val medicationTrack = medicationsViewModel.getMedicationTrack()
+        updateUI(medicationTrack)
+    }
+
+    private fun updateUI(medicationTrack: MedicationTrack?) {
+        medicationTrack?.run {
+
+            if (startDate != null)
+                binding.editTextStartFrom.setText(convertMilliSecondsToDate(startDate!!))
+            if (reminderTime?.text?.isNotEmpty() == true)
+                binding.editTextTime.setText(reminderTime!!.text)
+            if (notes?.isNotEmpty() == true)
+                binding.editTextNote.setText(notes)
+
+            binding.toolbar.title = medicationName
+            binding.tvMedicationType.text = medicationType?.name ?: ""
+
+            periodTime?.run {
+                medicationTimesAdapter.selectItem(id)
+            }
+        }
+
+        checkPeriodTimeData()
     }
 
     private fun setupAdapters() {
@@ -75,6 +132,12 @@ class ChooseTimeFragment : BaseFragment() {
         }
 
         binding.btnNext.setOnClickListener {
+            val notes = binding.editTextNote.text.toString().trim()
+            medicationsViewModel.selectPeriodTime(
+                periodTime = medicationTimesAdapter.getItemSelected(),
+                specificDays = daysAdapter.getItemsSelected(),
+                notes = notes
+            )
             navController.tryNavigate(
                 ChooseTimeFragmentDirections.actionChooseTimeFragmentToSelectTimeFragment()
             )
@@ -90,6 +153,9 @@ class ChooseTimeFragment : BaseFragment() {
             )
         }
 
+        binding.editTextNote.addTextChangedListener {
+            checkPeriodTimeData()
+        }
     }
 
     private fun updateUI() {
@@ -101,7 +167,7 @@ class ChooseTimeFragment : BaseFragment() {
 
     private fun setupDaysAdapter() {
         daysAdapter = DaysAdapter {
-
+            checkPeriodTimeData()
         }
 
         binding.rvDays.adapter = daysAdapter
@@ -127,11 +193,17 @@ class ChooseTimeFragment : BaseFragment() {
 
     private fun setupMedicationTimesAdapter() {
         medicationTimesAdapter = MedicationTimesAdapter {
-            val specificDaysIsNotSelected = checkStrengthData(it)
-            if (specificDaysIsNotSelected)
+            val specificDaysIsNotSelected = it.id != 5
+            binding.groupSpecificDays.changeVisibility(show = !specificDaysIsNotSelected, isGone = true)
+
+            if (specificDaysIsNotSelected) {
+                medicationsViewModel.selectPeriodTime(periodTime = it)
                 navController.tryNavigate(
                     ChooseTimeFragmentDirections.actionChooseTimeFragmentToSelectTimeFragment()
                 )
+            }else {
+                checkPeriodTimeData()
+            }
         }
 
         binding.rvTimes.apply {
@@ -164,19 +236,15 @@ class ChooseTimeFragment : BaseFragment() {
         )
     }
 
-    private fun checkStrengthData(time: Time): Boolean {
-        val specificDaysIsNotSelected = time.id != 5
-        binding.groupSpecificDays.changeVisibility(show = !specificDaysIsNotSelected, isGone = true)
-
-        return specificDaysIsNotSelected
-
+    private fun checkPeriodTimeData() {
         val date = binding.editTextStartFrom.text.toString()
         val time = binding.editTextTime.text.toString()
+        val notes = binding.editTextNote.text.toString()
 
         val textColorId: Int
         val backgroundColorId: Int
 
-        if(date.isNotEmpty() && time.isNotEmpty() && medicationTimesAdapter.selectedPosition() == 4) {
+        if(date.isNotEmpty() && time.isNotEmpty() && medicationTimesAdapter.selectedPosition() == 4 && daysAdapter.anyItemIsSelected() && notes.isNotEmpty()) {
             binding.btnNext.enable()
             textColorId = R.color.white
             backgroundColorId = R.color.primary_color
@@ -191,7 +259,5 @@ class ChooseTimeFragment : BaseFragment() {
             ContextCompat.getColorStateList(requireContext(), backgroundColorId)
         binding.btnNext.setTextColor(ContextCompat.getColorStateList(requireContext(), textColorId))
         binding.btnNext.iconTint = ContextCompat.getColorStateList(requireContext(), textColorId)
-
-        return false
     }
 }

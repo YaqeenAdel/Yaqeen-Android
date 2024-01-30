@@ -6,18 +6,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.setFragmentResult
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
+import com.cancer.yaqeen.data.features.home.models.ReminderTime
 import com.cancer.yaqeen.data.features.home.models.Time
 import com.cancer.yaqeen.databinding.FragmentTimeBinding
 import com.cancer.yaqeen.databinding.FragmentTreatmentBinding
+import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.disable
 import com.cancer.yaqeen.presentation.util.dpToPx
 import com.cancer.yaqeen.presentation.util.enable
 import com.cancer.yaqeen.presentation.util.recyclerview.VerticalMarginItemDecoration
+import com.cancer.yaqeen.presentation.util.tryNavigateUp
 import com.cancer.yaqeen.presentation.util.tryPopBackStack
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -52,21 +57,34 @@ class TimeFragment : DialogFragment() {
 
         navController = findNavController()
 
-        
-
         setupTimesAdapter()
 
         setListener()
     }
-    private fun setListener(){
+
+    private fun setListener() {
         binding.btnNext.setOnClickListener {
-            navController.tryPopBackStack()
+            val hourSelected = hoursAdapter.getItemSelected().time
+            val minuteSelected = minutesAdapter.getItemSelected().time
+            val timing = if (binding.btnAm.isChecked) "AM" else "PM"
+            setFragmentResult(
+                Constants.REQUEST_REMINDER_TIME_KEY,
+                bundleOf(
+                    Constants.REMINDER_TIME_KEY to ReminderTime(
+                        hour = hourSelected,
+                        minute = minuteSelected,
+                        timing = timing,
+                        text = "$hourSelected:$minuteSelected $timing"
+                    )
+                )
+            )
+            navController.tryNavigateUp()
         }
         binding.toggleGroup.addOnButtonCheckedListener { group, checkedId, isChecked ->
             checkTimeData()
         }
     }
-    
+
     private fun setupTimesAdapter() {
         setupHoursAdapter()
         setupMinutesAdapter()
@@ -194,12 +212,11 @@ class TimeFragment : DialogFragment() {
         val textColorId: Int
         val backgroundColorId: Int
 
-        if(hourIsSelected && minuteIsSelected && timingIsSelected) {
+        if (hourIsSelected && minuteIsSelected && timingIsSelected) {
             binding.btnNext.enable()
             textColorId = R.color.white
             backgroundColorId = R.color.primary_color
-        }
-        else {
+        } else {
             binding.btnNext.disable()
             textColorId = R.color.medium_gray
             backgroundColorId = R.color.light_gray

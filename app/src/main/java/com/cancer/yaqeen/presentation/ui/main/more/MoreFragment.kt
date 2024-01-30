@@ -48,15 +48,13 @@ class MoreFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
 
         navController = findNavController()
 
-        observeStates()
         setListener()
 
+        updateUI()
     }
 
     override fun onResume() {
         super.onResume()
-
-        moreViewModel.getUserInfo()
 
         val language = if (moreViewModel.selectedLanguageIsEnglish()){
             getString(R.string.english)
@@ -77,16 +75,10 @@ class MoreFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
 
     }
 
-    private fun observeStates() {
-        lifecycleScope {
-            moreViewModel.viewStateUser.collect { userInfo ->
-                handleUI(userInfo)
-            }
-        }
-    }
 
-    private fun handleUI(userInfo: Pair<User?, Boolean>) {
-        val (user, isLogged) = userInfo
+    private fun updateUI() {
+        val isLogged = moreViewModel.userIsLoggedIn()
+        val user = moreViewModel.getUser()
 
         binding.groupProfile.changeVisibility(show = isLogged, isGone = true)
         binding.groupGuest.changeVisibility(show = !isLogged, isGone = true)

@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.models.Time
+import com.cancer.yaqeen.data.features.home.models.UnitType
 import com.cancer.yaqeen.databinding.ItemHourMinuteBinding
 import com.cancer.yaqeen.databinding.ItemTimeBinding
 import com.cancer.yaqeen.presentation.util.changeVisibility
@@ -68,6 +69,9 @@ class TimesAdapter(
 
     fun anyItemIsSelected(): Boolean =
         selectedPosition != -1
+
+    fun getItemSelected(): Time =
+        currentList[selectedPosition]
 
     inner class TimesViewHolder(
         private val itemBinding: ItemHourMinuteBinding

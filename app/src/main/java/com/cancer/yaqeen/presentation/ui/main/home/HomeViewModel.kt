@@ -155,6 +155,12 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun getUser(): User? =
+        prefEncryptionUtil.getModelData(
+            SharedPrefEncryptionUtil.PREF_USER,
+            User::class.java
+        )
+
     fun userIsLoggedIn() =
         prefEncryptionUtil.isLogged
 

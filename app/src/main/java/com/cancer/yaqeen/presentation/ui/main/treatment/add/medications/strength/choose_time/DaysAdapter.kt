@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.models.Day
+import com.cancer.yaqeen.data.features.home.models.UnitType
 import com.cancer.yaqeen.databinding.ItemDayBinding
 
 class DaysAdapter(
@@ -63,6 +64,12 @@ class DaysAdapter(
         notifyItemChangedByPosition(positionItem)
         return positionItem
     }
+
+    fun getItemsSelected(): List<Day> =
+        currentList.filter { it.selected }
+
+    fun anyItemIsSelected(): Boolean =
+        currentList.any { it.selected }
 
 
     inner class DaysViewHolder(

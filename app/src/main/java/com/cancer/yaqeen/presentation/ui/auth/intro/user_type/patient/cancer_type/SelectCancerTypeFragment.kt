@@ -140,7 +140,10 @@ class SelectCancerTypeFragment : BaseFragment() {
     private fun setupCancerTypesAdapter() {
         cancerTypesAdapter = CancerTypesAdapter {
             selectCancerType(it)
-            viewModel.updateUserProfile()
+            navController.tryNavigate(
+                SelectCancerTypeFragmentDirections.actionSelectCancerTypeFragmentToStagesFragment()
+            )
+//            viewModel.updateUserProfile()
         }
 
         binding.rvCancerTypes.apply {

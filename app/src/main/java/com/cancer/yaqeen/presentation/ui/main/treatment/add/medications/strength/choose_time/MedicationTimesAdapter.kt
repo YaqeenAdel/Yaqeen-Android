@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.cancer.yaqeen.data.features.home.models.Time
+import com.cancer.yaqeen.data.features.home.models.UnitType
 import com.cancer.yaqeen.databinding.ItemMedicationTimeBinding
 
 class MedicationTimesAdapter(
@@ -53,6 +54,9 @@ class MedicationTimesAdapter(
     }
 
     fun selectedPosition(): Int = selectedPosition
+
+    fun getItemSelected(): Time =
+        currentList[selectedPosition]
 
     fun selectItem(id: Int){
         val positionItem = currentList.indexOfFirst {

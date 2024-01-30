@@ -65,6 +65,8 @@ class HomeFragment : BaseFragment(showBottomMenu = true), OnClickListener {
 
         setListener()
 
+        updateUI()
+
 
         homeViewModel.getBookmarkedArticles()
     }
@@ -75,7 +77,6 @@ class HomeFragment : BaseFragment(showBottomMenu = true), OnClickListener {
         binding.tvCurrentDayDate.text = getTodayDate()
 
         homeViewModel.getArticles()
-        homeViewModel.getUserInfo()
     }
 
     private fun setListener(){
@@ -84,6 +85,18 @@ class HomeFragment : BaseFragment(showBottomMenu = true), OnClickListener {
         }
     }
 
+    private fun updateUI() {
+        val isLogged = homeViewModel.userIsLoggedIn()
+        val user = homeViewModel.getUser()
+
+        binding.groupProfile.changeVisibility(show = isLogged, isGone = false)
+        binding.groupGuest.changeVisibility(show = !isLogged, isGone = false)
+
+
+        binding.tvNameUser.text = user?.name ?: ""
+        bindImage(binding.ivProfilePic, user?.pictureURL)
+
+    }
     private fun setupAdapters() {
         setupArticlesAdapter()
     }
@@ -143,12 +156,6 @@ class HomeFragment : BaseFragment(showBottomMenu = true), OnClickListener {
         lifecycleScope {
             homeViewModel.viewStateArticles.collect { articles ->
                 articlesAdapter.setList(articles)
-            }
-        }
-
-        lifecycleScope {
-            homeViewModel.viewStateUser.collect { userInfo ->
-                handleUI(userInfo)
             }
         }
 

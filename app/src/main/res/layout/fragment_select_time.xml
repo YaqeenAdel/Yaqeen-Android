@@ -129,7 +129,6 @@
             <include
                 android:id="@+id/item_medication_time"
                 layout="@layout/item_medication_time"
-                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
@@ -140,7 +139,7 @@
                 android:layout_height="wrap_content"
                 app:hintTextColor="@color/light_black"
                 android:textColorHint="@color/light_black"
-                android:visibility="visible"
+                android:visibility="gone"
                 app:boxBackgroundColor="@color/white"
                 app:boxStrokeColor="@color/gray"
                 app:boxCornerRadiusTopEnd="@dimen/_8sdp"

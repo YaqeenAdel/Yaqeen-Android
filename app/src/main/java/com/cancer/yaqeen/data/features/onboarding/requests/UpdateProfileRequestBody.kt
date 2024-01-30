@@ -26,11 +26,11 @@ data class UserRequestBody (
     val patient: PatientRequestBody
 )
 data class PatientRequestBody (
-    val ageGroup: Int,
+    val ageGroup: Int?,
     @SerializedName("cancerTypeId")
-    val cancerTypeID: Int,
+    val cancerTypeID: Int?,
     @SerializedName("cancerStageId")
-    val cancerStageID: Int
+    val cancerStageID: Int?
 )
 
 //data class DoctorRequestBody (
@@ -94,9 +94,9 @@ data class UpdateProfileRequestBuilder(
                 gender = gender,
                 interests = interests,
                 patient = PatientRequestBody (
-                    ageGroup = ageGroupPatient ?: 0,
-                    cancerTypeID = cancerTypeIDPatient ?: 0,
-                    cancerStageID = cancerStageIDPatient ?: 0
+                    ageGroup = ageGroupPatient,
+                    cancerTypeID = cancerTypeIDPatient,
+                    cancerStageID = cancerStageIDPatient
                 )
             )
         )

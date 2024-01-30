@@ -56,6 +56,9 @@ class MedicationTypesAdapter(
     fun anyItemIsSelected(): Boolean =
         selectedPosition != -1
 
+    fun getItemSelected(): MedicationType =
+        currentList[selectedPosition]
+
     fun selectItem(id: Int){
         val positionItem = currentList.indexOfFirst {
             it.id == id

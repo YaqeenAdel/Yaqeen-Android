@@ -17,6 +17,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
+import com.cancer.yaqeen.data.features.home.models.MedicationTrack
 import com.cancer.yaqeen.data.features.home.models.MedicationType
 import com.cancer.yaqeen.databinding.FragmentMedicationsBinding
 import com.cancer.yaqeen.databinding.FragmentStagesBinding
@@ -43,6 +44,12 @@ class MedicationsFragment : BaseFragment() {
 
     private val medicationsViewModel: MedicationsViewModel by activityViewModels()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        medicationsViewModel.resetMedicationTrack()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -62,14 +69,35 @@ class MedicationsFragment : BaseFragment() {
         updateUI()
 
         setListener()
-
     }
+
+    override fun onResume() {
+        super.onResume()
+
+        val medicationTrack = medicationsViewModel.getMedicationTrack()
+        updateUI(medicationTrack)
+    }
+
+    private fun updateUI(medicationTrack: MedicationTrack?) {
+        medicationTrack?.run {
+            if (medicationName?.isNotEmpty() == true)
+                binding.editTextCapsuleName.setText(medicationName)
+            medicationType?.run {
+                medicationTypesAdapter.selectItem(id)
+            }
+        }
+
+        checkMedicationData()
+    }
+
     private fun setListener(){
         binding.toolbar.setNavigationOnClickListener {
             navController.popBackStack()
         }
 
         binding.btnNext.setOnClickListener {
+            val capsuleName = getCapsuleName()
+            medicationsViewModel.selectMedicationType(medicationTypesAdapter.getItemSelected(), capsuleName.trim())
             navController.tryNavigate(
                 MedicationsFragmentDirections.actionMedicationsFragmentToStrengthFragment()
             )
@@ -119,7 +147,7 @@ class MedicationsFragment : BaseFragment() {
     }
 
     private fun checkMedicationData() {
-        val capsuleName = binding.editTextCapsuleName.text.toString()
+        val capsuleName = getCapsuleName()
 
         val textColorId: Int
         val backgroundColorId: Int
@@ -141,4 +169,6 @@ class MedicationsFragment : BaseFragment() {
         binding.btnNext.iconTint = ContextCompat.getColorStateList(requireContext(), textColorId)
 
     }
+
+    private fun getCapsuleName() = binding.editTextCapsuleName.text.toString()
 }
