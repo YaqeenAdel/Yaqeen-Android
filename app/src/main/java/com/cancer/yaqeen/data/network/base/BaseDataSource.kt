@@ -36,15 +36,18 @@ abstract class BaseDataSource(
             val response = call()
             if (response.isSuccessful) {
                 val body = response.body()
+                Log.d("TAG", "getResultRestAPI: $body")
                 return if (body != null)
                     DataState.Success(mapper.map(body))
                 else
                     DataState.Failed()
             }
+            Log.d("TAG", "getResultRestAPI: ${response.errorBody()}")
 
             return error(errorHandler.getErrorResponseServer(response.errorBody(), response.code()))
 
         } catch (e: Exception) {
+            Log.d("TAG", "getResultRestAPI: $e")
             return error(errorHandler.getError(e))
         }
     }
