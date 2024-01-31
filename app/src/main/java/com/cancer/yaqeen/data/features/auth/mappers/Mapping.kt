@@ -14,8 +14,12 @@ class MappingLoginRemoteAsUser: Mapper<UserProfile, User> {
             nickname = nickname ?: "",
             pictureURL = pictureURL ?: "",
             email = email ?: "",
-            isEmailVerified = isEmailVerified ?: false,
-            familyName = familyName ?: ""
+            familyName = familyName ?: "",
+            gender = "",
+            agreedTerms = false,
+            firstName = "",
+            lastName = "",
+            userInterests = listOf(),
         )
     }
 }

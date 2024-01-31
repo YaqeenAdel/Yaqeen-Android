@@ -1,13 +1,10 @@
 package com.cancer.yaqeen.data.features.onboarding.mappers
 
 import com.cancer.yaqeen.data.base.Mapper
-import com.cancer.yaqeen.data.features.auth.models.Aggregate
 import com.cancer.yaqeen.data.features.auth.models.Doctor
 import com.cancer.yaqeen.data.features.auth.models.Patient
-import com.cancer.yaqeen.data.features.auth.models.SAggregate
 import com.cancer.yaqeen.data.features.auth.models.User
-import com.cancer.yaqeen.data.features.auth.models.VerificationStatus
-import com.cancer.yaqeen.data.features.auth.responses.LoginRemote
+import com.cancer.yaqeen.data.features.auth.models.UserInterest
 import com.cancer.yaqeen.data.features.onboarding.models.CancerType
 import com.cancer.yaqeen.data.features.onboarding.models.Module
 import com.cancer.yaqeen.data.features.onboarding.models.Photo
@@ -18,13 +15,12 @@ import com.cancer.yaqeen.data.features.onboarding.responses.CancerStageResponse
 import com.cancer.yaqeen.data.features.onboarding.responses.CancerTypeResponse
 import com.cancer.yaqeen.data.features.onboarding.responses.DoctorResponse
 import com.cancer.yaqeen.data.features.onboarding.responses.InterestResponse
+import com.cancer.yaqeen.data.features.onboarding.responses.InterestUserResponse
 import com.cancer.yaqeen.data.features.onboarding.responses.PatientResponse
 import com.cancer.yaqeen.data.features.onboarding.responses.PhotoResponse
 import com.cancer.yaqeen.data.features.onboarding.responses.ResourcesResponse
-import com.cancer.yaqeen.data.features.onboarding.responses.SAggregateResponse
 import com.cancer.yaqeen.data.features.onboarding.responses.UniversitiesResponse
 import com.cancer.yaqeen.data.features.onboarding.responses.UserProfileResponse
-import com.cancer.yaqeen.data.features.onboarding.responses.VerificationStatusResponse
 
 
 class MappingResourcesRemoteAsModel: Mapper<ResourcesResponse, Resources> {
@@ -92,58 +88,56 @@ class MappingUserProfileRemoteAsModel(val user: User?): Mapper<UserProfileRespon
     override fun map(input: UserProfileResponse): User? = input.users?.let {
         it.firstOrNull()?.run {
             User(
-                id = user?.id,
-                name = user?.name,
-                nickname = user?.nickname,
-                pictureURL = user?.pictureURL,
-                familyName = user?.familyName,
-                gender = gender,
+                id = user?.id ?: "",
+                name = user?.name ?: "",
+                nickname = user?.nickname ?: "",
+                pictureURL = user?.pictureURL ?: "",
+                familyName = user?.familyName ?: "",
+
+                gender = gender ?: "",
                 doctor = MappingDoctorRemoteAsModel().map(doctor),
-                agreedTerms = agreedTerms,
-                isEmailVerified = isEmailVerified,
-                questionsAggregate = MappingSAggregateRemoteAsModel().map(questionsAggregate),
-                firstName = firstName,
-                lastName = lastName,
+                agreedTerms = agreedTerms ?: false,
+//                isEmailVerified = isEmailVerified,
+//                questionsAggregate = MappingSAggregateRemoteAsModel().map(questionsAggregate),
+                firstName = firstName ?: "",
+                lastName = lastName ?: "",
                 patient = MappingPatientRemoteAsModel().map(patient),
-                email = email
+                email = email ?: "",
+                userInterests = MappingUserInterestRemoteAsModel().map(interestUsers),
             )
-        } ?: User()
+        }
     }
+}
+class MappingUserInterestRemoteAsModel: Mapper<List<InterestUserResponse>?, List<UserInterest>> {
+    override fun map(input: List<InterestUserResponse>?): List<UserInterest> = input?.map {
+        it.run {
+            UserInterest(
+                id = interestID ?: 0,
+                name = interest?.translations?.firstOrNull()?.translation?.name ?: "",
+            )
+        }
+    } ?: listOf()
 }
 class MappingPatientRemoteAsModel: Mapper<PatientResponse?, Patient?> {
     override fun map(input: PatientResponse?): Patient? = input?.run {
         Patient(
-            cancerTypeID = cancerTypeID,
-            ageGroup = ageGroup,
-            cancerStageID = cancerStageID
+            ageGroup = ageGroup ?: 0,
+            cancerStageID = cancerStageID ?: 0,
+            cancerTypeID = cancerTypeID ?: 0,
+            stageName = cancerStage?.translations?.firstOrNull()?.translation?.stageName ?: "",
+            cancerTypeName = cancerType?.translations?.firstOrNull()?.translation?.cancerTypeName ?: "",
         )
     }
 }
 class MappingDoctorRemoteAsModel: Mapper<DoctorResponse?, Doctor?> {
     override fun map(input: DoctorResponse?): Doctor? = input?.run {
         Doctor(
-            medicalField = medicalField,
-            degree = degree,
-            university = university,
-            verificationStatus = MappingVerificationStatusRemoteAsModel().map(verificationStatus),
-            answersAggregate = MappingSAggregateRemoteAsModel().map(answersAggregate),
+            credentialsAttachments = credentialsAttachments ?: listOf(),
+            degree = degree ?: "",
+            medicalField = medicalField ?: "",
+            university = university ?: "",
+            verificationStatus = verificationStatus ?: ""
         )
     }
 }
-class MappingVerificationStatusRemoteAsModel: Mapper<VerificationStatusResponse?, VerificationStatus?> {
-    override fun map(input: VerificationStatusResponse?): VerificationStatus? = input?.run {
-        VerificationStatus(
-            notes = notes,
-            verifierUserID = verifierUserID
-        )
-    }
-}
-class MappingSAggregateRemoteAsModel: Mapper<SAggregateResponse?, SAggregate?> {
-    override fun map(input: SAggregateResponse?): SAggregate? = input?.run {
-        SAggregate(
-            aggregate = Aggregate(
-                aggregate?.count
-            )
-        )
-    }
-}
+

@@ -71,7 +71,7 @@ data class FluffyTranslationResponse (
 
 data class InterestResponse (
     @SerializedName("InterestId")
-    val interestID: Long?,
+    val interestID: Int?,
 
     @SerializedName("LogoURL")
     val logoURL: String?,

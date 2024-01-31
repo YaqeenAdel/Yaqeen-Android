@@ -12,7 +12,7 @@
         android:title="@string/search" />
 
     <item
-        android:id="@+id/treatmentFragment"
+        android:id="@+id/treatmentHistoryFragment"
         android:icon="@drawable/ic_treatment"
         android:title="@string/treatment" />
     <item

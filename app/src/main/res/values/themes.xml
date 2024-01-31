@@ -27,6 +27,16 @@
     </style>
 
 
+    <style name="AppBottomDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/AppModalDialogStyle</item>
+    </style>
+
+    <style name="AppModalDialogStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/background_dialog_view</item>
+
+    </style>
+
+
     <style name="CustomMaterialButtonStyle" parent="Widget.MaterialComponents.Button">
         <!-- Customize attributes of the Material Button here -->
         <item name="backgroundTint">@color/silver_medal</item>
@@ -86,4 +96,11 @@
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textColor">@color/primary_color</item>
     </style>
+
+
+    <style name="CustomCalendarDay" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:background">@color/primary_color</item>
+        <item name="android:activatedBackgroundIndicator">@color/primary_color</item>
+    </style>
+
 </resources>

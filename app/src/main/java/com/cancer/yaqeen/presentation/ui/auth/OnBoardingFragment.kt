@@ -16,6 +16,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.cancer.yaqeen.R
+import com.cancer.yaqeen.data.features.onboarding.models.OnBoardingInfo
 import com.cancer.yaqeen.data.features.onboarding.models.Photo
 import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.databinding.FragmentNewOnBoardingBinding
@@ -44,10 +45,12 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
     private val runnable = object : Runnable {
 
         override fun run() {
-            val count = adapter.itemCount
-            binding.viewPager.setCurrentItem(scrollPosition++ % count, true)
+            try {
+                val count = adapter.itemCount
+                binding.viewPager.setCurrentItem(scrollPosition++ % count, true)
 
-            handler.postDelayed(this, 3000)
+                handler.postDelayed(this, 3000)
+            }catch (_: Exception){}
         }
     }
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,6 +85,8 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
         getResourcesData()
 
         observeStates()
+
+        setupViewPager()
 
 //        setupLanguageAutoCompleteAdapter()
     }
@@ -207,13 +212,25 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
 //        }
 //    }
 
-    private fun setupViewPager(photos: List<Photo>) {
+    private fun setupViewPager(photos: List<Photo>? = null) {
+        val onBoardingList: List<OnBoardingInfo> = listOf(
+            OnBoardingInfo(
+                photoId = R.drawable.ic_screen_1,
+                title = getString(R.string.on_boarding_title_1),
+                body = getString(R.string.on_boarding_body_1)
+            ),
+            OnBoardingInfo(
+                photoId = R.mipmap.ic_screen_2,
+                title = getString(R.string.on_boarding_title_2),
+                body = getString(R.string.on_boarding_body_2)
+            )
+        )
         val pages = mutableListOf<Fragment>()
 
         binding.tabLayout.removeAllTabs()
-        photos.onEach {
+        onBoardingList.onEach {
             pages.add(PageFragment().apply {
-                arguments = bundleOf("photoURL" to it.photoURL , "title" to it.title, "body" to it.body)
+                arguments = bundleOf("photoID" to it.photoId , "title" to it.title, "body" to it.body)
             })
             binding.tabLayout.apply {
                 addTab(newTab())

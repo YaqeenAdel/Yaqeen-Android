@@ -63,7 +63,7 @@ class SplashFragment : BaseFragment() {
                 if (isLogged == null){
                     Handler().postDelayed({
                         checkNotificationPermission()
-                    }, 6000)
+                    }, 3000)
                 }else if(isLogged){
                     navController.navigate(
                         SplashFragmentDirections.actionSplashFragmentToQuoteFragment()

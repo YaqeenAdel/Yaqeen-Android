@@ -1,14 +1,11 @@
-package com.cancer.yaqeen.presentation.ui.main.home
+package com.cancer.yaqeen.presentation.ui.main.treatment
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Filter
-import android.widget.Filterable
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.models.Time
 import com.cancer.yaqeen.databinding.ItemTimeBinding
@@ -80,7 +77,8 @@ class TimesAdapter(
             val isSelected = selectedPosition == position
             itemBinding.tvTime.text = item.time
 
-            itemBinding.ivCurve.changeVisibility(show = isSelected, isGone = true)
+            itemBinding.ivCurve.changeVisibility(show = isSelected)
+            itemBinding.viewLine.changeVisibility(show = !isSelected)
 
             if (isSelected){
                 itemBinding.tvTime.setTextColor(ContextCompat.getColor(_context, R.color.primary_color))
@@ -90,11 +88,11 @@ class TimesAdapter(
                 itemBinding.itemContainer.backgroundTintList = ContextCompat.getColorStateList(_context, android.R.color.transparent)
             }
 
-//            itemBinding.itemContainer.setOnClickListener {
-//                onItemClick(item)
-//
-//                notifyItemChangedByPosition(position)
-//            }
+            itemBinding.itemContainer.setOnClickListener {
+                onItemClick(item)
+
+                notifyItemChangedByPosition(position)
+            }
         }
 
      }

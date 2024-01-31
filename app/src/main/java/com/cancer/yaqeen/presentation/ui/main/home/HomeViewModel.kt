@@ -78,6 +78,8 @@ class HomeViewModel @Inject constructor(
     }
 
     fun getBookmarkedArticles() {
+        if (!prefEncryptionUtil.isLogged)
+            return
         viewModelScope.launch {
             getBookmarkedArticlesUseCase().onEach { response ->
 //                _viewStateLoading.emit(response.loading)
@@ -152,6 +154,12 @@ class HomeViewModel @Inject constructor(
             _viewStateUser.emit(user to isLoggedIn)
         }
     }
+
+    fun getUser(): User? =
+        prefEncryptionUtil.getModelData(
+            SharedPrefEncryptionUtil.PREF_USER,
+            User::class.java
+        )
 
     fun userIsLoggedIn() =
         prefEncryptionUtil.isLogged

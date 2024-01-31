@@ -13,6 +13,7 @@ import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.dpToPx
 import com.cancer.yaqeen.presentation.util.recyclerview.VerticalMarginItemDecoration
 import com.cancer.yaqeen.presentation.util.tryNavigate
+import com.cancer.yaqeen.presentation.util.tryPopBackStack
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -46,6 +47,10 @@ class TermsAndConditionFragment : BaseFragment() {
             navController.tryNavigate(
                 TermsAndConditionFragmentDirections.actionTermsAndConditionFragmentToIntroFragment()
             )
+        }
+
+        binding.btnReject.setOnClickListener {
+            navController.tryPopBackStack()
         }
 
 //        observeStates()

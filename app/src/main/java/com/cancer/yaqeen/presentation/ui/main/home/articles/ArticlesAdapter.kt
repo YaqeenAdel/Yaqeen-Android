@@ -2,6 +2,7 @@ package com.cancer.yaqeen.presentation.ui.main.home.articles
 
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Filter
@@ -75,9 +76,11 @@ class ArticlesAdapter(
             itemBinding.tvArticleHeadline.text = item.title
             itemBinding.tvArticleDate.text = item.createdDate
             itemBinding.tvInterestName.text = item.interests.firstOrNull()?.interestName
-            itemBinding.cardCategory.backgroundTintList =
-                ColorStateList.valueOf(Color.parseColor(item.interests.firstOrNull()?.backgroundColor ?: "#FFFFFFFF"))
-            itemBinding.tvInterestName.setTextColor(ColorStateList.valueOf(Color.parseColor(item.interests.firstOrNull()?.textColor ?: "#FF000000")))
+            item.interests.firstOrNull()?.backgroundColor?.let {
+                itemBinding.ivInterestIcon.imageTintList = ColorStateList.valueOf(Color.parseColor(it))
+            }
+
+//            itemBinding.tvInterestName.setTextColor(ColorStateList.valueOf(Color.parseColor(item.interests.firstOrNull()?.textColor ?: "#FF000000")))
 
             itemBinding.view.changeVisibility(show = (position + 1) < itemCount, isGone = false)
             bindResourceImage(

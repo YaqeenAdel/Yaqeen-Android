@@ -23,50 +23,9 @@
         app:layout_constraintTop_toTopOf="parent">
 
 
-        <androidx.constraintlayout.widget.Group
-            android:id="@+id/group_guest"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:constraint_referenced_ids="iv_header_logo,tv_app_name"
-            android:visibility="invisible"/>
-
-        <ImageView
-            android:id="@+id/iv_header_logo"
-            android:layout_width="@dimen/_37sdp"
-            android:layout_height="@dimen/_35sdp"
-            android:visibility="invisible"
-            android:src="@drawable/logo_launcher"
-            android:scaleType="fitXY"
-            app:layout_constraintHorizontal_bias="0.42"
-            android:layout_marginVertical="@dimen/_18sdp"
-            android:layout_marginStart="@dimen/_16sdp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="Logo Header" />
-
-        <TextView
-            android:id="@+id/tv_app_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/_48sdp"
-            android:visibility="invisible"
-            android:textColor="@color/rose_penk"
-            android:textSize="@dimen/_16ssp"
-            android:fontFamily="sans-serif-medium"
-            android:textAllCaps="true"
-            android:text="@string/app_name"
-            android:paddingVertical="@dimen/_4sdp"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_header_logo"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/iv_header_logo"
-            app:layout_constraintTop_toTopOf="@+id/iv_header_logo" />
-
         <androidx.cardview.widget.CardView
-            android:id="@+id/card_profile"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -82,11 +41,59 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+                <androidx.constraintlayout.widget.Group
+                    android:id="@+id/group_guest"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:constraint_referenced_ids="iv_header_logo,tv_app_name"
+                    android:visibility="invisible"/>
+
+                <androidx.constraintlayout.widget.Group
+                    android:id="@+id/group_profile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:constraint_referenced_ids="iv_profile_pic,tv_name_user,tv_email_user"
+                    android:visibility="invisible"/>
+
+                <ImageView
+                    android:id="@+id/iv_header_logo"
+                    android:layout_width="@dimen/_37sdp"
+                    android:layout_height="@dimen/_35sdp"
+                    android:src="@drawable/logo_launcher"
+                    android:scaleType="fitXY"
+                    android:visibility="invisible"
+                    app:layout_constraintHorizontal_bias="0.42"
+                    android:layout_marginVertical="@dimen/_12sdp"
+                    android:layout_marginStart="@dimen/_14sdp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:contentDescription="Logo Header" />
+
+                <TextView
+                    android:id="@+id/tv_app_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:visibility="invisible"
+                    android:layout_marginStart="@dimen/_14sdp"
+                    android:layout_marginEnd="@dimen/_8sdp"
+                    android:textColor="@color/rose_penk"
+                    android:textSize="@dimen/_16ssp"
+                    android:fontFamily="sans-serif-medium"
+                    android:textAllCaps="true"
+                    android:text="@string/app_name"
+                    android:paddingVertical="@dimen/_4sdp"
+                    app:layout_constraintBottom_toBottomOf="@+id/iv_header_logo"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/iv_header_logo"
+                    app:layout_constraintTop_toTopOf="@+id/iv_header_logo" />
+
 
                 <com.makeramen.roundedimageview.RoundedImageView
                     android:id="@+id/iv_profile_pic"
                     android:layout_width="@dimen/_46sdp"
                     android:layout_height="@dimen/_46sdp"
+                    android:visibility="gone"
                     app:riv_oval="true"
                     app:riv_tile_mode="clamp"
                     android:scaleType="fitXY"
@@ -102,6 +109,7 @@
                     android:id="@+id/tv_name_user"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     android:layout_marginStart="@dimen/_12sdp"
                     android:layout_marginEnd="@dimen/_14sdp"
                     android:singleLine="true"
@@ -120,6 +128,7 @@
                     android:id="@+id/tv_email_user"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     android:singleLine="true"
                     android:ellipsize="marquee"
                     android:focusable="true"
