@@ -111,11 +111,16 @@ fun Long.formatDate(pattern: String = "dd MMM yyyy"): String {
 }
 
 fun String.formatDate(): String {
-    val inputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
-    val outputDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+    return try {
+        val inputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+        val outputDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
-    val inputDate = inputDateFormat.parse(this)
-    return outputDateFormat.format(inputDate)
+        val inputDate = inputDateFormat.parse(this)
+        outputDateFormat.format(inputDate)
+    }catch (_: Exception){
+        ""
+    }
+
 
 }
 fun convertMillisecondsToTime(milliseconds: Long, pattern: String = "hh:mm a"): String {

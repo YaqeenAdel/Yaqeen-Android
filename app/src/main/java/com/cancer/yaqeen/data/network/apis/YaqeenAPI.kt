@@ -23,8 +23,6 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface YaqeenAPI {
-    @POST("/api/MobileAuth/Login")
-    suspend fun login(@Body requestBody: LoginRequestBody): Response<LoginRemote>
 
     @GET("resources")
     @Headers("isAuthorization: false")

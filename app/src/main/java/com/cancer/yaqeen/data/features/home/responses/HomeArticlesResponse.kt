@@ -10,7 +10,7 @@ data class ArticleResponse(
     @SerializedName("AssignedTo")
     val assignedTo: Any?,
     @SerializedName("Attachments")
-    val attachments: List<Any>?,
+    val attachments: Any?,
     @SerializedName("AuthorUserId")
     val authorUserID: String?,
     @SerializedName("ContentId")

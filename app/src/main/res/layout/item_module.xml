@@ -48,19 +48,29 @@
             android:background="@drawable/background_view_unselected"/>
 
         <com.makeramen.roundedimageview.RoundedImageView
-            android:id="@+id/iv_module_icon"
+            android:id="@+id/iv_module_background"
             android:layout_width="@dimen/_54sdp"
             android:layout_height="@dimen/_54sdp"
             android:background="@color/light_gray"
-            app:riv_oval="true"
-            app:riv_tile_mode="clamp"
-            android:src="@drawable/ic_interest"
-            app:riv_mutate_background="true"
-            android:padding="@dimen/_10sdp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/btn_interest"
-            android:layout_marginHorizontal="@dimen/_24sdp"/>
+            android:layout_marginHorizontal="@dimen/_24sdp"
+            app:riv_mutate_background="true"
+            app:riv_oval="true"
+            app:riv_tile_mode="clamp" />
+
+        <ImageView
+            android:id="@+id/iv_module_icon"
+            android:layout_width="@dimen/_54sdp"
+            android:layout_height="@dimen/_54sdp"
+            android:padding="@dimen/_10sdp"
+            android:src="@drawable/ic_interest"
+            app:layout_constraintBottom_toBottomOf="@id/iv_module_background"
+            app:layout_constraintStart_toStartOf="@id/iv_module_background"
+            app:layout_constraintEnd_toEndOf="@id/iv_module_background"
+            app:layout_constraintTop_toTopOf="@id/iv_module_background" />
+
 
         <TextView
             android:id="@+id/tv_module_name"

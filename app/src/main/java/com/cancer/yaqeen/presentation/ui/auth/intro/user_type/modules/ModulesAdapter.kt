@@ -1,6 +1,7 @@
 package com.cancer.yaqeen.presentation.ui.auth.intro.user_type.modules
 
 import android.content.res.ColorStateList
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Filter
@@ -63,11 +64,14 @@ class ModulesAdapter(
         items = list ?: listOf()
     }
 
-    fun selectItem(id: Int){
-        val positionItem = currentList.indexOfFirst {
-            it.id.toInt() == id
+    fun selectItems(ids: MutableList<Int>?){
+        ids?.forEach { id ->
+            val positionItem = currentList.indexOfFirst {
+                it.id == id
+            }
+            notifyItemChangedByPosition(positionItem)
         }
-        notifyItemChangedByPosition(positionItem)
+
     }
 
     fun allItemsUnSelected(): Boolean =
@@ -87,6 +91,10 @@ class ModulesAdapter(
             itemBinding.tvModuleName.text = item.moduleName
             bindImage(itemBinding.ivModuleIcon, item.icon)
             itemBinding.btnInterest.isChecked = item.selected
+
+            if (item.iconColor.isNotEmpty())
+                itemBinding.ivModuleIcon.imageTintList = ColorStateList.valueOf(Color.parseColor(item.iconColor))
+
 
             if(item.selected){
                 bindResourceImage(itemBinding.radioButton, R.drawable.ic_checked)

@@ -50,7 +50,7 @@ class MappingInterestRemoteAsModel : Mapper<InterestResponse, Interest> {
         Interest(
             interestID = interestID ?: 0,
             interestName = translations?.firstOrNull()?.translation?.name ?: "",
-            backgroundColor = if (styleBackgroundColorHex == null) "#FFFFFFFF" else "#$styleBackgroundColorHex",
+            backgroundColor = if (styleBackgroundColorHex == null) "#1BAFB7" else "#$styleBackgroundColorHex",
             textColor = if (styleForegroundColorHex == null) "#FF000000" else "#$styleForegroundColorHex"
         )
     }

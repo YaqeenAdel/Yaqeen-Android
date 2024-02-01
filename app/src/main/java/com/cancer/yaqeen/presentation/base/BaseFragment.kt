@@ -39,6 +39,7 @@ open class BaseFragment constructor(private val showBottomMenu: Boolean) : Fragm
         super.onStart()
         (requireActivity() as MainActivity).displayBottomMenu(showBottomMenu)
 
+        onLoading(false)
     }
 
     fun FragmentActivity.hideSoftKeyboard() {
