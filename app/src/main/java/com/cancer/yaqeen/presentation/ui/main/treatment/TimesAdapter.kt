@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.cancer.yaqeen.R
-import com.cancer.yaqeen.data.features.home.models.Time
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.Time
 import com.cancer.yaqeen.databinding.ItemTimeBinding
 import com.cancer.yaqeen.presentation.util.changeVisibility
 

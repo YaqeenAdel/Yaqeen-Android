@@ -221,7 +221,7 @@
             app:iconGravity="start"/>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_medical_reminder"
+            android:id="@+id/btn_medical_appointment"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             style="@style/Widget.Material3.Button.TextButton"
@@ -234,7 +234,7 @@
             app:backgroundTint="@color/light_gray"
             android:textColor="@color/dark_gray"
             android:textSize="@dimen/_12ssp"
-            android:text="@string/medical_reminder"
+            android:text="@string/medical_appointment"
             android:fontFamily="sans-serif-medium"
             android:gravity="start|center"
             android:textAllCaps="false"

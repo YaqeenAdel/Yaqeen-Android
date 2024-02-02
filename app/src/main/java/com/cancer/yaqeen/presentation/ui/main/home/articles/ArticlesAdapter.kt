@@ -2,16 +2,13 @@ package com.cancer.yaqeen.presentation.ui.main.home.articles
 
 import android.content.res.ColorStateList
 import android.graphics.Color
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Filter
-import android.widget.Filterable
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.cancer.yaqeen.R
-import com.cancer.yaqeen.data.features.home.models.Article
+import com.cancer.yaqeen.data.features.home.articles.models.Article
 import com.cancer.yaqeen.databinding.ItemArticleBinding
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindResourceImage
 import com.cancer.yaqeen.presentation.util.changeVisibility

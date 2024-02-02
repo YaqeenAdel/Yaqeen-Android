@@ -1,4 +1,4 @@
-package com.cancer.yaqeen.data.features.home.requests
+package com.cancer.yaqeen.data.features.home.articles.requests
 
 import com.google.gson.annotations.SerializedName
 

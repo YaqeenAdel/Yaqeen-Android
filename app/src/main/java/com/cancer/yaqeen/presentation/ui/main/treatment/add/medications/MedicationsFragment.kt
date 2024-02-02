@@ -1,36 +1,28 @@
 package com.cancer.yaqeen.presentation.ui.main.treatment.add.medications
 
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
-import com.cancer.yaqeen.data.features.home.models.MedicationTrack
-import com.cancer.yaqeen.data.features.home.models.MedicationType
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.MedicationTrack
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.MedicationType
 import com.cancer.yaqeen.databinding.FragmentMedicationsBinding
-import com.cancer.yaqeen.databinding.FragmentStagesBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
-import com.cancer.yaqeen.presentation.ui.auth.intro.user_type.patient.stages.StagesAdapter
-import com.cancer.yaqeen.presentation.ui.main.home.HomeViewModel
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.disable
 import com.cancer.yaqeen.presentation.util.dpToPx
 import com.cancer.yaqeen.presentation.util.enable
 import com.cancer.yaqeen.presentation.util.recyclerview.VerticalMarginItemDecoration
 import com.cancer.yaqeen.presentation.util.tryNavigate
-import com.cancer.yaqeen.presentation.util.tryPopBackStack
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -117,6 +109,8 @@ class MedicationsFragment : BaseFragment() {
     private fun setupMedicationTypesAdapter() {
         medicationTypesAdapter = MedicationTypesAdapter {
             checkMedicationData()
+
+            binding.textLayoutCapsuleName.hint = getString(R.string.name_of_the_medication, it.name)
         }
 
         binding.rvMedicationTypes.apply {

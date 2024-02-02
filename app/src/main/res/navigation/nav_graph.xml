@@ -135,7 +135,7 @@
 
         <argument
             android:name="article"
-            app:argType="com.cancer.yaqeen.data.features.home.models.Article"
+            app:argType="com.cancer.yaqeen.data.features.home.articles.models.Article"
             app:nullable="false"/>
 
         <argument

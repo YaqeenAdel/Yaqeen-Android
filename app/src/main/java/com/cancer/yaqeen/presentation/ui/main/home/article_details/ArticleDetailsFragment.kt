@@ -4,7 +4,6 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +13,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.cancer.yaqeen.R
-import com.cancer.yaqeen.data.features.home.models.Article
+import com.cancer.yaqeen.data.features.home.articles.models.Article
 import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.databinding.FragmentArticleDetailsBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment

@@ -1,28 +1,44 @@
 package com.cancer.yaqeen.presentation.ui.main.treatment.add.medications
 
 import androidx.databinding.ObservableField
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.cancer.yaqeen.data.features.auth.models.Profile
-import com.cancer.yaqeen.data.features.home.models.Day
-import com.cancer.yaqeen.data.features.home.models.MedicationTrack
-import com.cancer.yaqeen.data.features.home.models.MedicationType
-import com.cancer.yaqeen.data.features.home.models.ReminderTime
-import com.cancer.yaqeen.data.features.home.models.Time
-import com.cancer.yaqeen.data.features.home.models.UnitType
+import androidx.lifecycle.viewModelScope
+import com.cancer.yaqeen.data.features.home.articles.models.Article
+import com.cancer.yaqeen.data.features.home.articles.requests.BookmarkArticleRequest
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.Day
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.MedicationTrack
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.MedicationType
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.ReminderTime
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.Time
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.UnitType
+import com.cancer.yaqeen.data.features.home.schedule.medication.requests.AddMedicationRequest
+import com.cancer.yaqeen.data.features.home.schedule.medication.requests.AddMedicationRequestBuilder
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
+import com.cancer.yaqeen.data.network.base.Status
 import com.cancer.yaqeen.data.network.error.ErrorEntity
+import com.cancer.yaqeen.domain.features.home.schedule.medication.AddMedicationUseCase
+import com.cancer.yaqeen.presentation.util.SingleLiveEvent
+import com.cancer.yaqeen.presentation.util.timestampToDay
+import com.cancer.yaqeen.presentation.util.timestampToMonth
+import com.cancer.yaqeen.presentation.util.timestampToYear
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MedicationsViewModel @Inject constructor(
     private val prefEncryptionUtil: SharedPrefEncryptionUtil,
+    private val addMedicationUseCase: AddMedicationUseCase
 ) : ViewModel() {
 
     private var viewModelJob: Job? = null
+
+    private val _viewStateAddMedication = SingleLiveEvent<Boolean?>()
+    val viewStateAddMedication: LiveData<Boolean?> = _viewStateAddMedication
 
     private val _viewStateLoading = MutableStateFlow<Boolean>(false)
     val viewStateLoading = _viewStateLoading.asStateFlow()
@@ -30,7 +46,9 @@ class MedicationsViewModel @Inject constructor(
     private val _viewStateError = MutableStateFlow<ErrorEntity?>(null)
     val viewStateError = _viewStateError.asStateFlow()
 
-    private var medicationTrackField: ObservableField<MedicationTrack> = ObservableField(MedicationTrack())
+    private var medicationTrackField: ObservableField<MedicationTrack> = ObservableField(
+        MedicationTrack()
+    )
 
     fun selectMedicationType(medicationType: MedicationType, medicationName: String) =
         medicationTrackField.get()?.also {
@@ -38,17 +56,18 @@ class MedicationsViewModel @Inject constructor(
             it.medicationName = medicationName
         }
 
-    fun selectUnitType(unitType: UnitType, medicationAmount: String) =
+    fun selectUnitType(unitType: UnitType, strengthAmount: String) =
         medicationTrackField.get()?.also {
             it.unitType = unitType
-            it.medicationAmount = medicationAmount
+            it.strengthAmount = strengthAmount
         }
 
-    fun selectPeriodTime(periodTime: Time, specificDays: List<Day>? = null, notes: String? = null) =
+    fun selectPeriodTime(periodTime: Time, specificDays: List<Day>? = null, notes: String? = null, dosageAmount: String? = null) =
         medicationTrackField.get()?.also {
             it.periodTime = periodTime
             it.specificDays = specificDays
             it.notes = notes
+            it.dosageAmount = dosageAmount
         }
 
     fun selectSpecificDays(specificDays: List<Day>) =
@@ -66,9 +85,10 @@ class MedicationsViewModel @Inject constructor(
             it.reminderTime = reminderTime
         }
 
-    fun selectNotes(notes: String) =
+    fun selectNotesAndDosageAmount(notes: String, dosageAmount: String) =
         medicationTrackField.get()?.also {
             it.notes = notes
+            it.dosageAmount = dosageAmount
         }
 
     fun getMedicationTrack(): MedicationTrack? =
@@ -78,6 +98,68 @@ class MedicationsViewModel @Inject constructor(
         medicationTrackField.set(MedicationTrack())
     }
 
+    fun addMedication() {
+        viewModelJob = viewModelScope.launch {
+            val medicationTrackField = getMedicationTrack()
+            medicationTrackField?.run {
+                addMedicationUseCase(
+                    AddMedicationRequestBuilder(
+                        medicationName = medicationName ?: "",
+                        medicationTypeName = medicationType?.name ?: "",
+                        unitTypeName = unitType?.name ?: "",
+                        strengthAmount = strengthAmount ?: "",
+                        dosageAmount = dosageAmount ?: "",
+                        cronExpression = createCronExpression(
+                            minutes = reminderTime?.minute ?: "0",
+                            startingHour = reminderTime?.hour24 ?: "0",
+                            time = periodTime,
+                            startingDate = startDate,
+                            specificDays = specificDays
+                        ),
+                    ).buildRequestBody()
+                ).collect { response ->
+                    _viewStateLoading.emit(response.loading)
+                    when (response.status) {
+                        Status.ERROR -> emitError(response.errorEntity)
+                        Status.SUCCESS -> {
+                            if (response.data == true) {
+                                resetMedicationTrack()
+                                _viewStateAddMedication.postValue(true)
+                            }
+                        }
+
+                        else -> {}
+                    }
+                }
+            }
+
+        }
+    }
+
+    private fun createCronExpression(
+        minutes: String,
+        startingHour: String,
+        time: Time?,
+        startingDate: Long?,
+        specificDays: List<Day>?
+    ): String {
+        val seconds = "0"
+        val hours = "$startingHour${time?.cronExpression ?: ""}"
+        val startingDay = startingDate?.timestampToDay() ?: "0"
+        val startingMonth = startingDate?.timestampToMonth() ?: "0"
+        val startingYear = startingDate?.timestampToYear() ?: "0"
+        val (dayOfMonth, dayOfWeek) = when (time?.id) {
+            4 -> "$startingDay/2" to "?"
+            5 -> "?" to (specificDays?.map { it.cronExpression }?.joinToString(separator = ",") { it } ?: "")
+            else -> "$startingDay/1" to "?"
+        }
+        val month = "$startingMonth/1"
+        val year = "$startingYear/1"
+
+        return "$seconds $minutes $hours $dayOfMonth $month $dayOfWeek $year"
+    }
+
+
     fun userIsLoggedIn() =
         prefEncryptionUtil.isLogged
 
@@ -85,6 +167,7 @@ class MedicationsViewModel @Inject constructor(
         _viewStateError.emit(errorEntity)
         _viewStateError.emit(null)
     }
+
     override fun onCleared() {
         super.onCleared()
         viewModelJob = null

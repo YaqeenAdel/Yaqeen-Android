@@ -7,20 +7,17 @@ import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
 import android.widget.Toast
-import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.auth.models.User
-import com.cancer.yaqeen.data.features.home.models.Article
-import com.cancer.yaqeen.data.features.home.models.Time
+import com.cancer.yaqeen.data.features.home.articles.models.Article
 import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.data.utils.getTodayDate
 import com.cancer.yaqeen.databinding.FragmentHomeBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.ui.main.home.articles.ArticlesAdapter
-import com.cancer.yaqeen.presentation.ui.main.treatment.TimesAdapter
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindImage
 import com.cancer.yaqeen.presentation.util.changeVisibility
@@ -63,8 +60,6 @@ class HomeFragment : BaseFragment(showBottomMenu = true), OnClickListener {
         setupAdapters()
         observeStates()
 
-        setListener()
-
         updateUI()
 
 
@@ -77,12 +72,6 @@ class HomeFragment : BaseFragment(showBottomMenu = true), OnClickListener {
         binding.tvCurrentDayDate.text = getTodayDate()
 
         homeViewModel.getArticles()
-    }
-
-    private fun setListener(){
-        binding.editTextSearch.doOnTextChanged { text, _, _, _ ->
-            getArticles(text.toString())
-        }
     }
 
     private fun updateUI() {

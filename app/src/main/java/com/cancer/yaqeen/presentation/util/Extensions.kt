@@ -15,6 +15,9 @@ import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
 import com.cancer.yaqeen.R
 import com.google.android.material.textfield.TextInputLayout
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 fun View.changeVisibility(show: Boolean, isGone: Boolean = false) =
     if (show) {
@@ -159,4 +162,25 @@ fun String.detectLanguage(): String {
         containsEnglish && !containsArabic -> "en"
         else -> "unknown"
     }
+}
+
+fun Long.timestampToDay(): String {
+    val dateFormat = SimpleDateFormat("d", Locale.ENGLISH)
+    val date = Date(this)
+
+    return dateFormat.format(date)
+}
+
+fun Long.timestampToMonth(): String {
+    val dateFormat = SimpleDateFormat("M", Locale.ENGLISH)
+    val date = Date(this)
+
+    return dateFormat.format(date)
+}
+
+fun Long.timestampToYear(): String {
+    val dateFormat = SimpleDateFormat("yyyy", Locale.ENGLISH)
+    val date = Date(this)
+
+    return dateFormat.format(date)
 }

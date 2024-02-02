@@ -1,17 +1,17 @@
 package com.cancer.yaqeen.data.network.apis
 
-import com.cancer.yaqeen.data.features.auth.requests.LoginRequestBody
-import com.cancer.yaqeen.data.features.auth.responses.LoginRemote
-import com.cancer.yaqeen.data.features.home.requests.BookmarkArticleRequest
-import com.cancer.yaqeen.data.features.home.responses.BookmarkArticleResponse
-import com.cancer.yaqeen.data.features.home.responses.BookmarkedArticlesResponse
-import com.cancer.yaqeen.data.features.home.responses.HomeArticlesResponse
-import com.cancer.yaqeen.data.features.home.responses.UnBookmarkArticleResponse
+import com.cancer.yaqeen.data.features.home.articles.requests.BookmarkArticleRequest
+import com.cancer.yaqeen.data.features.home.articles.responses.BookmarkArticleResponse
+import com.cancer.yaqeen.data.features.home.articles.responses.BookmarkedArticlesResponse
+import com.cancer.yaqeen.data.features.home.articles.responses.HomeArticlesResponse
+import com.cancer.yaqeen.data.features.home.articles.responses.UnBookmarkArticleResponse
 import com.cancer.yaqeen.data.features.onboarding.requests.UpdateInterestsUserRequestBody
 import com.cancer.yaqeen.data.features.onboarding.requests.UpdateProfileRequestBody
 import com.cancer.yaqeen.data.features.onboarding.responses.ResourcesResponse
 import com.cancer.yaqeen.data.features.onboarding.responses.UniversitiesResponse
 import com.cancer.yaqeen.data.features.onboarding.responses.UserProfileResponse
+import com.cancer.yaqeen.data.features.home.schedule.medication.requests.AddMedicationRequest
+import com.cancer.yaqeen.data.features.home.schedule.medication.responses.AddMedicationResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -68,6 +68,11 @@ interface YaqeenAPI {
     suspend fun unBookmarkArticle(
         @Path("bookmarkId") bookmarkId: Int
     ): Response<UnBookmarkArticleResponse>
+
+    @POST("Schedules")
+    suspend fun addMedication(
+        @Body requestBody: AddMedicationRequest
+    ): Response<AddMedicationResponse>
 
 
 }

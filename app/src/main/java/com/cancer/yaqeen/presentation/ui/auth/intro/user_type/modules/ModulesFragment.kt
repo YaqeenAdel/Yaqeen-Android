@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -103,13 +104,13 @@ class ModulesFragment : BaseFragment() {
                         UserType.DOCTOR -> it.doctorInterests
                     }
                     modulesAdapter.setList(modules)
-                    modulesAdapter.currentList.firstOrNull()?.apply {
-                        val interestModuleIds = viewModel.getUserProfile()?.interestModuleIds
-                        if(interestModuleIds == null)
-                            selectInterestModule(this)
-                        else
-                            modulesAdapter.selectItems(interestModuleIds)
+                    val interestModuleIds = viewModel.getUserProfile()?.interestModuleIds
+                    Log.d("TAG", "observeStates: $interestModuleIds")
+                    if(!interestModuleIds.isNullOrEmpty()) {
+                        binding.btnFinish.changeVisibility(show = true)
+                        modulesAdapter.selectItems(interestModuleIds)
                     }
+
                 }
 
             }
