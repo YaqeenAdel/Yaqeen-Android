@@ -2,15 +2,12 @@ package com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.strengt
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.cancer.yaqeen.R
-import com.cancer.yaqeen.data.features.home.models.Time
-import com.cancer.yaqeen.data.features.home.models.UnitType
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.Time
 import com.cancer.yaqeen.databinding.ItemHourMinuteBinding
-import com.cancer.yaqeen.databinding.ItemTimeBinding
 import com.cancer.yaqeen.presentation.util.changeVisibility
 
 class TimesAdapter(

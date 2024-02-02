@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,13 +13,10 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
-import com.cancer.yaqeen.data.features.home.models.MedicationTrack
-import com.cancer.yaqeen.data.features.home.models.MedicationType
-import com.cancer.yaqeen.data.features.home.models.UnitType
-import com.cancer.yaqeen.databinding.FragmentMedicationsBinding
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.MedicationTrack
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.UnitType
 import com.cancer.yaqeen.databinding.FragmentStrengthBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
-import com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.MedicationTypesAdapter
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.MedicationsViewModel
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.disable
@@ -72,13 +68,15 @@ class StrengthFragment : BaseFragment() {
 
     private fun updateUI(medicationTrack: MedicationTrack?) {
         medicationTrack?.run {
-            if (medicationAmount?.isNotEmpty() == true)
-                binding.editTextCount.setText(medicationAmount)
+            if (strengthAmount?.isNotEmpty() == true)
+                binding.editTextCount.setText(strengthAmount)
             binding.toolbar.title = medicationName
             binding.tvMedicationType.text = medicationType?.name ?: ""
             unitType?.run {
                 unitTypesAdapter.selectItem(id)
             }
+
+            binding.tvStrength2.text = getString(R.string.strength_question, medicationType?.name ?: "")
         }
 
         checkStrengthData()
@@ -90,8 +88,8 @@ class StrengthFragment : BaseFragment() {
         }
 
         binding.btnNext.setOnClickListener {
-            val medicationAmount = getMedicationAmount()
-            medicationsViewModel.selectUnitType(unitTypesAdapter.getItemSelected(), medicationAmount.trim())
+            val strengthAmount = getStrengthAmount()
+            medicationsViewModel.selectUnitType(unitTypesAdapter.getItemSelected(), strengthAmount.trim())
             navController.tryNavigate(
                 StrengthFragmentDirections.actionStrengthFragmentToChooseTimeFragment()
             )
@@ -141,7 +139,7 @@ class StrengthFragment : BaseFragment() {
     }
 
     private fun checkStrengthData() {
-        val medicationAmount = getMedicationAmount()
+        val medicationAmount = getStrengthAmount()
 
         val textColorId: Int
         val backgroundColorId: Int
@@ -164,5 +162,5 @@ class StrengthFragment : BaseFragment() {
 
     }
 
-    private fun getMedicationAmount() = binding.editTextCount.text.toString()
+    private fun getStrengthAmount() = binding.editTextCount.text.toString()
 }

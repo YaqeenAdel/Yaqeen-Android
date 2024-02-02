@@ -2,6 +2,7 @@ package com.cancer.yaqeen.presentation.ui.auth.intro.user_type.modules
 
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Filter
@@ -53,7 +54,7 @@ class ModulesAdapter(
     }
 
     override fun onBindViewHolder(holder: ModulesViewHolder, position: Int) {
-        val item = currentList[position]
+        val item = items[position]
         item?.let {
             holder.bind(it)
         }
@@ -66,16 +67,16 @@ class ModulesAdapter(
 
     fun selectItems(ids: MutableList<Int>?){
         ids?.forEach { id ->
-            val positionItem = currentList.indexOfFirst {
+            items.firstOrNull {
                 it.id == id
-            }
-            notifyItemChangedByPosition(positionItem)
+            }?.selected = true
         }
-
+        notifyDataSetChanged()
+        Log.d("TAG", "observeStates: $items")
     }
 
     fun allItemsUnSelected(): Boolean =
-        !currentList.any {
+        !items.any {
             it.selected
         }
 

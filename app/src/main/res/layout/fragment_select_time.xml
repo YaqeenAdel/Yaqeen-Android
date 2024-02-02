@@ -248,7 +248,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/text_layout_note"
+            android:id="@+id/text_layout_dosage"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -269,11 +269,49 @@
             app:layout_constraintTop_toBottomOf="@id/text_layout_time">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_text_dosage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:hint="@string/dosage"
+                android:importantForAutofill="noExcludeDescendants"
+                android:inputType="number"
+                android:fontFamily="sans-serif"
+                android:paddingVertical="@dimen/_14sdp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/x_dark_gray"
+                android:textCursorDrawable="@color/xx_dark_gray"
+                android:textSize="@dimen/_12ssp"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/text_layout_note"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:hintTextColor="@color/x_dark_gray"
+            android:textColorHint="@color/x_dark_gray"
+            app:boxBackgroundColor="@color/white"
+            app:boxStrokeColor="@color/gray"
+            app:endIconMode="clear_text"
+            app:endIconTint="@color/x_dark_gray"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:layout_marginBottom="@dimen/_12sdp"
+            app:boxCornerRadiusTopEnd="@dimen/_8sdp"
+            app:boxCornerRadiusTopStart="@dimen/_8sdp"
+            app:boxCornerRadiusBottomStart="@dimen/_8sdp"
+            app:boxCornerRadiusBottomEnd="@dimen/_8sdp"
+            app:layout_constraintStart_toStartOf="@id/relativeLayout"
+            app:layout_constraintEnd_toEndOf="@id/relativeLayout"
+            app:layout_constraintTop_toBottomOf="@id/text_layout_dosage">
+
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_text_note"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:hint="@string/note"
+                android:hint="@string/notes"
                 android:importantForAutofill="noExcludeDescendants"
                 android:inputType="text"
                 android:fontFamily="sans-serif"

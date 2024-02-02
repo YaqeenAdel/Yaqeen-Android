@@ -7,12 +7,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cancer.yaqeen.data.features.auth.models.Profile
 import com.cancer.yaqeen.data.features.auth.models.User
+import com.cancer.yaqeen.data.features.auth.models.UserInterest
 import com.cancer.yaqeen.data.network.base.Status
 import com.cancer.yaqeen.data.features.auth.models.UserType
 import com.cancer.yaqeen.data.features.onboarding.models.Module
 import com.cancer.yaqeen.data.features.onboarding.models.Resources
 import com.cancer.yaqeen.data.features.onboarding.models.University
-import com.cancer.yaqeen.data.features.onboarding.requests.UpdateInterestsUserRequestBuilder
 import com.cancer.yaqeen.data.features.onboarding.requests.UpdateProfileRequestBuilder
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.data.network.error.ErrorEntity
@@ -177,7 +177,7 @@ class OnboardingViewModel @Inject constructor(
                     Status.SUCCESS -> {
                         response.data?.let {
                             with(it) {
-                                if(patient?.cancerTypeID == null || patient.ageGroup == null || patient.cancerStageID == null
+                                if(patient?.cancerTypeID == null || patient.cancerStageID == null || userInterests.isNullOrEmpty()
 //                                    || doctor?.medicalField == null || doctor.degree == null || doctor.university == null
                                     ){
                                     _viewStateLoginSuccess.emit(it)
@@ -193,7 +193,9 @@ class OnboardingViewModel @Inject constructor(
                                     doctor?.medicalField,
                                     doctor?.degree,
                                     doctor?.university,
-                                    agreedTerms
+                                    agreedTerms,
+                                    userInterests
+
                                 )
                             }
 
@@ -284,7 +286,8 @@ class OnboardingViewModel @Inject constructor(
         medicalField: String?,
         degree: String?,
         university: String?,
-        agreedTerms: Boolean?
+        agreedTerms: Boolean?,
+        userInterests: List<UserInterest>
     ) {
         userProfile.set(
             Profile(
@@ -294,7 +297,7 @@ class OnboardingViewModel @Inject constructor(
                     UserType.DOCTOR,
                 cancerTypeId = cancerTypeID,
                 stageId = cancerStageID,
-                interestModuleIds = arrayListOf(),
+                interestModuleIds = userInterests.map { it.id } as? MutableList<Int> ?: arrayListOf(),
                 universityId = university,
                 degreeId = degree,
                 medicalFieldId = medicalField,

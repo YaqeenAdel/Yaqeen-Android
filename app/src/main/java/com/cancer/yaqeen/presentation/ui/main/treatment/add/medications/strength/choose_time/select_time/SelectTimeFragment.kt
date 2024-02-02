@@ -15,8 +15,8 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
-import com.cancer.yaqeen.data.features.home.models.MedicationTrack
-import com.cancer.yaqeen.data.features.home.models.ReminderTime
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.MedicationTrack
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.ReminderTime
 import com.cancer.yaqeen.databinding.FragmentSelectTimeBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.MedicationsViewModel
@@ -100,6 +100,8 @@ class SelectTimeFragment : BaseFragment() {
                 binding.editTextTime.setText(reminderTime!!.text)
             if (notes?.isNotEmpty() == true)
                 binding.editTextNote.setText(notes)
+            if (dosageAmount?.isNotEmpty() == true)
+                binding.editTextDosage.setText(dosageAmount)
 
             binding.toolbar.title = medicationName
             binding.tvMedicationType.text = medicationType?.name ?: ""
@@ -125,7 +127,8 @@ class SelectTimeFragment : BaseFragment() {
 
         binding.btnNext.setOnClickListener {
             val notes = binding.editTextNote.text.toString().trim()
-            medicationsViewModel.selectNotes(notes = notes)
+            val dosageAmount = binding.editTextDosage.text.toString().trim()
+            medicationsViewModel.selectNotesAndDosageAmount(notes = notes, dosageAmount = dosageAmount)
             navController.tryNavigate(
                 SelectTimeFragmentDirections.actionSelectTimeFragmentToMedicationConfirmationFragment()
             )
@@ -143,6 +146,10 @@ class SelectTimeFragment : BaseFragment() {
         }
 
         binding.editTextNote.addTextChangedListener {
+            checkTimeData()
+        }
+
+        binding.editTextDosage.addTextChangedListener {
             checkTimeData()
         }
     }
@@ -176,11 +183,12 @@ class SelectTimeFragment : BaseFragment() {
         val date = binding.editTextStartFrom.text.toString()
         val time = binding.editTextTime.text.toString()
         val notes = binding.editTextNote.text.toString()
+        val dosageAmount = binding.editTextDosage.text.toString()
 
         val textColorId: Int
         val backgroundColorId: Int
 
-        if(date.isNotEmpty() && time.isNotEmpty() && notes.isNotEmpty()) {
+        if(date.isNotEmpty() && time.isNotEmpty() && notes.isNotEmpty() && dosageAmount.isNotEmpty()) {
             binding.btnNext.enable()
             textColorId = R.color.white
             backgroundColorId = R.color.primary_color

@@ -1,7 +1,6 @@
 package com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.strength.choose_time
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,10 +11,9 @@ import androidx.fragment.app.setFragmentResult
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
-import com.cancer.yaqeen.data.features.home.models.ReminderTime
-import com.cancer.yaqeen.data.features.home.models.Time
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.ReminderTime
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.Time
 import com.cancer.yaqeen.databinding.FragmentTimeBinding
-import com.cancer.yaqeen.databinding.FragmentTreatmentBinding
 import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.disable
@@ -23,8 +21,6 @@ import com.cancer.yaqeen.presentation.util.dpToPx
 import com.cancer.yaqeen.presentation.util.enable
 import com.cancer.yaqeen.presentation.util.recyclerview.VerticalMarginItemDecoration
 import com.cancer.yaqeen.presentation.util.tryNavigateUp
-import com.cancer.yaqeen.presentation.util.tryPopBackStack
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -71,7 +67,17 @@ class TimeFragment : DialogFragment() {
                 Constants.REQUEST_REMINDER_TIME_KEY,
                 bundleOf(
                     Constants.REMINDER_TIME_KEY to ReminderTime(
-                        hour = hourSelected,
+                        hour12 = hourSelected,
+                        hour24 = if (binding.btnAm.isChecked) {
+                            if (hourSelected == "12")
+                                "00"
+                            else hourSelected
+                        } else {
+                            if (hourSelected == "12")
+                                "12"
+                            else
+                                (hourSelected.toInt() + 12).toString()
+                        },
                         minute = minuteSelected,
                         timing = timing,
                         text = "$hourSelected:$minuteSelected $timing"
@@ -80,7 +86,7 @@ class TimeFragment : DialogFragment() {
             )
             navController.tryNavigateUp()
         }
-        binding.toggleGroup.addOnButtonCheckedListener { group, checkedId, isChecked ->
+        binding.toggleGroup.addOnButtonCheckedListener { _, _, _ ->
             checkTimeData()
         }
     }

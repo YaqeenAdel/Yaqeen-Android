@@ -5,8 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.cancer.yaqeen.data.features.home.models.MedicationType
-import com.cancer.yaqeen.data.features.home.models.UnitType
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.UnitType
 import com.cancer.yaqeen.databinding.ItemUnitTypeBinding
 
 class UnitTypesAdapter(

@@ -7,11 +7,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.cancer.yaqeen.R
-import com.cancer.yaqeen.data.features.home.models.Day
-import com.cancer.yaqeen.data.features.home.models.UnitType
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.Day
 import com.cancer.yaqeen.databinding.ItemDayBinding
 
 class DaysAdapter(
+    private var items: List<Day> = listOf(),
     private val onItemClick: (Day) -> Unit
 ) :
     ListAdapter<Day, DaysAdapter.DaysViewHolder>(Companion) {
@@ -47,10 +47,12 @@ class DaysAdapter(
 
     fun setList(list: List<Day>?) {
         submitList(list)
+
+        items = list ?: listOf()
     }
 
     override fun onBindViewHolder(holder: DaysViewHolder, position: Int) {
-        val item = currentList[position]
+        val item = items[position]
         item?.let {
             holder.bind(position, it)
         }
@@ -58,7 +60,7 @@ class DaysAdapter(
 
 
     fun selectItem(id: Int): Int{
-        val positionItem = currentList.indexOfFirst {
+        val positionItem = items.indexOfFirst {
             it.id == id
         }
         notifyItemChangedByPosition(positionItem)
@@ -66,11 +68,21 @@ class DaysAdapter(
     }
 
     fun getItemsSelected(): List<Day> =
-        currentList.filter { it.selected }
+        items.filter { it.selected }
 
     fun anyItemIsSelected(): Boolean =
-        currentList.any { it.selected }
+        items.any { it.selected }
 
+
+    fun selectItems(days: List<Day>?) {
+        days?.forEach { day ->
+            items.firstOrNull {
+                it.id == day.id
+            }?.selected = true
+        }
+
+        notifyDataSetChanged()
+    }
 
     inner class DaysViewHolder(
         private val itemBinding: ItemDayBinding

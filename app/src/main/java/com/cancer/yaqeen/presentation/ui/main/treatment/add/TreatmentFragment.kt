@@ -11,7 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
-import com.cancer.yaqeen.data.features.home.models.Time
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.Time
 import com.cancer.yaqeen.data.utils.getTodayDate
 import com.cancer.yaqeen.databinding.FragmentTreatmentBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment

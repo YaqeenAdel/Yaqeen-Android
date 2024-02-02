@@ -1,7 +1,6 @@
 package com.cancer.yaqeen.domain.features.home.articles.usecases
 
-import com.cancer.yaqeen.data.features.home.IHomeRepository
-import com.cancer.yaqeen.data.features.home.requests.BookmarkArticleRequest
+import com.cancer.yaqeen.data.features.home.articles.IHomeRepository
 import com.cancer.yaqeen.data.network.base.DataState
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject

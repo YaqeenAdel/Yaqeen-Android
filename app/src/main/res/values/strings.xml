@@ -30,7 +30,7 @@
     <string name="check_your_email">Check Your Email</string>
     <string name="activation">Activation</string>
     <string name="see_all">See all</string>
-    <string name="recommended_articles">Recommended Article</string>
+    <string name="recommended_articles">Recommended Articles</string>
     <string name="therapy_treatment">Therapy Treatment</string>
 
 
@@ -103,6 +103,7 @@
     <string name="name_of_medication">Name of Medication</string>
     <string name="medication_type">Medication Type</string>
     <string name="name_of_the_capsule">Name of the capsule</string>
+    <string name="name_of_the_medication">Name of the %s</string>
     <string name="specify_the_medication_type">Specify the Medication Type</string>
     <string name="on_boarding_title_1">Explore trusted articles to learn more about your condition</string>
     <string name="on_boarding_body_1">" Discover helpful tips for recovery, Empower your healing journey with reliable information and practical advice."</string>
@@ -112,6 +113,7 @@
     <string name="medication_s_track">Medication’s Track</string>
     <string name="strength">Strength</string>
     <string name="how_many_capsules_of_a_certain_strength_should_be_taken_at_once">How many capsules of a certain strength should be taken at once?</string>
+    <string name="strength_question">How many %s of a certain strength should be taken at once?</string>
     <string name="unit">Unit</string>
     <string name="choose_units">Choose Units</string>
     <string name="what_time_would_you_consume_this">What time would you consume this?</string>
@@ -134,6 +136,9 @@
     <string name="add">Add</string>
     <string name="history_s_medications">History’s Medications</string>
     <string name="specific_days_of_the_week">Specific Days of the week</string>
+    <string name="medical_appointment">Medical Appointment</string>
+    <string name="medication_added_successfully">Medication Added Successfully</string>
+    <string name="dosage">Dosage</string>
 
 
     <string-array name="languages_array">

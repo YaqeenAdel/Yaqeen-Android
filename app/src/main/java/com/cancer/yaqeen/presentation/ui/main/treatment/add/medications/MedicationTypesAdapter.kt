@@ -8,7 +8,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.cancer.yaqeen.data.features.home.models.MedicationType
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.MedicationType
 import com.cancer.yaqeen.databinding.ItemMedicationTypeBinding
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindResourceImage
 

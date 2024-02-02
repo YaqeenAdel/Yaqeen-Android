@@ -126,7 +126,10 @@ class StagesFragment : BaseFragment() {
     private fun setupStagesAdapter() {
         stagesAdapter = StagesAdapter {
             selectStage(it)
-            viewModel.updateUserProfile()
+            navController.tryNavigate(
+                StagesFragmentDirections.actionStagesFragmentToModulesFragment()
+            )
+//            viewModel.updateUserProfile()
         }
 
         binding.rvStages.apply {

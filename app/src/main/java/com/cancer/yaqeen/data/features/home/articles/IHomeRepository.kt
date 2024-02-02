@@ -1,8 +1,7 @@
-package com.cancer.yaqeen.data.features.home
+package com.cancer.yaqeen.data.features.home.articles
 
-import com.cancer.yaqeen.data.features.home.models.Article
-import com.cancer.yaqeen.data.features.home.models.Bookmark
-import com.cancer.yaqeen.data.features.home.requests.BookmarkArticleRequest
+import com.cancer.yaqeen.data.features.home.articles.models.Article
+import com.cancer.yaqeen.data.features.home.articles.requests.BookmarkArticleRequest
 import com.cancer.yaqeen.data.network.base.DataState
 import kotlinx.coroutines.flow.Flow
 

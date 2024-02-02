@@ -1,16 +1,16 @@
-package com.cancer.yaqeen.data.features.home.mappers
+package com.cancer.yaqeen.data.features.home.articles.mappers
 
 import com.cancer.yaqeen.data.base.Mapper
-import com.cancer.yaqeen.data.features.home.models.Article
-import com.cancer.yaqeen.data.features.home.models.Bookmark
-import com.cancer.yaqeen.data.features.home.models.Interest
-import com.cancer.yaqeen.data.features.home.responses.BookmarkArticleResponse
-import com.cancer.yaqeen.data.features.home.responses.ArticleResponse
-import com.cancer.yaqeen.data.features.home.responses.BookmarkedArticlesResponse
-import com.cancer.yaqeen.data.features.home.responses.HomeArticlesResponse
-import com.cancer.yaqeen.data.features.home.responses.InterestResponse
-import com.cancer.yaqeen.data.features.home.responses.SavedArticleResponse
-import com.cancer.yaqeen.data.features.home.responses.UnBookmarkArticleResponse
+import com.cancer.yaqeen.data.features.home.articles.models.Article
+import com.cancer.yaqeen.data.features.home.articles.models.Bookmark
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.Interest
+import com.cancer.yaqeen.data.features.home.articles.responses.BookmarkArticleResponse
+import com.cancer.yaqeen.data.features.home.articles.responses.ArticleResponse
+import com.cancer.yaqeen.data.features.home.articles.responses.BookmarkedArticlesResponse
+import com.cancer.yaqeen.data.features.home.articles.responses.HomeArticlesResponse
+import com.cancer.yaqeen.data.features.home.articles.responses.InterestResponse
+import com.cancer.yaqeen.data.features.home.articles.responses.SavedArticleResponse
+import com.cancer.yaqeen.data.features.home.articles.responses.UnBookmarkArticleResponse
 import com.cancer.yaqeen.data.utils.formatDate
 
 

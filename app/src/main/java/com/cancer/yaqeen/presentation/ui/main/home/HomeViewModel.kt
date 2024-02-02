@@ -5,9 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cancer.yaqeen.data.features.auth.models.User
-import com.cancer.yaqeen.data.features.home.models.Article
-import com.cancer.yaqeen.data.features.home.models.Bookmark
-import com.cancer.yaqeen.data.features.home.requests.BookmarkArticleRequest
+import com.cancer.yaqeen.data.features.home.articles.models.Article
+import com.cancer.yaqeen.data.features.home.articles.requests.BookmarkArticleRequest
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.data.network.base.Status
 import com.cancer.yaqeen.data.network.error.ErrorEntity

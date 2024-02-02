@@ -1,13 +1,11 @@
-package com.cancer.yaqeen.data.features.home
+package com.cancer.yaqeen.data.features.home.articles
 
-import com.cancer.yaqeen.data.features.home.mappers.MappingBookmarkArticleRemoteAsUIModel
-import com.cancer.yaqeen.data.features.home.mappers.MappingArticlesRemoteAsModel
-import com.cancer.yaqeen.data.features.home.mappers.MappingBookmarkedArticlesRemoteAsModel
-import com.cancer.yaqeen.data.features.home.mappers.MappingSavedArticlesRemoteAsModel
-import com.cancer.yaqeen.data.features.home.mappers.MappingUnBookmarkArticleRemoteAsUIModel
-import com.cancer.yaqeen.data.features.home.models.Article
-import com.cancer.yaqeen.data.features.home.models.Bookmark
-import com.cancer.yaqeen.data.features.home.requests.BookmarkArticleRequest
+import com.cancer.yaqeen.data.features.home.articles.mappers.MappingBookmarkArticleRemoteAsUIModel
+import com.cancer.yaqeen.data.features.home.articles.mappers.MappingArticlesRemoteAsModel
+import com.cancer.yaqeen.data.features.home.articles.mappers.MappingSavedArticlesRemoteAsModel
+import com.cancer.yaqeen.data.features.home.articles.mappers.MappingUnBookmarkArticleRemoteAsUIModel
+import com.cancer.yaqeen.data.features.home.articles.models.Article
+import com.cancer.yaqeen.data.features.home.articles.requests.BookmarkArticleRequest
 import com.cancer.yaqeen.data.network.base.BaseDataSource
 import com.cancer.yaqeen.data.network.base.DataState
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil

@@ -136,3 +136,11 @@ fun getTodayDate(): String {
 
     return currentTimestamp.formatDate()
 }
+
+fun String.tryToLong(): Long {
+    return try {
+        toLong()
+    }catch (_: Exception){
+        0
+    }
+}

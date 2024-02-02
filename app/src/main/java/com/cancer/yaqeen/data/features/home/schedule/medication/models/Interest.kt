@@ -1,4 +1,4 @@
-package com.cancer.yaqeen.data.features.home.models
+package com.cancer.yaqeen.data.features.home.schedule.medication.models
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
