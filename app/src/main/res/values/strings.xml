@@ -129,17 +129,57 @@
     <string name="minute">Minute</string>
     <string name="am">AM</string>
     <string name="pm">PM</string>
-    <string name="capsule">Capsule</string>
-    <string name="pills">Pills</string>
-    <string name="liquid">Liquid</string>
-    <string name="injection">Injection</string>
     <string name="add">Add</string>
     <string name="history_s_medications">History’s Medications</string>
+    <string name="history_s_symptoms">History’s Symptoms</string>
+    <string name="history_s_routine_tests">History’s Routine Tests</string>
+    <string name="history_s_medical_reminder">History’s Medical Reminder</string>
     <string name="specific_days_of_the_week">Specific Days of the week</string>
     <string name="medical_appointment">Medical Appointment</string>
     <string name="medication_added_successfully">Medication Added Successfully</string>
     <string name="dosage">Dosage</string>
+    <string name="starting_date">Starting Date</string>
+    <string name="take">Take</string>
+    <string name="quote_title_1">“When we long for life without difficulties, remind us that oaks grow strong in contrary winds, and diamonds are made under pressure.”</string>
+    <string name="quote_title_2">“You have to be willing to give up the life you planned, and instead, greet the life that is waiting for you.”</string>
+    <string name="quote_owner_1">Peter Marshall</string>
+    <string name="quote_owner_2">Joseph Campbell</string>
 
+    <string name="white">#FFFFFFFF</string>
+    <string name="black">#FF000000</string>
+    <string name="by">"by/ %s"</string>
+
+    <string name="capsule">Capsule</string>
+    <string name="pills">Pills</string>
+    <string name="liquid">Liquid</string>
+    <string name="injection">Injection</string>
+
+    <string name="mg">Mg</string>
+    <string name="mcg">Mcg</string>
+    <string name="ml">Ml</string>
+    <string name="percentage">%</string>
+
+    <string name="capsule_enum" translatable="false">Capsule</string>
+    <string name="pills_enum" translatable="false">Pills</string>
+    <string name="liquid_enum" translatable="false">Liquid</string>
+    <string name="injection_enum" translatable="false">Injection</string>
+
+    <string name="mg_enum" translatable="false">Mg</string>
+    <string name="mcg_enum" translatable="false">Mcg</string>
+    <string name="ml_enum" translatable="false">Ml</string>
+    <string name="percentage_enum" translatable="false">%</string>
+
+    <string name="sun">Sun</string>
+    <string name="mon">Mon</string>
+    <string name="tues">Tues</string>
+    <string name="wed">Wed</string>
+    <string name="thur">Thur</string>
+    <string name="fri">Fri</string>
+    <string name="sat">Sat</string>
+    <string name="every_day">Every Day</string>
+    <string name="every_8_hours">Every 8 hours</string>
+    <string name="every_12_hours">Every 12 hours</string>
+    <string name="day_after_day">Day after day</string>
 
     <string-array name="languages_array">
         <item>English</item>

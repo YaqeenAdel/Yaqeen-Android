@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Time
 import com.cancer.yaqeen.databinding.ItemHourMinuteBinding
+import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.changeVisibility
 
 class TimesAdapter(
@@ -15,8 +16,8 @@ class TimesAdapter(
 ) :
     ListAdapter<Time, TimesAdapter.TimesViewHolder>(Companion) {
 
-    private var selectedPosition = -1
-    private var lastSelectedPosition = -1
+    private var selectedPosition = Constants.INIT_SELECTED_POSITION
+    private var lastSelectedPosition = Constants.INIT_SELECTED_POSITION
 
     companion object : DiffUtil.ItemCallback<Time>() {
         override fun areItemsTheSame(
@@ -65,7 +66,7 @@ class TimesAdapter(
     }
 
     fun anyItemIsSelected(): Boolean =
-        selectedPosition != -1
+        selectedPosition != Constants.INIT_SELECTED_POSITION
 
     fun getItemSelected(): Time =
         currentList[selectedPosition]

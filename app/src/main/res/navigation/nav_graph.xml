@@ -60,6 +60,9 @@
         <action
             android:id="@+id/action_homeFragment_to_articleDetailsFragment"
             app:destination="@id/articleDetailsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_treatmentHistoryFragment"
+            app:destination="@id/treatmentHistoryFragment" />
     </fragment>
     <fragment
         android:id="@+id/selectUserTypeFragment"
@@ -188,6 +191,12 @@
         android:id="@+id/medicationsFragment"
         android:name="com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.MedicationsFragment"
         tools:layout="@layout/fragment_medications" >
+
+        <argument
+            android:name="medication"
+            app:nullable="true"
+            app:argType="com.cancer.yaqeen.data.features.home.schedule.medication.models.Medication"/>
+
         <action
             android:id="@+id/action_medicationsFragment_to_strengthFragment"
             app:destination="@id/strengthFragment" />
@@ -233,6 +242,9 @@
         <action
             android:id="@+id/action_treatmentHistoryFragment_to_treatmentFragment"
             app:destination="@id/treatmentFragment" />
+        <action
+            android:id="@+id/action_treatmentHistoryFragment_to_medicationDialogFragment"
+            app:destination="@id/medicationDialogFragment" />
     </fragment>
     <fragment
         android:id="@+id/selectTimeFragment"
@@ -248,5 +260,17 @@
             android:id="@+id/action_selectTimeFragment_to_calendarFragment"
             app:destination="@id/calendarFragment" />
     </fragment>
+    <dialog
+        android:id="@+id/medicationDialogFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.main.treatment.history.dialogs.MedicationDialogFragment"
+        tools:layout="@layout/fragment_medication_dialog">
+
+        <argument
+            android:name="medication"
+            app:argType="com.cancer.yaqeen.data.features.home.schedule.medication.models.Medication"/>
+        <action
+            android:id="@+id/action_medicationDialogFragment_to_medicationsFragment"
+            app:destination="@id/medicationsFragment"/>
+    </dialog>
 
 </navigation>

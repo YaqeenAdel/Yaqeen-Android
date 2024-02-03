@@ -9,5 +9,19 @@ object Constants {
 
     const val REMINDER_TIME_KEY = "REMINDER_TIME_KEY"
     const val REQUEST_REMINDER_TIME_KEY = "REQUEST_REMINDER_TIME_KEY"
+
+    const val PHOTO_ID_KEY = "PHOTO_ID"
+    const val TITLE_KEY = "TITLE"
+    const val BODY_KEY = "BODY"
+
+
+    const val MAX_QUOTES = 2
+
+    const val MAX_POSITION_TO_SCROLL = 2
+
+    const val INIT_SELECTED_POSITION = -1
+
+    const val SCHEDULE_MEDICATION = "medication"
+
 }
 

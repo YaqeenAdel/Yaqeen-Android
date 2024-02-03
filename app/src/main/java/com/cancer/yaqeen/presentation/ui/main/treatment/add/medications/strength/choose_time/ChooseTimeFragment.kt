@@ -15,7 +15,9 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Day
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.DayEnum
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.MedicationTrack
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.PeriodTimeEnum
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.ReminderTime
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Time
 import com.cancer.yaqeen.databinding.FragmentChooseTimeBinding
@@ -192,21 +194,21 @@ class ChooseTimeFragment : BaseFragment() {
 
         daysAdapter.setList(
             listOf(
-                Day(id = 0, name = "Sun", cronExpression = "SUN"),
-                Day(id = 1, name = "Mon", cronExpression = "MON"),
-                Day(id = 2, name = "Tues", cronExpression = "TUE"),
-                Day(id = 3, name = "Wed", cronExpression = "WED"),
-                Day(id = 4, name = "Thur", cronExpression = "THU"),
-                Day(id = 5, name = "Fri", cronExpression = "FRI"),
-                Day(id = 6, name = "Sat", cronExpression = "SAT")
+                Day(id = DayEnum.SUN.id, name = getString(R.string.sun), cronExpression = DayEnum.SUN.cronExpression),
+                Day(id = DayEnum.MON.id, name = getString(R.string.mon), cronExpression = DayEnum.MON.cronExpression),
+                Day(id = DayEnum.TUE.id, name = getString(R.string.tues), cronExpression = DayEnum.TUE.cronExpression),
+                Day(id = DayEnum.WED.id, name = getString(R.string.wed), cronExpression = DayEnum.WED.cronExpression),
+                Day(id = DayEnum.THU.id, name = getString(R.string.thur), cronExpression = DayEnum.THU.cronExpression),
+                Day(id = DayEnum.FRI.id, name = getString(R.string.fri), cronExpression = DayEnum.FRI.cronExpression),
+                Day(id = DayEnum.SAT.id, name = getString(R.string.sat), cronExpression = DayEnum.SAT.cronExpression)
             )
         )
     }
 
     private fun selectItem(itemId: Int) {
         val selectItemPosition = daysAdapter.selectItem(itemId)
-        if (selectItemPosition >= 2)
-            binding.rvTimes.scrollToPosition(selectItemPosition - 2)
+        if (selectItemPosition >= Constants.MAX_POSITION_TO_SCROLL)
+            binding.rvTimes.scrollToPosition(selectItemPosition - Constants.MAX_POSITION_TO_SCROLL)
     }
 
     private fun setupMedicationTimesAdapter() {
@@ -235,19 +237,19 @@ class ChooseTimeFragment : BaseFragment() {
         medicationTimesAdapter.submitList(
             listOf(
                 Time(
-                    id = 1, time = "Every Day", cronExpression = ""
+                    id = PeriodTimeEnum.EVERY_DAY.id, time = getString(R.string.every_day), cronExpression = PeriodTimeEnum.EVERY_DAY.cronExpression
                 ),
                 Time(
-                    id = 2, time = "Every 8 hours", cronExpression = "/8"
+                    id = PeriodTimeEnum.EVERY_8_HOURS.id, time = getString(R.string.every_8_hours), cronExpression = PeriodTimeEnum.EVERY_8_HOURS.cronExpression
                 ),
                 Time(
-                    id = 3, time = "Every 12 hours", cronExpression = "/12"
+                    id = PeriodTimeEnum.EVERY_12_HOURS.id, time = getString(R.string.every_12_hours), cronExpression = PeriodTimeEnum.EVERY_12_HOURS.cronExpression
                 ),
                 Time(
-                    id = 4, time = "Day after day", cronExpression = ""
+                    id = PeriodTimeEnum.DAY_AFTER_DAY.id, time = getString(R.string.day_after_day), cronExpression = PeriodTimeEnum.DAY_AFTER_DAY.cronExpression
                 ),
                 Time(
-                    id = 5, time = "Specific Days of The week", cronExpression = ""
+                    id = PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id, time = getString(R.string.specific_days_of_the_week), cronExpression = PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.cronExpression
                 )
             )
         )

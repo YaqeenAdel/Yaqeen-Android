@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.cancer.yaqeen.databinding.ItemViewPagerBinding
+import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindImage
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindResourceImage
 
@@ -28,9 +29,9 @@ class PageFragment : Fragment(){
         super.onViewCreated(view, savedInstanceState)
 
         binding?.apply {
-            arguments?.getInt("photoID")?.let { bindResourceImage(image, it) }
-            tvTitle.text = arguments?.getString("title")
-            tvBody.text = arguments?.getString("body")
+            arguments?.getInt(Constants.PHOTO_ID_KEY)?.let { bindResourceImage(image, it) }
+            tvTitle.text = arguments?.getString(Constants.TITLE_KEY)
+            tvBody.text = arguments?.getString(Constants.BODY_KEY)
         }
     }
 

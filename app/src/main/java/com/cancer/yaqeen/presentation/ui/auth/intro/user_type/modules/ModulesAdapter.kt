@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.onboarding.models.Module
 import com.cancer.yaqeen.databinding.ItemModuleBinding
+import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindImage
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindResourceImage
 import java.util.Locale
@@ -24,8 +25,8 @@ class ModulesAdapter(
 ) :
     ListAdapter<Module, ModulesAdapter.ModulesViewHolder>(Companion), Filterable {
 
-    private var selectedPosition = -1
-    private var lastSelectedPosition = -1
+    private var selectedPosition = Constants.INIT_SELECTED_POSITION
+    private var lastSelectedPosition = Constants.INIT_SELECTED_POSITION
 
     companion object : DiffUtil.ItemCallback<Module>() {
         override fun areItemsTheSame(
@@ -72,7 +73,6 @@ class ModulesAdapter(
             }?.selected = true
         }
         notifyDataSetChanged()
-        Log.d("TAG", "observeStates: $items")
     }
 
     fun allItemsUnSelected(): Boolean =

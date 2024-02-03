@@ -13,6 +13,7 @@ import com.cancer.yaqeen.databinding.FragmentQuoteBinding
 import com.cancer.yaqeen.databinding.FragmentSplashBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.ui.auth.OnBoardingFragmentDirections
+import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindResourceImage
 import com.cancer.yaqeen.presentation.util.tryNavigate
@@ -52,22 +53,22 @@ class QuoteFragment : BaseFragment() {
     }
 
     private fun displayRandomView() {
-        var colorId = R.color.white
-        var backgroundId = R.drawable.background_gradient_quote_view
-        var quoteTitle = ""
-        var quoteOwner = ""
-        when(getRandomIntInRange(0, 2)){
+        var colorId: Int
+        var backgroundId: Int
+        var quoteTitle: String
+        var quoteOwner: String
+        when(getRandomIntInRange(0, Constants.MAX_QUOTES)){
             0 -> {
                 colorId = R.color.white
                 backgroundId = R.drawable.background_gradient_quote_view
-                quoteTitle = "“When we long for life without difficulties, remind us that oaks grow strong in contrary winds, and diamonds are made under pressure.”"
-                quoteOwner = "Peter Marshall"
+                quoteTitle = getString(R.string.quote_title_1)
+                quoteOwner = getString(R.string.quote_owner_1)
             }
             else -> {
                 colorId = R.color.black
                 backgroundId = R.drawable.background_gradient_quote_view2
-                quoteTitle = "“You have to be willing to give up the life you planned, and instead, greet the life that is waiting for you.”"
-                quoteOwner = "Joseph Campbell"
+                quoteTitle = getString(R.string.quote_title_2)
+                quoteOwner = getString(R.string.quote_owner_2)
             }
         }
         bindResourceImage(_binding.ivBackground, backgroundId)

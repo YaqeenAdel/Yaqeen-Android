@@ -11,4 +11,6 @@ data class MedicationTrack(
     var startDate: Long? = null,
     var reminderTime: ReminderTime? = null,
     var notes: String? = null,
+    val editable: Boolean = false,
+    val medicationId: Int? = null
 )

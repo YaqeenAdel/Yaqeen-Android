@@ -14,10 +14,10 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.MedicationTrack
-import com.cancer.yaqeen.data.features.home.schedule.medication.models.UnitType
 import com.cancer.yaqeen.databinding.FragmentStrengthBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.MedicationsViewModel
+import com.cancer.yaqeen.presentation.ui.main.treatment.getUnitTypes
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.disable
 import com.cancer.yaqeen.presentation.util.dpToPx
@@ -121,20 +121,7 @@ class StrengthFragment : BaseFragment() {
         }
 
         unitTypesAdapter.submitList(
-            listOf(
-                UnitType(
-                    id = 1, name = "Mg"
-                ),
-                UnitType(
-                    id = 2, name = "Mcg"
-                ),
-                UnitType(
-                    id = 3, name = "Ml"
-                ),
-                UnitType(
-                    id = 4, name = "%"
-                )
-            )
+            getUnitTypes(requireContext())
         )
     }
 

@@ -155,29 +155,6 @@ class SelectCancerTypeFragment : BaseFragment() {
             )
         }
 
-//        cancerTypesAdapter.setList(
-//            listOf(
-//                CancerType(
-//                    id = 1, icon = "", typeName = "Selection item"
-//                ),
-//                CancerType(
-//                    id = 2, icon = "", typeName = "Selection item"
-//                ),
-//                CancerType(
-//                    id = 3, icon = "", typeName = "Selection item"
-//                ),
-//                CancerType(
-//                    id = 4, icon = "", typeName = "Selection item"
-//                ),
-//                CancerType(
-//                    id = 5, icon = "", typeName = "Other "
-//                ),
-//            )
-//        )
-//        cancerTypesAdapter.currentList.firstOrNull()?.apply {
-//            selectCancerType(this)
-//        }
-
     }
 
     private fun selectCancerType(it: CancerType) {

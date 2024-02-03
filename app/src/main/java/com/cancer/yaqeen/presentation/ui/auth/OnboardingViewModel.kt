@@ -233,7 +233,6 @@ class OnboardingViewModel @Inject constructor(
                     when (response.status) {
                         Status.ERROR -> emitError(response.errorEntity)
                         Status.SUCCESS -> {
-                            Log.d("TAG", "updateUserProfile: ${response.data}")
                             response.data?.let {
                                 _viewStateUpdateProfileSuccess.emit(true)
                                 _viewStateUpdateProfileSuccess.emit(null)

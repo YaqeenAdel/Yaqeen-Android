@@ -34,7 +34,7 @@ import kotlinx.coroutines.flow.collectLatest
 
 
 @AndroidEntryPoint
-class HomeFragment : BaseFragment(showBottomMenu = true), OnClickListener {
+class HomeFragment : BaseFragment(showBottomMenu = true) {
 
     private var binding: FragmentHomeBinding by autoCleared()
 
@@ -62,6 +62,7 @@ class HomeFragment : BaseFragment(showBottomMenu = true), OnClickListener {
 
         updateUI()
 
+        setListener()
 
         homeViewModel.getBookmarkedArticles()
     }
@@ -72,6 +73,13 @@ class HomeFragment : BaseFragment(showBottomMenu = true), OnClickListener {
         binding.tvCurrentDayDate.text = getTodayDate()
 
         homeViewModel.getArticles()
+    }
+    private fun setListener(){
+        binding.tvSeeAll.setOnClickListener {
+            navController.tryNavigate(
+                HomeFragmentDirections.actionHomeFragmentToTreatmentHistoryFragment()
+            )
+        }
     }
 
     private fun updateUI() {
@@ -190,12 +198,6 @@ class HomeFragment : BaseFragment(showBottomMenu = true), OnClickListener {
             homeViewModel.getArticles()
         else if(queryTrimmed.isNotEmpty())
             homeViewModel.getArticles(queryTrimmed)
-    }
-
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            R.id.tv_see_all_calender -> {}
-        }
     }
 
 }

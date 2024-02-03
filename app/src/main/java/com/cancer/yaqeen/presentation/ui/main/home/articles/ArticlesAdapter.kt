@@ -69,21 +69,24 @@ class ArticlesAdapter(
         private val _context = itemBinding.root.context
 
         fun bind(position: Int, item: Article) {
-            itemBinding.articleImageUrl = item.thumbnail
-            itemBinding.tvArticleHeadline.text = item.title
-            itemBinding.tvArticleDate.text = item.createdDate
-            itemBinding.tvInterestName.text = item.interests.firstOrNull()?.interestName
-            item.interests.firstOrNull()?.backgroundColor?.let {
-                itemBinding.ivInterestIcon.imageTintList = ColorStateList.valueOf(Color.parseColor(it))
-            }
+            with(item){
+                itemBinding.articleImageUrl = thumbnail
+                itemBinding.tvArticleHeadline.text = title
+                itemBinding.tvArticleDate.text = createdDate
+                itemBinding.tvInterestName.text = interests.firstOrNull()?.interestName
+
+                interests.firstOrNull()?.backgroundColor?.let {
+                    itemBinding.ivInterestIcon.imageTintList = ColorStateList.valueOf(Color.parseColor(it))
+                }
 
 //            itemBinding.tvInterestName.setTextColor(ColorStateList.valueOf(Color.parseColor(item.interests.firstOrNull()?.textColor ?: "#FF000000")))
 
-            itemBinding.view.changeVisibility(show = (position + 1) < itemCount, isGone = false)
-            bindResourceImage(
-                itemBinding.ivArticleBookmark,
-                if(item.isFavorite || saved) R.drawable.ic_bookmark_checked else R.drawable.ic_bookmark_unchecked
-            )
+                itemBinding.view.changeVisibility(show = (position + 1) < itemCount, isGone = false)
+                bindResourceImage(
+                    itemBinding.ivArticleBookmark,
+                    if(isFavorite || saved) R.drawable.ic_bookmark_checked else R.drawable.ic_bookmark_unchecked
+                )
+            }
 
             itemBinding.itemContainer.setOnClickListener {
                 onItemClick(item)

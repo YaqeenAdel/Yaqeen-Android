@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.cancer.yaqeen.data.features.onboarding.models.University
 import com.cancer.yaqeen.databinding.ItemUniversityBinding
+import com.cancer.yaqeen.presentation.util.Constants
 import java.util.Locale
 
 class UniversitiesAdapter(
@@ -20,8 +21,8 @@ class UniversitiesAdapter(
 ) :
     ListAdapter<University, UniversitiesAdapter.UniversitiesViewHolder>(Companion), Filterable {
 
-    private var selectedPosition = -1
-    private var lastSelectedPosition = -1
+    private var selectedPosition = Constants.INIT_SELECTED_POSITION
+    private var lastSelectedPosition = Constants.INIT_SELECTED_POSITION
 
     companion object : DiffUtil.ItemCallback<University>() {
         override fun areItemsTheSame(

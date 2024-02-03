@@ -80,15 +80,16 @@ class ArticleDetailsFragment : BaseFragment() {
     }
 
     private fun setArticleDetails() {
-        article.run {
+        with(article) {
             createUnderLine()
             binding.tvArticleHeadline.text = title
             binding.tvInterestName.text = interests.firstOrNull()?.interestName
             binding.tvArticleLink.text = link
-            binding.cardCategory.backgroundTintList =
-                ColorStateList.valueOf(Color.parseColor(interests.firstOrNull()?.backgroundColor ?: "#FFFFFFFF"))
-            binding.tvInterestName.setTextColor(ColorStateList.valueOf(Color.parseColor(interests.firstOrNull()?.textColor ?: "#FF000000")))
-            binding.tvArticleWriter.text = "by/ "
+            interests.firstOrNull()?.backgroundColor?.let {
+                binding.ivInterestIcon.imageTintList = ColorStateList.valueOf(Color.parseColor(it))
+            }
+
+            binding.tvArticleWriter.text = getString(R.string.by, "")
 
             bindResourceImage(
                 binding.ivArticleBookmark,
