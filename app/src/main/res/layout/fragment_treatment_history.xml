@@ -7,6 +7,10 @@
 
     </data>
 
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -219,7 +223,7 @@
         </HorizontalScrollView>
 
         <TextView
-            android:id="@+id/tv_medications_history"
+            android:id="@+id/tv_schedule_history"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_32sdp"
@@ -230,16 +234,33 @@
             android:textColor="@color/xx_dark_gray"
             android:textSize="@dimen/_12ssp"
             android:textStyle="bold"
-            android:text="@string/history_s_medications"
             android:fontFamily="sans-serif-medium"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rv_categories" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_treatment_history"
+            android:id="@+id/rv_medications_history"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_marginBottom="@dimen/_64sdp"
+            android:layout_marginHorizontal="@dimen/_20sdp"
+            tools:itemCount="5"
+            tools:listitem="@layout/item_medication"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_schedule_history"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_symptoms_history"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_marginBottom="@dimen/_64sdp"
             android:layout_marginHorizontal="@dimen/_20sdp"
             tools:itemCount="5"
             tools:listitem="@layout/item_medication_type"
@@ -248,7 +269,9 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_medications_history"/>
+            app:layout_constraintTop_toBottomOf="@id/tv_schedule_history"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
 </layout>

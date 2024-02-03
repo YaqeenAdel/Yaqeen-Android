@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Day
 import com.cancer.yaqeen.databinding.ItemDayBinding
+import com.cancer.yaqeen.presentation.util.Constants
 
 class DaysAdapter(
     private var items: List<Day> = listOf(),
@@ -16,8 +17,8 @@ class DaysAdapter(
 ) :
     ListAdapter<Day, DaysAdapter.DaysViewHolder>(Companion) {
 
-    private var selectedPosition = -1
-    private var lastSelectedPosition = -1
+    private var selectedPosition = Constants.INIT_SELECTED_POSITION
+    private var lastSelectedPosition = Constants.INIT_SELECTED_POSITION
 
     companion object : DiffUtil.ItemCallback<Day>() {
         override fun areItemsTheSame(

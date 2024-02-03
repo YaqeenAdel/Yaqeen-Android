@@ -4,20 +4,20 @@ import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.cancer.yaqeen.data.features.home.articles.models.Article
-import com.cancer.yaqeen.data.features.home.articles.requests.BookmarkArticleRequest
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Day
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.Medication
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.MedicationTrack
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.MedicationType
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.PeriodTimeEnum
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.ReminderTime
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Time
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.UnitType
-import com.cancer.yaqeen.data.features.home.schedule.medication.requests.AddMedicationRequest
 import com.cancer.yaqeen.data.features.home.schedule.medication.requests.AddMedicationRequestBuilder
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.data.network.base.Status
 import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.domain.features.home.schedule.medication.AddMedicationUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.medication.GetMedicationRemindersUseCase
 import com.cancer.yaqeen.presentation.util.SingleLiveEvent
 import com.cancer.yaqeen.presentation.util.timestampToDay
 import com.cancer.yaqeen.presentation.util.timestampToMonth
@@ -32,7 +32,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MedicationsViewModel @Inject constructor(
     private val prefEncryptionUtil: SharedPrefEncryptionUtil,
-    private val addMedicationUseCase: AddMedicationUseCase
+    private val addMedicationUseCase: AddMedicationUseCase,
+    private val getMedicationRemindersUseCase: GetMedicationRemindersUseCase,
 ) : ViewModel() {
 
     private var viewModelJob: Job? = null
@@ -101,38 +102,50 @@ class MedicationsViewModel @Inject constructor(
     fun addMedication() {
         viewModelJob = viewModelScope.launch {
             val medicationTrackField = getMedicationTrack()
-            medicationTrackField?.run {
-                addMedicationUseCase(
-                    AddMedicationRequestBuilder(
-                        medicationName = medicationName ?: "",
-                        medicationTypeName = medicationType?.name ?: "",
-                        unitTypeName = unitType?.name ?: "",
-                        strengthAmount = strengthAmount ?: "",
-                        dosageAmount = dosageAmount ?: "",
-                        cronExpression = createCronExpression(
-                            minutes = reminderTime?.minute ?: "0",
-                            startingHour = reminderTime?.hour24 ?: "0",
-                            time = periodTime,
-                            startingDate = startDate,
-                            specificDays = specificDays
-                        ),
-                    ).buildRequestBody()
-                ).collect { response ->
-                    _viewStateLoading.emit(response.loading)
-                    when (response.status) {
-                        Status.ERROR -> emitError(response.errorEntity)
-                        Status.SUCCESS -> {
-                            if (response.data == true) {
-                                resetMedicationTrack()
-                                _viewStateAddMedication.postValue(true)
+            if (medicationTrackField?.editable == true) {
+                editMedication(medicationTrackField)
+                return@launch
+            }
+            else {
+                medicationTrackField?.run {
+                    addMedicationUseCase(
+                        AddMedicationRequestBuilder(
+                            medicationName = medicationName ?: "",
+                            medicationTypeName = medicationType?.name ?: "",
+                            unitTypeName = unitType?.name ?: "",
+                            strengthAmount = strengthAmount ?: "",
+                            dosageAmount = dosageAmount ?: "",
+                            cronExpression = createCronExpression(
+                                minutes = reminderTime?.minute ?: "0",
+                                startingHour = reminderTime?.hour24 ?: "0",
+                                time = periodTime,
+                                startingDate = startDate,
+                                specificDays = specificDays
+                            ),
+                        ).buildRequestBody()
+                    ).collect { response ->
+                        _viewStateLoading.emit(response.loading)
+                        when (response.status) {
+                            Status.ERROR -> emitError(response.errorEntity)
+                            Status.SUCCESS -> {
+                                if (response.data == true) {
+                                    resetMedicationTrack()
+                                    _viewStateAddMedication.postValue(true)
+                                }
                             }
-                        }
 
-                        else -> {}
+                            else -> {}
+                        }
                     }
                 }
             }
+        }
+    }
+    private fun editMedication(medicationTrack: MedicationTrack?){
+        viewModelJob = viewModelScope.launch {
+            medicationTrack?.run {
 
+            }
         }
     }
 
@@ -149,14 +162,18 @@ class MedicationsViewModel @Inject constructor(
         val startingMonth = startingDate?.timestampToMonth() ?: "0"
         val startingYear = startingDate?.timestampToYear() ?: "0"
         val (dayOfMonth, dayOfWeek) = when (time?.id) {
-            4 -> "$startingDay/2" to "?"
-            5 -> "?" to (specificDays?.map { it.cronExpression }?.joinToString(separator = ",") { it } ?: "")
+            PeriodTimeEnum.DAY_AFTER_DAY.id -> "$startingDay/2" to "?"
+            PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id -> "?" to (specificDays?.map { it.cronExpression }?.joinToString(separator = ",") { it } ?: "")
             else -> "$startingDay/1" to "?"
         }
         val month = "$startingMonth/1"
         val year = "$startingYear/1"
 
         return "$seconds $minutes $hours $dayOfMonth $month $dayOfWeek $year"
+    }
+
+    fun setMedicationTrack(medicationTrack: MedicationTrack) {
+        medicationTrackField.set(medicationTrack)
     }
 
 

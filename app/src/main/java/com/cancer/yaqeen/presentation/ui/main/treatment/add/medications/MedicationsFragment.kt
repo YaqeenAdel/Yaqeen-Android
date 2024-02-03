@@ -12,11 +12,14 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.cancer.yaqeen.R
+import com.cancer.yaqeen.data.features.home.schedule.medication.mappers.MappingMedicationAsMedicationTrack
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.MedicationTrack
-import com.cancer.yaqeen.data.features.home.schedule.medication.models.MedicationType
 import com.cancer.yaqeen.databinding.FragmentMedicationsBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
+import com.cancer.yaqeen.presentation.ui.main.treatment.getMedicationTypes
+import com.cancer.yaqeen.presentation.ui.main.treatment.history.dialogs.MedicationDialogFragmentArgs
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.disable
 import com.cancer.yaqeen.presentation.util.dpToPx
@@ -36,10 +39,22 @@ class MedicationsFragment : BaseFragment() {
 
     private val medicationsViewModel: MedicationsViewModel by activityViewModels()
 
+
+    private val args: MedicationsFragmentArgs by navArgs()
+
+    private val medication by lazy {
+        args.medication
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        medicationsViewModel.resetMedicationTrack()
+        if (medication == null)
+            medicationsViewModel.resetMedicationTrack()
+        else
+            medicationsViewModel.setMedicationTrack(
+                MappingMedicationAsMedicationTrack(requireContext()).map(medication!!)
+            )
     }
 
     override fun onCreateView(
@@ -123,20 +138,7 @@ class MedicationsFragment : BaseFragment() {
         }
 
         medicationTypesAdapter.submitList(
-            listOf(
-                MedicationType(
-                    id = 1, name = getString(R.string.capsule), iconResId = R.drawable.ic_capsule
-                ),
-                MedicationType(
-                    id = 2, name = getString(R.string.pills), iconResId = R.drawable.ic_pills
-                ),
-                MedicationType(
-                    id = 3, name = getString(R.string.liquid), iconResId = R.drawable.ic_liquid
-                ),
-                MedicationType(
-                    id = 4, name = getString(R.string.injection), iconResId = R.drawable.ic_injection
-                )
-            )
+            getMedicationTypes(requireContext())
         )
     }
 

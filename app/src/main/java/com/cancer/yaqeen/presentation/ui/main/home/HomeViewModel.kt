@@ -149,7 +149,6 @@ class HomeViewModel @Inject constructor(
                 User::class.java
             )
 
-            Log.d("TAG", "getUserInfo: $isLoggedIn / $user")
             _viewStateUser.emit(user to isLoggedIn)
         }
     }

@@ -195,7 +195,7 @@
                 android:layout_height="match_parent"
                 android:focusable="false"
                 android:layout_gravity="center"
-                android:hint="@string/start_from"
+                android:hint="@string/starting_date"
                 android:importantForAutofill="noExcludeDescendants"
                 android:inputType="text"
                 android:fontFamily="sans-serif"

@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.cancer.yaqeen.data.features.onboarding.models.CancerType
 import com.cancer.yaqeen.databinding.ItemCancerTypeBinding
+import com.cancer.yaqeen.presentation.util.Constants
 import java.util.Locale
 
 class CancerTypesAdapter(
@@ -20,8 +21,8 @@ class CancerTypesAdapter(
 ) :
     ListAdapter<CancerType, CancerTypesAdapter.CancerTypesViewHolder>(Companion), Filterable {
 
-    private var selectedPosition = -1
-    private var lastSelectedPosition = -1
+    private var selectedPosition = Constants.INIT_SELECTED_POSITION
+    private var lastSelectedPosition = Constants.INIT_SELECTED_POSITION
 
     companion object : DiffUtil.ItemCallback<CancerType>() {
         override fun areItemsTheSame(

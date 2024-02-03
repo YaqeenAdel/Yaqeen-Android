@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.MedicationType
 import com.cancer.yaqeen.databinding.ItemMedicationTypeBinding
+import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindResourceImage
 
 class MedicationTypesAdapter(
@@ -17,8 +18,8 @@ class MedicationTypesAdapter(
 ) :
     ListAdapter<MedicationType, MedicationTypesAdapter.MedicationTypesViewHolder>(Companion) {
 
-    private var selectedPosition = -1
-    private var lastSelectedPosition = -1
+    private var selectedPosition = Constants.INIT_SELECTED_POSITION
+    private var lastSelectedPosition = Constants.INIT_SELECTED_POSITION
 
     companion object : DiffUtil.ItemCallback<MedicationType>() {
         override fun areItemsTheSame(
@@ -54,7 +55,7 @@ class MedicationTypesAdapter(
     }
 
     fun anyItemIsSelected(): Boolean =
-        selectedPosition != -1
+        selectedPosition != Constants.INIT_SELECTED_POSITION
 
     fun getItemSelected(): MedicationType =
         currentList[selectedPosition]

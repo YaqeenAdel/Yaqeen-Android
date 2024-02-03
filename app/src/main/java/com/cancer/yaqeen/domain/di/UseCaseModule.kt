@@ -12,6 +12,7 @@ import com.cancer.yaqeen.domain.features.home.articles.usecases.GetArticlesUseCa
 import com.cancer.yaqeen.domain.features.home.articles.usecases.GetBookmarkedArticlesUseCase
 import com.cancer.yaqeen.domain.features.home.articles.usecases.UnBookmarkArticleUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.AddMedicationUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.medication.GetMedicationRemindersUseCase
 import com.cancer.yaqeen.domain.features.onboarding.usecases.GetResourcesUseCase
 import com.cancer.yaqeen.domain.features.onboarding.usecases.GetUniversitiesUseCase
 import com.cancer.yaqeen.domain.features.onboarding.usecases.GetUserProfileUseCase
@@ -86,6 +87,10 @@ object UseCaseModule {
     @Provides
     fun provideAddMedicationUseCase(repository: ScheduleRepositoryImpl) =
         AddMedicationUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideGetMedicationRemindersUseCase(repository: ScheduleRepositoryImpl) =
+        GetMedicationRemindersUseCase(repository)
 
 
 }

@@ -7,14 +7,15 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.UnitType
 import com.cancer.yaqeen.databinding.ItemUnitTypeBinding
+import com.cancer.yaqeen.presentation.util.Constants
 
 class UnitTypesAdapter(
     private val onItemClick: (UnitType) -> Unit
 ) :
     ListAdapter<UnitType, UnitTypesAdapter.UnitTypesViewHolder>(Companion) {
 
-    private var selectedPosition = -1
-    private var lastSelectedPosition = -1
+    private var selectedPosition = Constants.INIT_SELECTED_POSITION
+    private var lastSelectedPosition = Constants.INIT_SELECTED_POSITION
 
     companion object : DiffUtil.ItemCallback<UnitType>() {
         override fun areItemsTheSame(
@@ -50,7 +51,7 @@ class UnitTypesAdapter(
     }
 
     fun anyItemIsSelected(): Boolean =
-        selectedPosition != -1
+        selectedPosition != Constants.INIT_SELECTED_POSITION
 
     fun getItemSelected(): UnitType =
         currentList[selectedPosition]

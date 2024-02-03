@@ -5,19 +5,28 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.RecyclerView
 import com.cancer.yaqeen.R
-import com.cancer.yaqeen.data.features.home.schedule.medication.models.Time
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.Time.Companion.getHours24
+import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.data.utils.getTodayDate
 import com.cancer.yaqeen.databinding.FragmentTreatmentHistoryBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.ui.main.treatment.TimesAdapter
+import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.autoCleared
+import com.cancer.yaqeen.presentation.util.changeVisibility
+import com.cancer.yaqeen.presentation.util.dpToPx
+import com.cancer.yaqeen.presentation.util.recyclerview.VerticalMarginItemDecoration
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import com.google.android.material.button.MaterialButton
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
 class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
@@ -27,6 +36,10 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
     private lateinit var navController: NavController
 
     private lateinit var timesAdapter: TimesAdapter
+    private lateinit var medicationsAdapter: MedicationsAdapter
+
+    private val viewModel: SchedulesHistoryViewModel by viewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -43,8 +56,15 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
 
         setListener()
 
-        setupTimesAdapter()
+        setupAdapters()
 
+        observeStates()
+
+    }
+
+    private fun setupAdapters() {
+        setupTimesAdapter()
+        setupMedicationsAdapter()
     }
 
     override fun onResume() {
@@ -66,6 +86,36 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
     }
 
 
+    private fun observeStates() {
+        lifecycleScope {
+            viewModel.viewStateLoading.collectLatest {
+                onLoading(it)
+            }
+        }
+        lifecycleScope {
+            viewModel.viewStateError.collectLatest {
+                handleResponseError(it)
+            }
+        }
+
+        lifecycleScope {
+            viewModel.viewStateMedications.collect { medications ->
+                medicationsAdapter.submitList(medications)
+            }
+        }
+    }
+
+    private fun handleResponseError(errorEntity: ErrorEntity?) {
+        val errorMessage = handleError(errorEntity)
+        displayErrorMessage(errorMessage)
+    }
+
+    private fun displayErrorMessage(errorMessage: String?) {
+        errorMessage?.let {
+            Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
+        }
+    }
+
     private fun setupTimesAdapter() {
         timesAdapter = TimesAdapter {
 
@@ -75,46 +125,54 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
 
 
         timesAdapter.submitList(
-            listOf(
-                Time(0, "00:00"),
-                Time(1, "1:00"),
-                Time(2, "2:00"),
-                Time(3, "3:00"),
-                Time(4, "4:00"),
-                Time(5, "5:00"),
-                Time(6, "6:00"),
-                Time(7, "7:00"),
-                Time(8, "8:00"),
-                Time(9, "9:00"),
-                Time(10, "10:00"),
-                Time(11, "11:00"),
-                Time(12, "12:00"),
-                Time(13, "13:00"),
-                Time(14, "14:00"),
-                Time(15, "15:00"),
-                Time(16, "16:00"),
-                Time(17, "17:00"),
-                Time(18, "18:00"),
-                Time(19, "19:00"),
-                Time(20, "20:00"),
-                Time(21, "21:00"),
-                Time(22, "22:00"),
-                Time(23, "23:00")
-            )
+            getHours24()
         )
 
         selectItem(12)
     }
 
+
+    private fun setupMedicationsAdapter() {
+        medicationsAdapter = MedicationsAdapter(
+            onItemClick = {
+                navController.tryNavigate(
+                    TreatmentHistoryFragmentDirections.actionTreatmentHistoryFragmentToMedicationDialogFragment(it)
+                )
+            }
+        )
+        binding.rvMedicationsHistory.apply {
+            adapter = medicationsAdapter
+            addItemDecoration(
+                VerticalMarginItemDecoration(
+                    dpToPx(16f, requireContext())
+                )
+            )
+        }
+    }
+
     private fun selectItem(itemId: Int) {
         val selectItemPosition = timesAdapter.selectItem(itemId)
-        if(selectItemPosition >= 2)
-            binding.rvTimes.scrollToPosition(selectItemPosition - 2)
+        if(selectItemPosition >= Constants.MAX_POSITION_TO_SCROLL)
+            binding.rvTimes.scrollToPosition(selectItemPosition - Constants.MAX_POSITION_TO_SCROLL)
+    }
+
+    private fun getMedications() {
+        viewModel.getMedications()
     }
 
     private fun MaterialButton.updateUI() {
         resetUI()
         updateButtonUI(R.color.light_black, R.color.cold_white, R.color.primary_color)
+    }
+
+    private fun RecyclerView.updateUI() {
+        resetRecyclerUI()
+        changeVisibility(show = true)
+    }
+
+    private fun resetRecyclerUI() {
+        binding.rvMedicationsHistory.changeVisibility(show = false, isGone = true)
+        binding.rvSymptomsHistory.changeVisibility(show = false, isGone = true)
     }
 
     private fun resetUI() {
@@ -144,19 +202,22 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
             }
             R.id.btn_medications -> {
                 binding.btnMedications.updateUI()
-                binding.tvMedicationsHistory.updateUI(getString(R.string.history_s_medications))
+                binding.tvScheduleHistory.updateUI(getString(R.string.history_s_medications))
+                binding.rvMedicationsHistory.updateUI()
+                getMedications()
             }
             R.id.btn_symptoms -> {
                 binding.btnSymptoms.updateUI()
-                binding.tvMedicationsHistory.updateUI(getString(R.string.history_s_medications))
+                binding.tvScheduleHistory.updateUI(getString(R.string.history_s_symptoms))
+                binding.rvSymptomsHistory.updateUI()
             }
             R.id.btn_routine_tests -> {
                 binding.btnRoutineTests.updateUI()
-                binding.tvMedicationsHistory.updateUI(getString(R.string.history_s_medications))
+                binding.tvScheduleHistory.updateUI(getString(R.string.history_s_routine_tests))
             }
             R.id.btn_medical_reminder -> {
                 binding.btnMedicalReminder.updateUI()
-                binding.tvMedicationsHistory.updateUI(getString(R.string.history_s_medications))
+                binding.tvScheduleHistory.updateUI(getString(R.string.history_s_medical_reminder))
             }
         }
     }

@@ -10,14 +10,15 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Time
 import com.cancer.yaqeen.databinding.ItemMedicationTimeBinding
+import com.cancer.yaqeen.presentation.util.Constants
 
 class MedicationTimesAdapter(
     private val onItemClick: (Time) -> Unit
 ) :
     ListAdapter<Time, MedicationTimesAdapter.TimesViewHolder>(Companion) {
 
-    private var selectedPosition = -1
-    private var lastSelectedPosition = -1
+    private var selectedPosition = Constants.INIT_SELECTED_POSITION
+    private var lastSelectedPosition = Constants.INIT_SELECTED_POSITION
 
     companion object : DiffUtil.ItemCallback<Time>() {
         override fun areItemsTheSame(

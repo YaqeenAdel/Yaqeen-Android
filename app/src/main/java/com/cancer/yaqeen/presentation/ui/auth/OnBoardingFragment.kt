@@ -21,6 +21,9 @@ import com.cancer.yaqeen.data.features.onboarding.models.Photo
 import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.databinding.FragmentNewOnBoardingBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
+import com.cancer.yaqeen.presentation.util.Constants.BODY_KEY
+import com.cancer.yaqeen.presentation.util.Constants.PHOTO_ID_KEY
+import com.cancer.yaqeen.presentation.util.Constants.TITLE_KEY
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import com.google.android.material.tabs.TabLayout
@@ -50,9 +53,11 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
                 binding.viewPager.setCurrentItem(scrollPosition++ % count, true)
 
                 handler.postDelayed(this, 3000)
-            }catch (_: Exception){}
+            } catch (_: Exception) {
+            }
         }
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -91,7 +96,7 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
 //        setupLanguageAutoCompleteAdapter()
     }
 
-    private fun getResourcesData(){
+    private fun getResourcesData() {
         onboardingViewModel.getResources()
     }
 
@@ -112,7 +117,7 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
                     setupViewPager(it.photos)
                 }
                 val user = onboardingViewModel.viewStateLoginSuccess.replayCache
-                if(user.isNotEmpty() && user.firstOrNull() != null) {
+                if (user.isNotEmpty() && user.firstOrNull() != null) {
                     navigateToUpdateProfile()
                 }
             }
@@ -121,11 +126,11 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
             onboardingViewModel.viewStateLoginSuccess.collectLatest {
                 it?.let {
                     val resources = onboardingViewModel.viewStateResources.replayCache
-                    if(resources.isNotEmpty() && resources.firstOrNull() != null) {
+                    if (resources.isNotEmpty() && resources.firstOrNull() != null) {
 //                        Toast.makeText(context,
 //                            getString(R.string.you_have_logged_in_successfully),Toast.LENGTH_SHORT).show()
                         navigateToUpdateProfile()
-                    }else{
+                    } else {
 //                        getResourcesData()
                     }
                 }
@@ -161,6 +166,7 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
                     binding.viewPager.currentItem = tab.position
                 }
             }
+
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
             override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
@@ -230,7 +236,8 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
         binding.tabLayout.removeAllTabs()
         onBoardingList.onEach {
             pages.add(PageFragment().apply {
-                arguments = bundleOf("photoID" to it.photoId , "title" to it.title, "body" to it.body)
+                arguments =
+                    bundleOf(PHOTO_ID_KEY to it.photoId, TITLE_KEY to it.title, BODY_KEY to it.body)
             })
             binding.tabLayout.apply {
                 addTab(newTab())
@@ -244,21 +251,24 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
             clipToPadding = false
         }
 
-        binding.viewPager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
+        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 scrollPosition = position + 1
             }
+
             override fun onPageScrollStateChanged(state: Int) {}
             override fun onPageScrolled(
                 position: Int,
                 positionOffset: Float,
                 positionOffsetPixels: Int
-            ) {}
+            ) {
+            }
         })
 
         handler.post(runnable)
     }
-    private fun navigateToHome(){
+
+    private fun navigateToHome() {
         removeCallbacks()
         navController.tryNavigate(
             OnBoardingFragmentDirections.actionOnBoardingFragmentToQuoteFragment()
@@ -273,20 +283,22 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
         )
     }
 
-    private fun removeCallbacks(){
+    private fun removeCallbacks() {
         binding.viewPager.removeCallbacks(runnable)
         handler.removeCallbacks(runnable)
     }
 
     override fun onClick(v: View?) {
-        when(v?.id){
+        when (v?.id) {
             R.id.tv_skip -> {
                 navigateToHome()
             }
+
             R.id.btn_signup -> {
                 removeCallbacks()
                 onboardingViewModel.login(requireContext())
             }
+
             R.id.btn_login -> {
                 removeCallbacks()
                 onboardingViewModel.login(requireContext())

@@ -10,14 +10,15 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.cancer.yaqeen.data.features.onboarding.models.Stage
 import com.cancer.yaqeen.databinding.ItemCancerStageBinding
+import com.cancer.yaqeen.presentation.util.Constants
 
 class StagesAdapter(
     private val onItemClick: (Stage) -> Unit
 ) :
     ListAdapter<Stage, StagesAdapter.StagesViewHolder>(Companion) {
 
-    private var selectedPosition = -1
-    private var lastSelectedPosition = -1
+    private var selectedPosition = Constants.INIT_SELECTED_POSITION
+    private var lastSelectedPosition = Constants.INIT_SELECTED_POSITION
 
     companion object : DiffUtil.ItemCallback<Stage>() {
         override fun areItemsTheSame(

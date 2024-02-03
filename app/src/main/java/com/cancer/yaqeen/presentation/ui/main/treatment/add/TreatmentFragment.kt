@@ -11,11 +11,12 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
-import com.cancer.yaqeen.data.features.home.schedule.medication.models.Time
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.Time.Companion.getHours24
 import com.cancer.yaqeen.data.utils.getTodayDate
 import com.cancer.yaqeen.databinding.FragmentTreatmentBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.ui.main.treatment.TimesAdapter
+import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import dagger.hilt.android.AndroidEntryPoint
@@ -80,32 +81,7 @@ class TreatmentFragment : BaseFragment(showBottomMenu = true), View.OnClickListe
 
 
         timesAdapter.submitList(
-            listOf(
-                Time(0, "00:00"),
-                Time(1, "1:00"),
-                Time(2, "2:00"),
-                Time(3, "3:00"),
-                Time(4, "4:00"),
-                Time(5, "5:00"),
-                Time(6, "6:00"),
-                Time(7, "7:00"),
-                Time(8, "8:00"),
-                Time(9, "9:00"),
-                Time(10, "10:00"),
-                Time(11, "11:00"),
-                Time(12, "12:00"),
-                Time(13, "13:00"),
-                Time(14, "14:00"),
-                Time(15, "15:00"),
-                Time(16, "16:00"),
-                Time(17, "17:00"),
-                Time(18, "18:00"),
-                Time(19, "19:00"),
-                Time(20, "20:00"),
-                Time(21, "21:00"),
-                Time(22, "22:00"),
-                Time(23, "23:00")
-            )
+            getHours24()
         )
 
         selectItem(12)
@@ -113,15 +89,15 @@ class TreatmentFragment : BaseFragment(showBottomMenu = true), View.OnClickListe
 
     private fun selectItem(itemId: Int) {
         val selectItemPosition = timesAdapter.selectItem(itemId)
-        if(selectItemPosition >= 2)
-            binding.rvTimes.scrollToPosition(selectItemPosition - 2)
+        if(selectItemPosition >= Constants.MAX_POSITION_TO_SCROLL)
+            binding.rvTimes.scrollToPosition(selectItemPosition - Constants.MAX_POSITION_TO_SCROLL)
     }
 
     override fun onClick(v: View?) {
         when(v?.id){
             R.id.btn_medications -> {
                 navController.tryNavigate(
-                    TreatmentFragmentDirections.actionTreatmentFragmentToMedicationsFragment()
+                    TreatmentFragmentDirections.actionTreatmentFragmentToMedicationsFragment(null)
                 )
             }
             R.id.btn_symptoms -> {

@@ -154,13 +154,13 @@
                     android:textSize="@dimen/_10ssp"
                     android:fontFamily="sans-serif-medium"
                     app:layout_constraintBottom_toBottomOf="@+id/iv_calender"
-                    app:layout_constraintEnd_toStartOf="@+id/tv_see_all_calender"
+                    app:layout_constraintEnd_toStartOf="@+id/tv_see_all"
                     app:layout_constraintStart_toEndOf="@+id/iv_calender"
                     app:layout_constraintTop_toTopOf="@+id/iv_calender"
                     tools:text="1 Jan 2024" />
 
                 <TextView
-                    android:id="@+id/tv_see_all_calender"
+                    android:id="@+id/tv_see_all"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_18sdp"
@@ -183,7 +183,7 @@
                     android:visibility="gone"
                     android:layout_marginTop="@dimen/_14sdp"
                     app:layout_constraintStart_toStartOf="@id/iv_calender"
-                    app:layout_constraintEnd_toEndOf="@id/tv_see_all_calender"
+                    app:layout_constraintEnd_toEndOf="@id/tv_see_all"
                     app:layout_constraintTop_toBottomOf="@id/tv_current_day_date"
                     app:layout_constraintBottom_toBottomOf="parent" />
 
@@ -208,7 +208,7 @@
                     android:drawablePadding="@dimen/_20sdp"
                     android:visibility="invisible"
                     app:layout_constraintStart_toStartOf="@id/iv_calender"
-                    app:layout_constraintEnd_toEndOf="@id/tv_see_all_calender"
+                    app:layout_constraintEnd_toEndOf="@id/tv_see_all"
                     app:layout_constraintTop_toBottomOf="@id/tv_current_day_date"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:drawableStartCompat="@drawable/message_circle"   />

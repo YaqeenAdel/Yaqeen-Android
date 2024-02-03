@@ -105,7 +105,6 @@ class ModulesFragment : BaseFragment() {
                     }
                     modulesAdapter.setList(modules)
                     val interestModuleIds = viewModel.getUserProfile()?.interestModuleIds
-                    Log.d("TAG", "observeStates: $interestModuleIds")
                     if(!interestModuleIds.isNullOrEmpty()) {
                         binding.btnFinish.changeVisibility(show = true)
                         modulesAdapter.selectItems(interestModuleIds)

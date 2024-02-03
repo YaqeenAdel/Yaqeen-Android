@@ -12,6 +12,7 @@ import com.cancer.yaqeen.data.features.onboarding.responses.UniversitiesResponse
 import com.cancer.yaqeen.data.features.onboarding.responses.UserProfileResponse
 import com.cancer.yaqeen.data.features.home.schedule.medication.requests.AddMedicationRequest
 import com.cancer.yaqeen.data.features.home.schedule.medication.responses.AddMedicationResponse
+import com.cancer.yaqeen.data.features.home.schedule.medication.responses.SchedulesResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -74,5 +75,9 @@ interface YaqeenAPI {
         @Body requestBody: AddMedicationRequest
     ): Response<AddMedicationResponse>
 
+    @GET("Schedules/{scheduleType}")
+    suspend fun getMedicationsReminders(
+        @Path("scheduleType") scheduleType: String
+    ): Response<SchedulesResponse>
 
 }
