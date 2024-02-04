@@ -24,6 +24,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.Locale
 import javax.inject.Inject
 import kotlin.system.exitProcess
 
@@ -79,6 +80,7 @@ class MainActivity : AppCompatActivity() {
     fun changeLanguageByDestination(destId: Int){
         lifecycleScope.launch {
             delay(100)
+           // setlanguage("ar")
             val intent = packageManager.getLaunchIntentForPackage(packageName)
             intent?.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
             val navBuilder = NavDeepLinkBuilder(this@MainActivity)
@@ -93,6 +95,15 @@ class MainActivity : AppCompatActivity() {
             pendingIntent.send(this@MainActivity, 0, intent)
             exitProcess(0)
         }
+    }
+
+    fun setlanguage(language: String){
+        val locale = Locale(language)
+        Locale.setDefault(locale)
+        val resources = getResources()
+        val configuration = resources.getConfiguration()
+        configuration.locale = locale
+        resources.updateConfiguration(configuration, resources.getDisplayMetrics())
     }
     fun changeLanguage(){
         lifecycleScope.launch {
