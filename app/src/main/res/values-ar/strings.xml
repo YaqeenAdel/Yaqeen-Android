@@ -1,0 +1,185 @@
+<resources>
+    <string name="app_name">يقين</string>
+
+    <string name="hello_blank_fragment">مرحبًا بك في شاشة البداية</string>
+    <string name="com_auth0_domain">nan</string>
+    <string name="com_auth0_client_id">nan</string>
+    <string name="language">اللغة</string>
+    <string name="explore_the_app">استكشاف التطبيق</string>
+    <string name="start_join">بدء الانضمام</string>
+    <string name="login">تسجيل الدخول</string>
+    <string name="log_in">تسجيل الدخول</string>
+    <string name="login_dialog">تسجيل الدخول</string>
+    <string name="next">التالي</string>
+    <string name="please_select_your_user_type">الرجاء تحديد نوع المستخدم الخاص بك</string>
+    <string name="hey_tell_us_about_you">مرحبًا! أخبرنا المزيد عنك</string>
+    <string name="simple_steps_to_know_more_about_you">خطوات بسيطة للتعرف عليك أكثر</string>
+    <string name="are_you_ready">هل أنت مستعد!</string>
+    <string name="back">الرجوع</string>
+    <string name="patient">مريض</string>
+    <string name="volunteer_doctor">طبيب متطوع</string>
+    <string name="what_is_your_cancer_type">ما نوع السرطان الذي تعاني منه؟</string>
+    <string name="other">آخر</string>
+    <string name="question">سؤال ..؟</string>
+    <string name="select_module_you_interest">اختر الوحدة التي تهمك؟</string>
+    <string name="i_m_yet_unknown">لا أزال مجهول</string>
+    <string name="more_information_about_your_specialization">مزيد من المعلومات حول تخصصك</string>
+    <string name="terms_condition"> الشروط والأحكام</string>
+    <string name="accept">قبول</string>
+    <string name="reject">رفض</string>
+    <string name="check_your_email">تحقق من بريدك الإلكتروني</string>
+    <string name="activation">التفعيل</string>
+    <string name="see_all">اعرض الكل</string>
+    <string name="recommended_articles">مقالات موصى بها</string>
+    <string name="therapy_treatment">علاج علاجي</string>
+    <string name="resend_again">إعادة إرسال مرة أخرى</string>
+    <string name="university">جامعة</string>
+    <string name="degree">درجة علمية</string>
+    <string name="medical_field">مجال طبي</string>
+    <string name="NoInternetConnection" translatable="false">لا يوجد اتصال بالإنترنت</string>
+    <string name="no_internet_connection">لا يوجد اتصال بالإنترنت، يرجى التحقق من الاتصال والمحاولة مرة أخرى</string>
+    <string name="timeout_exceeded">تم تجاوز المهلة أثناء الانتظار للتحميل، تأكد من أنك متصل بالإنترنت</string>
+    <string name="error_occurred">حدث خطأ، يرجى المحاولة مرة أخرى</string>
+    <string name="token_expired_title">انتهت صلاحية رمز التفويض</string>
+    <string name="token_expired_message">انتهت صلاحية رمز التفويض الخاص بك. عليك تسجيل الدخول مرة أخرى</string>
+    <string name="un_authorized" translatable="false">لم تتم الموافقة</string>
+    <string name="missing_data">البيانات المدخلة غير صحيحة</string>
+    <string name="missing_response">الاستجابة غير صحيحة</string>
+    <string name="activation_message">تم إرسال رابط تفعيل الحساب إلى بريدك الإلكتروني</string>
+    <string name="edit">تحرير</string>
+    <string name="resend_activation_link">إعادة إرسال رابط التفعيل</string>
+    <string name="otp_verification">التحقق من الرمز</string>
+    <string name="create_account">إنشاء حساب</string>
+    <string name="previous">السابق</string>
+    <string name="search">بحث</string>
+    <string name="at_any_stage_of_cancer">في أي مرحلة من مراحل السرطان ..؟</string>
+    <string name="start">بدء</string>
+    <string name="skip">تخطي</string>
+    <string name="medical_id_card">بطاقة هوية طبية</string>
+    <string name="select_university">اختر الجامعة</string>
+    <string name="you_have_logged_in_successfully">لقد قمت بتسجيل الدخول بنجاح</string>
+    <string name="sign_in">تسجيل الدخول</string>
+    <string name="continue_as_a_guest">المتابعة كضيف</string>
+    <string name="don_t_have_account">ليس لديك حساب؟</string>
+    <string name="on_boarding_title">استكشاف مقالات موثوقة لمعرفة المزيد عن حالتك</string>
+    <string name="on_boarding_message">اكتشف نصائح مفيدة للتعافي، قم بتمكين رحلتك نحو الشفاء بمعلومات موثوقة ونصائح عملية</string>
+    <string name="sign_up">التسجيل</string>
+    <string name="specify_your_type_of_cancer">حدد نوع السرطان الخاص بك.</string>
+    <string name="search_type_of_cancer">بحث عن نوع السرطان</string>
+    <string name="search_type_of_interest">بحث مجالات الاهتمام</string>
+    <string name="specify_your_cancer_stage">حدد مرحلة السرطان الخاصة بك.</string>
+    <string name="interest">اهتمام؟</string>
+    <string name="select_all_categories_you_interest">اختر جميع الفئات التي تهمك.</string>
+    <string name="finish">انتهاء</string>
+    <string name="notifications">إشعارات</string>
+    <string name="register_medication">تسجيل الدواء</string>
+    <string name="confirm">تأكيد</string>
+    <string name="amount">المبلغ</string>
+    <string name="period">الفترة</string>
+    <string name="title_home">الصفحة الرئيسية</string>
+    <string name="treatment">علاج</string>
+    <string name="notification">إشعار</string>
+    <string name="more">المزيد</string>
+    <string name="welcome_back">مرحبًا مرة أخرى</string>
+    <string name="menu">القائمة</string>
+    <string name="medicine">دواء</string>
+    <string name="symptoms">أعراض</string>
+    <string name="saved_articles">المقالات المحفوظة</string>
+    <string name="account_setting">إعدادات الحساب</string>
+    <string name="help">مساعدة</string>
+    <string name="log_out">تسجيل الخروج</string>
+    <string name="english">الإنجليزية</string>
+    <string name="arabic">العربية</string>
+    <string name="close">إغلاق</string>
+    <string name="to_be_able_to_use_the_feature_you_must_log_in">لتتمكن من استخدام هذه الخاصية، يجب عليك تسجيل الدخول</string>
+    <string name="treatment_reminder">تذكير بالعلاج</string>
+    <string name="choose_your_treatment_categories">اختر فئات علاجك</string>
+    <string name="medications">أدوية</string>
+    <string name="routine_tests">اختبارات دورية</string>
+    <string name="medical_reminder">تذكير طبي</string>
+    <string name="name_of_medication">اسم الدواء</string>
+    <string name="medication_type">نوع الدواء</string>
+    <string name="name_of_the_capsule">اسم الكبسولة</string>
+    <string name="name_of_the_medication">اسم ال٪s</string>
+    <string name="specify_the_medication_type">حدد نوع الدواء</string>
+    <string name="on_boarding_title_1">استكشاف مقالات موثوقة لمعرفة المزيد عن حالتك</string>
+    <string name="on_boarding_body_1">اكتشف نصائح مفيدة للتعافي، قم بتمكين رحلتك نحو الشفاء باستشارات موثوقة ونصائح عملية.</string>
+
+    <string name="on_boarding_title_2">تسجيل سجل طبي لأعراضك ضروري.</string>
+    <string name="on_boarding_body_2">تتبع مشاعرك يمكن أن يعزز فهمك لحالتك الصحية، ويقدم رؤى قيمة لإدارة أفضل.</string>
+    <string name="medication_s_track">تتبع الأدوية</string>
+    <string name="strength">القوة</string>
+    <string name="how_many_capsules_of_a_certain_strength_should_be_taken_at_once">ما هي الكمية الموصى بها من الكبسولات بنفس التركيز التي يجب تناولها في مرة واحدة؟</string>
+    <string name="strength_question">كم نسبة ال٪s من نفس التركيز التي يجب تناولها في مرة واحدة؟</string>
+    <string name="unit">وحدة</string>
+    <string name="choose_units">اختر الوحدات</string>
+    <string name="what_time_would_you_consume_this">في أي وقت ستتناول هذا؟</string>
+    <string name="start_from">ابتداء من</string>
+    <string name="time">وقت</string>
+    <string name="note">ملاحظة</string>
+    <string name="choose_days">اختر الأيام</string>
+    <string name="review">مراجعة</string>
+    <string name="notes">ملاحظات</string>
+    <string name="hour">ساعة</string>
+    <string name="days">أيام</string>
+    <string name="reminder">تذكير</string>
+    <string name="minute">دقيقة</string>
+    <string name="am">صباحًا</string>
+    <string name="pm">مساءً</string>
+    <string name="add">إضافة</string>
+    <string name="history_s_medications">الأدوية السابقة</string>
+    <string name="history_s_symptoms">History’s Symptoms</string>
+    <string name="history_s_routine_tests">History’s Routine Tests</string>
+    <string name="history_s_medical_reminder">History’s Medical Reminder</string>
+    <string name="specific_days_of_the_week">أيام محددة من الأسبوع</string>
+    <string name="medical_appointment">موعد طبي</string>
+    <string name="medication_added_successfully">تم إضافة الدواء بنجاح</string>
+    <string name="dosage">جرعة</string>
+    <string name="starting_date">Starting Date</string>
+    <string name="take">Take</string>
+    <string name="quote_title_1">“When we long for life without difficulties, remind us that oaks grow strong in contrary winds, and diamonds are made under pressure.”</string>
+    <string name="quote_title_2">“You have to be willing to give up the life you planned, and instead, greet the life that is waiting for you.”</string>
+    <string name="quote_owner_1">Peter Marshall</string>
+    <string name="quote_owner_2">Joseph Campbell</string>
+
+    <string name="white">#FFFFFFFF</string>
+    <string name="black">#FF000000</string>
+    <string name="by">"by/ %s"</string>
+
+    <string name="capsule">كبسولة</string>
+    <string name="pills">أقراص</string>
+    <string name="liquid">سائل</string>
+    <string name="injection">حقنة</string>
+
+    <string name="mg">Mg</string>
+    <string name="mcg">Mcg</string>
+    <string name="ml">Ml</string>
+    <string name="percentage">%</string>
+
+    <string name="capsule_enum" translatable="false">Capsule</string>
+    <string name="pills_enum" translatable="false">Pills</string>
+    <string name="liquid_enum" translatable="false">Liquid</string>
+    <string name="injection_enum" translatable="false">Injection</string>
+
+    <string name="mg_enum" translatable="false">Mg</string>
+    <string name="mcg_enum" translatable="false">Mcg</string>
+    <string name="ml_enum" translatable="false">Ml</string>
+    <string name="percentage_enum" translatable="false">%</string>
+
+    <string name="sun">Sun</string>
+    <string name="mon">Mon</string>
+    <string name="tues">Tues</string>
+    <string name="wed">Wed</string>
+    <string name="thur">Thur</string>
+    <string name="fri">Fri</string>
+    <string name="sat">Sat</string>
+    <string name="every_day">Every Day</string>
+    <string name="every_8_hours">Every 8 hours</string>
+    <string name="every_12_hours">Every 12 hours</string>
+    <string name="day_after_day">Day after day</string>
+
+    <string-array name="languages_array">
+        <item>English</item>
+        <item>Arabic</item>
+    </string-array>
+</resources>

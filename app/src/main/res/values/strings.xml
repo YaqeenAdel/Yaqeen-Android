@@ -32,13 +32,10 @@
     <string name="see_all">See all</string>
     <string name="recommended_articles">Recommended Articles</string>
     <string name="therapy_treatment">Therapy Treatment</string>
-
-
     <string name="resend_again">Resend again</string>
     <string name="university">University</string>
     <string name="degree">Degree</string>
     <string name="medical_field">Medical Field</string>
-
     <string name="NoInternetConnection" translatable="false">No Internet Connection</string>
     <string name="no_internet_connection">No internet connection, please check connection and try again</string>
     <string name="timeout_exceeded">Timeout exceeded while waiting for loading, make sure you are connected to the internet</string>
