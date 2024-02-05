@@ -1,42 +1,38 @@
-package com.cancer.yaqeen.presentation.ui.main.home
+package com.cancer.yaqeen.presentation.ui.main.search
 
 import android.os.Bundle
 import android.util.Log
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.DecelerateInterpolator
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.cancer.yaqeen.R
-import com.cancer.yaqeen.data.features.auth.models.User
 import com.cancer.yaqeen.data.features.home.articles.models.Article
 import com.cancer.yaqeen.data.network.error.ErrorEntity
-import com.cancer.yaqeen.data.utils.getTodayDate
+import com.cancer.yaqeen.databinding.FragmentArticlesBinding
 import com.cancer.yaqeen.databinding.FragmentHomeBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
+import com.cancer.yaqeen.presentation.ui.main.home.HomeFragmentDirections
+import com.cancer.yaqeen.presentation.ui.main.home.HomeViewModel
 import com.cancer.yaqeen.presentation.ui.main.home.articles.ArticlesAdapter
+import com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.MedicationsFragmentArgs
 import com.cancer.yaqeen.presentation.util.autoCleared
-import com.cancer.yaqeen.presentation.util.binding_adapters.bindImage
-import com.cancer.yaqeen.presentation.util.changeVisibility
 import com.cancer.yaqeen.presentation.util.dpToPx
 import com.cancer.yaqeen.presentation.util.recyclerview.VerticalMarginItemDecoration
 import com.cancer.yaqeen.presentation.util.tryNavigate
-import com.yuyakaido.android.cardstackview.CardStackLayoutManager
-import com.yuyakaido.android.cardstackview.Direction
-import com.yuyakaido.android.cardstackview.Duration
-import com.yuyakaido.android.cardstackview.RewindAnimationSetting
-import com.yuyakaido.android.cardstackview.StackFrom
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
 
 @AndroidEntryPoint
-class HomeFragment : BaseFragment(showBottomMenu = true) {
+class ArticlesFragment : BaseFragment() {
 
-    private var binding: FragmentHomeBinding by autoCleared()
+    private var binding: FragmentArticlesBinding by autoCleared()
 
     private lateinit var navController: NavController
 
@@ -44,12 +40,18 @@ class HomeFragment : BaseFragment(showBottomMenu = true) {
 
     private val homeViewModel: HomeViewModel by viewModels()
 
+    private val args: ArticlesFragmentArgs by navArgs()
+
+    private val interestName by lazy {
+        args.interestName
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
+    ): View? {
         // Inflate the layout for this fragment
-        binding = FragmentHomeBinding.inflate(inflater, container, false)
+        binding = FragmentArticlesBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -57,50 +59,31 @@ class HomeFragment : BaseFragment(showBottomMenu = true) {
         super.onViewCreated(view, savedInstanceState)
 
         navController = findNavController()
+
         setupArticlesAdapter()
+
         observeStates()
 
         setListener()
 
         homeViewModel.getBookmarkedArticles()
+
+        binding.tvNameArticles.text = getString(R.string.name_articles, interestName)
+
+        homeViewModel.getArticles(interestName)
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        updateUI()
-
-        homeViewModel.getArticles()
-        homeViewModel.getMedicationsFromNow()
-    }
     private fun setListener(){
-        binding.tvSeeAll.setOnClickListener {
-            navController.tryNavigate(
-                HomeFragmentDirections.actionHomeFragmentToTreatmentHistoryFragment()
-            )
+        binding.toolbar.setNavigationOnClickListener {
+            navController.popBackStack()
         }
-    }
-
-    private fun updateUI() {
-        val isLogged = homeViewModel.userIsLoggedIn()
-        val user = homeViewModel.getUser()
-
-        binding.groupProfile.changeVisibility(show = isLogged, isGone = false)
-        binding.groupGuest.changeVisibility(show = !isLogged, isGone = false)
-
-
-        binding.tvNameUser.text = user?.name ?: ""
-        bindImage(binding.ivProfilePic, user?.pictureURL)
-
-
-        binding.tvCurrentDayDate.text = getTodayDate()
     }
 
     private fun setupArticlesAdapter() {
         articlesAdapter = ArticlesAdapter(
             onItemClick = {
                 navController.tryNavigate(
-                    HomeFragmentDirections.actionHomeFragmentToArticleDetailsFragment(it, false)
+                    ArticlesFragmentDirections.actionArticlesFragmentToArticleDetailsFragment(it, false)
                 )
             },
             onFavouriteArticleClick = {
@@ -118,24 +101,6 @@ class HomeFragment : BaseFragment(showBottomMenu = true) {
                 )
             )
         }
-    }
-
-    private fun setupTimesAdapter() {
-
-        val setting = RewindAnimationSetting.Builder()
-            .setDirection(Direction.Bottom)
-            .setDuration(Duration.Normal.duration)
-            .setInterpolator(DecelerateInterpolator())
-            .build()
-        val cardStackLayoutManager = CardStackLayoutManager(requireContext())
-        cardStackLayoutManager.setRewindAnimationSetting(setting)
-        cardStackLayoutManager.setStackFrom(StackFrom.None)
-        binding.rvTreatments.apply {
-            layoutManager = cardStackLayoutManager
-            adapter = articlesAdapter
-        }
-        binding.rvTreatments.swipe()
-
     }
 
     private fun observeStates() {
@@ -162,12 +127,6 @@ class HomeFragment : BaseFragment(showBottomMenu = true) {
             }
         }
 
-        lifecycleScope {
-            homeViewModel.viewStateMedications.collect { medications ->
-                Log.d("TAG", "observeStates: medications $medications")
-//                medicationsAdapter.submitList(medications)
-            }
-        }
     }
 
     private fun handleItemUI(favouriteStatusArticle: Pair<Article, Boolean>?) {
@@ -188,13 +147,4 @@ class HomeFragment : BaseFragment(showBottomMenu = true) {
             Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
         }
     }
-
-    private fun getArticles(searchQuery: String) {
-        val queryTrimmed = searchQuery.trim()
-        if (searchQuery.isEmpty())
-            homeViewModel.getArticles()
-        else if(queryTrimmed.isNotEmpty())
-            homeViewModel.getArticles(queryTrimmed)
-    }
-
 }

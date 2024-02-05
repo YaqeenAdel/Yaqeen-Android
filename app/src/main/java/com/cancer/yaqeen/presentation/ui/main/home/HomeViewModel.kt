@@ -1,12 +1,13 @@
 package com.cancer.yaqeen.presentation.ui.main.home
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cancer.yaqeen.data.features.auth.models.User
 import com.cancer.yaqeen.data.features.home.articles.models.Article
 import com.cancer.yaqeen.data.features.home.articles.requests.BookmarkArticleRequest
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.Medication
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.ScheduleType
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.data.network.base.Status
 import com.cancer.yaqeen.data.network.error.ErrorEntity
@@ -14,7 +15,9 @@ import com.cancer.yaqeen.domain.features.home.articles.usecases.BookmarkArticleU
 import com.cancer.yaqeen.domain.features.home.articles.usecases.GetArticlesUseCase
 import com.cancer.yaqeen.domain.features.home.articles.usecases.GetBookmarkedArticlesUseCase
 import com.cancer.yaqeen.domain.features.home.articles.usecases.UnBookmarkArticleUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.medication.GetMedicationRemindersFromNowUseCase
 import com.cancer.yaqeen.domain.features.onboarding.usecases.GetUserProfileUseCase
+import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -33,10 +36,14 @@ class HomeViewModel @Inject constructor(
     private val getBookmarkedArticlesUseCase: GetBookmarkedArticlesUseCase,
     private val bookmarkArticleUseCase: BookmarkArticleUseCase,
     private val unBookmarkArticleUseCase: UnBookmarkArticleUseCase,
+    private val getMedicationRemindersFromNowUseCase: GetMedicationRemindersFromNowUseCase,
 //    private val removeArticleFromFavouriteUseCase: RemoveArticleFromFavouriteUseCase,
 ) : ViewModel() {
 
     private var viewModelJob: Job? = null
+
+    private val _viewStateMedications = MutableStateFlow<List<Medication>>(listOf())
+    val viewStateMedications = _viewStateMedications.asStateFlow()
 
     private val _viewStateArticles = MutableStateFlow<List<Article>>(listOf())
     val viewStateArticles = _viewStateArticles.asStateFlow()
@@ -56,6 +63,26 @@ class HomeViewModel @Inject constructor(
     private val _viewStateError = MutableStateFlow<ErrorEntity?>(null)
     val viewStateError = _viewStateError.asStateFlow()
 
+
+    fun getMedicationsFromNow() {
+        viewModelJob = viewModelScope.launch {
+            getMedicationRemindersFromNowUseCase(
+                scheduleType = ScheduleType.MEDICATION.scheduleType
+            ).collect { response ->
+                _viewStateLoading.emit(response.loading)
+                when (response.status) {
+                    Status.ERROR -> emitError(response.errorEntity)
+                    Status.SUCCESS -> {
+                        response.data?.let {
+                            _viewStateMedications.emit(it)
+                        }
+                    }
+
+                    else -> {}
+                }
+            }
+        }
+    }
 
     fun getArticles(searchQuery: String = "") {
         viewModelScope.launch {

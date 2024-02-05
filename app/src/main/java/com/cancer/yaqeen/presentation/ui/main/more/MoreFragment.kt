@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
@@ -21,8 +22,10 @@ import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindImage
 import com.cancer.yaqeen.presentation.util.changeVisibility
 import com.cancer.yaqeen.presentation.util.tryNavigate
+import com.cancer.yaqeen.presentation.util.tryPopBackStack
 import com.google.android.material.button.MaterialButton
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 
 
 @AndroidEntryPoint
@@ -51,6 +54,7 @@ class MoreFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
         setListener()
 
         updateUI()
+        observeStates()
     }
 
     override fun onResume() {
@@ -74,7 +78,16 @@ class MoreFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
         binding.btnLogOut.setOnClickListener(this)
 
     }
+    private fun observeStates() {
 
+        lifecycleScope {
+            moreViewModel.viewStateLogoutSuccess.observe(viewLifecycleOwner) { response ->
+                if(response == true){
+                    navController.tryNavigate(MoreFragmentDirections.actionMoreFragmentToOnBoardingFragment())
+                }
+            }
+        }
+    }
 
     private fun updateUI() {
         val isLogged = moreViewModel.userIsLoggedIn()
@@ -110,8 +123,7 @@ class MoreFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
                 (requireActivity() as? MainActivity)?.changeLanguageByDestination(R.id.moreFragment)
             }
             R.id.btn_log_out -> {
-                moreViewModel.logOut()
-                navController.tryNavigate(MoreFragmentDirections.actionMoreFragmentToOnBoardingFragment())
+                moreViewModel.logout(requireContext())
             }
         }
     }

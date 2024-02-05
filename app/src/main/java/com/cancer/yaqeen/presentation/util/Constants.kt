@@ -21,7 +21,6 @@ object Constants {
 
     const val INIT_SELECTED_POSITION = -1
 
-    const val SCHEDULE_MEDICATION = "medication"
 
 }
 

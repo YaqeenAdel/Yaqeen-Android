@@ -24,6 +24,9 @@
                 app:imageUrl="@{article_image_url}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/card_category"
+                app:layout_constraintBottom_toTopOf="@id/view"
+                app:layout_constraintVertical_bias="0"
+                android:layout_marginBottom="@dimen/_4sdp"
                 app:riv_corner_radius="@dimen/_8sdp"
                 tools:src="@drawable/header_logo" />
 

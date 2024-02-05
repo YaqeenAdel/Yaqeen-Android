@@ -272,5 +272,33 @@
             android:id="@+id/action_medicationDialogFragment_to_medicationsFragment"
             app:destination="@id/medicationsFragment"/>
     </dialog>
+    <dialog
+        android:id="@+id/authFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.main.required_auth.AuthFragment"
+        tools:layout="@layout/fragment_auth" >
+        <action
+            android:id="@+id/action_authFragment_to_termsAndConditionFragment"
+            app:destination="@id/termsAndConditionFragment" />
+    </dialog>
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.main.search.SearchFragment"
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_searchFragment_to_articlesFragment"
+            app:destination="@id/articlesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/articlesFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.main.search.ArticlesFragment"
+        tools:layout="@layout/fragment_articles">
+
+        <argument
+            android:name="interestName"
+            app:argType="string"/>
+        <action
+            android:id="@+id/action_articlesFragment_to_articleDetailsFragment"
+            app:destination="@id/articleDetailsFragment" />
+    </fragment>
 
 </navigation>

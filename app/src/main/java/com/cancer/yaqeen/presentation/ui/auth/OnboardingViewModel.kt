@@ -3,6 +3,7 @@ package com.cancer.yaqeen.presentation.ui.auth
 import android.content.Context
 import android.util.Log
 import androidx.databinding.ObservableField
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cancer.yaqeen.data.features.auth.models.Profile
@@ -23,6 +24,7 @@ import com.cancer.yaqeen.domain.features.onboarding.usecases.GetUniversitiesUseC
 import com.cancer.yaqeen.domain.features.onboarding.usecases.GetUserProfileUseCase
 import com.cancer.yaqeen.domain.features.onboarding.usecases.UpdateInterestsUserUseCase
 import com.cancer.yaqeen.domain.features.onboarding.usecases.UpdateUserProfileUseCase
+import com.cancer.yaqeen.presentation.util.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -62,8 +64,8 @@ class OnboardingViewModel @Inject constructor(
     val viewStateLoginSuccess = _viewStateLoginSuccess.asSharedFlow()
 
 
-    private val _viewStateUserDataCompleted = MutableStateFlow<Boolean?>(null)
-    val viewStateUserDataCompleted = _viewStateUserDataCompleted.asSharedFlow()
+    private val _viewStateUserDataCompleted = SingleLiveEvent<Boolean?>()
+    val viewStateUserDataCompleted: LiveData<Boolean?> = _viewStateUserDataCompleted
 
 
     private val _viewStateLoading = MutableStateFlow<Boolean>(false)
@@ -182,7 +184,7 @@ class OnboardingViewModel @Inject constructor(
                                     ){
                                     _viewStateLoginSuccess.emit(it)
                                 }else{
-                                    _viewStateUserDataCompleted.emit(true)
+                                    _viewStateUserDataCompleted.postValue(true)
                                     prefEncryptionUtil.isLogged = true
                                 }
                                 setProfileUser(

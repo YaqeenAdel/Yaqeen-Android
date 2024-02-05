@@ -12,6 +12,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.cancer.yaqeen.R
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.ScheduleType
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Time.Companion.getHours24
 import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.data.utils.getTodayDate
@@ -23,10 +24,13 @@ import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.changeVisibility
 import com.cancer.yaqeen.presentation.util.dpToPx
 import com.cancer.yaqeen.presentation.util.recyclerview.VerticalMarginItemDecoration
+import com.cancer.yaqeen.presentation.util.timestampToDay
+import com.cancer.yaqeen.presentation.util.timestampToHour
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import com.google.android.material.button.MaterialButton
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import java.util.Calendar
 
 @AndroidEntryPoint
 class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
@@ -39,6 +43,8 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
     private lateinit var medicationsAdapter: MedicationsAdapter
 
     private val viewModel: SchedulesHistoryViewModel by viewModels()
+
+    private var scheduledType: ScheduleType = ScheduleType.MEDICATION
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -60,6 +66,17 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
 
         observeStates()
 
+        when(savedInstanceState?.getInt("scheduledType") ?: ScheduleType.MEDICATION.id){
+            ScheduleType.MEDICATION.id -> enableMedications()
+            ScheduleType.SYMPTOMS.id -> enableSymptoms()
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt("scheduledType", scheduledType.id)
+        super.onSaveInstanceState(outState)
+
+
     }
 
     private fun setupAdapters() {
@@ -71,6 +88,12 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
         super.onResume()
 
         binding.tvCurrentDayDate.text = getTodayDate()
+
+
+        val currentDate = Calendar.getInstance()
+        val currentHour = (currentDate.timeInMillis.timestampToHour().toIntOrNull() ?: 0) + 12
+
+        selectItem(currentHour)
     }
 
     private fun setListener(){
@@ -84,7 +107,20 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
         binding.btnMedicalReminder.setOnClickListener(this)
 
     }
+    private fun enableMedications() {
+        binding.btnMedications.updateUI()
+        binding.tvScheduleHistory.updateUI(getString(R.string.history_s_medications))
+        binding.rvMedicationsHistory.updateUI()
+        scheduledType = ScheduleType.MEDICATION
+        getMedications()
+    }
 
+    private fun enableSymptoms(){
+        binding.btnSymptoms.updateUI()
+        binding.tvScheduleHistory.updateUI(getString(R.string.history_s_symptoms))
+        binding.rvSymptomsHistory.updateUI()
+        scheduledType = ScheduleType.SYMPTOMS
+    }
 
     private fun observeStates() {
         lifecycleScope {
@@ -128,7 +164,6 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
             getHours24()
         )
 
-        selectItem(12)
     }
 
 
@@ -152,8 +187,16 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
 
     private fun selectItem(itemId: Int) {
         val selectItemPosition = timesAdapter.selectItem(itemId)
-        if(selectItemPosition >= Constants.MAX_POSITION_TO_SCROLL)
-            binding.rvTimes.scrollToPosition(selectItemPosition - Constants.MAX_POSITION_TO_SCROLL)
+        if(selectItemPosition >= Constants.MAX_POSITION_TO_SCROLL) {
+            val position = when (selectItemPosition) {
+                timesAdapter.itemCount - Constants.MAX_POSITION_TO_SCROLL -> selectItemPosition + 1
+                timesAdapter.itemCount - 1 -> selectItemPosition
+                else -> selectItemPosition - Constants.MAX_POSITION_TO_SCROLL
+            }
+
+            binding.rvTimes.scrollToPosition(position)
+
+        }
     }
 
     private fun getMedications() {
@@ -196,20 +239,18 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
     override fun onClick(v: View?) {
         when(v?.id){
             R.id.btn_add -> {
-                navController.tryNavigate(
-                    TreatmentHistoryFragmentDirections.actionTreatmentHistoryFragmentToTreatmentFragment()
-                )
+                if (viewModel.userIsLoggedIn())
+                    navController.tryNavigate(
+                        TreatmentHistoryFragmentDirections.actionTreatmentHistoryFragmentToTreatmentFragment()
+                    )
+                else
+                    navController.tryNavigate(R.id.authFragment)
             }
             R.id.btn_medications -> {
-                binding.btnMedications.updateUI()
-                binding.tvScheduleHistory.updateUI(getString(R.string.history_s_medications))
-                binding.rvMedicationsHistory.updateUI()
-                getMedications()
+                enableMedications()
             }
             R.id.btn_symptoms -> {
-                binding.btnSymptoms.updateUI()
-                binding.tvScheduleHistory.updateUI(getString(R.string.history_s_symptoms))
-                binding.rvSymptomsHistory.updateUI()
+                enableSymptoms()
             }
             R.id.btn_routine_tests -> {
                 binding.btnRoutineTests.updateUI()

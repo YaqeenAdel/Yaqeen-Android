@@ -138,8 +138,8 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
             }
         }
         lifecycleScope {
-            onboardingViewModel.viewStateUserDataCompleted.collectLatest {
-                if (it == true) navigateToHome()
+            onboardingViewModel.viewStateUserDataCompleted.observe(viewLifecycleOwner) { response ->
+                if (response == true) navigateToHome()
             }
         }
     }
@@ -294,12 +294,7 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
                 navigateToHome()
             }
 
-            R.id.btn_signup -> {
-                removeCallbacks()
-                onboardingViewModel.login(requireContext())
-            }
-
-            R.id.btn_login -> {
+            R.id.btn_signup, R.id.btn_login -> {
                 removeCallbacks()
                 onboardingViewModel.login(requireContext())
             }

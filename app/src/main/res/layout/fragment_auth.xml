@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        android:background="@drawable/background_bottom_sheet"
+        android:backgroundTint="@color/white"
+        tools:context=".presentation.ui.main.required_auth.AuthFragment">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_signup"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            style="@style/Widget.Material3.Button.TextButton"
+            app:backgroundTint="@color/primary_color"
+            app:layout_constraintVertical_bias="1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btn_login"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginVertical="@dimen/_32sdp"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginEnd="@dimen/_18sdp"
+            android:paddingVertical="@dimen/_10sdp"
+            app:cornerRadius="@dimen/_16sdp"
+            android:textSize="@dimen/_14ssp"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:text="@string/sign_up"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_login"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            style="@style/Widget.Material3.Button.TextButton"
+            app:strokeWidth="@dimen/_1sdp"
+            app:strokeColor="@color/gray"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_signup"
+            app:layout_constraintBottom_toBottomOf="@id/btn_signup"
+            app:layout_constraintTop_toTopOf="@id/btn_signup"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:layout_marginStart="@dimen/_18sdp"
+            android:paddingVertical="@dimen/_10sdp"
+            app:cornerRadius="@dimen/_16sdp"
+            android:textSize="@dimen/_14ssp"
+            android:textAllCaps="false"
+            android:textColor="@color/light_black"
+            android:text="@string/log_in"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
