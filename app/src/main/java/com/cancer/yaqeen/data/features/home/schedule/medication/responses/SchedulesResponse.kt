@@ -4,14 +4,14 @@ import com.google.gson.annotations.SerializedName
 
 data class SchedulesResponse(
     @SerializedName("Schedules")
-    val schedules: List<Schedule>?
+    val schedules: List<ScheduleResponse>?
 )
-data class Schedule (
+data class ScheduleResponse (
     @SerializedName("CronExpression")
     val cronExpression: String?,
 
     @SerializedName("Entity")
-    val entity: Entity?,
+    val entity: EntityResponse?,
 
     @SerializedName("EntityType")
     val entityType: String?,
@@ -20,7 +20,7 @@ data class Schedule (
     val scheduleID: Int?
 )
 
-data class Entity (
+data class EntityResponse (
     @SerializedName("Name")
     val name: String?,
 

@@ -20,6 +20,7 @@ class TimesAdapter(
     private var selectedPosition = Constants.INIT_SELECTED_POSITION
     private var lastSelectedPosition = Constants.INIT_SELECTED_POSITION
 
+
     companion object : DiffUtil.ItemCallback<Time>() {
         override fun areItemsTheSame(
             oldItem: Time,
@@ -89,11 +90,11 @@ class TimesAdapter(
                 itemBinding.itemContainer.backgroundTintList = ContextCompat.getColorStateList(_context, android.R.color.transparent)
             }
 
-            itemBinding.itemContainer.setOnClickListener {
-                onItemClick(item)
-
-                notifyItemChangedByPosition(position)
-            }
+//            itemBinding.itemContainer.setOnClickListener {
+//                onItemClick(item)
+//
+//                notifyItemChangedByPosition(position)
+//            }
         }
 
      }

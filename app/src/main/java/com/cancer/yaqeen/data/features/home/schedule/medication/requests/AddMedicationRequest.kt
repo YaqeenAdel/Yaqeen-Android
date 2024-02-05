@@ -1,5 +1,6 @@
 package com.cancer.yaqeen.data.features.home.schedule.medication.requests
 
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.ScheduleType
 import com.cancer.yaqeen.data.features.onboarding.requests.UpdateProfileRequestBody
 import com.cancer.yaqeen.data.utils.tryToLong
 import com.google.gson.annotations.SerializedName
@@ -47,7 +48,7 @@ data class AddMedicationRequestBuilder(
     fun buildRequestBody(): AddMedicationRequest =
         AddMedicationRequest(
             schedule = ScheduleMedicationRequest(
-                entityType = "medication",
+                entityType = ScheduleType.MEDICATION.scheduleType,
                 entity = EntityMedicationRequest(
                     name = medicationName,
                     type = medicationTypeName,

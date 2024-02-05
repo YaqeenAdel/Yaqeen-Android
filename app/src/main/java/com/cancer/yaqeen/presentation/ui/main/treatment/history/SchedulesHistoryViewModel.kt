@@ -3,6 +3,7 @@ package com.cancer.yaqeen.presentation.ui.main.treatment.history
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Medication
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.ScheduleType
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.data.network.base.Status
 import com.cancer.yaqeen.data.network.error.ErrorEntity
@@ -36,7 +37,7 @@ class SchedulesHistoryViewModel @Inject constructor(
     fun getMedications() {
         viewModelJob = viewModelScope.launch {
             getMedicationRemindersUseCase(
-                scheduleType = Constants.SCHEDULE_MEDICATION
+                scheduleType = ScheduleType.MEDICATION.scheduleType
             ).collect { response ->
                 _viewStateLoading.emit(response.loading)
                 when (response.status) {
@@ -52,6 +53,11 @@ class SchedulesHistoryViewModel @Inject constructor(
             }
         }
     }
+
+
+    fun userIsLoggedIn() =
+        prefEncryptionUtil.isLogged
+
 
     private suspend fun emitError(errorEntity: ErrorEntity?) {
         _viewStateError.emit(errorEntity)

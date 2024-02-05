@@ -73,7 +73,11 @@ class MedicationConfirmationFragment : BaseFragment() {
         }
 
         binding.btnConfirm.setOnClickListener {
-            medicationsViewModel.addMedication()
+            val medicationTrack = medicationsViewModel.getMedicationTrack()
+            if (medicationTrack?.editable == true)
+                medicationsViewModel.editMedication()
+            else
+                medicationsViewModel.addMedication()
         }
     }
 
@@ -94,6 +98,19 @@ class MedicationConfirmationFragment : BaseFragment() {
                 if(response == true){
                     Toast.makeText(requireContext(),
                         getString(R.string.medication_added_successfully), Toast.LENGTH_SHORT).show()
+                    navController.tryPopBackStack(
+                        R.id.homeFragment,
+                        false
+                    )
+                }
+            }
+        }
+
+        lifecycleScope {
+            medicationsViewModel.viewStateEditMedication.observe(viewLifecycleOwner) { response ->
+                if(response == true){
+                    Toast.makeText(requireContext(),
+                        getString(R.string.medication_edited_successfully), Toast.LENGTH_SHORT).show()
                     navController.tryPopBackStack(
                         R.id.homeFragment,
                         false

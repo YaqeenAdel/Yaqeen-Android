@@ -18,8 +18,11 @@ import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.ui.main.treatment.TimesAdapter
 import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.autoCleared
+import com.cancer.yaqeen.presentation.util.timestampToDay
+import com.cancer.yaqeen.presentation.util.timestampToHour
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.Calendar
 
 @AndroidEntryPoint
 class TreatmentFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
@@ -55,6 +58,12 @@ class TreatmentFragment : BaseFragment(showBottomMenu = true), View.OnClickListe
         super.onResume()
 
         binding.tvCurrentDayDate.text = getTodayDate()
+
+
+        val currentDate = Calendar.getInstance()
+        val currentHour = (currentDate.timeInMillis.timestampToHour().toIntOrNull() ?: 0) + 12
+
+        selectItem(currentHour)
     }
 
     private fun setListener(){
@@ -84,13 +93,20 @@ class TreatmentFragment : BaseFragment(showBottomMenu = true), View.OnClickListe
             getHours24()
         )
 
-        selectItem(12)
     }
 
     private fun selectItem(itemId: Int) {
         val selectItemPosition = timesAdapter.selectItem(itemId)
-        if(selectItemPosition >= Constants.MAX_POSITION_TO_SCROLL)
-            binding.rvTimes.scrollToPosition(selectItemPosition - Constants.MAX_POSITION_TO_SCROLL)
+        if(selectItemPosition >= Constants.MAX_POSITION_TO_SCROLL) {
+            val position = when (selectItemPosition) {
+                timesAdapter.itemCount - Constants.MAX_POSITION_TO_SCROLL -> selectItemPosition + 1
+                timesAdapter.itemCount - 1 -> selectItemPosition
+                else -> selectItemPosition - Constants.MAX_POSITION_TO_SCROLL
+            }
+
+            binding.rvTimes.scrollToPosition(position)
+
+        }
     }
 
     override fun onClick(v: View?) {

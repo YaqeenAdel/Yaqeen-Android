@@ -4,7 +4,10 @@ import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import com.auth0.android.Auth0
+import com.auth0.android.authentication.AuthenticationAPIClient
 import com.auth0.android.authentication.AuthenticationException
+import com.auth0.android.authentication.storage.CredentialsManager
+import com.auth0.android.authentication.storage.SharedPreferencesStorage
 import com.auth0.android.provider.WebAuthProvider
 import com.cancer.yaqeen.BuildConfig
 import com.cancer.yaqeen.BuildConfig.AUTH_0_SCHEMA
@@ -35,6 +38,7 @@ class AuthRepositoryImpl @Inject constructor(
             try {
                 val credentials = WebAuthProvider.login(auth0)
                     .withScheme(AUTH_0_SCHEMA)
+                    .withParameters(mapOf("prompt" to "select_account"))
                     .withScope("openid profile email read:current_user update:current_user_metadata")
                     .withAudience(AUTH_0_URL)
                     .await(context)
@@ -77,12 +81,16 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun logout(context: Context): Flow<DataState<Boolean>> =
         withContext(Dispatchers.IO){
+            sharedPrefEncryptionUtil.clearUserPreferenceStorage()
             try {
+                val apiClient = AuthenticationAPIClient(auth0)
+                val manager = CredentialsManager(apiClient, SharedPreferencesStorage(context))
+                manager.clearCredentials()
                 WebAuthProvider.logout(auth0)
                     .withScheme(AUTH_0_SCHEMA)
                     .await(context)
 
-//                sharedPrefEncryptionUtil.setToken("")
+
                 flow {
                     emit(
                         DataState.Success(true)

@@ -5,7 +5,9 @@ import com.cancer.yaqeen.data.base.Mapper
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Medication
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.MedicationTrack
 import com.cancer.yaqeen.data.features.home.schedule.medication.responses.AddMedicationResponse
+import com.cancer.yaqeen.data.features.home.schedule.medication.responses.EditMedicationResponse
 import com.cancer.yaqeen.data.features.home.schedule.medication.responses.SchedulesResponse
+import com.cancer.yaqeen.data.features.home.schedule.medication.responses.TodaySchedulesResponse
 import com.cancer.yaqeen.presentation.ui.main.treatment.getMedicationType
 import com.cancer.yaqeen.presentation.ui.main.treatment.getUnitType
 
@@ -53,6 +55,31 @@ class MappingMedicationAsMedicationTrack(val context: Context): Mapper<Medicatio
             medicationId = id
         )
     }
+}
+
+class MappingEditMedicationRemoteAsUIModel :
+    Mapper<EditMedicationResponse, Boolean> {
+    override fun map(input: EditMedicationResponse): Boolean {
+        return input.response != null
+    }
+}
+
+class MappingMedicationsRemindersFromNowRemoteAsModel: Mapper<TodaySchedulesResponse, List<Medication>> {
+    override fun map(input: TodaySchedulesResponse): List<Medication> = input.schedules?.map {
+        it.run {
+            Medication(
+                id = scheduleID ?: 0,
+                medicationName = entity?.name ?: "",
+                medicationType = entity?.type ?: "",
+                strengthAmount = entity?.strengthTimes ?: 0,
+                unitType = entity?.unit ?: "",
+                dosageAmount = entity?.dosageTimes ?: 0,
+                notes = "",
+                scheduleType = "",
+                time = ""
+            )
+        }
+    } ?: listOf()
 }
 
 

@@ -164,6 +164,13 @@ fun String.detectLanguage(): String {
     }
 }
 
+fun Long.timestampToHour(): String {
+    val dateFormat = SimpleDateFormat("h", Locale.ENGLISH)
+    val date = Date(this)
+
+    return dateFormat.format(date)
+}
+
 fun Long.timestampToDay(): String {
     val dateFormat = SimpleDateFormat("d", Locale.ENGLISH)
     val date = Date(this)

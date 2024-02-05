@@ -12,6 +12,8 @@ import com.cancer.yaqeen.domain.features.home.articles.usecases.GetArticlesUseCa
 import com.cancer.yaqeen.domain.features.home.articles.usecases.GetBookmarkedArticlesUseCase
 import com.cancer.yaqeen.domain.features.home.articles.usecases.UnBookmarkArticleUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.AddMedicationUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.medication.EditMedicationUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.medication.GetMedicationRemindersFromNowUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.GetMedicationRemindersUseCase
 import com.cancer.yaqeen.domain.features.onboarding.usecases.GetResourcesUseCase
 import com.cancer.yaqeen.domain.features.onboarding.usecases.GetUniversitiesUseCase
@@ -91,6 +93,14 @@ object UseCaseModule {
     @Provides
     fun provideGetMedicationRemindersUseCase(repository: ScheduleRepositoryImpl) =
         GetMedicationRemindersUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideEditMedicationUseCase(repository: ScheduleRepositoryImpl) =
+        EditMedicationUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideGetMedicationRemindersFromNowUseCase(repository: ScheduleRepositoryImpl) =
+        GetMedicationRemindersFromNowUseCase(repository)
 
 
 }
