@@ -105,7 +105,7 @@ fun Float.calculatePriceAfterDiscount(discountPercentage: Float): Float {
 }
 
 fun Long.formatDate(pattern: String = "dd MMM yyyy"): String {
-    val dateFormat = SimpleDateFormat(pattern)
+    val dateFormat = SimpleDateFormat(pattern, Locale.getDefault())
     val date = Date(this)
     return dateFormat.format(date)
 }

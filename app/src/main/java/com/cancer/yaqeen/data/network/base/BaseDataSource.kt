@@ -13,20 +13,19 @@ abstract class BaseDataSource(
         try {
             val response = call()
             if (response.isSuccessful) {
-                Log.d("TAG", "getResultRestAPI: ${response.isSuccessful}")
                 val body = response.body()
-                Log.d("TAG", "getResultRestAPI: $body")
+                Log.d("TAG", "getResultRestAPI body: $body")
                 return if (body != null)
                     DataState.Success(body)
                 else
                     DataState.Failed()
             }
 
-            Log.d("TAG", "getResultRestAPI: ${response.errorBody()}")
+            Log.d("TAG", "getResultRestAPI error: ${response.errorBody()}")
             return error(errorHandler.getErrorResponseServer(response.errorBody(), response.code()))
 
         } catch (e: Exception) {
-            Log.d("TAG", "getResultRestAPI: $e")
+            Log.d("TAG", "getResultRestAPI Exception: $e")
             return error(errorHandler.getError(e))
         }
     }
@@ -36,18 +35,18 @@ abstract class BaseDataSource(
             val response = call()
             if (response.isSuccessful) {
                 val body = response.body()
-                Log.d("TAG", "getResultRestAPI: $body")
+                Log.d("TAG", "getResultRestAPI body: $body")
                 return if (body != null)
                     DataState.Success(mapper.map(body))
                 else
                     DataState.Failed()
             }
-            Log.d("TAG", "getResultRestAPI: ${response.errorBody()}")
+            Log.d("TAG", "getResultRestAPI error: ${response.errorBody()}")
 
             return error(errorHandler.getErrorResponseServer(response.errorBody(), response.code()))
 
         } catch (e: Exception) {
-            Log.d("TAG", "getResultRestAPI: $e")
+            Log.d("TAG", "getResultRestAPI Exception: $e")
             return error(errorHandler.getError(e))
         }
     }

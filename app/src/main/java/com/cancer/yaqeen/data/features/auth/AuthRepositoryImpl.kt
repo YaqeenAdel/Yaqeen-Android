@@ -10,6 +10,7 @@ import com.auth0.android.authentication.storage.CredentialsManager
 import com.auth0.android.authentication.storage.SharedPreferencesStorage
 import com.auth0.android.provider.WebAuthProvider
 import com.cancer.yaqeen.BuildConfig
+import com.cancer.yaqeen.BuildConfig.AUTH_0_CLIENT_ID
 import com.cancer.yaqeen.BuildConfig.AUTH_0_SCHEMA
 import com.cancer.yaqeen.BuildConfig.AUTH_0_URL
 
@@ -17,8 +18,13 @@ import com.cancer.yaqeen.data.network.base.BaseDataSource
 import com.cancer.yaqeen.data.network.base.DataState
 import com.cancer.yaqeen.data.features.auth.mappers.MappingLoginRemoteAsUser
 import com.cancer.yaqeen.data.features.auth.models.User
+import com.cancer.yaqeen.data.features.auth.requests.RefreshTokenRequestBody
+import com.cancer.yaqeen.data.features.auth.responses.RefreshTokenResponse
+import com.cancer.yaqeen.data.features.onboarding.mappers.MappingUniversitiesRemoteAsModel
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil.Companion.PREF_USER
+import com.cancer.yaqeen.data.network.apis.Auth0API
+import com.cancer.yaqeen.data.network.base.flowStatus
 import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.data.network.error.ErrorHandlerImpl
 import kotlinx.coroutines.Dispatchers
@@ -29,6 +35,7 @@ import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
     private val auth0: Auth0,
+    private val authAPI: Auth0API,
     errorHandler: ErrorHandlerImpl,
     private val sharedPrefEncryptionUtil: SharedPrefEncryptionUtil
 ): BaseDataSource(errorHandler), IAuthRepository {
@@ -106,4 +113,28 @@ class AuthRepositoryImpl @Inject constructor(
                 }
             }
         }
+
+    override suspend fun refreshToken(): Flow<DataState<RefreshTokenResponse>> {
+        return flowStatus {
+            getResultRestAPI{
+                val refreshToken = sharedPrefEncryptionUtil.getRefreshToken()
+                val refreshTokenResponse = authAPI.refreshToken(
+                    RefreshTokenRequestBody(
+                        grantType = "refresh_token",
+                        clientId = AUTH_0_CLIENT_ID,
+                        refreshToken = refreshToken
+                    )
+                )
+                if (refreshTokenResponse.isSuccessful){
+                    refreshTokenResponse.body()?.run {
+                        sharedPrefEncryptionUtil.setToken(accessToken)
+                        sharedPrefEncryptionUtil.setRefreshToken(refreshToken)
+                        sharedPrefEncryptionUtil.setTokenType(tokenType)
+                    }
+                }
+                refreshTokenResponse
+            }
+        }
+    }
+
 }

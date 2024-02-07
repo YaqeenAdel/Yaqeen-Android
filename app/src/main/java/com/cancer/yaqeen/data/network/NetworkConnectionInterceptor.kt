@@ -20,6 +20,7 @@ class NetworkConnectionInterceptor @Inject constructor(
         }
         val originalRequest = chain.request()
         val isAuthorization = originalRequest.headers["isAuthorization"] != "false"
+        val isAuth0 = originalRequest.headers["isAuth0"] == "true"
         val builder: Request.Builder = originalRequest
             .newBuilder()
             .addHeader("lang", sharedPrefUtil.selectedLanguage)
@@ -27,6 +28,10 @@ class NetworkConnectionInterceptor @Inject constructor(
         if (isAuthorization) {
             builder
                 .addHeader("Authorization", "${sharedPrefUtil.getTokenType()} ${sharedPrefUtil.getToken()}")
+        }
+        if(isAuth0){
+            builder
+                .addHeader("content-type", "application/x-www-form-urlencoded")
         }
         return chain.proceed(builder.build())
     }
