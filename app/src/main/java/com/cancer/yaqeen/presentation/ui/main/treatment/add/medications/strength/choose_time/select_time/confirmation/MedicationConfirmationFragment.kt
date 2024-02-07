@@ -99,7 +99,7 @@ class MedicationConfirmationFragment : BaseFragment() {
                     Toast.makeText(requireContext(),
                         getString(R.string.medication_added_successfully), Toast.LENGTH_SHORT).show()
                     navController.tryPopBackStack(
-                        R.id.homeFragment,
+                        R.id.treatmentHistoryFragment,
                         false
                     )
                 }
@@ -112,7 +112,7 @@ class MedicationConfirmationFragment : BaseFragment() {
                     Toast.makeText(requireContext(),
                         getString(R.string.medication_edited_successfully), Toast.LENGTH_SHORT).show()
                     navController.tryPopBackStack(
-                        R.id.homeFragment,
+                        R.id.treatmentHistoryFragment,
                         false
                     )
                 }

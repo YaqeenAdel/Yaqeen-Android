@@ -71,7 +71,10 @@ class HomeFragment : BaseFragment(showBottomMenu = true) {
         updateUI()
 
         homeViewModel.getArticles()
-        homeViewModel.getMedicationsFromNow()
+
+        if (homeViewModel.userIsLoggedIn()){
+            homeViewModel.getMedicationsFromNow()
+        }
     }
     private fun setListener(){
         binding.tvSeeAll.setOnClickListener {

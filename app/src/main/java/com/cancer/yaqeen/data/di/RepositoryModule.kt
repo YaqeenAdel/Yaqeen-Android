@@ -7,6 +7,7 @@ import com.cancer.yaqeen.data.features.onboarding.OnboardingRepositoryImpl
 import com.cancer.yaqeen.data.features.profile.ProfileRepositoryImpl
 import com.cancer.yaqeen.data.features.home.schedule.ScheduleRepositoryImpl
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
+import com.cancer.yaqeen.data.network.apis.Auth0API
 import com.cancer.yaqeen.data.network.apis.YaqeenAPI
 import com.cancer.yaqeen.data.network.error.ErrorHandlerImpl
 import dagger.Module
@@ -22,9 +23,10 @@ object RepositoryModule {
     @Provides
     fun provideAuthRepository(
         auth0: Auth0,
+        authAPI: Auth0API,
         errorHandlerImpl: ErrorHandlerImpl,
         sharedPrefEncryptionUtil: SharedPrefEncryptionUtil
-    ) = AuthRepositoryImpl(auth0, errorHandlerImpl, sharedPrefEncryptionUtil)
+    ) = AuthRepositoryImpl(auth0, authAPI, errorHandlerImpl, sharedPrefEncryptionUtil)
     @Singleton
     @Provides
     fun provideOnboardingRepository(

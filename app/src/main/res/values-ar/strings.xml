@@ -100,7 +100,7 @@
     <string name="name_of_medication">اسم الدواء</string>
     <string name="medication_type">نوع الدواء</string>
     <string name="name_of_the_capsule">اسم الكبسولة</string>
-    <string name="name_of_the_medication">اسم ال٪s</string>
+    <string name="name_of_the_medication">اسم ال%s</string>
     <string name="specify_the_medication_type">حدد نوع الدواء</string>
     <string name="on_boarding_title_1">استكشاف مقالات موثوقة لمعرفة المزيد عن حالتك</string>
     <string name="on_boarding_body_1">اكتشف نصائح مفيدة للتعافي، قم بتمكين رحلتك نحو الشفاء باستشارات موثوقة ونصائح عملية.</string>
@@ -110,7 +110,7 @@
     <string name="medication_s_track">تتبع الأدوية</string>
     <string name="strength">القوة</string>
     <string name="how_many_capsules_of_a_certain_strength_should_be_taken_at_once">ما هي الكمية الموصى بها من الكبسولات بنفس التركيز التي يجب تناولها في مرة واحدة؟</string>
-    <string name="strength_question">كم نسبة ال٪s من نفس التركيز التي يجب تناولها في مرة واحدة؟</string>
+    <string name="strength_question">كم نسبة ال%s من نفس التركيز التي يجب تناولها في مرة واحدة؟</string>
     <string name="unit">وحدة</string>
     <string name="choose_units">اختر الوحدات</string>
     <string name="what_time_would_you_consume_this">في أي وقت ستتناول هذا؟</string>
@@ -128,15 +128,15 @@
     <string name="pm">مساءً</string>
     <string name="add">إضافة</string>
     <string name="history_s_medications">الأدوية السابقة</string>
-    <string name="history_s_symptoms">History’s Symptoms</string>
-    <string name="history_s_routine_tests">History’s Routine Tests</string>
-    <string name="history_s_medical_reminder">History’s Medical Reminder</string>
+    <string name="history_s_symptoms">الأعراض السابقة</string>
+    <string name="history_s_routine_tests">الاختبارات الدورية السابقة</string>
+    <string name="history_s_medical_reminder">التذكيرات الطبية السابقة</string>
     <string name="specific_days_of_the_week">أيام محددة من الأسبوع</string>
     <string name="medical_appointment">موعد طبي</string>
     <string name="medication_added_successfully">تم إضافة الدواء بنجاح</string>
     <string name="medication_edited_successfully">تم تعديل الدواء بنجاح</string>
     <string name="dosage">جرعة</string>
-    <string name="starting_date">Starting Date</string>
+    <string name="starting_date">ابتداء من</string>
     <string name="take">Take</string>
     <string name="quote_title_1">“When we long for life without difficulties, remind us that oaks grow strong in contrary winds, and diamonds are made under pressure.”</string>
     <string name="quote_title_2">“You have to be willing to give up the life you planned, and instead, greet the life that is waiting for you.”</string>
@@ -167,18 +167,19 @@
     <string name="ml_enum" translatable="false">Ml</string>
     <string name="percentage_enum" translatable="false">%</string>
 
-    <string name="sun">Sun</string>
-    <string name="mon">Mon</string>
-    <string name="tues">Tues</string>
-    <string name="wed">Wed</string>
-    <string name="thur">Thur</string>
-    <string name="fri">Fri</string>
-    <string name="sat">Sat</string>
-    <string name="every_day">Every Day</string>
-    <string name="every_8_hours">Every 8 hours</string>
-    <string name="every_12_hours">Every 12 hours</string>
-    <string name="day_after_day">Day after day</string>
-    <string name="name_articles">"%s’s articles"</string>
+    <string name="sun">أحد</string>
+    <string name="mon">اثنين</string>
+    <string name="tues">ثلاثاء</string>
+    <string name="wed">أربعاء</string>
+    <string name="thur">خميس</string>
+    <string name="fri">جمعة</string>
+    <string name="sat">سبت</string>
+    <string name="every_day">كل يوم</string>
+    <string name="every_8_hours">كل 8 ساعات</string>
+    <string name="every_12_hours">كل 12 ساعة</string>
+    <string name="day_after_day">يوم بعد يوم</string>
+
+    <string name="name_articles">"%sمقالات ال"</string>
 
     <string-array name="languages_array">
         <item>English</item>

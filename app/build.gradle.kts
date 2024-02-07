@@ -147,4 +147,5 @@ dependencies {
 
     implementation ("de.hdodenhof:circleimageview:3.1.0")
 
+    implementation("com.cronutils:cron-utils:9.2.1")
 }

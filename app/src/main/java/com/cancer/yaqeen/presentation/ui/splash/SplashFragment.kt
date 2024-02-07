@@ -65,6 +65,7 @@ class SplashFragment : BaseFragment() {
                         checkNotificationPermission()
                     }, 3000)
                 }else if(isLogged){
+                    viewModel.refreshToken()
                     navController.navigate(
                         SplashFragmentDirections.actionSplashFragmentToQuoteFragment()
                     )

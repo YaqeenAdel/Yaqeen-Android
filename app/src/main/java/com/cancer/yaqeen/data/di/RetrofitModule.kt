@@ -37,7 +37,7 @@ object RetrofitModule {
     @AUTH
     fun provideAuthRetrofit(httpClient: OkHttpClient): Retrofit.Builder =
         Retrofit.Builder()
-            .baseUrl(BuildConfig.BASE_URL)
+            .baseUrl("https://${BuildConfig.AUTH_0_DOMAIN}/")
             .client(httpClient)
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().serializeNulls().create()))

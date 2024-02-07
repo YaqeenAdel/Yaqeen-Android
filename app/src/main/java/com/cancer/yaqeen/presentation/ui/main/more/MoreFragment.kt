@@ -61,9 +61,9 @@ class MoreFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
         super.onResume()
 
         val language = if (moreViewModel.selectedLanguageIsEnglish()){
-            getString(R.string.english)
-        } else {
             getString(R.string.arabic)
+        } else {
+            getString(R.string.english)
         }
         binding.btnLanguage.text = language
     }
