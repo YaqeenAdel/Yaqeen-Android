@@ -71,7 +71,7 @@ class HomeFragment : BaseFragment(showBottomMenu = true) {
         homeViewModel.getArticles()
 
         if (homeViewModel.userIsLoggedIn()){
-            homeViewModel.getMedicationsFromNow()
+//            homeViewModel.getMedicationsFromNow()
         }
     }
     private fun setListener(){

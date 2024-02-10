@@ -184,8 +184,8 @@ class OnboardingViewModel @Inject constructor(
                                     ){
                                     _viewStateLoginSuccess.emit(it)
                                 }else{
-                                    _viewStateUserDataCompleted.postValue(true)
                                     prefEncryptionUtil.isLogged = true
+                                    _viewStateUserDataCompleted.postValue(true)
                                 }
                                 setProfileUser(
                                     doctor == null,
