@@ -220,7 +220,10 @@ class ChooseTimeFragment : BaseFragment() {
             val specificDaysIsNotSelected = displayDays(it.id)
 
             if (specificDaysIsNotSelected) {
-                medicationsViewModel.selectPeriodTime(periodTime = it)
+                val notes = binding.editTextNote.text.toString().trim()
+                val dosageAmount = binding.editTextDosage.text.toString().trim()
+                medicationsViewModel.selectPeriodTime(periodTime = it, notes = notes, dosageAmount = dosageAmount)
+
                 navController.tryNavigate(
                     ChooseTimeFragmentDirections.actionChooseTimeFragmentToSelectTimeFragment()
                 )

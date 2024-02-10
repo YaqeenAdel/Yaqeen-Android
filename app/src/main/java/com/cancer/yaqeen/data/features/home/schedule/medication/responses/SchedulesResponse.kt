@@ -34,6 +34,9 @@ data class EntityResponse (
     val dosageTimes: Int?,
 
     @SerializedName("StrengthTimes100")
-    val strengthTimes: Int?
+    val strengthTimes: Int?,
+
+    @SerializedName("Notes")
+    val notes: String?
 )
 

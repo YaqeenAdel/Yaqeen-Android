@@ -35,6 +35,9 @@ data class EntityMedicationResponse (
     val dosageTimes100: Long?,
 
     @SerializedName("StrengthTimes100")
-    val strengthTimes100: Long?
+    val strengthTimes100: Long?,
+
+    @SerializedName("Notes")
+    val notes: String?
 )
 

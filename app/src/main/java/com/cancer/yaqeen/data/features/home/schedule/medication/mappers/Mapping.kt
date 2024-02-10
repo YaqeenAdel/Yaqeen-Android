@@ -34,9 +34,10 @@ class MappingMedicationsRemindersRemoteAsModel: Mapper<SchedulesResponse, List<M
                 strengthAmount = entity?.strengthTimes ?: 0,
                 unitType = entity?.unit ?: "",
                 dosageAmount = entity?.dosageTimes ?: 0,
-                notes = "",
+                notes = entity?.notes ?: "",
                 scheduleType = entityType ?: "",
-                cronExpression = cronExpression ?: ""
+                cronExpression = cronExpression ?: "",
+                reminderTime = cronExpression?.let { getReminderTimeFromCronExpression(cronExpression) }
             )
         }
     } ?: listOf()
@@ -78,7 +79,7 @@ class MappingMedicationsRemindersFromNowRemoteAsModel: Mapper<TodaySchedulesResp
                 strengthAmount = entity?.strengthTimes ?: 0,
                 unitType = entity?.unit ?: "",
                 dosageAmount = entity?.dosageTimes ?: 0,
-                notes = "",
+                notes = entity?.notes ?: "",
                 scheduleType = "",
                 cronExpression = ""
             )

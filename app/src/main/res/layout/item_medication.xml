@@ -38,6 +38,7 @@
             android:padding="@dimen/_6sdp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_time"
+            app:layout_constraintBottom_toBottomOf="@id/tv_time"
             android:layout_marginEnd="@dimen/_14sdp"
             android:src="@drawable/ic_icon" />
 
@@ -46,7 +47,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center|start"
-            android:layout_marginTop="@dimen/_11sdp"
+            android:layout_marginTop="@dimen/_8sdp"
             android:layout_marginEnd="@dimen/_4sdp"
             android:paddingVertical="@dimen/_4sdp"
             tools:text="CINNARIZINE, 5 MG "
@@ -66,7 +67,7 @@
             android:ellipsize="marquee"
             android:focusable="true"
             android:marqueeRepeatLimit="marquee_forever"
-            android:layout_marginTop="@dimen/_6sdp"
+            android:layout_marginTop="@dimen/_4sdp"
             android:paddingVertical="@dimen/_2sdp"
             tools:text="After breakfast, drinking water"
             android:textColor="@color/crow_black_blue"
@@ -85,7 +86,6 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginHorizontal="@dimen/_4sdp"
-            app:layout_constraintVertical_bias="0"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/tv_notes"
             app:layout_constraintTop_toTopOf="@id/tv_notes"

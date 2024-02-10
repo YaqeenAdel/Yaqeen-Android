@@ -33,7 +33,10 @@ data class EntityMedicationRequest (
     val strengthTimes: Long,
 
     @SerializedName("DosageTimes100")
-    val dosageTimes: Long
+    val dosageTimes: Long,
+
+    @SerializedName("Notes")
+    val notes: String
 )
 
 
@@ -43,7 +46,8 @@ data class AddMedicationRequestBuilder(
     val unitTypeName: String,
     val strengthAmount: String,
     val dosageAmount: String,
-    val cronExpression: String
+    val cronExpression: String,
+    val notes: String
 ) {
     fun buildRequestBody(): AddMedicationRequest =
         AddMedicationRequest(
@@ -55,6 +59,7 @@ data class AddMedicationRequestBuilder(
                     unit = unitTypeName,
                     strengthTimes = strengthAmount.tryToLong(),
                     dosageTimes = dosageAmount.tryToLong(),
+                    notes = notes
                 ),
                 cronExpression = cronExpression
             )

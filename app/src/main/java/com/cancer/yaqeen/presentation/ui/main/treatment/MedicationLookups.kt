@@ -1,6 +1,7 @@
 package com.cancer.yaqeen.presentation.ui.main.treatment
 
 import android.content.Context
+import android.util.Log
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Day
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.DayEnum
@@ -86,9 +87,9 @@ fun getUnitType(context: Context, unitType: String): UnitType?{
 fun getReminderTimeFromCronExpression(cronExpression: String): ReminderTime {
     val fields = cronExpression.split(" ")
 
-    val minute = fields[1]
+    val minute = fields[0]
 
-    val hourField = fields[2]
+    val hourField = fields[1]
 
     // if time is every 8 or 12 days
     val hour24 = if (hourField.contains("/")){
@@ -112,7 +113,7 @@ fun getReminderTimeFromCronExpression(cronExpression: String): ReminderTime {
 fun getPeriodTimeFromCronExpression(cronExpression: String): Time {
     val fields = cronExpression.split(" ")
 
-    val hourField = fields[2]
+    val hourField = fields[1]
 
     // if time is every 8 or 12 days
     val periodTime: Time = if (hourField.contains("/")){
@@ -127,9 +128,9 @@ fun getPeriodTimeFromCronExpression(cronExpression: String): Time {
             )
 
     }else {
-        val dayOfMonthField = fields[3]
+        val dayOfMonthField = fields[2]
 
-        if(dayOfMonthField == "?")
+        if(dayOfMonthField == "*")
             Time(
                 id = PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id, time = "", cronExpression = PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.cronExpression
             )
@@ -152,39 +153,41 @@ fun getPeriodTimeFromCronExpression(cronExpression: String): Time {
 fun getStartingDateFromCronExpression(cronExpression: String): Long? {
     val fields = cronExpression.split(" ")
 
-    val hourField = fields[2]
+    val hourField = fields[1]
 
-    val dayOfMonthField = fields[3]
+    val dayOfMonthField = fields[2]
 
-    if (!hourField.contains("/") && dayOfMonthField == "?")
+    if (!hourField.contains("/") && dayOfMonthField == "*")
         return null
 
 
-    val monthField = fields[4]
+    val monthField = fields[3]
 
-    val yearField = fields[6]
+//    val yearField = fields[5]
 
     val day = dayOfMonthField.split("/")[0].toInt()
     val month = monthField.split("/")[0].toInt()
-    val year = yearField.split("/")[0].toInt()
+//    val year = yearField.split("/")[0].toInt()
 
 
-    val calendar = Calendar.getInstance()
-    calendar.set(year, month, day)
+    val calendar = Calendar.getInstance().apply {
+        set(Calendar.MONTH, month - 1)
+        set(Calendar.DAY_OF_MONTH, day)
+    }
 
     return calendar.timeInMillis
 }
 fun getSpecificDaysFromCronExpression(cronExpression: String): List<Day>? {
     val fields = cronExpression.split(" ")
 
-    val dayOfWeekField = fields[5]
+    val dayOfWeekField = fields[4]
 
-    if (dayOfWeekField == "?")
+    if (dayOfWeekField == "*")
         return null
 
     val specificDays = dayOfWeekField.split(",")
     return specificDays.map {
-        val day = DayEnum.getDay(it)
+        val day = DayEnum.getDay(it.toInt())
         Day(day.id, it)
     }
 }
