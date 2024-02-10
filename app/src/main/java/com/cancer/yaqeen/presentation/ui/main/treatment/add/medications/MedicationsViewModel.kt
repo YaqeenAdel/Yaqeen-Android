@@ -126,6 +126,7 @@ class MedicationsViewModel @Inject constructor(
                             startingDate = startDate,
                             specificDays = specificDays
                         ),
+                        notes = notes ?: ""
                     ).buildRequestBody()
                 ).collect { response ->
                     _viewStateLoading.emit(response.loading)
@@ -164,6 +165,7 @@ class MedicationsViewModel @Inject constructor(
                             startingDate = startDate,
                             specificDays = specificDays
                         ),
+                        notes = notes ?: ""
                     ).buildRequestBody()
                 ).collect { response ->
                     _viewStateLoading.emit(response.loading)
@@ -196,27 +198,14 @@ class MedicationsViewModel @Inject constructor(
         val startingMonth = startingDate?.timestampToMonth() ?: "0"
         val startingYear = startingDate?.timestampToYear() ?: "0"
         val (dayOfMonth, dayOfWeek) = when (time?.id) {
-            PeriodTimeEnum.DAY_AFTER_DAY.id -> "$startingDay/2" to "?"
-            PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id -> "?" to (specificDays?.map { it.cronExpression }?.joinToString(separator = ",") { it } ?: "")
-            else -> "$startingDay/1" to "?"
+            PeriodTimeEnum.DAY_AFTER_DAY.id -> "$startingDay/2" to "*"
+            PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id -> "*" to (specificDays?.map { it.id }?.joinToString(separator = ",") { it.toString() } ?: "")
+            else -> "$startingDay/1" to "*"
         }
         val month = "$startingMonth/1"
         val year = "$startingYear/1"
 
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            val expression  = ZonedDateTime.now().truncatedTo(ChronoUnit.DAYS)
-//                .withYear(startingYear.toInt())
-//                .withMonth(startingMonth.toInt())
-//                .withDayOfMonth(startingDay.toInt())
-//                .withHour(startingHour.toInt())
-//                .withMinute(minutes.toInt())
-//            val cron = CronExpression.yearly()
-//            val matches =
-//                CronExpression.parse("$minutes $hours $dayOfMonth $month $dayOfWeek $year")
-//            Log.d("TAG", "createCronExpression: $matches")
-//        }
-
-        return "$seconds $minutes $hours $dayOfMonth $month $dayOfWeek $year"
+        return "$minutes $hours $dayOfMonth $month $dayOfWeek"
     }
 
     fun setMedicationTrack(medicationTrack: MedicationTrack) {

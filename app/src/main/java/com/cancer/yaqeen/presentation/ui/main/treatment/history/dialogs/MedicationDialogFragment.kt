@@ -56,7 +56,8 @@ class MedicationDialogFragment : DialogFragment() {
 
     private fun updateUI(medication: Medication) {
         with(medication){
-            binding.tvTime.text = cronExpression
+            val timing = if(reminderTime?.isAM == true) getString(R.string.am) else getString(R.string.pm)
+            binding.tvTime.text = "${reminderTime?.text} $timing"
             binding.tvMedicationDetails.text = "$medicationName $strengthAmount $unitType"
             binding.tvDosageAmount.text = "$dosageAmount $medicationType"
             binding.tvNotes.text = notes

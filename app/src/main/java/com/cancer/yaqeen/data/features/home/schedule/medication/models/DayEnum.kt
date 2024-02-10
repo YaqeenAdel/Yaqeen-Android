@@ -10,14 +10,14 @@ enum class DayEnum(val id: Int, val cronExpression: String) {
     SAT(6, "SAT");
 
     companion object {
-        fun getDay(cronExpression: String): DayEnum{
-            return when(cronExpression){
-                SUN.cronExpression -> SUN
-                MON.cronExpression -> MON
-                TUE.cronExpression -> TUE
-                WED.cronExpression -> WED
-                THU.cronExpression -> THU
-                FRI.cronExpression -> FRI
+        fun getDay(id: Int): DayEnum{
+            return when(id){
+                SUN.id -> SUN
+                MON.id -> MON
+                TUE.id -> TUE
+                WED.id -> WED
+                THU.id -> THU
+                FRI.id -> FRI
                 else -> SAT
             }
         }

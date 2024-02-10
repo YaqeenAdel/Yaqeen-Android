@@ -14,4 +14,5 @@ data class Medication(
     val notes: String,
     val scheduleType: String,
     val cronExpression: String,
+    val reminderTime: ReminderTime? = null,
 ): Parcelable
