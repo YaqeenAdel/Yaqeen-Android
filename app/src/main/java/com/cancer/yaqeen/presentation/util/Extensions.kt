@@ -191,3 +191,10 @@ fun Long.timestampToYear(): String {
 
     return dateFormat.format(date)
 }
+
+fun Long.timestampToTiming(): String {
+    val dateFormat = SimpleDateFormat("a", Locale.ENGLISH)
+    val date = Date(this)
+
+    return dateFormat.format(date)
+}

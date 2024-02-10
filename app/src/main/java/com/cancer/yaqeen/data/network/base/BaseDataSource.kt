@@ -52,6 +52,16 @@ abstract class BaseDataSource(
     }
 
 
+    protected suspend fun <T> getResultDao(call: suspend () -> T): DataState<T> {
+        return try {
+            val response = call()
+            DataState.Success(response)
+
+        } catch (e: Exception) {
+            error(errorHandler.getError(e))
+        }
+    }
+
     protected suspend fun <M, T> getResultDao(mapper: Mapper<T, M>, call: suspend () -> T): DataState<M> {
         return try {
             val result = call()

@@ -13,5 +13,5 @@ data class Medication(
     val dosageAmount: Int,
     val notes: String,
     val scheduleType: String,
-    val time: String,
+    val cronExpression: String,
 ): Parcelable

@@ -10,10 +10,10 @@ data class BookmarkArticleResponse (
 
 data class InsertBookmarksOneResponse (
     @SerializedName("BookmarkId")
-    val bookmarkID: Long?,
+    val bookmarkID: Int?,
 
     @SerializedName("ContentId")
-    val contentID: Long?,
+    val contentID: Int?,
 
     @SerializedName("CreatedDate")
     val createdDate: String?

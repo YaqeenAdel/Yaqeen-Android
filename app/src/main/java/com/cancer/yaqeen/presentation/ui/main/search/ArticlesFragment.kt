@@ -65,8 +65,8 @@ class ArticlesFragment : BaseFragment() {
         observeStates()
 
         setListener()
-
-        homeViewModel.getBookmarkedArticles()
+//
+//        homeViewModel.getBookmarkedArticles()
 
         binding.tvNameArticles.text = getString(R.string.name_articles, interestName)
 

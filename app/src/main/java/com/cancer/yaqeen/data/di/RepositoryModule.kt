@@ -10,6 +10,7 @@ import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.data.network.apis.Auth0API
 import com.cancer.yaqeen.data.network.apis.YaqeenAPI
 import com.cancer.yaqeen.data.network.error.ErrorHandlerImpl
+import com.cancer.yaqeen.data.room.YaqeenDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -45,9 +46,10 @@ object RepositoryModule {
     @Provides
     fun provideHomeRepository(
         apiService: YaqeenAPI,
+        yaqeenDao: YaqeenDao,
         errorHandlerImpl: ErrorHandlerImpl,
         sharedPrefEncryptionUtil: SharedPrefEncryptionUtil
-    ) = HomeRepositoryImpl(apiService, errorHandlerImpl, sharedPrefEncryptionUtil)
+    ) = HomeRepositoryImpl(apiService, yaqeenDao, errorHandlerImpl, sharedPrefEncryptionUtil)
     @Singleton
     @Provides
     fun provideScheduleRepository(

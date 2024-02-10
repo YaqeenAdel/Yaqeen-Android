@@ -334,7 +334,7 @@
             app:backgroundTint="@color/white"
             android:textColor="@color/light_black"
             android:textSize="@dimen/_12ssp"
-            android:text="English"
+            tools:text="English"
             android:fontFamily="sans-serif-medium"
             android:gravity="start|center"
             android:textAllCaps="false"

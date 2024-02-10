@@ -10,6 +10,7 @@ import com.cancer.yaqeen.data.features.onboarding.models.Language
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.data.network.base.Status
 import com.cancer.yaqeen.domain.features.auth.login.usecases.LogoutUseCase
+import com.cancer.yaqeen.domain.features.home.articles.usecases.RemoveBookmarkedArticlesUseCase
 import com.cancer.yaqeen.presentation.util.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -17,6 +18,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -26,6 +28,7 @@ import javax.inject.Inject
 class MoreViewModel @Inject constructor(
     private val prefEncryptionUtil: SharedPrefEncryptionUtil,
     private val logoutUseCase: LogoutUseCase,
+    private val removeBookmarkedArticlesUseCase: RemoveBookmarkedArticlesUseCase,
 ) : ViewModel() {
 
     private var viewModelJob: Job? = null
@@ -76,6 +79,9 @@ class MoreViewModel @Inject constructor(
                     Status.SUCCESS -> {
                         response.data?.let {
                             _viewStateLogoutSuccess.postValue(it)
+                            if (it){
+                                removeBookmarkedArticles()
+                            }
                         }
                     }
 
@@ -87,6 +93,11 @@ class MoreViewModel @Inject constructor(
         }
     }
 
+    private fun removeBookmarkedArticles(){
+        viewModelJob = viewModelScope.launch {
+            removeBookmarkedArticlesUseCase().collect()
+        }
+    }
     override fun onCleared() {
         super.onCleared()
         viewModelJob = null

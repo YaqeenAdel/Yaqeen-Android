@@ -4,25 +4,27 @@ import android.Manifest
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.PermissionChecker
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import com.cancer.yaqeen.R
 import com.cancer.yaqeen.databinding.FragmentSplashBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.util.autoCleared
+import com.cronutils.builder.CronBuilder
+import com.cronutils.model.Cron
+import com.cronutils.model.CronType
+import com.cronutils.model.definition.CronDefinitionBuilder
+import com.cronutils.model.field.value.SpecialChar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
+import com.cronutils.model.field.expression.FieldExpressionFactory.*
+
 
 @AndroidEntryPoint
 class SplashFragment : BaseFragment() {
@@ -54,7 +56,7 @@ class SplashFragment : BaseFragment() {
         navController = findNavController()
 
         observeUiState()
-
+//        createCronExpression()
     }
 
     private fun observeUiState() {
@@ -95,5 +97,43 @@ class SplashFragment : BaseFragment() {
 
     private fun checkUserInfo(){
         viewModel.checkUserInfo()
+    }
+
+    private fun createCronExpression() {
+        // Define your own cron: arbitrary fields are allowed and last field can be optional
+        // Define your own cron: arbitrary fields are allowed and last field can be optional
+        var cronDefinition = CronDefinitionBuilder.defineCron()
+            .withSeconds().and()
+            .withMinutes().and()
+            .withHours().and()
+            .withDayOfMonth()
+            .supportsHash().supportsL().supportsW().and()
+            .withMonth().and()
+            .withDayOfWeek()
+            .withIntMapping(7, 0) //we support non-standard non-zero-based numbers!
+            .supportsHash().supportsL().supportsW().and()
+            .withYear().optional().and()
+            .instance()
+
+// or get a predefined instance
+
+// or get a predefined instance
+        cronDefinition = CronDefinitionBuilder.instanceDefinitionFor(CronType.QUARTZ)
+
+        val cron: Cron =
+            CronBuilder.cron(CronDefinitionBuilder.instanceDefinitionFor(CronType.QUARTZ))
+                .withYear(always())
+                .withMonth(always())
+                .withDoM(questionMark())
+                .withDoW(every(2))
+                .withHour(on(1))
+                .withMinute(on(0))
+                .withSecond(on(0))
+                .instance()
+// Obtain the string expression
+// Obtain the string expression
+        val cronAsString: String = cron.asString()
+
+        Log.d("TAG", "createCronExpression: $cronAsString")
     }
 }

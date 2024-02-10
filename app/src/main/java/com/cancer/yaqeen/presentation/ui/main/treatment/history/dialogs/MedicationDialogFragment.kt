@@ -1,11 +1,9 @@
 package com.cancer.yaqeen.presentation.ui.main.treatment.history.dialogs
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RelativeLayout
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -13,8 +11,6 @@ import androidx.navigation.fragment.navArgs
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Medication
 import com.cancer.yaqeen.databinding.FragmentMedicationDialogBinding
-import com.cancer.yaqeen.databinding.FragmentTimeBinding
-import com.cancer.yaqeen.presentation.ui.main.home.article_details.ArticleDetailsFragmentArgs
 import com.cancer.yaqeen.presentation.ui.main.treatment.getMedicationType
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindResourceImage
@@ -60,7 +56,7 @@ class MedicationDialogFragment : DialogFragment() {
 
     private fun updateUI(medication: Medication) {
         with(medication){
-            binding.tvTime.text = time
+            binding.tvTime.text = cronExpression
             binding.tvMedicationDetails.text = "$medicationName $strengthAmount $unitType"
             binding.tvDosageAmount.text = "$dosageAmount $medicationType"
             binding.tvNotes.text = notes

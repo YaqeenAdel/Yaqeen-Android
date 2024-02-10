@@ -55,17 +55,9 @@ class MoreFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
 
         updateUI()
         observeStates()
-    }
 
-    override fun onResume() {
-        super.onResume()
+        setLanguage()
 
-        val language = if (moreViewModel.selectedLanguageIsEnglish()){
-            getString(R.string.arabic)
-        } else {
-            getString(R.string.english)
-        }
-        binding.btnLanguage.text = language
     }
 
     private fun setListener(){
@@ -106,6 +98,15 @@ class MoreFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
         binding.tvNameUser.text = user?.name ?: ""
         binding.tvEmailUser.text = user?.email ?: ""
         bindImage(binding.ivProfilePic, user?.pictureURL)
+    }
+
+    private fun setLanguage() {
+        val language = if (moreViewModel.selectedLanguageIsEnglish()){
+            getString(R.string.arabic)
+        } else {
+            getString(R.string.english)
+        }
+        binding.btnLanguage.text = language
     }
 
     private fun View.updateButtonUI(isLogged: Boolean) {

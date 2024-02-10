@@ -1,6 +1,7 @@
 package com.cancer.yaqeen.presentation.ui.main.treatment.history
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.ScheduleType
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Time.Companion.getHours24
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.Timing
 import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.data.utils.getTodayDate
 import com.cancer.yaqeen.databinding.FragmentTreatmentHistoryBinding
@@ -26,6 +28,7 @@ import com.cancer.yaqeen.presentation.util.dpToPx
 import com.cancer.yaqeen.presentation.util.recyclerview.VerticalMarginItemDecoration
 import com.cancer.yaqeen.presentation.util.timestampToDay
 import com.cancer.yaqeen.presentation.util.timestampToHour
+import com.cancer.yaqeen.presentation.util.timestampToTiming
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import com.google.android.material.button.MaterialButton
 import dagger.hilt.android.AndroidEntryPoint
@@ -70,6 +73,8 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
             ScheduleType.MEDICATION.id -> enableMedications()
             ScheduleType.SYMPTOMS.id -> enableSymptoms()
         }
+
+        selectItem(getCurrentHour())
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -89,11 +94,6 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
 
         binding.tvCurrentDayDate.text = getTodayDate()
 
-
-        val currentDate = Calendar.getInstance()
-        val currentHour = (currentDate.timeInMillis.timestampToHour().toIntOrNull() ?: 0) + 12
-
-        selectItem(currentHour)
     }
 
     private fun setListener(){
@@ -183,6 +183,13 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
                 )
             )
         }
+    }
+    private fun getCurrentHour(): Int {
+        val currentDate = Calendar.getInstance()
+        val timing = (currentDate.timeInMillis.timestampToTiming())
+
+        return (currentDate.timeInMillis.timestampToHour().toIntOrNull()
+            ?: 0) + if (timing == Timing.PM.id) 12 else 0
     }
 
     private fun selectItem(itemId: Int) {

@@ -105,6 +105,7 @@ class ArticlesAdapter(
             it.contentID == article.contentID
         }.also {
             it.isFavorite = isFavorite
+            it.bookmarkID = article.bookmarkID
         }
         notifyItemChanged(index)
     }
