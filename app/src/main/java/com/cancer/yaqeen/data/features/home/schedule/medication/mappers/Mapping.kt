@@ -9,6 +9,10 @@ import com.cancer.yaqeen.data.features.home.schedule.medication.responses.EditMe
 import com.cancer.yaqeen.data.features.home.schedule.medication.responses.SchedulesResponse
 import com.cancer.yaqeen.data.features.home.schedule.medication.responses.TodaySchedulesResponse
 import com.cancer.yaqeen.presentation.ui.main.treatment.getMedicationType
+import com.cancer.yaqeen.presentation.ui.main.treatment.getPeriodTimeFromCronExpression
+import com.cancer.yaqeen.presentation.ui.main.treatment.getReminderTimeFromCronExpression
+import com.cancer.yaqeen.presentation.ui.main.treatment.getSpecificDaysFromCronExpression
+import com.cancer.yaqeen.presentation.ui.main.treatment.getStartingDateFromCronExpression
 import com.cancer.yaqeen.presentation.ui.main.treatment.getUnitType
 
 
@@ -32,7 +36,7 @@ class MappingMedicationsRemindersRemoteAsModel: Mapper<SchedulesResponse, List<M
                 dosageAmount = entity?.dosageTimes ?: 0,
                 notes = "",
                 scheduleType = entityType ?: "",
-                time = cronExpression ?: ""
+                cronExpression = cronExpression ?: ""
             )
         }
     } ?: listOf()
@@ -46,10 +50,10 @@ class MappingMedicationAsMedicationTrack(val context: Context): Mapper<Medicatio
             unitType = getUnitType(context, unitType),
             strengthAmount = strengthAmount.toString(),
             dosageAmount = dosageAmount.toString(),
-            periodTime = null,
-            specificDays = null,
-            startDate = null,
-            reminderTime = null,
+            periodTime = getPeriodTimeFromCronExpression(cronExpression),
+            specificDays = getSpecificDaysFromCronExpression(cronExpression),
+            startDate = getStartingDateFromCronExpression(cronExpression),
+            reminderTime = getReminderTimeFromCronExpression(cronExpression),
             notes = notes,
             editable = true,
             medicationId = id
@@ -76,7 +80,7 @@ class MappingMedicationsRemindersFromNowRemoteAsModel: Mapper<TodaySchedulesResp
                 dosageAmount = entity?.dosageTimes ?: 0,
                 notes = "",
                 scheduleType = "",
-                time = ""
+                cronExpression = ""
             )
         }
     } ?: listOf()

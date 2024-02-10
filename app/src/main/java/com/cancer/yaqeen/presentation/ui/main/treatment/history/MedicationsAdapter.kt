@@ -1,7 +1,5 @@
 package com.cancer.yaqeen.presentation.ui.main.treatment.history
 
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -56,7 +54,7 @@ class MedicationsAdapter(
 
         fun bind(item: Medication) {
             with(item){
-                itemBinding.tvTime.text = time
+                itemBinding.tvTime.text = cronExpression
                 itemBinding.tvMedicationDetails.text = "$medicationName, $strengthAmount $unitType"
                 itemBinding.tvNotes.text = notes
                 itemBinding.tvDosageAmount.text = "$dosageAmount $medicationType"

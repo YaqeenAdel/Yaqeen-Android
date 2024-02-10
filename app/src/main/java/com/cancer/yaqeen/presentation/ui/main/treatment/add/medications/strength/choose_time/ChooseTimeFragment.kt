@@ -77,7 +77,9 @@ class ChooseTimeFragment : BaseFragment() {
             if (requestKey == Constants.REQUEST_REMINDER_TIME_KEY) {
                 val reminderTime: ReminderTime? = bundle.getParcelable(Constants.REMINDER_TIME_KEY)
                 reminderTime?.run {
-                    binding.editTextTime.setText(text)
+
+                    val timing = if (isAM) getString(R.string.am) else getString(R.string.pm)
+                    binding.editTextTime.setText("$text $timing")
                 }
                 medicationsViewModel.selectReminderTime(reminderTime)
 
@@ -106,8 +108,10 @@ class ChooseTimeFragment : BaseFragment() {
         medicationTrack?.run {
             if (startDate != null)
                 binding.editTextStartFrom.setText(convertMilliSecondsToDate(startDate!!))
-            if (reminderTime?.text?.isNotEmpty() == true)
-                binding.editTextTime.setText(reminderTime!!.text)
+            if (reminderTime?.text?.isNotEmpty() == true) {
+                val timing = if (reminderTime!!.isAM) getString(R.string.am) else getString(R.string.pm)
+                binding.editTextTime.setText("${reminderTime!!.text} $timing")
+            }
             if (notes?.isNotEmpty() == true)
                 binding.editTextNote.setText(notes)
             if (dosageAmount?.isNotEmpty() == true)

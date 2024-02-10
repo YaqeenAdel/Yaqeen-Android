@@ -11,6 +11,10 @@ import com.cancer.yaqeen.domain.features.auth.login.usecases.RefreshTokenUseCase
 import com.cancer.yaqeen.domain.features.home.articles.usecases.BookmarkArticleUseCase
 import com.cancer.yaqeen.domain.features.home.articles.usecases.GetArticlesUseCase
 import com.cancer.yaqeen.domain.features.home.articles.usecases.GetBookmarkedArticlesUseCase
+import com.cancer.yaqeen.domain.features.home.articles.usecases.GetLocalBookmarkedArticlesUseCase
+import com.cancer.yaqeen.domain.features.home.articles.usecases.RemoveBookmarkedArticleUseCase
+import com.cancer.yaqeen.domain.features.home.articles.usecases.RemoveBookmarkedArticlesUseCase
+import com.cancer.yaqeen.domain.features.home.articles.usecases.SaveArticleUseCase
 import com.cancer.yaqeen.domain.features.home.articles.usecases.UnBookmarkArticleUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.AddMedicationUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.EditMedicationUseCase
@@ -91,6 +95,22 @@ object UseCaseModule {
     @Provides
     fun provideUnBookmarkArticleUseCase(repository: HomeRepositoryImpl) =
         UnBookmarkArticleUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideGetLocalBookmarkedArticlesUseCase(repository: HomeRepositoryImpl) =
+        GetLocalBookmarkedArticlesUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideRemoveBookmarkedArticlesUseCase(repository: HomeRepositoryImpl) =
+        RemoveBookmarkedArticlesUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideRemoveBookmarkedArticleUseCase(repository: HomeRepositoryImpl) =
+        RemoveBookmarkedArticleUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideSaveArticleUseCase(repository: HomeRepositoryImpl) =
+        SaveArticleUseCase(repository)
     @Singleton
     @Provides
     fun provideAddMedicationUseCase(repository: ScheduleRepositoryImpl) =

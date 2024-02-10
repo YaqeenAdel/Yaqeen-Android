@@ -2,6 +2,7 @@ package com.cancer.yaqeen.data.features.home.articles.mappers
 
 import com.cancer.yaqeen.data.base.Mapper
 import com.cancer.yaqeen.data.features.home.articles.models.Article
+import com.cancer.yaqeen.data.features.home.articles.room.Article as LocalArticle
 import com.cancer.yaqeen.data.features.home.articles.models.Bookmark
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Interest
 import com.cancer.yaqeen.data.features.home.articles.responses.BookmarkArticleResponse
@@ -50,16 +51,22 @@ class MappingInterestRemoteAsModel : Mapper<InterestResponse, Interest> {
         Interest(
             interestID = interestID ?: 0,
             interestName = translations?.firstOrNull()?.translation?.name ?: "",
-            backgroundColor = if (styleBackgroundColorHex == null) "#1BAFB7" else "#$styleBackgroundColorHex",
-            textColor = if (styleForegroundColorHex == null) "#FF000000" else "#$styleForegroundColorHex"
+            backgroundColor = if (styleBackgroundColorHex == null) "#1BAFB7" else if (styleBackgroundColorHex.startsWith(
+                    "#"
+                )
+            ) styleBackgroundColorHex else "#$styleBackgroundColorHex",
+            textColor = if (styleForegroundColorHex == null) "#FF000000" else if (styleForegroundColorHex.startsWith(
+                    "#"
+                )
+            ) styleForegroundColorHex else "#$styleForegroundColorHex"
         )
     }
 }
 
 class MappingBookmarkArticleRemoteAsUIModel :
-    Mapper<BookmarkArticleResponse, Boolean> {
-    override fun map(input: BookmarkArticleResponse): Boolean {
-        return input.bookmark != null
+    Mapper<BookmarkArticleResponse, Int?> {
+    override fun map(input: BookmarkArticleResponse): Int? {
+        return input.bookmark?.bookmarkID
     }
 }
 
@@ -105,12 +112,22 @@ class MappingSavedArticleRemoteAsModel : Mapper<SavedArticleResponse, Article> {
             createdDate = createdDate?.formatDate() ?: "",
             phase = "",
             interests = listOf(),
-            description = content?.translations?.firstOrNull()?.translationDetails?.description ?: "",
+            description = content?.translations?.firstOrNull()?.translationDetails?.description
+                ?: "",
             link = content?.translations?.firstOrNull()?.translationDetails?.link ?: "",
             thumbnail = content?.translations?.firstOrNull()?.translationDetails?.thumbnail ?: "",
             title = content?.translations?.firstOrNull()?.translationDetails?.title ?: "",
             updatedAt = "",
             visibility = false
+        )
+    }
+}
+
+class MappingArticlesAsLocalModel : Mapper<List<Article>, List<LocalArticle>> {
+    override fun map(input: List<Article>): List<LocalArticle> = input.map {
+        LocalArticle(
+            articleID = it.contentID,
+            bookmarkID = it.bookmarkID,
         )
     }
 }

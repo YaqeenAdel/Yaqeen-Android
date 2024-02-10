@@ -9,5 +9,6 @@ data class ReminderTime(
     val hour24: String,
     val minute: String,
     val timing: String,
+    val isAM: Boolean,
     val text: String,
 ): Parcelable

@@ -262,7 +262,6 @@
                     app:boxCornerRadiusTopStart="@dimen/_8sdp"
                     app:boxCornerRadiusBottomStart="@dimen/_8sdp"
                     app:boxCornerRadiusBottomEnd="@dimen/_8sdp"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="@id/rv_times"
                     app:layout_constraintEnd_toEndOf="@id/rv_times"
                     app:layout_constraintTop_toBottomOf="@id/text_layout_time">

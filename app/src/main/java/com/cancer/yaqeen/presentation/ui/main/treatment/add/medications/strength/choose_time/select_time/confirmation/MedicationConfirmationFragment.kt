@@ -62,7 +62,10 @@ class MedicationConfirmationFragment : BaseFragment() {
             binding.tvAmountVal.text = "${dosageAmount ?: ""} ${medicationType?.name ?: ""}"
             binding.tvDaysVal.text = if (specificDays.isNullOrEmpty()) periodTime?.time ?: "" else specificDays!!.joinToString { it.name }
             binding.tvStartFromVal.text = startDate?.let { convertMilliSecondsToDate(it) } ?: ""
-            binding.tvTimeVal.text = reminderTime?.run { text } ?: ""
+            binding.tvTimeVal.text = reminderTime?.run {
+                val timing = if (isAM) getString(R.string.am) else getString(R.string.pm)
+                "$text $timing"
+            } ?: ""
 
         }
     }

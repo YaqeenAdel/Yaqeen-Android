@@ -115,7 +115,7 @@ class MedicationsViewModel @Inject constructor(
                 addMedicationUseCase(
                     AddMedicationRequestBuilder(
                         medicationName = medicationName ?: "",
-                        medicationTypeName = medicationType?.name ?: "",
+                        medicationTypeName = medicationType?.nameEn ?: "",
                         unitTypeName = unitType?.name ?: "",
                         strengthAmount = strengthAmount ?: "",
                         dosageAmount = dosageAmount ?: "",
@@ -153,7 +153,7 @@ class MedicationsViewModel @Inject constructor(
                     scheduleId = medicationId ?: 0,
                     request = AddMedicationRequestBuilder(
                         medicationName = medicationName ?: "",
-                        medicationTypeName = medicationType?.name ?: "",
+                        medicationTypeName = medicationType?.nameEn ?: "",
                         unitTypeName = unitType?.name ?: "",
                         strengthAmount = strengthAmount ?: "",
                         dosageAmount = dosageAmount ?: "",

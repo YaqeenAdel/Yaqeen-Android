@@ -64,13 +64,14 @@ class TimeFragment : DialogFragment() {
         binding.btnNext.setOnClickListener {
             val hourSelected = hoursAdapter.getItemSelected().time
             val minuteSelected = minutesAdapter.getItemSelected().time
-            val timing = if (binding.btnAm.isChecked) getString(R.string.am) else getString(R.string.pm)
+            val isAM = binding.btnAm.isChecked
+            val timing = if (isAM) getString(R.string.am) else getString(R.string.pm)
             setFragmentResult(
                 Constants.REQUEST_REMINDER_TIME_KEY,
                 bundleOf(
                     Constants.REMINDER_TIME_KEY to ReminderTime(
                         hour12 = hourSelected,
-                        hour24 = if (binding.btnAm.isChecked) {
+                        hour24 = if (isAM) {
                             if (hourSelected == "12")
                                 "00"
                             else hourSelected
@@ -82,7 +83,8 @@ class TimeFragment : DialogFragment() {
                         },
                         minute = minuteSelected,
                         timing = timing,
-                        text = "$hourSelected:$minuteSelected $timing"
+                        isAM = isAM,
+                        text = "$hourSelected:$minuteSelected"
                     )
                 )
             )

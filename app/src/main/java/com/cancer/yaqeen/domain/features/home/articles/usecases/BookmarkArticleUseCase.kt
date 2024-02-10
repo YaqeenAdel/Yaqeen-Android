@@ -9,7 +9,7 @@ import javax.inject.Inject
 class BookmarkArticleUseCase @Inject constructor(private val repository: IHomeRepository) {
     suspend operator fun invoke(
         request: BookmarkArticleRequest
-    ): Flow<DataState<Boolean>> =
+    ): Flow<DataState<Int?>> =
         repository.bookmarkArticle(
             request
         )

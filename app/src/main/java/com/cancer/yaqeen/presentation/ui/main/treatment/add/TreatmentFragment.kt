@@ -12,6 +12,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Time.Companion.getHours24
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.Timing
 import com.cancer.yaqeen.data.utils.getTodayDate
 import com.cancer.yaqeen.databinding.FragmentTreatmentBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
@@ -20,6 +21,7 @@ import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.timestampToDay
 import com.cancer.yaqeen.presentation.util.timestampToHour
+import com.cancer.yaqeen.presentation.util.timestampToTiming
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
@@ -52,6 +54,7 @@ class TreatmentFragment : BaseFragment(showBottomMenu = true), View.OnClickListe
 
         setupTimesAdapter()
 
+        selectItem(getCurrentHour())
     }
 
     override fun onResume() {
@@ -59,11 +62,6 @@ class TreatmentFragment : BaseFragment(showBottomMenu = true), View.OnClickListe
 
         binding.tvCurrentDayDate.text = getTodayDate()
 
-
-        val currentDate = Calendar.getInstance()
-        val currentHour = (currentDate.timeInMillis.timestampToHour().toIntOrNull() ?: 0) + 12
-
-        selectItem(currentHour)
     }
 
     private fun setListener(){
@@ -93,6 +91,13 @@ class TreatmentFragment : BaseFragment(showBottomMenu = true), View.OnClickListe
             getHours24()
         )
 
+    }
+    private fun getCurrentHour(): Int {
+        val currentDate = Calendar.getInstance()
+        val timing = (currentDate.timeInMillis.timestampToTiming())
+
+        return (currentDate.timeInMillis.timestampToHour().toIntOrNull()
+            ?: 0) + if (timing == Timing.PM.id) 12 else 0
     }
 
     private fun selectItem(itemId: Int) {
