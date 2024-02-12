@@ -78,7 +78,7 @@ class HomeFragment : BaseFragment(showBottomMenu = true) {
         updateUI()
 
         homeViewModel.getArticles()
-        homeViewModel.getTodayReminders()
+//        homeViewModel.getTodayReminders()
     }
     private fun setListener(){
         binding.tvSeeAll.setOnClickListener {
