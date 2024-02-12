@@ -2,7 +2,7 @@ package com.cancer.yaqeen.data.features.home.schedule
 
 import com.cancer.yaqeen.data.features.home.schedule.medication.mappers.MappingAddMedicationRemoteAsUIModel
 import com.cancer.yaqeen.data.features.home.schedule.medication.mappers.MappingEditMedicationRemoteAsUIModel
-import com.cancer.yaqeen.data.features.home.schedule.medication.mappers.MappingMedicationsRemindersFromNowRemoteAsModel
+import com.cancer.yaqeen.data.features.home.schedule.medication.mappers.MappingRemindersFromNowRemoteAsModel
 import com.cancer.yaqeen.data.features.home.schedule.medication.mappers.MappingMedicationsRemindersRemoteAsModel
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Medication
 import com.cancer.yaqeen.data.features.home.schedule.medication.requests.AddMedicationRequest
@@ -36,10 +36,10 @@ class ScheduleRepositoryImpl @Inject constructor(
             }
         }
 
-    override suspend fun getMedicationsRemindersFromNow(): Flow<DataState<List<Medication>>> =
+    override suspend fun getTodayReminders(): Flow<DataState<List<Medication>>> =
         flowStatus {
-            getResultRestAPI(MappingMedicationsRemindersFromNowRemoteAsModel()){
-                apiService.getMedicationsRemindersFromNow()
+            getResultRestAPI(MappingRemindersFromNowRemoteAsModel()){
+                apiService.getTodayReminders()
             }
         }
 

@@ -8,7 +8,6 @@ import com.cancer.yaqeen.data.features.home.articles.models.Article
 import com.cancer.yaqeen.data.features.home.articles.room.Article as LocalArticle
 import com.cancer.yaqeen.data.features.home.articles.requests.BookmarkArticleRequest
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Medication
-import com.cancer.yaqeen.data.features.home.schedule.medication.models.ScheduleType
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.data.network.base.Status
 import com.cancer.yaqeen.data.network.error.ErrorEntity
@@ -19,7 +18,7 @@ import com.cancer.yaqeen.domain.features.home.articles.usecases.GetLocalBookmark
 import com.cancer.yaqeen.domain.features.home.articles.usecases.RemoveBookmarkedArticleUseCase
 import com.cancer.yaqeen.domain.features.home.articles.usecases.SaveArticleUseCase
 import com.cancer.yaqeen.domain.features.home.articles.usecases.UnBookmarkArticleUseCase
-import com.cancer.yaqeen.domain.features.home.schedule.medication.GetMedicationRemindersFromNowUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.medication.GetTodayRemindersUseCase
 import com.cancer.yaqeen.domain.features.onboarding.usecases.GetUserProfileUseCase
 import com.cancer.yaqeen.presentation.util.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -40,7 +39,7 @@ class HomeViewModel @Inject constructor(
     private val getBookmarkedArticlesUseCase: GetBookmarkedArticlesUseCase,
     private val bookmarkArticleUseCase: BookmarkArticleUseCase,
     private val unBookmarkArticleUseCase: UnBookmarkArticleUseCase,
-    private val getMedicationRemindersFromNowUseCase: GetMedicationRemindersFromNowUseCase,
+    private val getTodayRemindersUseCase: GetTodayRemindersUseCase,
     private val getLocalBookmarkedArticlesUseCase: GetLocalBookmarkedArticlesUseCase,
     private val removeBookmarkedArticleUseCase: RemoveBookmarkedArticleUseCase,
     private val saveArticleUseCase: SaveArticleUseCase,
@@ -71,11 +70,12 @@ class HomeViewModel @Inject constructor(
     val viewStateError = _viewStateError.asStateFlow()
 
 
-    fun getMedicationsFromNow() {
+    fun getTodayReminders() {
+        if(userIsLoggedIn())
+            return
+
         viewModelJob = viewModelScope.launch {
-            getMedicationRemindersFromNowUseCase(
-                scheduleType = ScheduleType.MEDICATION.scheduleType
-            ).collect { response ->
+            getTodayRemindersUseCase().collect { response ->
                 _viewStateLoading.emit(response.loading)
                 when (response.status) {
                     Status.ERROR -> emitError(response.errorEntity)

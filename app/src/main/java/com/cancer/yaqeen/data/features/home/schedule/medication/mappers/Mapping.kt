@@ -69,7 +69,7 @@ class MappingEditMedicationRemoteAsUIModel :
     }
 }
 
-class MappingMedicationsRemindersFromNowRemoteAsModel: Mapper<TodaySchedulesResponse, List<Medication>> {
+class MappingRemindersFromNowRemoteAsModel: Mapper<TodaySchedulesResponse, List<Medication>> {
     override fun map(input: TodaySchedulesResponse): List<Medication> = input.schedules?.map {
         it.run {
             Medication(

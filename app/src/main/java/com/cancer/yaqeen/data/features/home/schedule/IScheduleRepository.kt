@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 interface IScheduleRepository {
      suspend fun addMedication(request: AddMedicationRequest): Flow<DataState<Boolean>>
      suspend fun getMedicationsReminders(scheduleType: String): Flow<DataState<List<Medication>>>
-     suspend fun getMedicationsRemindersFromNow(): Flow<DataState<List<Medication>>>
+     suspend fun getTodayReminders(): Flow<DataState<List<Medication>>>
      suspend fun editMedication(scheduleId: Int, request: AddMedicationRequest): Flow<DataState<Boolean>>
 
 }
