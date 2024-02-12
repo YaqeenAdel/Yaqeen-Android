@@ -71,7 +71,7 @@ class HomeViewModel @Inject constructor(
 
 
     fun getTodayReminders() {
-        if(userIsLoggedIn())
+        if(!userIsLoggedIn())
             return
 
         viewModelJob = viewModelScope.launch {
