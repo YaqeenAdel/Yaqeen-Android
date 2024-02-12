@@ -6,9 +6,7 @@ import com.cancer.yaqeen.data.network.base.DataState
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GetMedicationRemindersFromNowUseCase @Inject constructor(private val repository: IScheduleRepository) {
-    suspend operator fun invoke(
-        scheduleType: String
-    ): Flow<DataState<List<Medication>>> =
-        repository.getMedicationsRemindersFromNow()
+class GetTodayRemindersUseCase @Inject constructor(private val repository: IScheduleRepository) {
+    suspend operator fun invoke(): Flow<DataState<List<Medication>>> =
+        repository.getTodayReminders()
 }

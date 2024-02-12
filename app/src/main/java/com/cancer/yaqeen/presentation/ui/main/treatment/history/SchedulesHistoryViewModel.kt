@@ -35,6 +35,8 @@ class SchedulesHistoryViewModel @Inject constructor(
 
 
     fun getMedications() {
+        if (!userIsLoggedIn())
+            return
         viewModelJob = viewModelScope.launch {
             getMedicationRemindersUseCase(
                 scheduleType = ScheduleType.MEDICATION.scheduleType

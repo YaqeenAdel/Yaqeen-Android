@@ -18,6 +18,8 @@ import com.cancer.yaqeen.data.utils.getTodayDate
 import com.cancer.yaqeen.databinding.FragmentHomeBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.ui.main.home.articles.ArticlesAdapter
+import com.cancer.yaqeen.presentation.ui.main.treatment.history.MedicationsAdapter
+import com.cancer.yaqeen.presentation.ui.main.treatment.history.TreatmentHistoryFragmentDirections
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindImage
 import com.cancer.yaqeen.presentation.util.changeVisibility
@@ -42,6 +44,8 @@ class HomeFragment : BaseFragment(showBottomMenu = true) {
 
     private lateinit var articlesAdapter: ArticlesAdapter
 
+    private lateinit var schedulesAdapter: SchedulesAdapter
+
     private val homeViewModel: HomeViewModel by viewModels()
 
     override fun onCreateView(
@@ -57,10 +61,15 @@ class HomeFragment : BaseFragment(showBottomMenu = true) {
         super.onViewCreated(view, savedInstanceState)
 
         navController = findNavController()
-        setupArticlesAdapter()
+        setupAdapters()
         observeStates()
 
         setListener()
+    }
+
+    private fun setupAdapters() {
+        setupArticlesAdapter()
+        setupSchedulesAdapter()
     }
 
     override fun onResume() {
@@ -69,10 +78,7 @@ class HomeFragment : BaseFragment(showBottomMenu = true) {
         updateUI()
 
         homeViewModel.getArticles()
-
-        if (homeViewModel.userIsLoggedIn()){
-//            homeViewModel.getMedicationsFromNow()
-        }
+        homeViewModel.getTodayReminders()
     }
     private fun setListener(){
         binding.tvSeeAll.setOnClickListener {
@@ -121,8 +127,22 @@ class HomeFragment : BaseFragment(showBottomMenu = true) {
         }
     }
 
-    private fun setupTimesAdapter() {
+    private fun setupSchedulesAdapter() {
+        schedulesAdapter = SchedulesAdapter(
+            onItemClick = {
+                navController.tryNavigate(
+                    TreatmentHistoryFragmentDirections.actionTreatmentHistoryFragmentToMedicationDialogFragment(it)
+                )
+            }
+        )
+        binding.rvSchedules.apply {
+            adapter = schedulesAdapter
+            layoutManager = createCardStackLayoutManager()
+        }
+        binding.rvSchedules.swipe()
+    }
 
+    private fun createCardStackLayoutManager(): CardStackLayoutManager {
         val setting = RewindAnimationSetting.Builder()
             .setDirection(Direction.Bottom)
             .setDuration(Duration.Normal.duration)
@@ -131,13 +151,10 @@ class HomeFragment : BaseFragment(showBottomMenu = true) {
         val cardStackLayoutManager = CardStackLayoutManager(requireContext())
         cardStackLayoutManager.setRewindAnimationSetting(setting)
         cardStackLayoutManager.setStackFrom(StackFrom.None)
-        binding.rvTreatments.apply {
-            layoutManager = cardStackLayoutManager
-            adapter = articlesAdapter
-        }
-        binding.rvTreatments.swipe()
 
+        return cardStackLayoutManager
     }
+
 
     private fun observeStates() {
         lifecycleScope {
@@ -164,9 +181,8 @@ class HomeFragment : BaseFragment(showBottomMenu = true) {
         }
 
         lifecycleScope {
-            homeViewModel.viewStateMedications.collect { medications ->
-                Log.d("TAG", "observeStates: medications $medications")
-//                medicationsAdapter.submitList(medications)
+            homeViewModel.viewStateMedications.collect { schedules ->
+                schedulesAdapter.submitList(schedules)
             }
         }
     }

@@ -89,6 +89,6 @@ interface YaqeenAPI {
     ): Response<SchedulesResponse>
 
     @GET("future_schedules")
-    suspend fun getMedicationsRemindersFromNow(): Response<TodaySchedulesResponse>
+    suspend fun getTodayReminders(): Response<TodaySchedulesResponse>
 
 }
