@@ -122,9 +122,9 @@ class TreatmentFragment : BaseFragment(showBottomMenu = true), View.OnClickListe
                 )
             }
             R.id.btn_symptoms -> {
-//                navController.tryNavigate(
-//
-//                )
+                navController.tryNavigate(
+                    TreatmentFragmentDirections.actionTreatmentFragmentToSymptomsTypesFragment(null)
+                )
             }
         }
     }

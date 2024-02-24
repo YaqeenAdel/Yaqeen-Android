@@ -135,6 +135,9 @@
     <string name="medical_appointment">Medical Appointment</string>
     <string name="medication_added_successfully">Medication Added Successfully</string>
     <string name="medication_edited_successfully">Medication Edited Successfully</string>
+    <string name="symptom_added_successfully">Symptom Added Successfully</string>
+    <string name="symptom_edited_successfully">Symptom Edited Successfully</string>
+    <string name="symptom_deleted_successfully">Symptom Deleted Successfully</string>
     <string name="dosage">Dosage</string>
     <string name="starting_date">Starting Date</string>
     <string name="take">Take</string>
@@ -179,6 +182,29 @@
     <string name="every_12_hours">Every 12 hours</string>
     <string name="day_after_day">Day after day</string>
     <string name="name_articles">"%s’s articles"</string>
+    <string name="common_of_symptoms">Common of Symptoms.</string>
+    <string name="symptoms_details">Symptoms Details</string>
+    <string name="details">Details</string>
+    <string name="symptoms_details_hint">Adding your feelings and details is crucial when providing information to the doctor during your appointment...</string>
+    <string name="attach_image_text">Include a photo to help the doctor in visualizing the issue.</string>
+    <string name="camera">Camera</string>
+    <string name="my_file">My File</string>
+    <string name="select_attached_files">Select attached files</string>
+    <string name="remind">Remind</string>
+    <string name="would_you_like_a_reminder_for_your_upcoming_doctor_s_appointment">Would you like a reminder for your upcoming doctor\'s appointment?</string>
+    <string name="doctor_s_name">Doctor’s Name</string>
+    <string name="day_and_time">Day and time</string>
+    <string name="show_more">Show More</string>
+    <string name="delete">Delete</string>
+    <string name="flash_is_not_available">Flash is Not Available</string>
+    <string name="healthcare_alert">Healthcare Alert</string>
+    <string name="location">Location</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="remind_before">Remind before</string>
+    <string name="remind_me_before_test">Remind me before test</string>
+    <string name="add_notes">Add Notes</string>
+    <string name="add_symptoms_to_the_reminder">Add Symptoms to the Reminder</string>
+    <string name="show_less">Show less</string>
 
     <string-array name="languages_array">
         <item>English</item>

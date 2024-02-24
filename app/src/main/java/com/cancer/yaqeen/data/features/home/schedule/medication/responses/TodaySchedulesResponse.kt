@@ -7,14 +7,17 @@ data class TodaySchedulesResponse(
     val schedules: List<TodayScheduleResponse>?
 )
 data class TodayScheduleResponse (
+    @SerializedName("ScheduleId")
+    val scheduleID: Int?,
+
     @SerializedName("ScheduledEvents")
     val scheduledEvents: ScheduledEventsResponse,
 
     @SerializedName("Entity")
     val entity: EntityResponse?,
 
-    @SerializedName("ScheduleId")
-    val scheduleID: Int?
+    @SerializedName("EntityType")
+    val entityType: String
 )
 
 data class ScheduledEventsResponse(

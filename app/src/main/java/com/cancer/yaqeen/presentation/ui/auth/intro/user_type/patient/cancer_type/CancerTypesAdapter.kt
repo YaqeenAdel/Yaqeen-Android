@@ -17,7 +17,7 @@ import java.util.Locale
 
 class CancerTypesAdapter(
     private var items: List<CancerType> = listOf(),
-    private val onItemClick: (CancerType) -> Unit
+    private val onItemClick: (CancerType) -> Unit,
 ) :
     ListAdapter<CancerType, CancerTypesAdapter.CancerTypesViewHolder>(Companion), Filterable {
 
@@ -47,9 +47,7 @@ class CancerTypesAdapter(
         val binding =
             ItemCancerTypeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
-        return CancerTypesViewHolder(binding) {
-            onItemClick(currentList[it])
-        }
+        return CancerTypesViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: CancerTypesViewHolder, position: Int) {
@@ -75,18 +73,10 @@ class CancerTypesAdapter(
 
     inner class CancerTypesViewHolder(
         private val itemBinding: ItemCancerTypeBinding,
-        onItemClick: (Int) -> Unit
     ) : RecyclerView.ViewHolder(itemBinding.root) {
 
         private val _context = itemBinding.root.context
 
-        init {
-            itemBinding.btnCancerType.setOnClickListener {
-                onItemClick(adapterPosition)
-
-                notifyItemChangedByPosition(adapterPosition)
-            }
-        }
 
         fun bind(position: Int, item: CancerType) {
             itemBinding.btnCancerType.text = item.typeName
@@ -102,6 +92,16 @@ class CancerTypesAdapter(
 
             changeCircleColorOfRadioButton()
             itemBinding.btnCancerType.isSelected = true
+
+            itemBinding.btnCancerType.setOnClickListener {
+                onItemClick(item)
+
+                notifyItemChangedByPosition(adapterPosition)
+            }
+
+            itemBinding.ivInfo.setOnClickListener {
+//                itemBinding.btnCancerType.error = item.info
+            }
         }
 
         private fun changeCircleColorOfRadioButton() {

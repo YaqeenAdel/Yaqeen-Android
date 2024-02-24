@@ -1,7 +1,6 @@
 package com.cancer.yaqeen.presentation.ui.main.treatment.history
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,12 +20,13 @@ import com.cancer.yaqeen.data.utils.getTodayDate
 import com.cancer.yaqeen.databinding.FragmentTreatmentHistoryBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.ui.main.treatment.TimesAdapter
+import com.cancer.yaqeen.presentation.ui.main.treatment.history.adapters.MedicationsAdapter
+import com.cancer.yaqeen.presentation.ui.main.treatment.history.adapters.SymptomsAdapter
 import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.changeVisibility
 import com.cancer.yaqeen.presentation.util.dpToPx
 import com.cancer.yaqeen.presentation.util.recyclerview.VerticalMarginItemDecoration
-import com.cancer.yaqeen.presentation.util.timestampToDay
 import com.cancer.yaqeen.presentation.util.timestampToHour
 import com.cancer.yaqeen.presentation.util.timestampToTiming
 import com.cancer.yaqeen.presentation.util.tryNavigate
@@ -44,6 +44,7 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
 
     private lateinit var timesAdapter: TimesAdapter
     private lateinit var medicationsAdapter: MedicationsAdapter
+    private lateinit var symptomsAdapter: SymptomsAdapter
 
     private val viewModel: SchedulesHistoryViewModel by viewModels()
 
@@ -87,6 +88,7 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
     private fun setupAdapters() {
         setupTimesAdapter()
         setupMedicationsAdapter()
+        setupSymptomsAdapter()
     }
 
     override fun onResume() {
@@ -120,6 +122,7 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
         binding.tvScheduleHistory.updateUI(getString(R.string.history_s_symptoms))
         binding.rvSymptomsHistory.updateUI()
         scheduledType = ScheduleType.SYMPTOMS
+        getSymptoms()
     }
 
     private fun observeStates() {
@@ -137,6 +140,22 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
         lifecycleScope {
             viewModel.viewStateMedications.collect { medications ->
                 medicationsAdapter.submitList(medications)
+            }
+        }
+
+        lifecycleScope {
+            viewModel.viewStateSymptoms.collect { symptoms ->
+                symptomsAdapter.setList(symptoms)
+            }
+        }
+
+        lifecycleScope {
+            viewModel.viewStateDeleteSymptom.observe(viewLifecycleOwner) { symptomId ->
+                symptomId?.let {
+                    Toast.makeText(requireContext(), getString(R.string.symptom_deleted_successfully), Toast.LENGTH_SHORT).show()
+//                    symptomsAdapter.deleteSymptom(symptomId)
+                    getSymptoms()
+                }
             }
         }
     }
@@ -184,6 +203,27 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
             )
         }
     }
+
+    private fun setupSymptomsAdapter() {
+        symptomsAdapter = SymptomsAdapter(
+            onEditClick = {
+                navController.tryNavigate(
+                    TreatmentHistoryFragmentDirections.actionTreatmentHistoryFragmentToSymptomsTypesFragment(it)
+                )
+            },
+            onDeleteClick = {
+                viewModel.deleteSymptom(it.id)
+            }
+        )
+        binding.rvSymptomsHistory.apply {
+            adapter = symptomsAdapter
+            addItemDecoration(
+                VerticalMarginItemDecoration(
+                    dpToPx(24f, requireContext())
+                )
+            )
+        }
+    }
     private fun getCurrentHour(): Int {
         val currentDate = Calendar.getInstance()
         val timing = (currentDate.timeInMillis.timestampToTiming())
@@ -208,6 +248,10 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
 
     private fun getMedications() {
         viewModel.getMedications()
+    }
+
+    private fun getSymptoms() {
+        viewModel.getSymptoms()
     }
 
     private fun MaterialButton.updateUI() {

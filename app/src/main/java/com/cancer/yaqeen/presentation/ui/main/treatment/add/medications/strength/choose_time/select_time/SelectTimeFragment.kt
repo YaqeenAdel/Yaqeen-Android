@@ -185,13 +185,13 @@ class SelectTimeFragment : BaseFragment() {
     private fun checkTimeData(): Boolean {
         val date = binding.editTextStartFrom.text.toString()
         val time = binding.editTextTime.text.toString()
-        val notes = binding.editTextNote.text.toString()
+//        val notes = binding.editTextNote.text.toString()
         val dosageAmount = binding.editTextDosage.text.toString()
 
         val textColorId: Int
         val backgroundColorId: Int
 
-        if(date.isNotEmpty() && time.isNotEmpty() && notes.isNotEmpty() && dosageAmount.isNotEmpty()) {
+        if(date.isNotEmpty() && time.isNotEmpty() && dosageAmount.isNotEmpty()) {
             binding.btnNext.enable()
             textColorId = R.color.white
             backgroundColorId = R.color.primary_color

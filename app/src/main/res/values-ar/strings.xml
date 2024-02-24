@@ -135,6 +135,9 @@
     <string name="medical_appointment">موعد طبي</string>
     <string name="medication_added_successfully">تم إضافة الدواء بنجاح</string>
     <string name="medication_edited_successfully">تم تعديل الدواء بنجاح</string>
+    <string name="symptom_added_successfully">تم إضافة علامة المرض بنجاح</string>
+    <string name="symptom_edited_successfully">تم تعديل علامة المرض بنجاح</string>
+    <string name="symptom_deleted_successfully">تم حدف علامة المرض بنجاح</string>
     <string name="dosage">جرعة</string>
     <string name="starting_date">ابتداء من</string>
     <string name="take">Take</string>
@@ -157,15 +160,6 @@
     <string name="ml">Ml</string>
     <string name="percentage">%</string>
 
-    <string name="capsule_enum" translatable="false">Capsule</string>
-    <string name="pills_enum" translatable="false">Pills</string>
-    <string name="liquid_enum" translatable="false">Liquid</string>
-    <string name="injection_enum" translatable="false">Injection</string>
-
-    <string name="mg_enum" translatable="false">Mg</string>
-    <string name="mcg_enum" translatable="false">Mcg</string>
-    <string name="ml_enum" translatable="false">Ml</string>
-    <string name="percentage_enum" translatable="false">%</string>
 
     <string name="sun">أحد</string>
     <string name="mon">اثنين</string>
@@ -180,6 +174,28 @@
     <string name="day_after_day">يوم بعد يوم</string>
 
     <string name="name_articles">"%sمقالات ال"</string>
+    <string name="common_of_symptoms">Common of Symptoms.</string>
+    <string name="symptoms_details">Symptoms Details</string>
+    <string name="details">Details</string>
+    <string name="symptoms_details_hint">Adding your feelings and details is crucial when providing information to the doctor during your appointment...</string>
+    <string name="attach_image_text">Include a photo to help the doctor in visualizing the issue.</string>
+    <string name="camera">Camera</string>
+    <string name="my_file">My File</string>
+    <string name="remind">Remind</string>
+    <string name="would_you_like_a_reminder_for_your_upcoming_doctor_s_appointment">Would you like a reminder for your upcoming doctor\'s appointment?</string>
+    <string name="doctor_s_name">Doctor’s Name</string>
+    <string name="day_and_time">Day and time</string>
+    <string name="delete">Delete</string>
+    <string name="flash_is_not_available">Flash is Not Available</string>
+    <string name="healthcare_alert">Healthcare Alert</string>
+    <string name="location">Location</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="remind_before">Remind before</string>
+    <string name="remind_me_before_test">Remind me before test</string>
+    <string name="add_notes">Add Notes</string>
+    <string name="add_symptoms_to_the_reminder">Add Symptoms to the Reminder</string>
+    <string name="show_more">Show More</string>
+    <string name="show_less">Show less</string>
 
     <string-array name="languages_array">
         <item>English</item>

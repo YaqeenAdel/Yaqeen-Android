@@ -6,9 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import com.cancer.yaqeen.BuildConfig.TERMS_AND_CONDITION
 import com.cancer.yaqeen.data.features.onboarding.models.TermsAndCondition
 import com.cancer.yaqeen.databinding.FragmentTermsAndConditionBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
+import com.cancer.yaqeen.presentation.util.MyWebViewClient
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.dpToPx
 import com.cancer.yaqeen.presentation.util.recyclerview.VerticalMarginItemDecoration
@@ -23,7 +25,7 @@ class TermsAndConditionFragment : BaseFragment() {
 
     private lateinit var navController: NavController
 
-    private lateinit var termsAndConditionAdapter: TermsAndConditionAdapter
+//    private lateinit var termsAndConditionAdapter: TermsAndConditionAdapter
 
 //    private val viewModel: OnboardingViewModel by activityViewModels()
 
@@ -41,7 +43,7 @@ class TermsAndConditionFragment : BaseFragment() {
 
         navController = findNavController()
 
-        setupTermsAndConditionAdapter()
+//        setupTermsAndConditionAdapter()
 
         binding.btnAccept.setOnClickListener {
             navController.tryNavigate(
@@ -55,7 +57,23 @@ class TermsAndConditionFragment : BaseFragment() {
 
 //        observeStates()
 
+        setupWebView(TERMS_AND_CONDITION)
     }
+
+    private fun setupWebView(link: String) {
+        val webSettings = binding.webView.settings
+        webSettings.javaScriptEnabled = true
+
+        onLoading(true)
+        val webViewClient = MyWebViewClient {
+            onLoading(it)
+        }
+        binding.webView.webViewClient = webViewClient
+
+        binding.webView.loadUrl(link)
+    }
+
+
 //    private fun observeStates() {
 //        lifecycleScope {
 //            viewModel.viewStateLoading.collectLatest {
@@ -80,52 +98,52 @@ class TermsAndConditionFragment : BaseFragment() {
 //        }
 //    }
 
-    private fun setupTermsAndConditionAdapter() {
-        termsAndConditionAdapter = TermsAndConditionAdapter()
-
-        binding.rvTermsCondition.apply {
-            adapter = termsAndConditionAdapter
-            addItemDecoration(
-                VerticalMarginItemDecoration(
-                    dpToPx(16f, requireContext())
-                )
-            )
-        }
-
-        val fakeDetails = "Lorem ipsum dolor sit amet consectetur. Magna diam dolor bibendum suspendisse sit pellentesque. Sapien mauris viverra lorem iaculis. Sit sollicitudin odio fames sit facilisi aliquam tortor tincidunt. Mauris ut posuere convallis porttitor. Ultrices elementum lacus convallis in pellentesque dictum quam eros sit. Nisi massa mauris arcu bibendum orci etiam egestas ac. Tempor pulvinar quis sit blandit at urna."
-        termsAndConditionAdapter.submitList(
-            listOf(
-                TermsAndCondition(
-                    id = 1, titleName = "#title name", details = fakeDetails
-                ),
-                TermsAndCondition(
-                    id = 2, titleName = "#title name", details = fakeDetails
-                ),
-                TermsAndCondition(
-                    id = 3, titleName = "#title name", details = fakeDetails
-                ),
-                TermsAndCondition(
-                    id = 4, titleName = "#title name", details = fakeDetails
-                ),
-                TermsAndCondition(
-                    id = 5, titleName = "#title name", details = fakeDetails
-                ),
-                TermsAndCondition(
-                    id = 6, titleName = "#title name", details = fakeDetails
-                ),
-                TermsAndCondition(
-                    id = 7, titleName = "#title name", details = fakeDetails
-                ),
-                TermsAndCondition(
-                    id = 8, titleName = "#title name", details = fakeDetails
-                ),
-                TermsAndCondition(
-                    id = 9, titleName = "#title name", details = fakeDetails
-                ),
-                TermsAndCondition(
-                    id = 10, titleName = "#title name", details = fakeDetails
-                )
-            )
-        )
-    }
+//    private fun setupTermsAndConditionAdapter() {
+//        termsAndConditionAdapter = TermsAndConditionAdapter()
+//
+//        binding.rvTermsCondition.apply {
+//            adapter = termsAndConditionAdapter
+//            addItemDecoration(
+//                VerticalMarginItemDecoration(
+//                    dpToPx(16f, requireContext())
+//                )
+//            )
+//        }
+//
+//        val fakeDetails = "Lorem ipsum dolor sit amet consectetur. Magna diam dolor bibendum suspendisse sit pellentesque. Sapien mauris viverra lorem iaculis. Sit sollicitudin odio fames sit facilisi aliquam tortor tincidunt. Mauris ut posuere convallis porttitor. Ultrices elementum lacus convallis in pellentesque dictum quam eros sit. Nisi massa mauris arcu bibendum orci etiam egestas ac. Tempor pulvinar quis sit blandit at urna."
+//        termsAndConditionAdapter.submitList(
+//            listOf(
+//                TermsAndCondition(
+//                    id = 1, titleName = "#title name", details = fakeDetails
+//                ),
+//                TermsAndCondition(
+//                    id = 2, titleName = "#title name", details = fakeDetails
+//                ),
+//                TermsAndCondition(
+//                    id = 3, titleName = "#title name", details = fakeDetails
+//                ),
+//                TermsAndCondition(
+//                    id = 4, titleName = "#title name", details = fakeDetails
+//                ),
+//                TermsAndCondition(
+//                    id = 5, titleName = "#title name", details = fakeDetails
+//                ),
+//                TermsAndCondition(
+//                    id = 6, titleName = "#title name", details = fakeDetails
+//                ),
+//                TermsAndCondition(
+//                    id = 7, titleName = "#title name", details = fakeDetails
+//                ),
+//                TermsAndCondition(
+//                    id = 8, titleName = "#title name", details = fakeDetails
+//                ),
+//                TermsAndCondition(
+//                    id = 9, titleName = "#title name", details = fakeDetails
+//                ),
+//                TermsAndCondition(
+//                    id = 10, titleName = "#title name", details = fakeDetails
+//                )
+//            )
+//        )
+//    }
 }

@@ -7,10 +7,22 @@
 
     </data>
 
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_24sdp"
+        android:layout_marginTop="@dimen/_14sdp"
+        android:layout_marginStart="@dimen/_2sdp"
+        android:layout_marginEnd="@dimen/_12sdp"
+        app:strokeWidth="@dimen/_1sdp"
+        app:strokeColor="@color/light_gray"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="@dimen/_18sdp">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/item_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_12sdp">
 
 
 
@@ -37,7 +49,7 @@
             android:id="@+id/iv_medication_background"
             android:layout_width="@dimen/_64sdp"
             android:layout_height="@dimen/_64sdp"
-            android:layout_marginTop="@dimen/_14sdp"
+            android:layout_marginTop="@dimen/_6sdp"
             android:background="@color/super_silver3"
             app:layout_constraintStart_toStartOf="@id/tv_time"
             app:layout_constraintTop_toBottomOf="@id/tv_time"
@@ -122,4 +134,6 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_dosage_amount" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
 </layout>

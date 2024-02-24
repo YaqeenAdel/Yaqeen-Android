@@ -15,13 +15,25 @@ import com.cancer.yaqeen.data.features.home.schedule.medication.responses.AddMed
 import com.cancer.yaqeen.data.features.home.schedule.medication.responses.EditMedicationResponse
 import com.cancer.yaqeen.data.features.home.schedule.medication.responses.SchedulesResponse
 import com.cancer.yaqeen.data.features.home.schedule.medication.responses.TodaySchedulesResponse
+import com.cancer.yaqeen.data.features.home.schedule.symptom.requests.AddSymptomRequest
+import com.cancer.yaqeen.data.features.home.schedule.symptom.requests.UploadUrlRequest
+import com.cancer.yaqeen.data.features.home.schedule.symptom.responses.AddSymptomResponse
+import com.cancer.yaqeen.data.features.home.schedule.symptom.responses.DeleteSymptomResponse
+import com.cancer.yaqeen.data.features.home.schedule.symptom.responses.EditSymptomResponse
+import com.cancer.yaqeen.data.features.home.schedule.symptom.responses.SymptomTypesResponse
+import com.cancer.yaqeen.data.features.home.schedule.symptom.responses.SymptomsResponse
+import com.cancer.yaqeen.data.features.home.schedule.symptom.responses.UploadUrlResponse
+import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Headers
+import retrofit2.http.Multipart
 import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -90,5 +102,39 @@ interface YaqeenAPI {
 
     @GET("future_schedules")
     suspend fun getTodayReminders(): Response<TodaySchedulesResponse>
+
+    @GET("resources/symptoms")
+    suspend fun getSymptomsTypes(): Response<SymptomTypesResponse>
+
+    @GET("Symptoms")
+    suspend fun getSymptoms(): Response<SymptomsResponse>
+
+    @PUT("upload_url")
+    suspend fun createAnUploadLocation(
+        @Body requestBody: UploadUrlRequest
+    ): Response<UploadUrlResponse>
+
+    @Multipart
+    @PUT("upload_url")
+    suspend fun uploadImage(
+        @Part image: MultipartBody.Part,
+        @Part signedUrl: MultipartBody.Part,
+    ): Response<Any>
+
+    @POST("Symptoms")
+    suspend fun addSymptom(
+        @Body requestBody: AddSymptomRequest
+    ): Response<AddSymptomResponse>
+
+    @POST("Symptoms/{symptomId}")
+    suspend fun editSymptom(
+        @Path("symptomId") symptomId: Int,
+        @Body requestBody: AddSymptomRequest
+    ): Response<EditSymptomResponse>
+
+    @DELETE("Symptoms/{symptomId}")
+    suspend fun deleteSymptom(
+        @Path("symptomId") symptomId: Int
+    ): Response<DeleteSymptomResponse>
 
 }

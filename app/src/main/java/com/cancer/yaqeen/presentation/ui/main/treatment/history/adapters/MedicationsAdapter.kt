@@ -1,4 +1,4 @@
-package com.cancer.yaqeen.presentation.ui.main.treatment.history
+package com.cancer.yaqeen.presentation.ui.main.treatment.history.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

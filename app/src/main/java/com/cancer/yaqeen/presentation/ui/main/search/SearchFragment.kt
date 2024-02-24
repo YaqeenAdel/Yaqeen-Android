@@ -6,12 +6,16 @@ import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import androidx.core.content.ContextCompat
+import androidx.core.widget.addTextChangedListener
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.databinding.FragmentSearchBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.util.autoCleared
+import com.cancer.yaqeen.presentation.util.disable
+import com.cancer.yaqeen.presentation.util.enable
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -55,6 +59,7 @@ class SearchFragment : BaseFragment(), OnClickListener {
         binding.chipEight.setOnClickListener(this)
         binding.chipNine.setOnClickListener(this)
         binding.chipTen.setOnClickListener(this)
+        binding.btnConfirm.setOnClickListener(this)
 
         binding.editTextArticleName.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
@@ -65,6 +70,9 @@ class SearchFragment : BaseFragment(), OnClickListener {
             } else {
                 false
             }
+        }
+        binding.editTextArticleName.addTextChangedListener {
+            checkSearchData()
         }
     }
 
@@ -86,6 +94,7 @@ class SearchFragment : BaseFragment(), OnClickListener {
             R.id.chip_eight -> "Testicular" to true
             R.id.chip_nine -> "Multiple Myeloma" to true
             R.id.chip_ten -> "Thyroid" to true
+            R.id.btn_confirm -> binding.editTextArticleName.text.toString().trim() to true
             else -> "" to false
         }
 
@@ -94,4 +103,27 @@ class SearchFragment : BaseFragment(), OnClickListener {
 
     }
 
+    private fun checkSearchData() {
+        val articleName = binding.editTextArticleName.text.toString().trim()
+
+        val textColorId: Int
+        val backgroundColorId: Int
+
+        if(articleName.isNotEmpty()) {
+            binding.btnConfirm.enable()
+            textColorId = R.color.white
+            backgroundColorId = R.color.primary_color
+        }
+        else {
+            binding.btnConfirm.disable()
+            textColorId = R.color.medium_gray
+            backgroundColorId = R.color.light_gray
+        }
+
+        binding.btnConfirm.backgroundTintList =
+            ContextCompat.getColorStateList(requireContext(), backgroundColorId)
+        binding.btnConfirm.setTextColor(ContextCompat.getColorStateList(requireContext(), textColorId))
+        binding.btnConfirm.iconTint = ContextCompat.getColorStateList(requireContext(), textColorId)
+
+    }
 }

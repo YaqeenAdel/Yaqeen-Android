@@ -1,6 +1,7 @@
 package com.cancer.yaqeen.presentation.util
 
 import android.content.res.ColorStateList
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
@@ -197,4 +198,16 @@ fun Long.timestampToTiming(): String {
     val date = Date(this)
 
     return dateFormat.format(date)
+}
+
+fun Bitmap.cropImageToSquare(): Bitmap {
+    val width = width
+    val height = height
+    val newWidth = if (height > width) width else height
+    val newHeight = if (height > width) height - (height - width) else height
+    var cropWidth = (width - height) / 2
+    cropWidth = if (cropWidth < 0) 0 else cropWidth
+    var cropHeight = (height - width) / 2
+    cropHeight = if (cropHeight < 0) 0 else cropHeight
+    return Bitmap.createBitmap(this, cropWidth, cropHeight, newWidth, newHeight)
 }

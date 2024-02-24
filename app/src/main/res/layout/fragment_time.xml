@@ -13,7 +13,7 @@
         android:fitsSystemWindows="true"
         android:background="@drawable/background_dialog_view"
         android:backgroundTint="@color/white"
-        tools:context=".presentation.ui.main.treatment.add.medications.strength.choose_time.TimeFragment">
+        tools:context=".presentation.ui.main.treatment.add.common.TimeFragment">
 
         <TextView
             android:id="@+id/tv_hour"

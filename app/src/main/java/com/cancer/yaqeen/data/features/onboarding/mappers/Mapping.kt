@@ -40,7 +40,8 @@ class MappingStageRemoteAsModel: Mapper<CancerStageResponse, Stage> {
             id = stageID ?: -1,
             number = stageID?.toInt() ?: 0,
             icon = logoURL ?: "",
-            stageName = translations?.firstOrNull()?.translation?.stageName ?: ""
+            stageName = translations?.firstOrNull()?.translation?.stageName ?: "",
+            info = translations?.firstOrNull()?.translation?.info ?: ""
         )
     }
 }
@@ -49,7 +50,8 @@ class MappingCancerTypeRemoteAsModel: Mapper<CancerTypeResponse, CancerType> {
         CancerType(
             id = cancerID ?: -1,
             icon = logoURL ?: "",
-            typeName = translations?.firstOrNull()?.translation?.cancerTypeName ?: ""
+            typeName = translations?.firstOrNull()?.translation?.cancerTypeName ?: "",
+            info = translations?.firstOrNull()?.translation?.info ?: ""
         )
     }
 }

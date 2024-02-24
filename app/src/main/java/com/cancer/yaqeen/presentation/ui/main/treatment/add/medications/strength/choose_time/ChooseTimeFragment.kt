@@ -157,12 +157,12 @@ class ChooseTimeFragment : BaseFragment() {
         }
         binding.editTextStartFrom.setOnClickListener {
             navController.tryNavigate(
-                ChooseTimeFragmentDirections.actionChooseTimeFragmentToCalendarFragment()
+                R.id.calendarFragment
             )
         }
         binding.editTextTime.setOnClickListener {
             navController.tryNavigate(
-                ChooseTimeFragmentDirections.actionChooseTimeFragmentToTimeFragment()
+                R.id.timeFragment
             )
         }
 
@@ -272,13 +272,13 @@ class ChooseTimeFragment : BaseFragment() {
     private fun checkPeriodTimeData() {
         val date = binding.editTextStartFrom.text.toString()
         val time = binding.editTextTime.text.toString()
-        val notes = binding.editTextNote.text.toString()
+//        val notes = binding.editTextNote.text.toString()
         val dosageAmount = binding.editTextDosage.text.toString()
 
         val textColorId: Int
         val backgroundColorId: Int
 
-        if (date.isNotEmpty() && time.isNotEmpty() && medicationTimesAdapter.selectedPosition() == 4 && daysAdapter.anyItemIsSelected() && notes.isNotEmpty() && dosageAmount.isNotEmpty()) {
+        if (date.isNotEmpty() && time.isNotEmpty() && medicationTimesAdapter.selectedPosition() == 4 && daysAdapter.anyItemIsSelected() && dosageAmount.isNotEmpty()) {
             binding.btnNext.enable()
             textColorId = R.color.white
             backgroundColorId = R.color.primary_color

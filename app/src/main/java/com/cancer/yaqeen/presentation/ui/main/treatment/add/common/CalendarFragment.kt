@@ -1,4 +1,4 @@
-package com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.strength.choose_time
+package com.cancer.yaqeen.presentation.ui.main.treatment.add.common
 
 import android.os.Bundle
 import android.view.LayoutInflater
