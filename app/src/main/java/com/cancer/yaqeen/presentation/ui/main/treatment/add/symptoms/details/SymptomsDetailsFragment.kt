@@ -24,6 +24,7 @@ import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.schedule.symptom.models.SymptomTrack
 import com.cancer.yaqeen.databinding.FragmentSymptomsDetailsBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
+import com.cancer.yaqeen.presentation.ui.main.treatment.add.symptoms.SymptomsTypesAdapter
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.symptoms.SymptomsViewModel
 import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.Constants.IMAGE_URI_KEY
@@ -33,9 +34,11 @@ import com.cancer.yaqeen.presentation.util.binding_adapters.bindImage
 import com.cancer.yaqeen.presentation.util.cameraPermissionsAreGranted
 import com.cancer.yaqeen.presentation.util.changeVisibility
 import com.cancer.yaqeen.presentation.util.disable
+import com.cancer.yaqeen.presentation.util.dpToPx
 import com.cancer.yaqeen.presentation.util.enable
 import com.cancer.yaqeen.presentation.util.enableCameraPermissions
 import com.cancer.yaqeen.presentation.util.enableStoragePermissions
+import com.cancer.yaqeen.presentation.util.recyclerview.VerticalMarginItemDecoration
 import com.cancer.yaqeen.presentation.util.storagePermissionsAreGranted
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import dagger.hilt.android.AndroidEntryPoint
@@ -47,6 +50,8 @@ class SymptomsDetailsFragment : BaseFragment() {
 
     private lateinit var navController: NavController
 
+    private lateinit var attachedPhotosAdapter: AttachedPhotosAdapter
+
     private val symptomsViewModel: SymptomsViewModel by activityViewModels()
 
 
@@ -56,9 +61,8 @@ class SymptomsDetailsFragment : BaseFragment() {
         ) { result ->
 
             result?.let {
-                updateUI(result)
+                addImage(result)
             }
-
         }
 
     override fun onCreateView(
@@ -89,12 +93,14 @@ class SymptomsDetailsFragment : BaseFragment() {
                 val uri = imageUri?.toUri()
 
                 uri?.let {
-                    updateUI(uri)
+                    addImage(uri)
                 }
             }
         }
 
         navController = findNavController()
+
+        setupAttachedPhotosAdapter()
 
         updateUI()
 
@@ -113,35 +119,42 @@ class SymptomsDetailsFragment : BaseFragment() {
             if (details?.isNotEmpty() == true)
                 binding.editTextDetails.setText(details)
 
-            imageUri?.let {
-                updateUI(imageUri)
-            }
-            imageDownloadUrl?.let {
-                updateUI(imageDownloadUrl)
-            }
+//            imageUri?.let {
+//                updateUI(imageUri)
+//            }
+//            imageDownloadUrl?.let {
+//                updateUI(imageDownloadUrl)
+//            }
 
         }
 
         checkSymptomData()
     }
 
-    private fun updateUI(uri: Uri?) {
-        binding.ivSymptom.setImageURI(uri)
+    private fun addImage(uri: Uri){
         symptomsViewModel.addSymptomPicture(uri)
-
-        val isAttached = uri != null
-        updateUI(isAttached)
+        attachedPhotosAdapter.addPicture(uri)
     }
 
-    private fun updateUI(url: String?) {
-        bindImage(binding.ivSymptom, url)
+    private fun setupAttachedPhotosAdapter() {
+        attachedPhotosAdapter = AttachedPhotosAdapter(
+            onShowClick = {
+                navController.tryNavigate(
+                    R.id.photoFullScreenFragment, bundleOf(
+                        "imageUri" to it.uri,
+                        "imageUrl" to it.url,
+                    )
+                )
+            },
+            onDeleteClick = {
 
-        val isAttached = url != null
-        updateUI(isAttached)
-    }
-    private fun updateUI(isAttached: Boolean) {
-        binding.groupImageAttached.changeVisibility(show = isAttached, isGone = false)
-        binding.groupImageUnattached.changeVisibility(show = !isAttached, isGone = false)
+            }
+        )
+
+        binding.rvImages.apply {
+            adapter = attachedPhotosAdapter
+        }
+
     }
 
     private fun setListener() {
@@ -153,18 +166,6 @@ class SymptomsDetailsFragment : BaseFragment() {
             navController.tryNavigate(
                 R.id.methodAttachedFileFragment
             )
-        }
-
-        binding.btnShow.setOnClickListener {
-            navController.tryNavigate(
-                R.id.photoFullScreenFragment, bundleOf(
-                    "imageUri" to symptomsViewModel.getSymptomPicture().toString()
-                )
-            )
-        }
-
-        binding.btnDelete.setOnClickListener {
-            updateUI(uri = null)
         }
 
         binding.btnNext.setOnClickListener {

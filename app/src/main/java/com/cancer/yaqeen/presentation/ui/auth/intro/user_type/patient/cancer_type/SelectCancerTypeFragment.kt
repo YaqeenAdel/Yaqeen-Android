@@ -1,12 +1,19 @@
 package com.cancer.yaqeen.presentation.ui.auth.intro.user_type.patient.cancer_type
 
+import android.content.Context
+import android.graphics.Point
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.PopupWindow
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
@@ -36,6 +43,8 @@ class SelectCancerTypeFragment : BaseFragment() {
 
     private lateinit var cancerTypesAdapter: CancerTypesAdapter
 
+    private var layoutPop: View? = null
+    private var tvInfo: TextView? = null
 
     private val viewModel: OnboardingViewModel by activityViewModels()
 
@@ -138,13 +147,18 @@ class SelectCancerTypeFragment : BaseFragment() {
     }
 
     private fun setupCancerTypesAdapter() {
-        cancerTypesAdapter = CancerTypesAdapter {
-            selectCancerType(it)
-            navController.tryNavigate(
-                SelectCancerTypeFragmentDirections.actionSelectCancerTypeFragmentToStagesFragment()
-            )
+        cancerTypesAdapter = CancerTypesAdapter(
+            onItemClick = {
+                selectCancerType(it)
+                navController.tryNavigate(
+                    SelectCancerTypeFragmentDirections.actionSelectCancerTypeFragmentToStagesFragment()
+                )
 //            viewModel.updateUserProfile()
-        }
+            },
+            onInfoClick = { point, info ->
+                showPopup(point, info)
+            }
+        )
 
         binding.rvCancerTypes.apply {
             adapter = cancerTypesAdapter
@@ -160,4 +174,44 @@ class SelectCancerTypeFragment : BaseFragment() {
     private fun selectCancerType(it: CancerType) {
         viewModel.selectCancerType(it.id.toInt())
     }
+
+
+    private fun initPopupView(){
+        if (layoutPop != null)
+            return
+
+        val viewGroup = requireActivity().findViewById<View>(R.id.popup) as? FrameLayout
+        val layoutInflater = requireContext()
+            .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as? LayoutInflater
+
+        layoutPop = layoutInflater?.inflate(R.layout.layout_popup, viewGroup)
+
+        tvInfo = layoutPop?.findViewById<View>(R.id.tv_info_val) as? TextView
+
+    }
+
+    private fun showPopup(point: Point, info: String) {
+        initPopupView()
+
+        tvInfo?.text = info
+
+        val popup = PopupWindow(requireContext())
+        popup.contentView = layoutPop
+
+        popup.isFocusable = true
+
+        // Some offset to align the popup a bit to the right, and a bit down, relative to button's position.
+        val offsetX = 60
+        val offsetY = 65
+
+        // Clear the default translucent background
+        popup.setBackgroundDrawable(BitmapDrawable())
+
+        popup.showAtLocation(layoutPop, Gravity.NO_GRAVITY, point.x + offsetX, point.y + offsetY)
+
+        tvInfo?.setOnClickListener {
+            popup.dismiss()
+        }
+    }
+
 }

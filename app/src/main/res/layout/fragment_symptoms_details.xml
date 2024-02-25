@@ -6,7 +6,6 @@
     <data>
 
     </data>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -92,6 +91,19 @@
             app:layout_constraintStart_toStartOf="@id/linearLayout"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/btn_next"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_details">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/text_layout_details"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -110,9 +122,10 @@
             app:boxCornerRadiusTopStart="@dimen/_8sdp"
             app:boxCornerRadiusBottomStart="@dimen/_8sdp"
             app:boxCornerRadiusBottomEnd="@dimen/_8sdp"
-            app:layout_constraintStart_toStartOf="@id/tv_details"
-            app:layout_constraintEnd_toEndOf="@id/tv_details"
-            app:layout_constraintTop_toBottomOf="@id/tv_details">
+            android:layout_marginHorizontal="@dimen/_18sdp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_text_details"
@@ -141,91 +154,12 @@
             android:layout_marginTop="@dimen/_6sdp"
             app:cardBackgroundColor="@color/white"
             app:layout_constraintTop_toBottomOf="@id/text_layout_details"
-            app:layout_constraintStart_toStartOf="@id/tv_details"
-            app:layout_constraintEnd_toEndOf="@id/tv_details">
+            app:layout_constraintStart_toStartOf="@id/text_layout_details"
+            app:layout_constraintEnd_toEndOf="@id/text_layout_details">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                
-                <androidx.constraintlayout.widget.Group
-                    android:id="@+id/group_image_attached"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:constraint_referenced_ids="iv_symptom,tv_symptom_image_name,btn_show,btn_delete"
-                    android:visibility="invisible"/>
-                
-                <ImageView
-                    android:id="@+id/iv_symptom"
-                    android:layout_width="@dimen/_42sdp"
-                    android:layout_height="@dimen/_42sdp"
-                    android:src="@mipmap/ic_launcher"
-                    android:scaleType="fitXY"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    android:layout_marginStart="@dimen/_4sdp"/>
-
-                <TextView
-                    android:id="@+id/tv_symptom_image_name"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="center|start"
-                    android:singleLine="true"
-                    android:ellipsize="marquee"
-                    android:focusable="true"
-                    android:marqueeRepeatLimit="marquee_forever"
-                    tools:text="name of photo."
-                    android:layout_marginStart="@dimen/_6sdp"
-                    android:layout_marginEnd="@dimen/_4sdp"
-                    android:textColor="@color/light_black"
-                    android:textSize="@dimen/_12ssp"
-                    android:fontFamily="sans-serif"
-                    app:layout_constraintEnd_toStartOf="@id/btn_show"
-                    app:layout_constraintStart_toEndOf="@id/iv_symptom"
-                    app:layout_constraintBottom_toBottomOf="@id/iv_symptom"
-                    app:layout_constraintTop_toTopOf="@+id/iv_symptom" />
-                
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_show"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/Widget.Material3.Button.IconButton"
-                    app:strokeColor="@color/primary_color"
-                    app:strokeWidth="@dimen/_1sdp"
-                    app:cornerRadius="@dimen/_8sdp"
-                    android:paddingHorizontal="@dimen/_6sdp"
-                    android:paddingVertical="@dimen/_8sdp"
-                    app:icon="@drawable/ic_show"
-                    app:iconTint="@color/primary_color"
-                    app:layout_constraintEnd_toStartOf="@id/btn_delete"
-                    app:layout_constraintBottom_toBottomOf="@id/iv_symptom"
-                    app:layout_constraintTop_toTopOf="@+id/iv_symptom"/>
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_delete"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/Widget.Material3.Button.IconButton"
-                    app:strokeColor="@color/primary_color"
-                    app:strokeWidth="@dimen/_1sdp"
-                    app:cornerRadius="@dimen/_8sdp"
-                    android:paddingHorizontal="@dimen/_6sdp"
-                    android:paddingVertical="@dimen/_8sdp"
-                    android:layout_marginEnd="@dimen/_8sdp"
-                    app:icon="@drawable/ic_delete"
-                    app:iconTint="@color/cascara"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toBottomOf="@id/iv_symptom"
-                    app:layout_constraintTop_toTopOf="@+id/iv_symptom"/>
-
-                
-                <androidx.constraintlayout.widget.Group
-                    android:id="@+id/group_image_unattached"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:constraint_referenced_ids="view,btn_attach_image"
-                    android:visibility="visible"/>
 
                 <View
                     android:id="@+id/view"
@@ -266,6 +200,25 @@
         </androidx.cardview.widget.CardView>
 
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_images"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:layout_marginBottom="@dimen/_12sdp"
+            android:nestedScrollingEnabled="false"
+            android:saveEnabled="false"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toBottomOf="@id/card_view"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@id/text_layout_details"
+            app:layout_constraintEnd_toEndOf="@id/text_layout_details"
+            tools:itemCount="4"
+            tools:listitem="@layout/item_photo_attached" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_next"
             style="@style/Widget.Material3.Button.TextButton"
@@ -285,7 +238,6 @@
             app:cornerRadius="@dimen/_16sdp"
             android:layout_marginBottom="@dimen/_18sdp"
             app:layout_constraintVertical_bias="1"
-            app:layout_constraintTop_toBottomOf="@id/card_view"
             app:layout_constraintStart_toStartOf="@id/tv_details"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/tv_details"/>

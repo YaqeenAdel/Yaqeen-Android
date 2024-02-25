@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginHorizontal="@dimen/_12sdp"
+    android:backgroundTint="@color/private_black"
+    android:background="@drawable/background_view_gray_radius_8"
+    android:id="@+id/popup">
+
+    <TextView
+        android:id="@+id/tv_info_val"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_8sdp"
+        android:layout_marginVertical="@dimen/_12sdp"
+        android:fontFamily="sans-serif"
+        android:gravity="center"
+        tools:text="@string/specify_your_type_of_cancer"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_15ssp"/>
+</FrameLayout>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_2sdp"
+        android:layout_marginVertical="@dimen/_4sdp"
+        app:cardCornerRadius="@dimen/_8sdp"
+        app:cardBackgroundColor="@color/white">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/iv_symptom"
+            android:layout_width="@dimen/_42sdp"
+            android:layout_height="@dimen/_42sdp"
+            android:src="@mipmap/ic_launcher"
+            android:scaleType="fitXY"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="@dimen/_4sdp"/>
+
+        <TextView
+            android:id="@+id/tv_symptom_image_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center|start"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            tools:text="name of photo."
+            android:layout_marginStart="@dimen/_6sdp"
+            android:layout_marginEnd="@dimen/_4sdp"
+            android:textColor="@color/light_black"
+            android:textSize="@dimen/_12ssp"
+            android:fontFamily="sans-serif"
+            app:layout_constraintEnd_toStartOf="@id/btn_show"
+            app:layout_constraintStart_toEndOf="@id/iv_symptom"
+            app:layout_constraintBottom_toBottomOf="@id/iv_symptom"
+            app:layout_constraintTop_toTopOf="@+id/iv_symptom" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_show"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Widget.Material3.Button.IconButton"
+            app:strokeColor="@color/primary_color"
+            app:strokeWidth="@dimen/_1sdp"
+            app:cornerRadius="@dimen/_8sdp"
+            android:paddingHorizontal="@dimen/_6sdp"
+            android:paddingVertical="@dimen/_8sdp"
+            app:icon="@drawable/ic_show"
+            app:iconTint="@color/primary_color"
+            app:layout_constraintEnd_toStartOf="@id/btn_delete"
+            app:layout_constraintBottom_toBottomOf="@id/iv_symptom"
+            app:layout_constraintTop_toTopOf="@+id/iv_symptom"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Widget.Material3.Button.IconButton"
+            app:strokeColor="@color/primary_color"
+            app:strokeWidth="@dimen/_1sdp"
+            app:cornerRadius="@dimen/_8sdp"
+            android:paddingHorizontal="@dimen/_6sdp"
+            android:paddingVertical="@dimen/_8sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
+            app:icon="@drawable/ic_delete"
+            app:iconTint="@color/cascara"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/iv_symptom"
+            app:layout_constraintTop_toTopOf="@+id/iv_symptom"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+</layout>

@@ -2,6 +2,8 @@ package com.cancer.yaqeen.presentation.ui.auth.intro.user_type.patient.cancer_ty
 
 import android.R
 import android.content.res.ColorStateList
+import android.graphics.Point
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Filter
@@ -18,6 +20,7 @@ import java.util.Locale
 class CancerTypesAdapter(
     private var items: List<CancerType> = listOf(),
     private val onItemClick: (CancerType) -> Unit,
+    private val onInfoClick: (Point, String) -> Unit,
 ) :
     ListAdapter<CancerType, CancerTypesAdapter.CancerTypesViewHolder>(Companion), Filterable {
 
@@ -76,7 +79,8 @@ class CancerTypesAdapter(
     ) : RecyclerView.ViewHolder(itemBinding.root) {
 
         private val _context = itemBinding.root.context
-
+        private var location = IntArray(2)
+        private val point: Point = Point()
 
         fun bind(position: Int, item: CancerType) {
             itemBinding.btnCancerType.text = item.typeName
@@ -100,7 +104,12 @@ class CancerTypesAdapter(
             }
 
             itemBinding.ivInfo.setOnClickListener {
-//                itemBinding.btnCancerType.error = item.info
+                itemBinding.ivInfo.getLocationOnScreen(location)
+
+                point.x = location[0]
+                point.y = location[1]
+
+                onInfoClick(point, item.info)
             }
         }
 
