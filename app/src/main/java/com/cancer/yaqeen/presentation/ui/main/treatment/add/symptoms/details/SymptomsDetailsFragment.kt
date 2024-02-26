@@ -136,7 +136,7 @@ class SymptomsDetailsFragment : BaseFragment() {
     private fun updateUI(url: String?) {
         bindImage(binding.ivSymptom, url)
 
-        val isAttached = url != null
+        val isAttached = !url.isNullOrEmpty()
         updateUI(isAttached)
     }
     private fun updateUI(isAttached: Boolean) {
