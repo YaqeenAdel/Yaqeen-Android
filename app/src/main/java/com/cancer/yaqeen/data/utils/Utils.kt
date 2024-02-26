@@ -142,10 +142,34 @@ fun String.formatDate(): String {
     }
 }
 
+fun String.formatDateAPI(): String {
+    return try {
+        val inputDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        val outputDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+
+        val inputDate = inputDateFormat.parse(this)
+        outputDateFormat.format(inputDate)
+    } catch (_: Exception) {
+        ""
+    }
+}
+
 fun String.formatTime(): String {
     return try {
         val inputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
         val outputTimeFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+
+        val inputDate = inputDateFormat.parse(this)
+        outputTimeFormat.format(inputDate)
+    } catch (_: Exception) {
+        ""
+    }
+}
+
+fun String.formatTimeAPI(): String {
+    return try {
+        val inputDateFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+        val outputTimeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
 
         val inputDate = inputDateFormat.parse(this)
         outputTimeFormat.format(inputDate)
