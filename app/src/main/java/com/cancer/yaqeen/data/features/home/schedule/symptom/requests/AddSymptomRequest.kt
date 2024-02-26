@@ -21,8 +21,8 @@ data class ScheduleSymptomRequest (
     @SerializedName("PhotoLink")
     var photoLink: String,
 
-//    @SerializedName("Time")
-//    var time: String
+    @SerializedName("Time")
+    var time: String
 )
 
 
@@ -40,7 +40,7 @@ data class AddSymptomRequestBuilder(
                 symptomLookupId = symptomLookupIds.first(),
                 notes = doctorName,
                 photoLink = photoLinks.first(),
-//                time = dateTime
+                time = dateTime
             )
         )
 }

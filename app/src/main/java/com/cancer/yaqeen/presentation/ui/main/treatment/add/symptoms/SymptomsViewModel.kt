@@ -12,6 +12,8 @@ import com.cancer.yaqeen.data.features.home.schedule.symptom.requests.AddSymptom
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.data.network.base.Status
 import com.cancer.yaqeen.data.network.error.ErrorEntity
+import com.cancer.yaqeen.data.utils.formatDateAPI
+import com.cancer.yaqeen.data.utils.formatTimeAPI
 import com.cancer.yaqeen.domain.features.home.schedule.symptom.AddSymptomUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.symptom.AddSymptomWithoutPhotoUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.symptom.EditSymptomUseCase
@@ -102,7 +104,7 @@ class SymptomsViewModel @Inject constructor(
                         details = details ?: "",
                         symptomLookupIds = symptomTypes?.map { it.id } ?: listOf(),
                         doctorName = doctorName ?: "",
-                        dateTime = "${startDate ?: ""} ${reminderTime.toString()}",
+                        dateTime = "${startDate?.formatDateAPI() ?: ""} ${reminderTime?.formatTimeAPI() ?: ""}",
                         photoLinks = listOf(imageUri.toString()),
                     ).buildRequestBody()
                 ).collect { response ->
@@ -134,7 +136,7 @@ class SymptomsViewModel @Inject constructor(
                         details = details ?: "",
                         symptomLookupIds = symptomTypes?.map { it.id } ?: listOf(),
                         doctorName = doctorName ?: "",
-                        dateTime = "${startDate ?: ""} ${reminderTime.toString()}",
+                        dateTime = "${startDate?.formatDateAPI() ?: ""} ${reminderTime?.formatTimeAPI() ?: ""}",
                         photoLinks = listOf(""),
                     ).buildRequestBody()
                 ).collect { response ->
@@ -175,7 +177,7 @@ class SymptomsViewModel @Inject constructor(
                         details = details ?: "",
                         symptomLookupIds = symptomTypes?.map { it.id } ?: listOf(),
                         doctorName = doctorName ?: "",
-                        dateTime = "${startDate ?: ""} ${reminderTime.toString()}",
+                        dateTime = "${startDate?.formatDateAPI() ?: ""} ${reminderTime?.formatTimeAPI() ?: ""}",
                         photoLinks = listOf(imageUrl.toString()),
                     ).buildRequestBody()
                 ).collect { response ->
@@ -206,7 +208,7 @@ class SymptomsViewModel @Inject constructor(
                         details = details ?: "",
                         symptomLookupIds = symptomTypes?.map { it.id } ?: listOf(),
                         doctorName = doctorName ?: "",
-                        dateTime = "${startDate ?: ""} ${reminderTime.toString()}",
+                        dateTime = "${startDate?.formatDateAPI() ?: ""} ${reminderTime?.formatTimeAPI() ?: ""}",
                         photoLinks = listOf(imageUri.toString()),
                     ).buildRequestBody()
                 ).collect { response ->
