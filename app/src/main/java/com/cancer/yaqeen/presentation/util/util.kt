@@ -155,5 +155,12 @@ fun cropImageToSquare(bitmap: Bitmap, size: Int): Bitmap {
     return Bitmap.createBitmap(bitmap, cropWidth, cropHeight, size, size)
 }
 
+fun getCurrentTimeMillis(): Long =
+    System.currentTimeMillis()
+
+fun generateFileName(): String =
+SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
+    .format(getCurrentTimeMillis()) + ".jpg"
+
 
 

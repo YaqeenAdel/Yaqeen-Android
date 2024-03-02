@@ -6,6 +6,7 @@ import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.Photo
 import com.cancer.yaqeen.data.features.home.schedule.symptom.models.SymptomTrack
 import com.cancer.yaqeen.data.features.home.schedule.symptom.models.SymptomType
 import com.cancer.yaqeen.data.features.home.schedule.symptom.requests.AddSymptomRequestBuilder
@@ -20,10 +21,15 @@ import com.cancer.yaqeen.domain.features.home.schedule.symptom.EditSymptomUseCas
 import com.cancer.yaqeen.domain.features.home.schedule.symptom.EditSymptomWithoutUploadUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.symptom.GetSymptomsTypesUseCase
 import com.cancer.yaqeen.presentation.util.SingleLiveEvent
+import com.cancer.yaqeen.presentation.util.generateFileName
+import com.cancer.yaqeen.presentation.util.getCurrentTimeMillis
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -89,10 +95,11 @@ class SymptomsViewModel @Inject constructor(
     fun addSymptom() {
         viewModelJob = viewModelScope.launch {
             val symptomTrackField = getSymptomTrack()
-            if (symptomTrackField?.imageUri == null)
-                addSymptomWithoutPhoto()
-            else
+            val isReadyToUploading = symptomTrackField?.photosList?.any { it.uri != null } ?: false
+            if (isReadyToUploading)
                 addSymptomWithPhoto()
+            else
+                addSymptomWithoutPhoto()
         }
     }
     private fun addSymptomWithPhoto() {
@@ -105,15 +112,16 @@ class SymptomsViewModel @Inject constructor(
                         symptomLookupIds = symptomTypes?.map { it.id } ?: listOf(),
                         doctorName = doctorName ?: "",
                         dateTime = "${startDate?.formatDateAPI() ?: ""} ${reminderTime?.formatTimeAPI() ?: ""}",
-                        photoLinks = listOf(imageUri.toString()),
-                    ).buildRequestBody()
-                ).collect { response ->
+                        photos = photosList ?: listOf(),
+                    )
+                ).onEach { response ->
+                    Log.d("TAG", "addSymptomFailed: ${response.errorEntity}")
                     _viewStateLoading.emit(response.loading)
                     when (response.status) {
                         Status.ERROR -> emitError(response.errorEntity)
                         Status.SUCCESS -> {
                             response.data?.let {
-                                if (it.symptomIsAdded) {
+                                if (it.symptomIsModified) {
                                     resetSymptomTrack()
                                     _viewStateAddSymptom.postValue(true)
                                 }
@@ -122,7 +130,10 @@ class SymptomsViewModel @Inject constructor(
 
                         else -> {}
                     }
-                }
+                }.catch {
+                    _viewStateLoading.emit(false)
+                    emitError(ErrorEntity.ApiError.Network)
+                }.launchIn(viewModelScope)
             }
         }
     }
@@ -137,7 +148,7 @@ class SymptomsViewModel @Inject constructor(
                         symptomLookupIds = symptomTypes?.map { it.id } ?: listOf(),
                         doctorName = doctorName ?: "",
                         dateTime = "${startDate?.formatDateAPI() ?: ""} ${reminderTime?.formatTimeAPI() ?: ""}",
-                        photoLinks = listOf(""),
+                        photos = listOf(),
                     ).buildRequestBody()
                 ).collect { response ->
                     _viewStateLoading.emit(response.loading)
@@ -160,7 +171,8 @@ class SymptomsViewModel @Inject constructor(
     fun editSymptom() {
         viewModelJob = viewModelScope.launch {
             val symptomTrackField = getSymptomTrack()
-            if (symptomTrackField?.imageUri == null)
+            val isReadyToUploading = symptomTrackField?.photosList?.any { it.uri != null } ?: false
+            if (isReadyToUploading)
                 editSymptomWithoutUpload()
             else
                 editSymptomWithUpload()
@@ -178,9 +190,9 @@ class SymptomsViewModel @Inject constructor(
                         symptomLookupIds = symptomTypes?.map { it.id } ?: listOf(),
                         doctorName = doctorName ?: "",
                         dateTime = "${startDate?.formatDateAPI() ?: ""} ${reminderTime?.formatTimeAPI() ?: ""}",
-                        photoLinks = listOf(imageUrl.toString()),
+                        photos = photosList ?: listOf(),
                     ).buildRequestBody()
-                ).collect { response ->
+                ).onEach { response ->
                     _viewStateLoading.emit(response.loading)
                     when (response.status) {
                         Status.ERROR -> emitError(response.errorEntity)
@@ -193,7 +205,10 @@ class SymptomsViewModel @Inject constructor(
 
                         else -> {}
                     }
-                }
+                }.catch {
+                    _viewStateLoading.emit(false)
+                    emitError(ErrorEntity.ApiError.Network)
+                }.launchIn(viewModelScope)
             }
         }
     }
@@ -209,8 +224,8 @@ class SymptomsViewModel @Inject constructor(
                         symptomLookupIds = symptomTypes?.map { it.id } ?: listOf(),
                         doctorName = doctorName ?: "",
                         dateTime = "${startDate?.formatDateAPI() ?: ""} ${reminderTime?.formatTimeAPI() ?: ""}",
-                        photoLinks = listOf(imageUri.toString()),
-                    ).buildRequestBody()
+                        photos = photosList ?: listOf(),
+                    )
                 ).collect { response ->
                     _viewStateLoading.emit(response.loading)
                     when (response.status) {
@@ -251,13 +266,50 @@ class SymptomsViewModel @Inject constructor(
             it.details = details
         }
 
-    fun addSymptomPicture(uri: Uri?) =
+    fun deleteSymptomPhoto(photo: Photo) =
         symptomTrackField.get()?.also {
-            it.imageUri = uri
+            it.photosList?.remove(photo)
         }
 
-    fun getSymptomPicture(): Uri? =
-        symptomTrackField.get()?.imageUri
+    fun addSymptomPhoto(photo: Photo) =
+        symptomTrackField.get()?.also {
+            it.photosList?.add(photo)
+        }
+
+    fun addSymptomPhotos(photos: List<Photo>) =
+        symptomTrackField.get()?.also {
+            it.photosList?.addAll(photos)
+        }
+
+    fun createPhoto(uri: Uri): Photo {
+        val timeMillis = getCurrentTimeMillis()
+        val fileName = generateFileName()
+        return Photo(
+            id = timeMillis,
+            uri = uri,
+            imageName = fileName
+        )
+    }
+
+    fun createPhotos(uris: List<Uri>): List<Photo> {
+        var timeMillis = 0L
+        var fileName = ""
+
+        val photos = uris.map { uri ->
+            timeMillis = getCurrentTimeMillis()
+            fileName = generateFileName()
+            Photo(
+                id = timeMillis,
+                uri = uri,
+                imageName = fileName
+            )
+        }
+
+        return photos
+    }
+
+    fun getSymptomPhotos(): List<Photo>? =
+        symptomTrackField.get()?.photosList
 
     fun selectStartDate(startDate: String) =
         symptomTrackField.get()?.also {

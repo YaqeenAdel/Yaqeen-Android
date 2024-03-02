@@ -15,6 +15,7 @@ import com.cancer.yaqeen.databinding.FragmentCalendarBinding
 import com.cancer.yaqeen.databinding.FragmentPhotoFullScreenBinding
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.symptoms.SymptomsTypesFragmentArgs
 import com.cancer.yaqeen.presentation.util.autoCleared
+import com.cancer.yaqeen.presentation.util.binding_adapters.bindImage
 import com.cancer.yaqeen.presentation.util.tryPopBackStack
 
 class PhotoFullScreenFragment : Fragment() {
@@ -26,7 +27,11 @@ class PhotoFullScreenFragment : Fragment() {
     private val args: PhotoFullScreenFragmentArgs by navArgs()
 
     private val imageUri by lazy {
-        args.imageUri
+        args.imageuri
+    }
+
+    private val imageUrl by lazy {
+        args.imageurl
     }
 
     override fun onCreateView(
@@ -48,7 +53,12 @@ class PhotoFullScreenFragment : Fragment() {
         }
 
 
-        updateUI(Uri.parse(imageUri))
+        imageUri?.let {
+            updateUI(Uri.parse(imageUri))
+        }
+        imageUrl?.let {
+            updateUI(imageUrl)
+        }
 
         val observer = binding.ivPhoto.viewTreeObserver
 
@@ -69,5 +79,8 @@ class PhotoFullScreenFragment : Fragment() {
     private fun updateUI(uri: Uri?) {
         binding.ivPhoto.setImageURI(uri)
 
+    }
+    private fun updateUI(url: String?) {
+        bindImage(binding.ivPhoto, url)
     }
 }

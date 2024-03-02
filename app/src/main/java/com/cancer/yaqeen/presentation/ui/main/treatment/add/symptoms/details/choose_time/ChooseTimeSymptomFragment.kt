@@ -16,12 +16,9 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
-import com.cancer.yaqeen.data.features.home.schedule.medication.models.MedicationTrack
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.ReminderTime
 import com.cancer.yaqeen.data.features.home.schedule.symptom.models.SymptomTrack
-import com.cancer.yaqeen.databinding.FragmentChooseTimeBinding
 import com.cancer.yaqeen.databinding.FragmentChooseTimeSymptomBinding
-import com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.strength.choose_time.ChooseTimeFragmentDirections
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.symptoms.SymptomsViewModel
 import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.autoCleared
@@ -116,22 +113,24 @@ class ChooseTimeSymptomFragment : Fragment() {
 
             binding.checkboxMedication.isChecked = isReminder
 
-            imageUri?.let {
-                updateUI(imageUri)
-            }
-            imageDownloadUrl?.let {
-                updateUI(imageDownloadUrl)
+            photosList?.firstOrNull()?.run {
+                uri?.let {
+                    updateUI(it)
+                }
+                url?.let {
+                    updateUI(it)
+                }
             }
         }
 
         checkPeriodTimeData()
     }
 
-    private fun updateUI(url: String?) {
+    private fun updateUI(url: String) {
         bindImage(binding.ivSymptom, url)
     }
 
-    private fun updateUI(uri: Uri?) {
+    private fun updateUI(uri: Uri) {
         binding.ivSymptom.setImageURI(uri)
     }
 

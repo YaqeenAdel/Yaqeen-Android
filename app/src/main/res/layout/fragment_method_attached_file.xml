@@ -13,7 +13,7 @@
         android:fitsSystemWindows="true"
         android:background="@drawable/background_bottom_sheet"
         android:backgroundTint="@color/white"
-        tools:context=".presentation.ui.main.treatment.add.symptoms.details.MethodAttachedFileFragment">
+        tools:context=".presentation.ui.main.treatment.add.common.MethodAttachedFileFragment">
 
         <TextView
             android:id="@+id/tv_select_attached_files"

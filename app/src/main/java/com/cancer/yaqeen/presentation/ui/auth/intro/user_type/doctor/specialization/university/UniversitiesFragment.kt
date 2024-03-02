@@ -94,31 +94,5 @@ class UniversitiesFragment : BottomSheetDialogFragment() {
             )
         }
 
-//        universitiesAdapter.setList(
-//            listOf(
-//                University(
-//                    universityID = 1, universityName = "Ain Shams"
-//                ),
-//                University(
-//                    universityID = 2, universityName = "Cairo"
-//                ),
-//                University(
-//                    universityID = 3, universityName = "Zagazig"
-//                ),
-//                University(
-//                    universityID = 4, universityName = "Alexandria"
-//                ),
-//                University(
-//                    universityID = 5, universityName = "Tanta"
-//                ),
-//                University(
-//                    universityID = 6, universityName = "Assuit"
-//                ),
-//                University(
-//                    universityID = 7, universityName = "Aswan"
-//                ),
-//            )
-//        )
-
     }
 }

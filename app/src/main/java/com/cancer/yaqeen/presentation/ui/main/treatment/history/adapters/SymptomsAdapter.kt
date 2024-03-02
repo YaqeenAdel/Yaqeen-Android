@@ -9,11 +9,15 @@ import com.cancer.yaqeen.data.features.home.schedule.symptom.models.Symptom
 import com.cancer.yaqeen.databinding.ItemSymptomBinding
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindImage
 import com.cancer.yaqeen.presentation.util.changeVisibility
+import com.cancer.yaqeen.presentation.util.dpToPx
+import com.cancer.yaqeen.presentation.util.recyclerview.HorizontalMarginItemDecoration
 
 class SymptomsAdapter(
+    private val itemClickable: Boolean = false,
     private var items: MutableList<Symptom> = arrayListOf(),
-    private val onEditClick: (Symptom) -> Unit,
-    private val onDeleteClick: (Symptom) -> Unit,
+    private val onEditClick: (Symptom) -> Unit = {},
+    private val onDeleteClick: (Symptom) -> Unit = {},
+    private val onItemClick: (Symptom) -> Unit = {},
 ) :
     ListAdapter<Symptom, SymptomsAdapter.SymptomsViewHolder>(Companion) {
 
@@ -44,7 +48,7 @@ class SymptomsAdapter(
     }
 
     override fun onBindViewHolder(holder: SymptomsViewHolder, position: Int) {
-        val item = items[position]
+        val item = getItem(position)
         item?.let {
             holder.bind(it)
         }
@@ -52,14 +56,16 @@ class SymptomsAdapter(
     fun setList(list: List<Symptom>?) {
         submitList(list)
 
-        items = (list)?.toMutableList() ?: arrayListOf()
+        if (items.isEmpty())
+            items = (list)?.toMutableList() ?: arrayListOf()
     }
 
     fun deleteSymptom(symptomId: Int) {
         val position = items.indexOfFirst { it.id == symptomId }
 
         items.removeAt(position)
-//        notifyItemRemoved(position)
+        super.submitList(items)
+        notifyDataSetChanged()
     }
 
     inner class SymptomsViewHolder(
@@ -67,6 +73,8 @@ class SymptomsAdapter(
     ) : RecyclerView.ViewHolder(itemBinding.root) {
 
         private val _context = itemBinding.root.context
+
+        private lateinit var photosAdapter: SmallPhotosAdapter
 
         private var types = ""
         private var isReminder = false
@@ -76,8 +84,12 @@ class SymptomsAdapter(
                 types = symptomTypes?.joinToString(separator = "\n"){ it.name } ?: ""
                 isReminder = doctorName?.isNotEmpty() == true
 
-                bindImage(itemBinding.ivSymptom, imageDownloadUrl)
-                bindImage(itemBinding.ivSymptom2, imageDownloadUrl)
+                bindImage(itemBinding.ivSymptom, photosList?.firstOrNull()?.url)
+
+                photosList?.let {
+                    setupPhotosAdapter(photosList!!.map { it.url ?: "" })
+                }
+
                 itemBinding.tvSymptomTypes.text = types
                 itemBinding.tvSymptomsVal.text = types
                 itemBinding.tvNotesVal.text = details
@@ -86,9 +98,16 @@ class SymptomsAdapter(
                 itemBinding.tvReminderVal.changeVisibility(show = isReminder, isGone = true)
                 itemBinding.tvDateTimeVal.text = "$reminderTime - $startDate"
 
-                itemBinding.view.changeVisibility(show = (adapterPosition + 1) < itemCount, isGone = false)
+                itemBinding.layoutLess.changeVisibility(show = true)
+                itemBinding.layoutMore.changeVisibility(show = false, isGone = true)
+
+                itemBinding.linearLayout.changeVisibility(show = !itemClickable, isGone = true)
             }
 
+            setListener(item)
+        }
+
+        private fun setListener(item: Symptom) {
             itemBinding.btnShowMore.setOnClickListener {
                 itemBinding.layoutLess.changeVisibility(show = false, isGone = true)
                 itemBinding.layoutMore.changeVisibility(show = true)
@@ -106,6 +125,24 @@ class SymptomsAdapter(
             itemBinding.btnDelete.setOnClickListener {
                 onDeleteClick(item)
             }
+
+            if (itemClickable)
+                itemBinding.itemContainer.setOnClickListener {
+                    onItemClick(item)
+                }
+        }
+
+        private fun setupPhotosAdapter(photosList: List<String>) {
+            photosAdapter = SmallPhotosAdapter {
+
+            }
+
+            itemBinding.rvSymptomPhotos.apply {
+                adapter = photosAdapter
+            }
+
+            photosAdapter.submitList(photosList)
+
         }
      }
 

@@ -1,9 +1,7 @@
-package com.cancer.yaqeen.presentation.ui.main.treatment.add.symptoms.details
+package com.cancer.yaqeen.presentation.ui.main.treatment.add.common
 
 import android.Manifest
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +12,6 @@ import androidx.fragment.app.setFragmentResult
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
-import com.cancer.yaqeen.databinding.FragmentAuthBinding
 import com.cancer.yaqeen.databinding.FragmentMethodAttachedFileBinding
 import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.autoCleared

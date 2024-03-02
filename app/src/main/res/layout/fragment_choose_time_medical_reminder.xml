@@ -225,6 +225,22 @@
             android:textSize="@dimen/_10ssp"
             android:text="@string/remind_me_before_test"/>
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_decrease"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Widget.Material3.Button.IconButton"
+                app:strokeWidth="@dimen/_1sdp"
+                app:strokeColor="@color/medium_gray"
+                app:backgroundTint="@color/light_gray"
+                app:icon="@drawable/ic_minus_small"
+                app:iconTint="@color/medium_gray"
+                app:cornerRadius="@dimen/_8sdp"
+                android:padding="@dimen/_12sdp"
+                android:layout_marginTop="@dimen/_4sdp"
+                app:layout_constraintStart_toStartOf="@id/text_layout_time"
+                app:layout_constraintTop_toTopOf="@id/text_layout_reminder_time"
+                app:layout_constraintBottom_toBottomOf="@id/text_layout_reminder_time"/>
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/text_layout_reminder_time"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -237,13 +253,14 @@
             app:endIconMode="clear_text"
             app:endIconTint="@color/x_dark_gray"
             android:layout_marginTop="@dimen/_6sdp"
+            android:layout_marginStart="@dimen/_2sdp"
             android:layout_marginBottom="@dimen/_12sdp"
             app:boxCornerRadiusTopEnd="@dimen/_8sdp"
             app:boxCornerRadiusTopStart="@dimen/_8sdp"
             app:boxCornerRadiusBottomStart="@dimen/_8sdp"
             app:boxCornerRadiusBottomEnd="@dimen/_8sdp"
-            app:layout_constraintStart_toStartOf="@id/text_layout_time"
-            app:layout_constraintEnd_toEndOf="@id/text_layout_time"
+            app:layout_constraintStart_toEndOf="@id/btn_decrease"
+            app:layout_constraintEnd_toStartOf="@id/btn_increase"
             app:layout_constraintTop_toBottomOf="@id/tv_remind_me_before_test">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -256,13 +273,32 @@
                 android:importantForAutofill="noExcludeDescendants"
                 android:inputType="text"
                 android:fontFamily="sans-serif"
-                android:paddingVertical="@dimen/_14sdp"
+                android:paddingVertical="@dimen/_12sdp"
                 android:textColor="@color/black"
                 android:textColorHint="@color/x_dark_gray"
                 android:textCursorDrawable="@color/xx_dark_gray"
                 android:textSize="@dimen/_12ssp"/>
 
         </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_increase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Widget.Material3.Button.IconButton"
+                app:strokeWidth="@dimen/_1sdp"
+                app:strokeColor="@color/medium_gray"
+                app:backgroundTint="@color/light_gray"
+                app:icon="@drawable/ic_plus_small"
+                app:iconTint="@color/medium_gray"
+                app:cornerRadius="@dimen/_8sdp"
+                android:padding="@dimen/_12sdp"
+                android:layout_marginStart="@dimen/_2sdp"
+                android:layout_marginTop="@dimen/_4sdp"
+                app:layout_constraintEnd_toEndOf="@id/text_layout_time"
+                app:layout_constraintStart_toEndOf="@id/text_layout_reminder_time"
+                app:layout_constraintTop_toTopOf="@id/text_layout_reminder_time"
+                app:layout_constraintBottom_toBottomOf="@id/text_layout_reminder_time"/>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/text_layout_note"

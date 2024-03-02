@@ -328,7 +328,7 @@
     </fragment>
     <dialog
         android:id="@+id/methodAttachedFileFragment"
-        android:name="com.cancer.yaqeen.presentation.ui.main.treatment.add.symptoms.details.MethodAttachedFileFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.main.treatment.add.common.MethodAttachedFileFragment"
         tools:layout="@layout/fragment_method_attached_file" />
     <fragment
         android:id="@+id/chooseTimeSymptomFragment"
@@ -344,7 +344,13 @@
         tools:layout="@layout/fragment_photo_full_screen">
 
         <argument
-            android:name="imageUri"
+            android:name="IMAGE_URI"
+            app:nullable="true"
+            app:argType="string"/>
+
+        <argument
+            android:name="IMAGE_URL"
+            app:nullable="true"
             app:argType="string"/>
     </fragment>
     <fragment

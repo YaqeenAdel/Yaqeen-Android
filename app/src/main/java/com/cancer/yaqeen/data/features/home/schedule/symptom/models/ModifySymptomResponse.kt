@@ -4,5 +4,5 @@ data class ModifySymptomResponse(
     val signedURL: String? = null,
     val path: String? = null,
     var photoIsUploaded: Boolean = false,
-    var symptomIsAdded: Boolean = false,
+    var symptomIsModified: Boolean = false,
 )

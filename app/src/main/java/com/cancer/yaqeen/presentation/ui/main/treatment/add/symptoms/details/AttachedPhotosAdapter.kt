@@ -1,6 +1,7 @@
 package com.cancer.yaqeen.presentation.ui.main.treatment.add.symptoms.details
 
 import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -10,6 +11,10 @@ import com.cancer.yaqeen.data.features.home.schedule.medication.models.Photo
 import com.cancer.yaqeen.databinding.ItemPhotoAttachedBinding
 import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindImage
+import com.cancer.yaqeen.presentation.util.generateFileName
+import com.cancer.yaqeen.presentation.util.getCurrentTimeMillis
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class AttachedPhotosAdapter(
     private var items: MutableList<Photo> = arrayListOf(),
@@ -17,9 +22,6 @@ class AttachedPhotosAdapter(
     private val onDeleteClick: (Photo) -> Unit,
 ) :
     ListAdapter<Photo, AttachedPhotosAdapter.SymptomsTypesViewHolder>(Companion) {
-
-    private var selectedPosition = Constants.INIT_SELECTED_POSITION
-    private var lastSelectedPosition = Constants.INIT_SELECTED_POSITION
 
     companion object : DiffUtil.ItemCallback<Photo>() {
         override fun areItemsTheSame(
@@ -48,25 +50,22 @@ class AttachedPhotosAdapter(
     }
 
     override fun onBindViewHolder(holder: SymptomsTypesViewHolder, position: Int) {
-        val item = items[position]
+        val item = getItem(position)
         item?.let {
-            holder.bind(it)
+            holder.bind(position, it)
         }
     }
-    fun setList(list: List<Photo>?) {
-        submitList(list)
 
-        items = (list ?: listOf()) as MutableList<Photo>
+    fun setList(list: List<Photo>) {
+        super.submitList(list)
+
+        if (items.isEmpty())
+            items = list as MutableList<Photo>
     }
 
-    fun addPicture(uri: Uri) {
-
+    fun addPicture(photo: Photo) {
         items.add(
-            Photo(
-                id = 0,
-                uri = uri,
-                imageName = ""
-            )
+            photo
         )
 
         notifyItemInserted(items.size - 1)
@@ -74,8 +73,21 @@ class AttachedPhotosAdapter(
             super.submitList(items)
     }
 
-    fun deletePicture() {
+    fun addPictures(photos: List<Photo>) {
+        val positionStart = items.size
+        items.addAll(
+            photos
+        )
 
+        notifyItemRangeInserted(positionStart, photos.size)
+        if(positionStart == 0)
+            super.submitList(items)
+    }
+
+    fun deletePicture(item: Photo) {
+        items.remove(item)
+        super.submitList(items)
+        notifyDataSetChanged()
     }
 
 
@@ -86,7 +98,7 @@ class AttachedPhotosAdapter(
 
         private val _context = itemBinding.root.context
 
-        fun bind(item: Photo) {
+        fun bind(position: Int, item: Photo) {
             with(item){
                 itemBinding.tvSymptomImageName.text = imageName
 
@@ -96,6 +108,7 @@ class AttachedPhotosAdapter(
 
                 itemBinding.btnDelete.setOnClickListener {
                     onDeleteClick(item)
+                    deletePicture(item)
                 }
 
                 uri?.let {

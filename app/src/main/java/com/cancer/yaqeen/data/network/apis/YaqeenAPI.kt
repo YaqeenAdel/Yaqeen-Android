@@ -69,6 +69,7 @@ interface YaqeenAPI {
     suspend fun getHomeArticles(
         @Query("lang") lang: String,
         @Query("search") searchQuery: String,
+        @Query("refresh") refresh: String = "true",
     ): Response<HomeArticlesResponse>
 
     @GET("bookmarks")
@@ -107,7 +108,9 @@ interface YaqeenAPI {
     suspend fun getSymptomsTypes(): Response<SymptomTypesResponse>
 
     @GET("Symptoms")
-    suspend fun getSymptoms(): Response<SymptomsResponse>
+    suspend fun getSymptoms(
+        @Query("refresh") refresh: String = "true"
+    ): Response<SymptomsResponse>
 
     @PUT("upload_url")
     suspend fun createAnUploadLocation(

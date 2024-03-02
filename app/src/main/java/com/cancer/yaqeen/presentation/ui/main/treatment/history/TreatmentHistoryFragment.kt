@@ -153,8 +153,7 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
             viewModel.viewStateDeleteSymptom.observe(viewLifecycleOwner) { symptomId ->
                 symptomId?.let {
                     Toast.makeText(requireContext(), getString(R.string.symptom_deleted_successfully), Toast.LENGTH_SHORT).show()
-//                    symptomsAdapter.deleteSymptom(symptomId)
-                    getSymptoms()
+                    symptomsAdapter.deleteSymptom(symptomId)
                 }
             }
         }

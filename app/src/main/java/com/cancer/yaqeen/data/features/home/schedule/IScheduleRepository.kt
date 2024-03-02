@@ -7,6 +7,7 @@ import com.cancer.yaqeen.data.features.home.schedule.symptom.models.ModifySympto
 import com.cancer.yaqeen.data.features.home.schedule.symptom.models.Symptom
 import com.cancer.yaqeen.data.features.home.schedule.symptom.models.SymptomType
 import com.cancer.yaqeen.data.features.home.schedule.symptom.requests.AddSymptomRequest
+import com.cancer.yaqeen.data.features.home.schedule.symptom.requests.AddSymptomRequestBuilder
 import com.cancer.yaqeen.data.features.home.schedule.symptom.requests.UploadUrlRequest
 import com.cancer.yaqeen.data.features.home.schedule.symptom.responses.DeleteSymptomResponse
 import com.cancer.yaqeen.data.features.home.schedule.symptom.responses.UploadUrlResponse
@@ -19,9 +20,9 @@ interface IScheduleRepository {
      suspend fun getTodayReminders(): Flow<DataState<List<Schedule>>>
      suspend fun editMedication(scheduleId: Int, request: AddMedicationRequest): Flow<DataState<Boolean>>
      suspend fun getSymptomsTypes(): Flow<DataState<List<SymptomType>>>
-     suspend fun addSymptom(request: AddSymptomRequest): Flow<DataState<ModifySymptomResponse?>>
+     suspend fun addSymptom(builder: AddSymptomRequestBuilder): Flow<DataState<ModifySymptomResponse?>>
      suspend fun addSymptomWithoutPhoto(request: AddSymptomRequest): Flow<DataState<Boolean>>
-     suspend fun editSymptom(symptomId: Int, addSymptomRequest: AddSymptomRequest): Flow<DataState<UploadUrlResponse>>
+     suspend fun editSymptom(symptomId: Int, builder: AddSymptomRequestBuilder): Flow<DataState<ModifySymptomResponse?>>
      suspend fun editSymptomWithoutUpload(symptomId: Int, request: AddSymptomRequest): Flow<DataState<Boolean>>
      suspend fun deleteSymptom(symptomId: Int): Flow<DataState<Boolean>>
      suspend fun getSymptoms(): Flow<DataState<List<Symptom>>>

@@ -1,6 +1,8 @@
 package com.cancer.yaqeen.data.features.home.schedule.symptom.mappers
 
+import android.util.Log
 import com.cancer.yaqeen.data.base.Mapper
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.Photo
 import com.cancer.yaqeen.data.features.home.schedule.symptom.models.ModifySymptomResponse
 import com.cancer.yaqeen.data.features.home.schedule.symptom.models.Symptom
 import com.cancer.yaqeen.data.features.home.schedule.symptom.models.SymptomTrack
@@ -13,6 +15,9 @@ import com.cancer.yaqeen.data.features.home.schedule.symptom.responses.SymptomsR
 import com.cancer.yaqeen.data.features.home.schedule.symptom.responses.UploadUrlResponse
 import com.cancer.yaqeen.data.utils.formatDate
 import com.cancer.yaqeen.data.utils.formatTime
+import com.cancer.yaqeen.presentation.util.generateFileName
+import com.cancer.yaqeen.presentation.util.getCurrentTimeMillis
+import java.util.UUID
 
 
 class MappingSymptomsTypesRemoteAsUIModel: Mapper<SymptomTypesResponse, List<SymptomType>> {
@@ -38,6 +43,16 @@ class MappingCreateAnUploadLocationRemoteAsUIModel :
     }
 }
 
+class MappingAddSymptomWithUploadRemoteAsUIModel :
+    Mapper<AddSymptomResponse, ModifySymptomResponse?> {
+    override fun map(input: AddSymptomResponse): ModifySymptomResponse? {
+        return ModifySymptomResponse(
+            photoIsUploaded = true,
+            symptomIsModified = input.response != null
+        )
+    }
+}
+
 class MappingAddSymptomRemoteAsUIModel :
     Mapper<AddSymptomResponse, Boolean> {
     override fun map(input: AddSymptomResponse): Boolean {
@@ -59,6 +74,16 @@ class MappingEditSymptomRemoteAsUIModel :
     }
 }
 
+class MappingEditSymptomWithUploadRemoteAsUIModel :
+    Mapper<EditSymptomResponse, ModifySymptomResponse?> {
+    override fun map(input: EditSymptomResponse): ModifySymptomResponse? {
+        return ModifySymptomResponse(
+            photoIsUploaded = true,
+            symptomIsModified = input.response != null
+        )
+    }
+}
+
 class MappingSymptomsRemoteAsModel: Mapper<SymptomsResponse, List<Symptom>> {
     override fun map(input: SymptomsResponse): List<Symptom> = input.symptoms?.map {
         it.run {
@@ -70,8 +95,7 @@ class MappingSymptomsRemoteAsModel: Mapper<SymptomsResponse, List<Symptom>> {
                         name = symptomLookup.translations?.firstOrNull()?.translation?.name ?: ""
                     )
                 ),
-                imageUrl = photoLink ?: "",
-                imageDownloadUrl = downloadPhotoLink?.url ?: "",
+                photosList = createPhotosList(photoLink, downloadPhotoLink?.url),
                 details = details,
                 reminderTime = time?.formatTime() ?: "",
                 startDate = time?.formatDate() ?: "",
@@ -79,6 +103,37 @@ class MappingSymptomsRemoteAsModel: Mapper<SymptomsResponse, List<Symptom>> {
             )
         }
     } ?: listOf()
+
+    private fun createPhotosList(photoPath: String?, url: String?): List<Photo> {
+        val photos: MutableList<Photo> = arrayListOf()
+        val photosPaths = photoPath?.split(",") ?: listOf()
+        val photosUrls = url?.split(",") ?: listOf()
+
+        val pathsSize = photosPaths.size
+        val urlsSize = photosUrls.size
+
+        val size = if(pathsSize < urlsSize) pathsSize else urlsSize
+
+        var pathURL = ""
+        var imageName = ""
+
+        for (index in 0 until size){
+            pathURL = photosPaths[index]
+            imageName = pathURL.substringAfterLast("/")
+            imageName = imageName.ifEmpty { generateFileName() }
+
+            photos.add(
+                Photo(
+                    id = getCurrentTimeMillis(),
+                    url = photosUrls[index],
+                    pathURL = pathURL,
+                    imageName = imageName
+                )
+            )
+        }
+
+        return photos
+    }
 }
 
 
@@ -87,8 +142,7 @@ class MappingSymptomAsSymptomTrack: Mapper<Symptom, SymptomTrack> {
         SymptomTrack(
             symptomTypes = symptomTypes,
             details = details,
-            imageUrl = imageUrl,
-            imageDownloadUrl = imageDownloadUrl,
+            photosList = photosList as MutableList<Photo>?,
             reminderTime = reminderTime,
             startDate = startDate,
             doctorName = doctorName,

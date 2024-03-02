@@ -26,6 +26,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginVertical="@dimen/_4sdp"
             android:layout_marginStart="@dimen/_4sdp"/>
 
         <TextView

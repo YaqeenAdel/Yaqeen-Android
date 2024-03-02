@@ -1,12 +1,10 @@
 package com.cancer.yaqeen.presentation.ui.main.treatment.add.symptoms.details
 
-import android.Manifest
 import android.net.Uri
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,22 +22,15 @@ import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.schedule.symptom.models.SymptomTrack
 import com.cancer.yaqeen.databinding.FragmentSymptomsDetailsBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
-import com.cancer.yaqeen.presentation.ui.main.treatment.add.symptoms.SymptomsTypesAdapter
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.symptoms.SymptomsViewModel
 import com.cancer.yaqeen.presentation.util.Constants
+import com.cancer.yaqeen.presentation.util.Constants.IMAGE_URI
 import com.cancer.yaqeen.presentation.util.Constants.IMAGE_URI_KEY
+import com.cancer.yaqeen.presentation.util.Constants.IMAGE_URL
 import com.cancer.yaqeen.presentation.util.Constants.REQUEST_TAKE_PICTURE_KEY
 import com.cancer.yaqeen.presentation.util.autoCleared
-import com.cancer.yaqeen.presentation.util.binding_adapters.bindImage
-import com.cancer.yaqeen.presentation.util.cameraPermissionsAreGranted
-import com.cancer.yaqeen.presentation.util.changeVisibility
 import com.cancer.yaqeen.presentation.util.disable
-import com.cancer.yaqeen.presentation.util.dpToPx
 import com.cancer.yaqeen.presentation.util.enable
-import com.cancer.yaqeen.presentation.util.enableCameraPermissions
-import com.cancer.yaqeen.presentation.util.enableStoragePermissions
-import com.cancer.yaqeen.presentation.util.recyclerview.VerticalMarginItemDecoration
-import com.cancer.yaqeen.presentation.util.storagePermissionsAreGranted
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -57,12 +48,16 @@ class SymptomsDetailsFragment : BaseFragment() {
 
     private val getContentResultLauncher: ActivityResultLauncher<String?> =
         registerForActivityResult(
-            ActivityResultContracts.GetContent()
+            ActivityResultContracts.GetMultipleContents()
         ) { result ->
 
-            result?.let {
-                addImage(result)
-            }
+            if(result.isNullOrEmpty())
+                return@registerForActivityResult
+
+            if (result.size == 1)
+                addImage(result.first())
+            else
+                addImages(result)
         }
 
     override fun onCreateView(
@@ -119,37 +114,41 @@ class SymptomsDetailsFragment : BaseFragment() {
             if (details?.isNotEmpty() == true)
                 binding.editTextDetails.setText(details)
 
-//            imageUri?.let {
-//                updateUI(imageUri)
-//            }
-//            imageDownloadUrl?.let {
-//                updateUI(imageDownloadUrl)
-//            }
-
+            if(photosList?.isNotEmpty() == true)
+                attachedPhotosAdapter.setList(photosList!!.toList())
         }
 
         checkSymptomData()
     }
 
     private fun addImage(uri: Uri){
-        symptomsViewModel.addSymptomPicture(uri)
-        attachedPhotosAdapter.addPicture(uri)
+        val photo = symptomsViewModel.createPhoto(uri)
+        attachedPhotosAdapter.addPicture(photo)
+        symptomsViewModel.addSymptomPhoto(photo)
+    }
+
+    private fun addImages(uris: List<Uri>){
+        val photos = symptomsViewModel.createPhotos(uris)
+        attachedPhotosAdapter.addPictures(photos)
+        symptomsViewModel.addSymptomPhotos(photos)
     }
 
     private fun setupAttachedPhotosAdapter() {
-        attachedPhotosAdapter = AttachedPhotosAdapter(
-            onShowClick = {
-                navController.tryNavigate(
-                    R.id.photoFullScreenFragment, bundleOf(
-                        "imageUri" to it.uri,
-                        "imageUrl" to it.url,
+        if (!::attachedPhotosAdapter.isInitialized) {
+            attachedPhotosAdapter = AttachedPhotosAdapter(
+                onShowClick = {
+                    navController.tryNavigate(
+                        R.id.photoFullScreenFragment, bundleOf(
+                            IMAGE_URI to it.uri?.toString(),
+                            IMAGE_URL to it.url,
+                        )
                     )
-                )
-            },
-            onDeleteClick = {
-
-            }
-        )
+                },
+                onDeleteClick = {
+                    symptomsViewModel.deleteSymptomPhoto(it)
+                }
+            )
+        }
 
         binding.rvImages.apply {
             adapter = attachedPhotosAdapter

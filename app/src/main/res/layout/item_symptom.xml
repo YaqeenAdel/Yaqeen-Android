@@ -7,14 +7,19 @@
 
     </data>
 
-    <RelativeLayout
+    <FrameLayout
+        android:id="@+id/item_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/background_view_white_radius_22"
         android:animateLayoutChanges="true">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout_less"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:layout_marginBottom="@dimen/_10sdp"
         android:visibility="visible">
 
         <ImageView
@@ -60,13 +65,13 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_13sdp"
             android:layout_marginTop="@dimen/_6sdp"
-            android:layout_marginBottom="@dimen/_2sdp"
             android:fontFamily="sans-serif-medium"
             android:text="@string/show_more"
             android:textColor="@color/primary_color"
             android:textSize="@dimen/_10ssp"
             app:backgroundTint="@color/white"
             app:cornerRadius="@dimen/_16sdp"
+            android:gravity="bottom|center"
             app:layout_constraintHorizontal_bias="1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -80,20 +85,38 @@
             android:id="@+id/layout_more"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:layout_marginBottom="@dimen/_10sdp"
             android:visibility="gone">
 
-            <ImageView
-                android:id="@+id/iv_symptom_2"
-                android:layout_width="@dimen/_44sdp"
-                android:layout_height="@dimen/_44sdp"
-                tools:src="@mipmap/ic_launcher"
-                android:scaleType="fitXY"
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_symptom_photos"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:saveEnabled="false"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 android:layout_marginTop="@dimen/_15sdp"
-                app:layout_goneMarginStart="@dimen/_14sdp"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn_show_less"
                 android:layout_marginVertical="@dimen/_10sdp"
-                android:layout_marginStart="@dimen/_14sdp"/>
+                android:layout_marginStart="@dimen/_14sdp"
+                tools:itemCount="4"
+                tools:listitem="@layout/item_photo_small" />
+<!--            <ImageView-->
+<!--                android:id="@+id/iv_symptom_2"-->
+<!--                android:layout_width="@dimen/_44sdp"-->
+<!--                android:layout_height="@dimen/_44sdp"-->
+<!--                tools:src="@mipmap/ic_launcher"-->
+<!--                android:scaleType="fitXY"-->
+<!--                android:layout_marginTop="@dimen/_15sdp"-->
+<!--                app:layout_constraintTop_toTopOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                android:layout_marginVertical="@dimen/_10sdp"-->
+<!--                android:layout_marginStart="@dimen/_14sdp"/>-->
 
 
             <com.google.android.material.button.MaterialButton
@@ -101,7 +124,7 @@
                 style="@style/Widget.Material3.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_13sdp"
+                android:layout_marginEnd="@dimen/_13sdp"
                 android:fontFamily="sans-serif-medium"
                 android:text="@string/show_less"
                 android:textColor="@color/primary_color"
@@ -109,10 +132,10 @@
                 app:backgroundTint="@color/white"
                 app:cornerRadius="@dimen/_16sdp"
                 app:layout_constraintHorizontal_bias="1"
-                app:layout_constraintBottom_toBottomOf="@id/iv_symptom_2"
+                app:layout_constraintBottom_toBottomOf="@id/rv_symptom_photos"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/iv_symptom_2"
-                app:layout_constraintTop_toTopOf="@id/iv_symptom_2"
+                app:layout_constraintStart_toEndOf="@id/rv_symptom_photos"
+                app:layout_constraintTop_toTopOf="@id/rv_symptom_photos"
                 app:layout_constraintVertical_bias="1" />
 
             <TextView
@@ -127,8 +150,8 @@
                 android:fontFamily="sans-serif"
                 android:layout_marginTop="@dimen/_6sdp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@id/iv_symptom_2"
-                app:layout_constraintTop_toBottomOf="@+id/iv_symptom_2" />
+                app:layout_constraintStart_toStartOf="@id/rv_symptom_photos"
+                app:layout_constraintTop_toBottomOf="@+id/rv_symptom_photos" />
 
             <TextView
                 android:id="@+id/tv_notes_val"
@@ -288,14 +311,15 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_date_time_val" />
 
             <LinearLayout
+                android:id="@+id/linearLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/view_day_time"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintVertical_bias="0"
-                android:layout_marginVertical="@dimen/_6sdp"
+                app:layout_constraintVertical_bias="1"
+                android:layout_marginTop="@dimen/_6sdp"
                 android:layout_marginHorizontal="@dimen/_14sdp"
                 android:orientation="horizontal"
                 android:background="@drawable/background_view_gray_radius_8">
@@ -346,12 +370,5 @@
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <View
-            android:id="@+id/view"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_1sdp"
-            android:layout_alignParentBottom="true"
-            android:background="@drawable/background_view_selected_colored"/>
-
-    </RelativeLayout>
+    </FrameLayout>
 </layout>

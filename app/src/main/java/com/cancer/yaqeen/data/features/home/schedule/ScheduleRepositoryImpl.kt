@@ -4,24 +4,27 @@ import android.content.Context
 import android.net.Uri
 import android.util.Log
 import android.webkit.MimeTypeMap
-import androidx.core.net.toUri
 import com.cancer.yaqeen.data.features.home.schedule.medication.mappers.MappingAddMedicationRemoteAsUIModel
 import com.cancer.yaqeen.data.features.home.schedule.medication.mappers.MappingEditMedicationRemoteAsUIModel
 import com.cancer.yaqeen.data.features.home.schedule.medication.mappers.MappingRemindersFromNowRemoteAsModel
 import com.cancer.yaqeen.data.features.home.schedule.medication.mappers.MappingMedicationsRemindersRemoteAsModel
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Medication
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.Photo
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Schedule
 import com.cancer.yaqeen.data.features.home.schedule.medication.requests.AddMedicationRequest
 import com.cancer.yaqeen.data.features.home.schedule.symptom.mappers.MappingAddSymptomRemoteAsUIModel
+import com.cancer.yaqeen.data.features.home.schedule.symptom.mappers.MappingAddSymptomWithUploadRemoteAsUIModel
 import com.cancer.yaqeen.data.features.home.schedule.symptom.mappers.MappingCreateAnUploadLocationRemoteAsUIModel
 import com.cancer.yaqeen.data.features.home.schedule.symptom.mappers.MappingDeleteSymptomRemoteAsUIModel
 import com.cancer.yaqeen.data.features.home.schedule.symptom.mappers.MappingEditSymptomRemoteAsUIModel
+import com.cancer.yaqeen.data.features.home.schedule.symptom.mappers.MappingEditSymptomWithUploadRemoteAsUIModel
 import com.cancer.yaqeen.data.features.home.schedule.symptom.mappers.MappingSymptomsRemoteAsModel
 import com.cancer.yaqeen.data.features.home.schedule.symptom.mappers.MappingSymptomsTypesRemoteAsUIModel
 import com.cancer.yaqeen.data.features.home.schedule.symptom.models.ModifySymptomResponse
 import com.cancer.yaqeen.data.features.home.schedule.symptom.models.Symptom
 import com.cancer.yaqeen.data.features.home.schedule.symptom.models.SymptomType
 import com.cancer.yaqeen.data.features.home.schedule.symptom.requests.AddSymptomRequest
+import com.cancer.yaqeen.data.features.home.schedule.symptom.requests.AddSymptomRequestBuilder
 import com.cancer.yaqeen.data.features.home.schedule.symptom.requests.UploadUrlRequest
 import com.cancer.yaqeen.data.features.home.schedule.symptom.responses.UploadUrlResponse
 import com.cancer.yaqeen.data.network.base.BaseDataSource
@@ -34,6 +37,8 @@ import com.cancer.yaqeen.data.network.error.ErrorHandlerImpl
 import com.cancer.yaqeen.data.utils.compressImage
 import com.cancer.yaqeen.presentation.util.FileUtils
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -93,69 +98,103 @@ class ScheduleRepositoryImpl @Inject constructor(
             }
         }
 
-    override suspend fun addSymptom(request: AddSymptomRequest): Flow<DataState<ModifySymptomResponse?>> =
-        flowStatus {
-            val fileUri = request.symptom.photoLink.toUri()
-            val file = FileUtils.getFile(context, fileUri)
-            val restCreateLocationAPI = getResultRestAPI(MappingCreateAnUploadLocationRemoteAsUIModel()) {
+
+    private suspend fun createAnUploadLocation(
+        fileUri: Uri?,
+        folderName: String
+    ): DataState<ModifySymptomResponse?> {
+        val file = FileUtils.getFile(context, fileUri)
+        val restCreateLocationAPI =
+            getResultRestAPI(MappingCreateAnUploadLocationRemoteAsUIModel()) {
                 apiService.createAnUploadLocation(
                     UploadUrlRequest(
-                        path = "symptoms/${file?.name}"
+                        path = "$folderName/${file?.name}"
                     )
                 )
             }
+        return restCreateLocationAPI
+    }
 
-            if (restCreateLocationAPI.status == Status.SUCCESS) {
-                val signedURL = restCreateLocationAPI.data?.signedURL
-                val pathURL = restCreateLocationAPI.data?.path
+    private suspend fun uploadImages(folderName: String, photos: List<Photo>): List<DataState<ModifySymptomResponse?>?> {
+        val responses = coroutineScope {
+            photos.filter { it.uri != null }.map { photo ->
+                async {
+                    val fileUri = photo.uri
 
-                val byteArray = compressImage(
-                    context,
-                    Uri.parse(fileUri.toString()),
-                    1080,
-                    2400,
-                    100
-                )
-                val fileExtension =
-                    MimeTypeMap.getFileExtensionFromUrl(fileUri.toString())
-                val imageRequestBody = RequestBody.Companion.create(
-                    "image/${fileExtension}".toMediaTypeOrNull(),
-                    byteArray!!.toByteString()
-                )
-                coroutineScope {
-                    launch(Dispatchers.IO) {
-                        val putRequest = Request
-                            .Builder()
-                            .url(signedURL.toString())
-                            .put(imageRequestBody)
-                            .build()
+                    val restCreateLocationAPI = createAnUploadLocation(fileUri, folderName)
 
-                        try {
-                            val response = OkHttpClient().newCall(putRequest).execute()
+                    if (restCreateLocationAPI.status == Status.SUCCESS) {
+                        val signedURL = restCreateLocationAPI.data?.signedURL
 
-                            if (response.isSuccessful) {
-                                restCreateLocationAPI.data?.apply {
-                                    photoIsUploaded = true
-                                }
-                                val addSymptomResponseAPI = getResultRestAPI {
-                                    apiService.addSymptom(request.apply {
-                                        symptom.photoLink = pathURL.toString()
-                                    })
-                                }
+                        val imageRequestBody = getImageRequestBody(fileUri)
 
-                                if (addSymptomResponseAPI.status == Status.SUCCESS) {
-                                    restCreateLocationAPI.data?.apply {
-                                        symptomIsAdded = true
+                        coroutineScope {
+                            launch(Dispatchers.IO) {
+                                val putRequest = Request
+                                    .Builder()
+                                    .url(signedURL.toString())
+                                    .put(imageRequestBody)
+                                    .build()
+
+                                try {
+                                    val response =
+                                        OkHttpClient().newCall(putRequest).execute()
+
+                                    if (response.isSuccessful) {
+                                        val pathURL = restCreateLocationAPI.data?.path.toString()
+                                        restCreateLocationAPI.data?.apply {
+                                            photoIsUploaded = true
+                                        }
+
+                                        photos.firstOrNull {
+                                            it.id == photo.id
+                                        }?.pathURL = pathURL
+
+                                    }else {
+                                        throw Exception()
                                     }
+                                } catch (e: Exception) {
+                                    throw Exception()
                                 }
                             }
-                        } catch (e: Exception) {
                         }
+                    }else{
+                        throw Exception()
                     }
+                    restCreateLocationAPI
                 }
-            }
+            }.awaitAll()
+        }
+        return responses
+    }
 
-            restCreateLocationAPI
+    override suspend fun addSymptom(builder: AddSymptomRequestBuilder): Flow<DataState<ModifySymptomResponse?>> =
+        flow {
+            emit(DataState.Loading())
+            try {
+                val photos = builder.photos
+
+                val responses = uploadImages("symptoms", photos)
+
+                val isFailed =
+                    responses.any { it?.status == Status.ERROR || it?.status == Status.FAILED}
+
+                if (isFailed){
+                    emit(DataState.Failed())
+                }else {
+                    val addSymptomResponseAPI = getResultRestAPI(
+                        MappingAddSymptomWithUploadRemoteAsUIModel()
+                    ) {
+                        apiService.addSymptom(builder.apply {
+                            this.photos = photos
+                        }.buildRequestBody())
+                    }
+                    emit(addSymptomResponseAPI)
+                }
+
+            } catch (e: Exception) {
+                emit(DataState.Failed())
+            }
         }
 
 
@@ -182,60 +221,52 @@ class ScheduleRepositoryImpl @Inject constructor(
 
     override suspend fun editSymptom(
         symptomId: Int,
-        request: AddSymptomRequest
-    ): Flow<DataState<UploadUrlResponse>> =
-        flowStatus {
-            val fileUri = request.symptom.photoLink.toUri()
-            val file = FileUtils.getFile(context, fileUri)
-            val restCreateLocationAPI = getResultRestAPI {
-                apiService.createAnUploadLocation(
-                    UploadUrlRequest(
-                        path = "symptoms/${file?.name}"
-                    )
-                )
-            }
+        builder: AddSymptomRequestBuilder
+    ): Flow<DataState<ModifySymptomResponse?>> =
+        flow {
+            emit(DataState.Loading())
+            try {
+                val photos = builder.photos
 
-            if (restCreateLocationAPI.status == Status.SUCCESS) {
-                val signedURL = restCreateLocationAPI.data?.getUploadURL?.signedURL
-                val pathURL = restCreateLocationAPI.data?.getUploadURL?.path
+                val responses = uploadImages("symptoms", photos)
 
-                val byteArray = compressImage(
-                    context,
-                    Uri.parse(fileUri.toString()),
-                    1080,
-                    2400,
-                    100
-                )
-                val fileExtension =
-                    MimeTypeMap.getFileExtensionFromUrl(fileUri.toString())
-                val imageRequestBody = RequestBody.Companion.create(
-                    "image/${fileExtension}".toMediaTypeOrNull(),
-                    byteArray!!.toByteString()
-                )
-                coroutineScope {
-                    launch(Dispatchers.IO) {
-                        val putRequest = Request
-                            .Builder()
-                            .url(signedURL.toString())
-                            .put(imageRequestBody)
-                            .build()
+                val isFailed =
+                    responses.any { it?.status == Status.ERROR || it?.status == Status.FAILED}
 
-                        val response = OkHttpClient().newCall(putRequest).execute()
-
-                        if (response.isSuccessful) {
-                            Log.d("TAG", "uploadImage: $response ")
-                            getResultRestAPI() {
-                                apiService.editSymptom(symptomId, request.apply {
-                                    symptom.photoLink = pathURL.toString()
-                                })
-                            }
-                        }
+                if (isFailed){
+                    emit(DataState.Failed())
+                }else {
+                    val editSymptomResponseAPI = getResultRestAPI(
+                        MappingEditSymptomWithUploadRemoteAsUIModel()
+                    ) {
+                        apiService.editSymptom(symptomId, builder.apply {
+                            this.photos = photos
+                        }.buildRequestBody())
                     }
+                    emit(editSymptomResponseAPI)
                 }
-            }
 
-            restCreateLocationAPI
+            } catch (e: Exception) {
+                emit(DataState.Failed())
+            }
         }
+
+    private fun getImageRequestBody(fileUri: Uri?): RequestBody {
+        val byteArray = compressImage(
+            context,
+            Uri.parse(fileUri.toString()),
+            1080,
+            2400,
+            100
+        )
+        val fileExtension =
+            MimeTypeMap.getFileExtensionFromUrl(fileUri.toString())
+        val imageRequestBody = RequestBody.create(
+            "image/${fileExtension}".toMediaTypeOrNull(),
+            byteArray!!.toByteString()
+        )
+        return imageRequestBody
+    }
 
 
     override suspend fun deleteSymptom(symptomId: Int): Flow<DataState<Boolean>> =

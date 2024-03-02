@@ -29,7 +29,7 @@
             app:titleTextAppearance="@style/ToolbarTitleStyle"
             app:titleTextColor="@color/light_black" />
 
-        <ScrollView
+        <androidx.core.widget.NestedScrollView
             android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -57,6 +57,26 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_symptom_photos"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_18sdp"
+                    android:layout_marginEnd="@dimen/_16sdp"
+                    android:layout_marginTop="@dimen/_14sdp"
+                    android:visibility="invisible"
+                    android:nestedScrollingEnabled="false"
+                    android:saveEnabled="false"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintTop_toBottomOf="@id/tv_symptoms_label"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintVertical_bias="0"
+                    tools:itemCount="4"
+                    tools:listitem="@layout/item_photo" />
+
                 <ImageView
                     android:id="@+id/iv_symptom"
                     android:layout_width="@dimen/_100sdp"
@@ -64,6 +84,7 @@
                     android:layout_marginTop="@dimen/_14sdp"
                     android:src="@mipmap/ic_launcher"
                     android:scaleType="fitXY"
+                    android:visibility="invisible"
                     app:layout_constraintTop_toBottomOf="@id/tv_symptoms_label"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"/>
@@ -79,7 +100,7 @@
                     android:textSize="@dimen/_10ssp"
                     android:fontFamily="sans-serif"
                     android:layout_marginStart="@dimen/_32sdp"
-                    android:layout_marginTop="@dimen/_6sdp"
+                    android:layout_marginTop="@dimen/_8sdp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/iv_symptom" />
@@ -247,7 +268,7 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </ScrollView>
+        </androidx.core.widget.NestedScrollView>
 
 
         <com.google.android.material.button.MaterialButton

@@ -24,6 +24,11 @@ object Constants {
     const val TITLE_KEY = "TITLE"
     const val BODY_KEY = "BODY"
 
+    const val IMAGE_URI = "IMAGE_URI"
+    const val IMAGE_URL = "IMAGE_URL"
+
+    const val SYMPTOM_KEY = "SYMPTOM_KEY"
+    const val REQUEST_SYMPTOM_KEY = "REQUEST_SYMPTOM_KEY"
 
     const val MAX_QUOTES = 2
 
