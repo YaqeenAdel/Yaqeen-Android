@@ -3,6 +3,8 @@ package com.cancer.yaqeen.data.features.home.schedule.symptom.requests
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Photo
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.ScheduleType
 import com.cancer.yaqeen.data.features.onboarding.requests.UpdateProfileRequestBody
+import com.cancer.yaqeen.data.utils.formatDateAPI
+import com.cancer.yaqeen.data.utils.formatTimeAPI
 import com.cancer.yaqeen.data.utils.tryToLong
 import com.google.gson.annotations.SerializedName
 
@@ -31,7 +33,8 @@ data class AddSymptomRequestBuilder(
     val details: String,
     val symptomLookupIds: List<Int>,
     val doctorName: String,
-    val dateTime: String,
+    val startDate: String?,
+    val time: String?,
     var photos: List<Photo>,
 ) {
     fun buildRequestBody(): AddSymptomRequest =
@@ -41,7 +44,7 @@ data class AddSymptomRequestBuilder(
                 symptomLookupId = symptomLookupIds.first(),
                 notes = doctorName,
                 photoLink = photos.map { it.pathURL }.joinToString(","),
-                time = dateTime
+                time = "${startDate?.formatDateAPI() ?: ""} ${time?.formatTimeAPI() ?: ""}"
             )
         )
 }

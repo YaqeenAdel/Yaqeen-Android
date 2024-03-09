@@ -70,6 +70,8 @@ class TreatmentFragment : BaseFragment(showBottomMenu = true), View.OnClickListe
         }
         binding.btnMedications.setOnClickListener(this)
         binding.btnSymptoms.setOnClickListener(this)
+        binding.btnRoutineTests.setOnClickListener(this)
+        binding.btnMedicalAppointment.setOnClickListener(this)
 
     }
     private fun updateUI() {
@@ -124,6 +126,16 @@ class TreatmentFragment : BaseFragment(showBottomMenu = true), View.OnClickListe
             R.id.btn_symptoms -> {
                 navController.tryNavigate(
                     TreatmentFragmentDirections.actionTreatmentFragmentToSymptomsTypesFragment(null)
+                )
+            }
+            R.id.btn_routine_tests -> {
+                navController.tryNavigate(
+                    TreatmentFragmentDirections.actionTreatmentFragmentToRoutineTestInfoFragment()
+                )
+            }
+            R.id.btn_medical_appointment -> {
+                navController.tryNavigate(
+                    TreatmentFragmentDirections.actionTreatmentFragmentToMedicalReminderInfoFragment()
                 )
             }
         }

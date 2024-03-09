@@ -19,6 +19,7 @@ import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.ReminderTime
 import com.cancer.yaqeen.data.features.home.schedule.symptom.models.SymptomTrack
 import com.cancer.yaqeen.databinding.FragmentChooseTimeSymptomBinding
+import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.symptoms.SymptomsViewModel
 import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.autoCleared
@@ -32,7 +33,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class ChooseTimeSymptomFragment : Fragment() {
+class ChooseTimeSymptomFragment : BaseFragment() {
 
     private var binding: FragmentChooseTimeSymptomBinding by autoCleared()
 

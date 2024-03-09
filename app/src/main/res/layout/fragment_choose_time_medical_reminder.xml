@@ -60,6 +60,7 @@
             android:id="@+id/tv_doctor_address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:layout_marginTop="@dimen/_22sdp"
             app:layout_constraintEnd_toEndOf="@id/toolbar"
             app:layout_constraintStart_toStartOf="@id/toolbar"
@@ -239,10 +240,10 @@
                 android:padding="@dimen/_12sdp"
                 android:layout_marginTop="@dimen/_4sdp"
                 app:layout_constraintStart_toStartOf="@id/text_layout_time"
-                app:layout_constraintTop_toTopOf="@id/text_layout_reminder_time"
-                app:layout_constraintBottom_toBottomOf="@id/text_layout_reminder_time"/>
+                app:layout_constraintTop_toTopOf="@id/text_layout_reminder_before_time"
+                app:layout_constraintBottom_toBottomOf="@id/text_layout_reminder_before_time"/>
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/text_layout_reminder_time"
+            android:id="@+id/text_layout_reminder_before_time"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -264,7 +265,7 @@
             app:layout_constraintTop_toBottomOf="@id/tv_remind_me_before_test">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_text_reminder_time"
+                android:id="@+id/edit_text_reminder_before_time"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
@@ -274,6 +275,7 @@
                 android:inputType="text"
                 android:fontFamily="sans-serif"
                 android:paddingVertical="@dimen/_12sdp"
+                android:text="0"
                 android:textColor="@color/black"
                 android:textColorHint="@color/x_dark_gray"
                 android:textCursorDrawable="@color/xx_dark_gray"
@@ -296,9 +298,9 @@
                 android:layout_marginStart="@dimen/_2sdp"
                 android:layout_marginTop="@dimen/_4sdp"
                 app:layout_constraintEnd_toEndOf="@id/text_layout_time"
-                app:layout_constraintStart_toEndOf="@id/text_layout_reminder_time"
-                app:layout_constraintTop_toTopOf="@id/text_layout_reminder_time"
-                app:layout_constraintBottom_toBottomOf="@id/text_layout_reminder_time"/>
+                app:layout_constraintStart_toEndOf="@id/text_layout_reminder_before_time"
+                app:layout_constraintTop_toTopOf="@id/text_layout_reminder_before_time"
+                app:layout_constraintBottom_toBottomOf="@id/text_layout_reminder_before_time"/>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/text_layout_note"
@@ -320,7 +322,7 @@
             app:boxCornerRadiusBottomEnd="@dimen/_8sdp"
             app:layout_constraintStart_toStartOf="@id/text_layout_time"
             app:layout_constraintEnd_toEndOf="@id/text_layout_time"
-            app:layout_constraintTop_toBottomOf="@id/text_layout_reminder_time">
+            app:layout_constraintTop_toBottomOf="@id/text_layout_reminder_before_time">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_text_note"
@@ -339,11 +341,74 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/group_symptom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="item_symptom, btn_delete_symptom"
+                android:visibility="gone"/>
+
+            <include
+                android:id="@+id/item_symptom"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                layout="@layout/item_symptom"
+                android:layout_marginTop="@dimen/_14sdp"
+                app:layout_constraintStart_toStartOf="@id/text_layout_time"
+                app:layout_constraintEnd_toEndOf="@id/text_layout_time"
+                app:layout_constraintTop_toBottomOf="@id/text_layout_note"/>
+
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_delete_symptom"
+                android:layout_width="@dimen/_32sdp"
+                android:layout_height="@dimen/_32sdp"
+                app:layout_constraintStart_toStartOf="@+id/item_symptom"
+                app:layout_constraintEnd_toEndOf="@id/item_symptom"
+                app:layout_constraintTop_toTopOf="@id/item_symptom"
+                app:layout_constraintBottom_toBottomOf="@id/item_symptom"
+                app:layout_constraintVertical_bias="0"
+                app:layout_constraintHorizontal_bias="1"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:layout_marginEnd="@dimen/_4sdp"
+                style="@style/Widget.Material3.Button.IconButton"
+                app:icon="@drawable/baseline_close_24"
+                app:iconTint="@color/medium_gray"
+                app:iconGravity="textStart"
+                app:strokeWidth="@dimen/_1sdp"
+                app:strokeColor="@color/gray"
+                app:cornerRadius="@dimen/_32sdp"/>
+            
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_add_symptom"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                android:gravity="center|start"
+                android:layout_marginTop="@dimen/_14sdp"
+                android:paddingStart="@dimen/_14sdp"
+                android:paddingEnd="@dimen/_4sdp"
+                android:paddingVertical="@dimen/_12sdp"
+                android:text="@string/add_symptoms_to_the_reminder"
+                android:textColor="@color/light_black"
+                android:textSize="@dimen/_14ssp"
+                android:fontFamily="sans-serif"
+                app:strokeColor="@color/gray"
+                app:strokeWidth="@dimen/_1sdp"
+                app:backgroundTint="@color/white"
+                app:cornerRadius="@dimen/_8sdp"
+                app:layout_constraintStart_toStartOf="@id/text_layout_time"
+                app:layout_constraintEnd_toEndOf="@id/text_layout_time"
+                app:layout_constraintTop_toBottomOf="@id/text_layout_note"/>
+
         <LinearLayout
             android:id="@+id/layout_toggle_group"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:visibility="gone"
             android:background="@drawable/background_view_gray_radius_8"
             android:layout_marginTop="@dimen/_14sdp"
             app:layout_constraintStart_toStartOf="@id/text_layout_time"
@@ -425,7 +490,7 @@
             style="@style/Widget.Material3.Button.TextButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:enabled="true"
+            android:enabled="false"
             android:paddingVertical="@dimen/_10sdp"
             app:iconTint="@color/medium_gray"
             app:icon="@drawable/ic_next"
@@ -439,6 +504,7 @@
             app:cornerRadius="@dimen/_16sdp"
             android:layout_marginVertical="@dimen/_18sdp"
             android:layout_marginHorizontal="@dimen/_16sdp"
+            app:layout_constraintVertical_bias="1"
             app:layout_constraintTop_toBottomOf="@id/scrollView"
             app:layout_constraintStart_toStartOf="@id/scrollView"
             app:layout_constraintBottom_toBottomOf="parent"

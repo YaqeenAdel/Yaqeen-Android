@@ -5,6 +5,11 @@ import com.cancer.yaqeen.data.features.home.articles.responses.BookmarkArticleRe
 import com.cancer.yaqeen.data.features.home.articles.responses.BookmarkedArticlesResponse
 import com.cancer.yaqeen.data.features.home.articles.responses.HomeArticlesResponse
 import com.cancer.yaqeen.data.features.home.articles.responses.UnBookmarkArticleResponse
+import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.requests.AddMedicalReminderRequest
+import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.requests.AddSymptomToMedicalReminderRequest
+import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.responses.AddMedicalReminderResponse
+import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.responses.AddSymptomToMedicalReminderResponse
+import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.responses.GetMedicalRemindersResponse
 import com.cancer.yaqeen.data.features.onboarding.requests.UpdateInterestsUserRequestBody
 import com.cancer.yaqeen.data.features.onboarding.requests.UpdateProfileRequestBody
 import com.cancer.yaqeen.data.features.onboarding.responses.ResourcesResponse
@@ -139,5 +144,25 @@ interface YaqeenAPI {
     suspend fun deleteSymptom(
         @Path("symptomId") symptomId: Int
     ): Response<DeleteSymptomResponse>
+
+    @POST("Schedules")
+    suspend fun addMedicalReminder(
+        @Body requestBody: AddMedicalReminderRequest
+    ): Response<AddMedicalReminderResponse>
+
+    @POST("ScheduleSymptom")
+    suspend fun addSymptomToMedicalReminder(
+        @Body requestBody: AddSymptomToMedicalReminderRequest
+    ): Response<AddSymptomToMedicalReminderResponse>
+
+    @GET("Schedules/{scheduleType}")
+    suspend fun getMedicalReminders(
+        @Path("scheduleType") scheduleType: String
+    ): Response<GetMedicalRemindersResponse>
+
+    @DELETE("Schedules/{scheduleId}")
+    suspend fun deleteSchedule(
+        @Path("scheduleId") scheduleId: Int
+    ): Response<Any>
 
 }

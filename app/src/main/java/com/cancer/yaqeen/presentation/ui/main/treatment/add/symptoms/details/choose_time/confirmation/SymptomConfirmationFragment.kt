@@ -81,9 +81,9 @@ class SymptomConfirmationFragment : BaseFragment() {
     }
 
     private fun updateUI() {
-        val medicationTrack = symptomsViewModel.getSymptomTrack()
+        val symptomTrack = symptomsViewModel.getSymptomTrack()
 
-        medicationTrack?.run {
+        symptomTrack?.run {
             val isReminder = doctorName?.isNotEmpty() == true
             binding.tvNotesVal.text = details ?: ""
             binding.tvSymptomsVal.text = symptomTypes?.joinToString(separator = "\n"){ it.name } ?: ""

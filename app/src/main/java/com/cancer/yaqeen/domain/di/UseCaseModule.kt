@@ -16,6 +16,9 @@ import com.cancer.yaqeen.domain.features.home.articles.usecases.RemoveBookmarked
 import com.cancer.yaqeen.domain.features.home.articles.usecases.RemoveBookmarkedArticlesUseCase
 import com.cancer.yaqeen.domain.features.home.articles.usecases.SaveArticleUseCase
 import com.cancer.yaqeen.domain.features.home.articles.usecases.UnBookmarkArticleUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.AddMedicalReminderUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.DeleteScheduleUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.GetMedicalRemindersUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.AddMedicationUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.EditMedicationUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.GetTodayRemindersUseCase
@@ -164,6 +167,19 @@ object UseCaseModule {
     @Provides
     fun provideGetSymptomsUseCase(repository: ScheduleRepositoryImpl) =
         GetSymptomsUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideAddMedicalReminderUseCase(repository: ScheduleRepositoryImpl) =
+        AddMedicalReminderUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideGetMedicalRemindersUseCase(repository: ScheduleRepositoryImpl) =
+        GetMedicalRemindersUseCase(repository)
+
+    @Singleton
+    @Provides
+    fun provideDeleteScheduleUseCase(repository: ScheduleRepositoryImpl) =
+        DeleteScheduleUseCase(repository)
 
 
 }

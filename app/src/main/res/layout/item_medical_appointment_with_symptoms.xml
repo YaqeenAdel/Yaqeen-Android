@@ -1,0 +1,487 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <FrameLayout
+        android:id="@+id/item_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_less"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/tv_doctor_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_14sdp"
+                android:layout_marginTop="@dimen/_14sdp"
+                android:layout_marginEnd="@dimen/_4sdp"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="start|top"
+                android:textColor="@color/light_black"
+                android:textSize="@dimen/_16ssp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Dr / Ahmed Essam" />
+
+            <TextView
+                android:id="@+id/tv_symptoms"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:fontFamily="sans-serif"
+                android:text="@string/symptoms"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_10ssp"
+                app:layout_constraintEnd_toEndOf="@id/tv_doctor_name"
+                app:layout_constraintStart_toStartOf="@id/tv_doctor_name"
+                app:layout_constraintTop_toBottomOf="@id/tv_doctor_name" />
+
+            <ImageView
+                android:id="@+id/iv_symptom"
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_marginVertical="@dimen/_8sdp"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@id/tv_symptoms"
+                app:layout_constraintTop_toBottomOf="@id/tv_symptoms"
+                app:layout_constraintVertical_bias="0"
+                tools:src="@mipmap/ic_launcher" />
+
+            <TextView
+                android:id="@+id/tv_symptom_types"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_6sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginEnd="@dimen/_4sdp"
+                android:layout_marginBottom="@dimen/_15sdp"
+                android:fontFamily="sans-serif"
+                android:gravity="start|top"
+                android:minLines="2"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_11ssp"
+                app:layout_constraintBottom_toBottomOf="@id/iv_symptom"
+                app:layout_constraintEnd_toStartOf="@id/tv_show_more"
+                app:layout_constraintStart_toEndOf="@id/iv_symptom"
+                app:layout_constraintTop_toTopOf="@id/iv_symptom"
+                tools:text="brown spots and irritation on my skin " />
+
+            <TextView
+                android:id="@+id/tv_show_more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_12sdp"
+                android:fontFamily="sans-serif"
+                android:paddingTop="@dimen/_8sdp"
+                android:text="@string/show_more"
+                android:textColor="@color/primary_color"
+                android:textSize="@dimen/_10ssp"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_symptom_types"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_symptom_types"
+                app:layout_constraintTop_toTopOf="@id/tv_symptom_types"
+                app:layout_constraintVertical_bias="1" />
+
+            <View
+                android:id="@+id/view"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_1sdp"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:layout_marginBottom="@dimen/_18sdp"
+                android:background="@color/primary_color_30"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/tv_show_more"
+                app:layout_constraintStart_toStartOf="@id/tv_symptom_types"
+                app:layout_constraintTop_toBottomOf="@id/tv_symptom_types"
+                app:layout_constraintVertical_bias="0" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_more"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tv_doctor_name2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_14sdp"
+                android:layout_marginTop="@dimen/_14sdp"
+                android:layout_marginEnd="@dimen/_4sdp"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="start|top"
+                android:textColor="@color/light_black"
+                android:textSize="@dimen/_16ssp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Dr / Ahmed Essam" />
+
+            <TextView
+                android:id="@+id/tv_symptoms2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:fontFamily="sans-serif"
+                android:text="@string/symptoms"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_10ssp"
+                app:layout_constraintEnd_toEndOf="@id/tv_doctor_name2"
+                app:layout_constraintStart_toStartOf="@id/tv_doctor_name2"
+                app:layout_constraintTop_toBottomOf="@id/tv_doctor_name2" />
+
+            <ImageView
+                android:id="@+id/iv_symptom2"
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_marginVertical="@dimen/_8sdp"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@id/tv_symptoms2"
+                app:layout_constraintTop_toBottomOf="@id/tv_symptoms2"
+                app:layout_constraintVertical_bias="0"
+                tools:src="@mipmap/ic_launcher" />
+
+            <TextView
+                android:id="@+id/tv_symptom_types2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_6sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginEnd="@dimen/_4sdp"
+                android:layout_marginBottom="@dimen/_15sdp"
+                android:fontFamily="sans-serif"
+                android:gravity="start|top"
+                android:minLines="2"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_11ssp"
+                app:layout_constraintBottom_toBottomOf="@id/iv_symptom2"
+                app:layout_constraintEnd_toStartOf="@id/tv_show_less"
+                app:layout_constraintStart_toEndOf="@id/iv_symptom2"
+                app:layout_constraintTop_toTopOf="@id/iv_symptom2"
+                tools:text="brown spots and irritation on my skin " />
+
+            <TextView
+                android:id="@+id/tv_show_less"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_12sdp"
+                android:fontFamily="sans-serif"
+                android:paddingTop="@dimen/_8sdp"
+                android:text="@string/show_less"
+                android:textColor="@color/primary_color"
+                android:textSize="@dimen/_10ssp"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_symptom_types2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_symptom_types2"
+                app:layout_constraintTop_toTopOf="@id/tv_symptom_types2"
+                app:layout_constraintVertical_bias="1" />
+
+            <View
+                android:id="@+id/view2"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_1sdp"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:layout_marginBottom="@dimen/_18sdp"
+                android:background="@color/primary_color_30"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/tv_show_less"
+                app:layout_constraintStart_toStartOf="@id/tv_symptom_types2"
+                app:layout_constraintTop_toBottomOf="@id/tv_symptom_types2"
+                app:layout_constraintVertical_bias="0" />
+
+            <TextView
+                android:id="@+id/tv_notes"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingVertical="@dimen/_2sdp"
+                android:gravity="center|start"
+                android:text="@string/notes"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_10ssp"
+                android:fontFamily="sans-serif"
+                android:layout_marginTop="@dimen/_18sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/iv_symptom2"
+                app:layout_constraintTop_toBottomOf="@+id/view2" />
+
+            <TextView
+                android:id="@+id/tv_notes_val"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:lineSpacingMultiplier="1.4"
+                android:gravity="center|start"
+                android:paddingVertical="@dimen/_2sdp"
+                tools:text="Feeling like I didn't completely empty my bowels after using the toilet and having stomach and lower pain."
+                android:layout_marginTop="@dimen/_6sdp"
+                android:textColor="@color/text_black2"
+                android:textSize="@dimen/_12ssp"
+                android:fontFamily="sans-serif-medium"
+                app:layout_constraintEnd_toEndOf="@id/tv_notes"
+                app:layout_constraintStart_toStartOf="@id/tv_notes"
+                app:layout_constraintTop_toBottomOf="@+id/tv_notes" />
+
+            <View
+                android:id="@+id/view_notes"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_1sdp"
+                android:background="@color/primary_color_30"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:layout_marginEnd="@dimen/_13sdp"
+                app:layout_constraintEnd_toEndOf="@id/tv_notes_val"
+                app:layout_constraintStart_toStartOf="@id/tv_notes_val"
+                app:layout_constraintTop_toBottomOf="@+id/tv_notes_val" />
+
+
+            <TextView
+                android:id="@+id/tv_location"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingVertical="@dimen/_2sdp"
+                android:gravity="center|start"
+                android:text="@string/location"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_10ssp"
+                android:fontFamily="sans-serif"
+                android:layout_marginTop="@dimen/_6sdp"
+                app:layout_constraintEnd_toEndOf="@id/tv_notes"
+                app:layout_constraintStart_toStartOf="@id/tv_notes"
+                app:layout_constraintTop_toBottomOf="@+id/view_notes" />
+
+            <TextView
+                android:id="@+id/tv_location_val"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center|start"
+                android:paddingVertical="@dimen/_2sdp"
+                tools:text="’ِMadeinty, cairo "
+                android:layout_marginTop="@dimen/_6sdp"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_10ssp"
+                android:fontFamily="sans-serif-medium"
+                android:lineSpacingMultiplier="1.4"
+                app:layout_constraintEnd_toEndOf="@id/tv_location"
+                app:layout_constraintStart_toStartOf="@id/tv_location"
+                app:layout_constraintTop_toBottomOf="@+id/tv_location" />
+
+            <View
+                android:id="@+id/view_symptoms"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_1sdp"
+                android:background="@color/primary_color_30"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:layout_marginEnd="@dimen/_13sdp"
+                app:layout_constraintEnd_toEndOf="@id/tv_location_val"
+                app:layout_constraintStart_toStartOf="@id/tv_location_val"
+                app:layout_constraintTop_toBottomOf="@+id/tv_location_val" />
+
+
+            <TextView
+                android:id="@+id/tv_days"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingVertical="@dimen/_2sdp"
+                android:gravity="center|start"
+                android:text="@string/days"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_10ssp"
+                android:fontFamily="sans-serif"
+                android:layout_marginTop="@dimen/_6sdp"
+                app:layout_constraintEnd_toEndOf="@id/tv_notes"
+                app:layout_constraintStart_toStartOf="@id/tv_notes"
+                app:layout_constraintTop_toBottomOf="@+id/view_symptoms" />
+
+            <TextView
+                android:id="@+id/tv_days_val"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center|start"
+                android:paddingVertical="@dimen/_2sdp"
+                tools:text="02/10/2023"
+                android:layout_marginTop="@dimen/_6sdp"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_10ssp"
+                android:fontFamily="sans-serif-medium"
+                app:layout_constraintEnd_toEndOf="@id/tv_days"
+                app:layout_constraintStart_toStartOf="@id/tv_days"
+                app:layout_constraintTop_toBottomOf="@+id/tv_days" />
+
+            <View
+                android:id="@+id/view_day_time"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_1sdp"
+                android:background="@color/primary_color_30"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:layout_marginEnd="@dimen/_13sdp"
+                app:layout_constraintEnd_toEndOf="@id/tv_days_val"
+                app:layout_constraintStart_toStartOf="@id/tv_days_val"
+                app:layout_constraintTop_toBottomOf="@+id/tv_days_val" />
+
+            <TextView
+                android:id="@+id/tv_time"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingVertical="@dimen/_2sdp"
+                android:gravity="center|start"
+                android:text="@string/time"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_10ssp"
+                android:fontFamily="sans-serif"
+                android:layout_marginTop="@dimen/_6sdp"
+                app:layout_constraintEnd_toEndOf="@id/tv_notes"
+                app:layout_constraintStart_toStartOf="@id/tv_notes"
+                app:layout_constraintTop_toBottomOf="@+id/view_day_time" />
+
+            <TextView
+                android:id="@+id/tv_time_val"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center|start"
+                android:paddingVertical="@dimen/_2sdp"
+                tools:text="01:29 pm"
+                android:layout_marginTop="@dimen/_6sdp"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_10ssp"
+                android:fontFamily="sans-serif-medium"
+                app:layout_constraintEnd_toEndOf="@id/tv_time"
+                app:layout_constraintStart_toStartOf="@id/tv_time"
+                app:layout_constraintTop_toBottomOf="@+id/tv_time" />
+
+            <View
+                android:id="@+id/view_time_time"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_1sdp"
+                android:background="@color/primary_color_30"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:layout_marginEnd="@dimen/_13sdp"
+                app:layout_constraintEnd_toEndOf="@id/tv_time_val"
+                app:layout_constraintStart_toStartOf="@id/tv_time_val"
+                app:layout_constraintTop_toBottomOf="@+id/tv_time_val" />
+
+            <TextView
+                android:id="@+id/tv_reminder"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingVertical="@dimen/_2sdp"
+                android:gravity="center|start"
+                android:text="@string/reminder"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_10ssp"
+                android:fontFamily="sans-serif"
+                android:layout_marginTop="@dimen/_6sdp"
+                app:layout_constraintEnd_toEndOf="@id/tv_notes"
+                app:layout_constraintStart_toStartOf="@id/tv_notes"
+                app:layout_constraintTop_toBottomOf="@+id/view_time_time" />
+
+            <TextView
+                android:id="@+id/tv_reminder_val"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center|start"
+                android:paddingVertical="@dimen/_2sdp"
+                tools:text="Before 24 Hours"
+                android:layout_marginTop="@dimen/_6sdp"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_10ssp"
+                android:fontFamily="sans-serif-medium"
+                app:layout_constraintEnd_toEndOf="@id/tv_reminder"
+                app:layout_constraintStart_toStartOf="@id/tv_reminder"
+                app:layout_constraintTop_toBottomOf="@+id/tv_reminder" />
+
+            <View
+                android:id="@+id/view_reminder_time"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_1sdp"
+                android:background="@color/primary_color_30"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:layout_marginEnd="@dimen/_13sdp"
+                app:layout_constraintEnd_toEndOf="@id/tv_reminder_val"
+                app:layout_constraintStart_toStartOf="@id/tv_reminder_val"
+                app:layout_constraintTop_toBottomOf="@+id/tv_reminder_val" />
+
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view_reminder_time"
+                android:layout_marginTop="@dimen/_12sdp"
+                android:layout_marginHorizontal="@dimen/_14sdp"
+                android:orientation="horizontal"
+                android:background="@drawable/background_view_gray_radius_8">
+
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_edit"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="@dimen/_2sdp"
+                    android:layout_marginStart="@dimen/_16sdp"
+                    app:iconSize="@dimen/_18sdp"
+                    app:iconTint="@color/primary_color"
+                    app:icon="@drawable/ic_edit"
+                    app:iconGravity="textStart"
+                    app:iconPadding="@dimen/_2sdp"
+                    android:text="@string/edit"
+                    android:textColor="@color/light_black"
+                    android:textSize="@dimen/_10ssp"
+                    android:fontFamily="sans-serif"
+                    app:backgroundTint="@color/white"
+                    app:cornerRadius="@dimen/_8sdp" />
+
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_delete"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="@dimen/_2sdp"
+                    android:layout_marginEnd="@dimen/_16sdp"
+                    app:iconSize="@dimen/_18sdp"
+                    app:iconTint="@color/primary_color"
+                    app:icon="@drawable/ic_delete"
+                    app:iconGravity="textStart"
+                    app:iconPadding="@dimen/_4sdp"
+                    android:text="@string/delete"
+                    android:textColor="@color/dark_gray"
+                    android:textSize="@dimen/_10ssp"
+                    android:fontFamily="sans-serif"
+                    app:backgroundTint="@color/white"
+                    app:cornerRadius="@dimen/_8sdp"  />
+
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_1sdp"
+                android:background="@color/primary_color_30"
+                app:layout_constraintStart_toStartOf="@id/linearLayout"
+                app:layout_constraintEnd_toEndOf="@id/linearLayout"
+                app:layout_constraintTop_toBottomOf="@id/linearLayout"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintVertical_bias="1"
+                android:layout_marginVertical="@dimen/_12sdp"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
+</layout>

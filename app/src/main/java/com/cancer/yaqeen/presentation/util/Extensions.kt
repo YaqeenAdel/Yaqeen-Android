@@ -1,9 +1,9 @@
 package com.cancer.yaqeen.presentation.util
 
-import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.Handler
+import android.util.Patterns
 import android.view.View
 import android.view.WindowManager
 import android.widget.AutoCompleteTextView
@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import androidx.navigation.NavOptions
-import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
 import com.cancer.yaqeen.R
 import com.google.android.material.textfield.TextInputLayout
@@ -211,3 +210,6 @@ fun Bitmap.cropImageToSquare(): Bitmap {
     cropHeight = if (cropHeight < 0) 0 else cropHeight
     return Bitmap.createBitmap(this, cropWidth, cropHeight, newWidth, newHeight)
 }
+
+fun String.isValidPhone() =
+    Patterns.PHONE.matcher(this).matches() && length < 11

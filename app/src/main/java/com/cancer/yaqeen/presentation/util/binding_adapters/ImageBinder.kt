@@ -1,5 +1,6 @@
 package com.cancer.yaqeen.presentation.util.binding_adapters
 
+import android.net.Uri
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
@@ -27,6 +28,11 @@ fun bindImage(imageView: ImageView, imgUrl: String?) {
         }
         else imageView.setImageResource(R.color.silver_medal)
     }
+}
+
+@BindingAdapter("imageURI")
+fun bindImageURI(imageView: ImageView, uri: Uri?){
+    imageView.setImageURI(uri)
 }
 
 @BindingAdapter("resourceId")

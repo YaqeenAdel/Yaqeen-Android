@@ -139,12 +139,12 @@ class SelectTimeFragment : BaseFragment() {
 
         binding.editTextStartFrom.setOnClickListener {
             navController.tryNavigate(
-                SelectTimeFragmentDirections.actionSelectTimeFragmentToCalendarFragment()
+                R.id.calendarFragment
             )
         }
         binding.editTextTime.setOnClickListener {
             navController.tryNavigate(
-                SelectTimeFragmentDirections.actionSelectTimeFragmentToTimeFragment()
+                R.id.timeFragment
             )
         }
 

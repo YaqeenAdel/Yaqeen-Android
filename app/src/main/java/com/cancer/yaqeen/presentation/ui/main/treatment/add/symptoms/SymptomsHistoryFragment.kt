@@ -70,7 +70,7 @@ class SymptomsHistoryFragment : BaseBottomSheetDialogFragment() {
         symptomsAdapter = SymptomsAdapter(
             itemClickable = true,
             onItemClick = {
-                setFragmentResult(Constants.REQUEST_SYMPTOM_KEY, bundleOf(Constants.SYMPTOM_KEY to it.id))
+                setFragmentResult(Constants.REQUEST_SYMPTOM_KEY, bundleOf(Constants.SYMPTOM_KEY to it))
                 navController.tryNavigateUp()
             }
         )

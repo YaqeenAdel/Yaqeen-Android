@@ -2,8 +2,15 @@ package com.cancer.yaqeen.data.features.home.schedule
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import android.webkit.MimeTypeMap
+import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.mappers.MappingAddMedicalReminderRemoteAsUIModel
+import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.mappers.MappingAddSymptomToMedicalReminderRemoteAsUIModel
+import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.mappers.MappingDeleteScheduleRemoteAsUIModel
+import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.mappers.MappingMedicalRemindersRemoteAsModel
+import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.models.AddMedicalReminder
+import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.models.MedicalReminder
+import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.requests.AddMedicalReminderRequest
+import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.requests.AddSymptomToMedicalReminderRequestBuilder
 import com.cancer.yaqeen.data.features.home.schedule.medication.mappers.MappingAddMedicationRemoteAsUIModel
 import com.cancer.yaqeen.data.features.home.schedule.medication.mappers.MappingEditMedicationRemoteAsUIModel
 import com.cancer.yaqeen.data.features.home.schedule.medication.mappers.MappingRemindersFromNowRemoteAsModel
@@ -26,7 +33,6 @@ import com.cancer.yaqeen.data.features.home.schedule.symptom.models.SymptomType
 import com.cancer.yaqeen.data.features.home.schedule.symptom.requests.AddSymptomRequest
 import com.cancer.yaqeen.data.features.home.schedule.symptom.requests.AddSymptomRequestBuilder
 import com.cancer.yaqeen.data.features.home.schedule.symptom.requests.UploadUrlRequest
-import com.cancer.yaqeen.data.features.home.schedule.symptom.responses.UploadUrlResponse
 import com.cancer.yaqeen.data.network.base.BaseDataSource
 import com.cancer.yaqeen.data.network.base.DataState
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
@@ -283,4 +289,42 @@ class ScheduleRepositoryImpl @Inject constructor(
             }
         }
 
+    override suspend fun addMedicalReminder(request: AddMedicalReminderRequest, symptomId: Int?): Flow<DataState<AddMedicalReminder?>> =
+        flowStatus {
+            val addMedicalReminderResponseAPI = getResultRestAPI(MappingAddMedicalReminderRemoteAsUIModel()) {
+                apiService.addMedicalReminder(request)
+            }
+
+            if (symptomId == null)
+                addMedicalReminderResponseAPI
+
+            addMedicalReminderResponseAPI.data?.let {
+                getResultRestAPI(MappingAddSymptomToMedicalReminderRemoteAsUIModel(it.scheduleID)) {
+                    apiService.addSymptomToMedicalReminder(
+                        AddSymptomToMedicalReminderRequestBuilder(
+                            medicalReminderID = it.scheduleID,
+                            symptomID = symptomId ?: 0,
+                        ).buildRequestBody()
+                    )
+                }
+            } ?: run {
+                addMedicalReminderResponseAPI
+            }
+
+        }
+
+
+    override suspend fun getMedicalReminders(scheduleType: String): Flow<DataState<List<MedicalReminder>>> =
+        flowStatus {
+            getResultRestAPI(MappingMedicalRemindersRemoteAsModel()) {
+                apiService.getMedicalReminders(scheduleType)
+            }
+        }
+
+    override suspend fun deleteSchedule(scheduleId: Int): Flow<DataState<Boolean>> =
+        flowStatus {
+            getResultRestAPI(MappingDeleteScheduleRemoteAsUIModel()) {
+                apiService.deleteSchedule(scheduleId)
+            }
+        }
 }

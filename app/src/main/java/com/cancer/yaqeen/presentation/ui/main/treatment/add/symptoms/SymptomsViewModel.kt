@@ -82,6 +82,8 @@ class SymptomsViewModel @Inject constructor(
                                     it.id == type.id
                                 }?.selected = true
                             }
+                            Log.d("TAG", "getSymptomsTypes: $it")
+
                             _viewStateSymptomsTypes.emit(it)
                         }
                     }
@@ -91,6 +93,13 @@ class SymptomsViewModel @Inject constructor(
             }
         }
     }
+
+    fun resetSymptomsTypes(){
+        viewModelJob = viewModelScope.launch {
+            _viewStateSymptomsTypes.emit(listOf())
+        }
+    }
+
 
     fun addSymptom() {
         viewModelJob = viewModelScope.launch {
@@ -111,7 +120,8 @@ class SymptomsViewModel @Inject constructor(
                         details = details ?: "",
                         symptomLookupIds = symptomTypes?.map { it.id } ?: listOf(),
                         doctorName = doctorName ?: "",
-                        dateTime = "${startDate?.formatDateAPI() ?: ""} ${reminderTime?.formatTimeAPI() ?: ""}",
+                        startDate = startDate,
+                        time = reminderTime,
                         photos = photosList ?: listOf(),
                     )
                 ).onEach { response ->
@@ -147,7 +157,8 @@ class SymptomsViewModel @Inject constructor(
                         details = details ?: "",
                         symptomLookupIds = symptomTypes?.map { it.id } ?: listOf(),
                         doctorName = doctorName ?: "",
-                        dateTime = "${startDate?.formatDateAPI() ?: ""} ${reminderTime?.formatTimeAPI() ?: ""}",
+                        startDate = startDate,
+                        time = reminderTime,
                         photos = listOf(),
                     ).buildRequestBody()
                 ).collect { response ->
@@ -189,7 +200,8 @@ class SymptomsViewModel @Inject constructor(
                         details = details ?: "",
                         symptomLookupIds = symptomTypes?.map { it.id } ?: listOf(),
                         doctorName = doctorName ?: "",
-                        dateTime = "${startDate?.formatDateAPI() ?: ""} ${reminderTime?.formatTimeAPI() ?: ""}",
+                        startDate = startDate,
+                        time = reminderTime,
                         photos = photosList ?: listOf(),
                     ).buildRequestBody()
                 ).onEach { response ->
@@ -223,7 +235,8 @@ class SymptomsViewModel @Inject constructor(
                         details = details ?: "",
                         symptomLookupIds = symptomTypes?.map { it.id } ?: listOf(),
                         doctorName = doctorName ?: "",
-                        dateTime = "${startDate?.formatDateAPI() ?: ""} ${reminderTime?.formatTimeAPI() ?: ""}",
+                        startDate = startDate,
+                        time = reminderTime,
                         photos = photosList ?: listOf(),
                     )
                 ).collect { response ->
@@ -252,8 +265,10 @@ class SymptomsViewModel @Inject constructor(
     fun getSymptomTrack(): SymptomTrack? =
         symptomTrackField.get()
 
-    fun resetSymptomTrack() =
+    fun resetSymptomTrack(){
         symptomTrackField.set(SymptomTrack())
+        resetSymptomsTypes()
+    }
 
     fun setSymptomTrack(symptomTrack: SymptomTrack) =
         symptomTrackField.set(symptomTrack)

@@ -96,8 +96,8 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:hintTextColor="@color/x_dark_gray"
-            android:textColorHint="@color/x_dark_gray"
+            app:hintTextColor="@color/light_black"
+            android:textColorHint="@color/light_black"
             app:boxBackgroundColor="@color/white"
             app:boxStrokeColor="@color/gray"
             app:endIconMode="clear_text"
@@ -123,7 +123,7 @@
                 android:fontFamily="sans-serif"
                 android:paddingVertical="@dimen/_14sdp"
                 android:textColor="@color/black"
-                android:textColorHint="@color/x_dark_gray"
+                android:textColorHint="@color/light_black"
                 android:textCursorDrawable="@color/xx_dark_gray"
                 android:textSize="@dimen/_12ssp"/>
 
