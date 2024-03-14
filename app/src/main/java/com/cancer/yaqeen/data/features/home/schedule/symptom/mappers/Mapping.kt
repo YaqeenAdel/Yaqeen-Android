@@ -1,6 +1,5 @@
 package com.cancer.yaqeen.data.features.home.schedule.symptom.mappers
 
-import android.util.Log
 import com.cancer.yaqeen.data.base.Mapper
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Photo
 import com.cancer.yaqeen.data.features.home.schedule.symptom.models.ModifySymptomResponse
@@ -17,7 +16,6 @@ import com.cancer.yaqeen.data.utils.formatDate
 import com.cancer.yaqeen.data.utils.formatTime
 import com.cancer.yaqeen.presentation.util.generateFileName
 import com.cancer.yaqeen.presentation.util.getCurrentTimeMillis
-import java.util.UUID
 
 
 class MappingSymptomsTypesRemoteAsUIModel: Mapper<SymptomTypesResponse, List<SymptomType>> {
@@ -95,7 +93,7 @@ class MappingSymptomsRemoteAsModel: Mapper<SymptomsResponse, List<Symptom>> {
                         name = symptomLookup.translations?.firstOrNull()?.translation?.name ?: ""
                     )
                 ),
-                photosList = createPhotosList(photoLink, downloadPhotoLink?.url),
+                photosList = createPhotosList(photoLink, downloadPhotoLink?.url, downloadPhotoLinks?.urls?.map { it.url }),
                 details = details,
                 reminderTime = time?.formatTime() ?: "",
                 startDate = time?.formatDate() ?: "",
@@ -104,10 +102,12 @@ class MappingSymptomsRemoteAsModel: Mapper<SymptomsResponse, List<Symptom>> {
         }
     } ?: listOf()
 
-    private fun createPhotosList(photoPath: String?, url: String?): List<Photo> {
+    private fun createPhotosList(photoPath: String?, url: String?, urls: List<String?>?): List<Photo> {
         val photos: MutableList<Photo> = arrayListOf()
         val photosPaths = photoPath?.split(",") ?: listOf()
-        val photosUrls = url?.split(",") ?: listOf()
+//        val photosUrls = url?.split(",") ?: listOf()
+
+        val photosUrls = urls ?: listOf()
 
         val pathsSize = photosPaths.size
         val urlsSize = photosUrls.size

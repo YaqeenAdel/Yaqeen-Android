@@ -109,6 +109,7 @@ class MedicalReminderViewModel @Inject constructor(
                         phoneNumber = phoneNumber ?: "",
                         startDate = startDate,
                         time = reminderTime,
+                        notifyBeforeMinutes = reminderBeforeTime?.toIntOrNull() ?: 0,
                         notes = notes ?: "",
                     ).buildRequestBody(),
                     symptom?.id

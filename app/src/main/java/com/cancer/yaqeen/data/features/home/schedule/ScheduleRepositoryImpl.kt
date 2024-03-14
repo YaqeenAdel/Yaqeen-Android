@@ -121,7 +121,10 @@ class ScheduleRepositoryImpl @Inject constructor(
         return restCreateLocationAPI
     }
 
-    private suspend fun uploadImages(folderName: String, photos: List<Photo>): List<DataState<ModifySymptomResponse?>?> {
+    private suspend fun uploadImages(
+        folderName: String,
+        photos: List<Photo>
+    ): List<DataState<ModifySymptomResponse?>?> {
         val responses = coroutineScope {
             photos.filter { it.uri != null }.map { photo ->
                 async {
@@ -156,7 +159,7 @@ class ScheduleRepositoryImpl @Inject constructor(
                                             it.id == photo.id
                                         }?.pathURL = pathURL
 
-                                    }else {
+                                    } else {
                                         throw Exception()
                                     }
                                 } catch (e: Exception) {
@@ -164,7 +167,7 @@ class ScheduleRepositoryImpl @Inject constructor(
                                 }
                             }
                         }
-                    }else{
+                    } else {
                         throw Exception()
                     }
                     restCreateLocationAPI
@@ -183,11 +186,11 @@ class ScheduleRepositoryImpl @Inject constructor(
                 val responses = uploadImages("symptoms", photos)
 
                 val isFailed =
-                    responses.any { it?.status == Status.ERROR || it?.status == Status.FAILED}
+                    responses.any { it?.status == Status.ERROR || it?.status == Status.FAILED }
 
-                if (isFailed){
+                if (isFailed) {
                     emit(DataState.Failed())
-                }else {
+                } else {
                     val addSymptomResponseAPI = getResultRestAPI(
                         MappingAddSymptomWithUploadRemoteAsUIModel()
                     ) {
@@ -237,11 +240,11 @@ class ScheduleRepositoryImpl @Inject constructor(
                 val responses = uploadImages("symptoms", photos)
 
                 val isFailed =
-                    responses.any { it?.status == Status.ERROR || it?.status == Status.FAILED}
+                    responses.any { it?.status == Status.ERROR || it?.status == Status.FAILED }
 
-                if (isFailed){
+                if (isFailed) {
                     emit(DataState.Failed())
-                }else {
+                } else {
                     val editSymptomResponseAPI = getResultRestAPI(
                         MappingEditSymptomWithUploadRemoteAsUIModel()
                     ) {
@@ -289,27 +292,31 @@ class ScheduleRepositoryImpl @Inject constructor(
             }
         }
 
-    override suspend fun addMedicalReminder(request: AddMedicalReminderRequest, symptomId: Int?): Flow<DataState<AddMedicalReminder?>> =
+    override suspend fun addMedicalReminder(
+        request: AddMedicalReminderRequest,
+        symptomId: Int?
+    ): Flow<DataState<AddMedicalReminder?>> =
         flowStatus {
-            val addMedicalReminderResponseAPI = getResultRestAPI(MappingAddMedicalReminderRemoteAsUIModel()) {
-                apiService.addMedicalReminder(request)
-            }
-
-            if (symptomId == null)
-                addMedicalReminderResponseAPI
-
-            addMedicalReminderResponseAPI.data?.let {
-                getResultRestAPI(MappingAddSymptomToMedicalReminderRemoteAsUIModel(it.scheduleID)) {
-                    apiService.addSymptomToMedicalReminder(
-                        AddSymptomToMedicalReminderRequestBuilder(
-                            medicalReminderID = it.scheduleID,
-                            symptomID = symptomId ?: 0,
-                        ).buildRequestBody()
-                    )
+            val addMedicalReminderResponseAPI =
+                getResultRestAPI(MappingAddMedicalReminderRemoteAsUIModel()) {
+                    apiService.addMedicalReminder(request)
                 }
-            } ?: run {
+
+            if (symptomId == null || symptomId == 0)
                 addMedicalReminderResponseAPI
-            }
+            else
+                addMedicalReminderResponseAPI.data?.let {
+                    getResultRestAPI(MappingAddSymptomToMedicalReminderRemoteAsUIModel(it.scheduleID)) {
+                        apiService.addSymptomToMedicalReminder(
+                            AddSymptomToMedicalReminderRequestBuilder(
+                                medicalReminderID = it.scheduleID,
+                                symptomID = symptomId ?: 0,
+                            ).buildRequestBody()
+                        )
+                    }
+                } ?: run {
+                    addMedicalReminderResponseAPI
+                }
 
         }
 

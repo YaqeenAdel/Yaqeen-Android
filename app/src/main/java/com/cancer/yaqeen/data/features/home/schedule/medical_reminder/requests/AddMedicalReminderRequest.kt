@@ -30,7 +30,10 @@ data class EntityAppointmentRequest (
     val phoneNumber: String,
 
     @SerializedName("Notes")
-    val notes: String
+    val notes: String,
+
+    @SerializedName("NotifyBeforeMinutes")
+    val notifyBeforeMinutes: Int
 )
 
 
@@ -40,6 +43,7 @@ data class AddMedicalReminderRequestBuilder(
     val phoneNumber: String,
     val startDate: String?,
     val time: String?,
+    val notifyBeforeMinutes: Int,
     val notes: String
 ) {
     fun buildRequestBody(): AddMedicalReminderRequest =
@@ -50,7 +54,8 @@ data class AddMedicalReminderRequestBuilder(
                     physician = doctorName,
                     location = location,
                     phoneNumber = phoneNumber,
-                    notes = notes
+                    notes = notes,
+                    notifyBeforeMinutes = notifyBeforeMinutes
                 ),
                 startDate = "${startDate?.formatDateAPI() ?: ""} ${time?.formatTimeAPI() ?: ""}"
             )

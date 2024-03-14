@@ -33,10 +33,22 @@ data class SymptomResponse (
     val photoLink: String?,
 
     @SerializedName("DownloadPhotoLink")
-    val downloadPhotoLink: DownloadPhotoLinkResponse?
+    val downloadPhotoLink: DownloadPhotoLinkResponse?,
+
+    @SerializedName("DownloadPhotoLinks")
+    val downloadPhotoLinks: DownloadPhotoLinksResponse?
 )
 
 data class DownloadPhotoLinkResponse (
+    val url: String?
+)
+
+data class DownloadPhotoLinksResponse (
+    val urls: List<SignedUrlResponse>?
+)
+
+data class SignedUrlResponse (
+    @SerializedName("signed_url")
     val url: String?
 )
 
