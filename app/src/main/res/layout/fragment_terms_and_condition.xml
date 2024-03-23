@@ -30,29 +30,38 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_terms_condition"
+<!--        <androidx.recyclerview.widget.RecyclerView-->
+<!--            android:id="@+id/rv_terms_condition"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:layout_marginStart="@dimen/_20sdp"-->
+<!--            android:layout_marginEnd="@dimen/_12sdp"-->
+<!--            android:nestedScrollingEnabled="false"-->
+<!--            android:saveEnabled="false"-->
+<!--            android:scrollbars="vertical"-->
+<!--            android:scrollbarStyle="outsideInset"-->
+<!--            android:scrollbarSize="@dimen/_4sdp"-->
+<!--            android:fadeScrollbars="false"-->
+<!--            android:scrollbarAlwaysDrawVerticalTrack="true"-->
+<!--            android:scrollbarThumbVertical="@color/gray"-->
+<!--            android:scrollbarTrackVertical="@color/light_gray"-->
+<!--            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintBottom_toTopOf="@id/layout_bottom"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/tv_title"-->
+<!--            tools:itemCount="10"-->
+<!--            tools:listitem="@layout/item_terms_condition" />-->
+
+        <WebView
+            android:id="@+id/web_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginStart="@dimen/_20sdp"
-            android:layout_marginEnd="@dimen/_12sdp"
-            android:nestedScrollingEnabled="false"
-            android:saveEnabled="false"
-            android:scrollbars="vertical"
-            android:scrollbarStyle="outsideInset"
-            android:scrollbarSize="@dimen/_4sdp"
-            android:fadeScrollbars="false"
-            android:scrollbarAlwaysDrawVerticalTrack="true"
-            android:scrollbarThumbVertical="@color/gray"
-            android:scrollbarTrackVertical="@color/light_gray"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:layout_marginTop="@dimen/_16sdp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toTopOf="@id/layout_bottom"
-            app:layout_constraintTop_toBottomOf="@id/tv_title"
-            tools:itemCount="10"
-            tools:listitem="@layout/item_terms_condition" />
-
+            app:layout_constraintTop_toBottomOf="@id/tv_title"  />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_bottom"
@@ -79,8 +88,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginVertical="@dimen/_18sdp"
-                android:layout_marginEnd="@dimen/_6sdp"
-                android:layout_marginStart="@dimen/_14sdp"
+                android:layout_marginHorizontal="@dimen/_14sdp"
                 android:paddingVertical="@dimen/_10sdp"
                 app:cornerRadius="@dimen/_14sdp"
                 android:textSize="@dimen/_14ssp"
@@ -92,6 +100,7 @@
                 android:id="@+id/btn_reject"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 style="@style/Widget.Material3.Button.TextButton"
                 app:strokeWidth="@dimen/_1sdp"
                 app:strokeColor="@color/cascara"

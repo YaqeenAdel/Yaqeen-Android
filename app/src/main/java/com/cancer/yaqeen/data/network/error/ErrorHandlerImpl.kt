@@ -22,6 +22,11 @@ import java.util.concurrent.TimeoutException
 class ErrorHandlerImpl: ErrorHandler {
 
     override fun getError(throwable: Throwable): ErrorEntity {
+        //400
+        /*
+
+okhttp.OkHttpClient      I  {"error":"Could not verify JWT: JWTExpired","path":"$","code":"invalid-jwt"}
+         */
         return when (throwable) {
             is NoConnectivityException, is UnknownHostException -> ErrorEntity.ApiError.InternetConnection
 

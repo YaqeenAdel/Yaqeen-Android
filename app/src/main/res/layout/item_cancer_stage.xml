@@ -7,10 +7,18 @@
 
     </data>
 
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
     <com.google.android.material.radiobutton.MaterialRadioButton
         android:id="@+id/btn_cancer_stage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginHorizontal="@dimen/_16sdp"
         android:fontFamily="sans-serif-medium"
         tools:text="Selection item"
@@ -20,8 +28,23 @@
         android:focusable="true"
         android:marqueeRepeatLimit="marquee_forever"
         android:singleLine="true"
-        android:drawableEnd="@drawable/info"
         app:buttonTint="@color/light_black"
         android:background="@drawable/radio_button_background"/>
+
+        <ImageView
+            android:id="@+id/iv_info"
+            android:layout_width="@dimen/_24sdp"
+            android:layout_height="@dimen/_24sdp"
+            android:padding="@dimen/_6sdp"
+            android:src="@drawable/info"
+            app:layout_constraintHorizontal_bias="1"
+            android:layout_marginEnd="@dimen/_6sdp"
+            app:layout_constraintStart_toStartOf="@id/btn_cancer_stage"
+            app:layout_constraintEnd_toEndOf="@id/btn_cancer_stage"
+            app:layout_constraintTop_toTopOf="@id/btn_cancer_stage"
+            app:layout_constraintBottom_toBottomOf="@id/btn_cancer_stage"
+            app:tint="@color/light_black" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

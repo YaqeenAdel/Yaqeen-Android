@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/item_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:layout_marginEnd="@dimen/_6sdp"
+            android:drawablePadding="@dimen/_6sdp"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center|start"
+            android:textColor="@color/x_dark_gray"
+            android:textSize="@dimen/_13ssp"
+            app:drawableStartCompat="@drawable/ic_time_circle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="10:00 pm" />
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/iv_symptom_background"
+            android:layout_width="@dimen/_64sdp"
+            android:layout_height="@dimen/_64sdp"
+            android:layout_marginTop="@dimen/_14sdp"
+            android:background="@color/super_silver3"
+            app:layout_constraintStart_toStartOf="@id/tv_time"
+            app:layout_constraintTop_toBottomOf="@id/tv_time"
+            app:riv_mutate_background="true"
+            app:riv_oval="true"
+            app:riv_tile_mode="clamp" />
+
+        <ImageView
+            android:id="@+id/iv_symptom_icon"
+            android:layout_width="@dimen/_64sdp"
+            android:layout_height="@dimen/_64sdp"
+            android:padding="@dimen/_14sdp"
+            tools:src="@drawable/ic_capsule"
+            app:layout_constraintBottom_toBottomOf="@id/iv_symptom_background"
+            app:layout_constraintStart_toStartOf="@id/iv_symptom_background"
+            app:layout_constraintEnd_toEndOf="@id/iv_symptom_background"
+            app:layout_constraintTop_toTopOf="@id/iv_symptom_background"
+            app:tint="@color/rose_penk" />
+
+        <TextView
+            android:id="@+id/tv_symptom_details"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center|start"
+            android:layout_marginEnd="@dimen/_4sdp"
+            android:paddingVertical="@dimen/_4sdp"
+            android:layout_marginStart="@dimen/_10sdp"
+            tools:text="CINNARIZINE 75 MG 20"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp"
+            android:fontFamily="sans-serif-medium"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/iv_symptom_background"
+            app:layout_constraintTop_toTopOf="@+id/iv_symptom_background" />
+
+
+        <TextView
+            android:id="@+id/tv_notes"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center|start"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:layout_marginTop="@dimen/_4sdp"
+            android:paddingVertical="@dimen/_2sdp"
+            tools:text="After breakfast, drinking water"
+            android:textColor="@color/crow_black_blue"
+            android:textSize="@dimen/_10ssp"
+            android:fontFamily="sans-serif"
+            android:layout_marginBottom="@dimen/_24sdp"
+            app:layout_constraintVertical_bias="0"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/tv_symptom_details"
+            app:layout_constraintStart_toStartOf="@id/tv_symptom_details"
+            app:layout_constraintTop_toBottomOf="@+id/tv_symptom_details" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -4,5 +4,6 @@ data class Stage(
     val id: Long,
     val number: Int,
     val icon: String,
-    val stageName: String
+    val stageName: String,
+    val info: String
 )

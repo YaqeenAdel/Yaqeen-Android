@@ -6,7 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -17,10 +19,14 @@ import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.databinding.FragmentAuthBinding
 import com.cancer.yaqeen.databinding.FragmentCalendarBinding
+import com.cancer.yaqeen.presentation.base.BaseBottomSheetDialogFragment
 import com.cancer.yaqeen.presentation.ui.auth.OnBoardingFragmentDirections
 import com.cancer.yaqeen.presentation.ui.auth.OnboardingViewModel
+import com.cancer.yaqeen.presentation.util.Constants.REQUEST_USER_LOG_IN_KEY
+import com.cancer.yaqeen.presentation.util.Constants.USER_LOG_IN_KEY
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.tryNavigate
+import com.cancer.yaqeen.presentation.util.tryNavigateUp
 import com.cancer.yaqeen.presentation.util.tryPopBackStack
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,7 +35,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class AuthFragment : BottomSheetDialogFragment() {
+class AuthFragment : BaseBottomSheetDialogFragment() {
 
     private var binding: FragmentAuthBinding by autoCleared()
 
@@ -69,15 +75,6 @@ class AuthFragment : BottomSheetDialogFragment() {
         }
 
     }
-    fun lifecycleScope(
-        block: suspend CoroutineScope.() -> Unit
-    ){
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                block()
-            }
-        }
-    }
 
     private fun observeStates() {
         lifecycleScope {
@@ -93,26 +90,26 @@ class AuthFragment : BottomSheetDialogFragment() {
         lifecycleScope {
             onboardingViewModel.viewStateLoginSuccess.collectLatest {
                 it?.let {
-                    val resources = onboardingViewModel.viewStateResources.replayCache
-                    if (resources.isNotEmpty() && resources.firstOrNull() != null) {
-                        navController.tryNavigate(
-                            OnBoardingFragmentDirections.actionOnBoardingFragmentToTermsAndConditionFragment()
-                        )
-                    }
+                    navController.tryNavigate(
+                        AuthFragmentDirections.actionAuthFragmentToTermsAndConditionFragment()
+                    )
                 }
 
             }
         }
         lifecycleScope {
             onboardingViewModel.viewStateUserDataCompleted.observe(viewLifecycleOwner) { response ->
-                if (response == true) navController.tryPopBackStack()
+                if (response == true) {
+                    setFragmentResult(REQUEST_USER_LOG_IN_KEY, bundleOf(USER_LOG_IN_KEY to true))
+                    navController.tryNavigateUp()
+                }
             }
         }
     }
 
     private fun handleResponseError(errorEntity: ErrorEntity?) {
-//        val errorMessage = handleError(errorEntity)
-//        displayErrorMessage(errorMessage)
+        val errorMessage = handleError(errorEntity)
+        displayErrorMessage(errorMessage)
     }
 
     private fun displayErrorMessage(errorMessage: String?) {

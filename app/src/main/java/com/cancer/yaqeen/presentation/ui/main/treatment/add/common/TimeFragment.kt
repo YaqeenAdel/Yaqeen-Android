@@ -1,4 +1,4 @@
-package com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.strength.choose_time
+package com.cancer.yaqeen.presentation.ui.main.treatment.add.common
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,7 +12,6 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.ReminderTime
-import com.cancer.yaqeen.data.features.home.schedule.medication.models.Time
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Time.Companion.getHours12
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Time.Companion.getMinutes
 import com.cancer.yaqeen.databinding.FragmentTimeBinding

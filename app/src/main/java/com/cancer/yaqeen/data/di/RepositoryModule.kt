@@ -1,5 +1,6 @@
 package com.cancer.yaqeen.data.di
 
+import android.content.Context
 import com.auth0.android.Auth0
 import com.cancer.yaqeen.data.features.auth.AuthRepositoryImpl
 import com.cancer.yaqeen.data.features.home.articles.HomeRepositoryImpl
@@ -14,6 +15,7 @@ import com.cancer.yaqeen.data.room.YaqeenDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -53,9 +55,10 @@ object RepositoryModule {
     @Singleton
     @Provides
     fun provideScheduleRepository(
+        @ApplicationContext context: Context,
         apiService: YaqeenAPI,
         errorHandlerImpl: ErrorHandlerImpl,
         sharedPrefEncryptionUtil: SharedPrefEncryptionUtil
-    ) = ScheduleRepositoryImpl(apiService, errorHandlerImpl, sharedPrefEncryptionUtil)
+    ) = ScheduleRepositoryImpl(context, apiService, errorHandlerImpl, sharedPrefEncryptionUtil)
 
 }

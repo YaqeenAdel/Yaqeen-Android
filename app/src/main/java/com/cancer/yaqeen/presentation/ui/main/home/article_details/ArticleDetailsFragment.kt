@@ -1,5 +1,6 @@
 package com.cancer.yaqeen.presentation.ui.main.home.article_details
 
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Paint
@@ -21,6 +22,7 @@ import com.cancer.yaqeen.presentation.ui.main.home.HomeViewModel
 import com.cancer.yaqeen.presentation.util.MyWebViewClient
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindResourceImage
+import com.cancer.yaqeen.presentation.util.tryNavigate
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
@@ -73,10 +75,35 @@ class ArticleDetailsFragment : BaseFragment() {
         binding.ivArticleBookmark.setOnClickListener {
             if (homeViewModel.userIsLoggedIn())
                 homeViewModel.changeFavouriteStatusArticle(article)
+            else
+                navController.tryNavigate(R.id.authFragment)
         }
         binding.ivShare.setOnClickListener {
 
         }
+
+        binding.ivShare.setOnClickListener {
+            shareArticle()
+        }
+    }
+
+    private fun shareArticle() {
+        val sendIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, article.link)
+            type = "text/plain"
+        }
+
+        val shareIntent = Intent.createChooser(sendIntent, "Share Via")
+
+        try {
+            if (shareIntent.resolveActivity(requireContext().packageManager) != null) {
+                startActivity(shareIntent)
+            } else {
+                Toast.makeText(context, "No app found to share it", Toast.LENGTH_SHORT).show()
+            }
+        }catch (_: Exception){}
+
     }
 
     private fun setArticleDetails() {

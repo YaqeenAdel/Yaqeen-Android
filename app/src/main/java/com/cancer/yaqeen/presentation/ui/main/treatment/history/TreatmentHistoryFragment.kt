@@ -1,7 +1,6 @@
 package com.cancer.yaqeen.presentation.ui.main.treatment.history
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,12 +20,14 @@ import com.cancer.yaqeen.data.utils.getTodayDate
 import com.cancer.yaqeen.databinding.FragmentTreatmentHistoryBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.ui.main.treatment.TimesAdapter
+import com.cancer.yaqeen.presentation.ui.main.treatment.history.adapters.MedicalRemindersAdapter
+import com.cancer.yaqeen.presentation.ui.main.treatment.history.adapters.MedicationsAdapter
+import com.cancer.yaqeen.presentation.ui.main.treatment.history.adapters.SymptomsAdapter
 import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.changeVisibility
 import com.cancer.yaqeen.presentation.util.dpToPx
 import com.cancer.yaqeen.presentation.util.recyclerview.VerticalMarginItemDecoration
-import com.cancer.yaqeen.presentation.util.timestampToDay
 import com.cancer.yaqeen.presentation.util.timestampToHour
 import com.cancer.yaqeen.presentation.util.timestampToTiming
 import com.cancer.yaqeen.presentation.util.tryNavigate
@@ -44,6 +45,8 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
 
     private lateinit var timesAdapter: TimesAdapter
     private lateinit var medicationsAdapter: MedicationsAdapter
+    private lateinit var symptomsAdapter: SymptomsAdapter
+    private lateinit var medicalRemindersAdapter: MedicalRemindersAdapter
 
     private val viewModel: SchedulesHistoryViewModel by viewModels()
 
@@ -72,6 +75,7 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
         when(savedInstanceState?.getInt("scheduledType") ?: ScheduleType.MEDICATION.id){
             ScheduleType.MEDICATION.id -> enableMedications()
             ScheduleType.SYMPTOMS.id -> enableSymptoms()
+            ScheduleType.MEDICAL_REMINDER.id -> enableMedicalReminders()
         }
 
         selectItem(getCurrentHour())
@@ -87,6 +91,8 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
     private fun setupAdapters() {
         setupTimesAdapter()
         setupMedicationsAdapter()
+        setupSymptomsAdapter()
+        setupMedicalRemindersAdapter()
     }
 
     override fun onResume() {
@@ -120,6 +126,15 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
         binding.tvScheduleHistory.updateUI(getString(R.string.history_s_symptoms))
         binding.rvSymptomsHistory.updateUI()
         scheduledType = ScheduleType.SYMPTOMS
+        getSymptoms()
+    }
+
+    private fun enableMedicalReminders(){
+        binding.btnMedicalReminder.updateUI()
+        binding.tvScheduleHistory.updateUI(getString(R.string.history_s_medical_reminder))
+        binding.rvMedicalAppointmentsHistory.updateUI()
+        scheduledType = ScheduleType.MEDICAL_REMINDER
+        getMedicalReminders()
     }
 
     private fun observeStates() {
@@ -137,6 +152,36 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
         lifecycleScope {
             viewModel.viewStateMedications.collect { medications ->
                 medicationsAdapter.submitList(medications)
+            }
+        }
+
+        lifecycleScope {
+            viewModel.viewStateSymptoms.collect { symptoms ->
+                symptomsAdapter.setList(symptoms)
+            }
+        }
+
+        lifecycleScope {
+            viewModel.viewStateDeleteSymptom.observe(viewLifecycleOwner) { symptomId ->
+                symptomId?.let {
+                    Toast.makeText(requireContext(), getString(R.string.symptom_deleted_successfully), Toast.LENGTH_SHORT).show()
+                    symptomsAdapter.deleteSymptom(symptomId)
+                }
+            }
+        }
+
+        lifecycleScope {
+            viewModel.viewStateDeleteMedicalReminder.observe(viewLifecycleOwner) { symptomId ->
+                symptomId?.let {
+                    Toast.makeText(requireContext(), getString(R.string.symptom_deleted_successfully), Toast.LENGTH_SHORT).show()
+                    medicalRemindersAdapter.deleteMedicalReminder(symptomId)
+                }
+            }
+        }
+
+        lifecycleScope {
+            viewModel.viewStateMedicalReminders.collect { medicalReminders ->
+                medicalRemindersAdapter.setList(medicalReminders)
             }
         }
     }
@@ -184,6 +229,46 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
             )
         }
     }
+
+    private fun setupSymptomsAdapter() {
+        symptomsAdapter = SymptomsAdapter(
+            onEditClick = {
+                navController.tryNavigate(
+                    TreatmentHistoryFragmentDirections.actionTreatmentHistoryFragmentToSymptomsTypesFragment(it)
+                )
+            },
+            onDeleteClick = {
+                viewModel.deleteSymptom(it.id)
+            }
+        )
+        binding.rvSymptomsHistory.apply {
+            adapter = symptomsAdapter
+            addItemDecoration(
+                VerticalMarginItemDecoration(
+                    dpToPx(24f, requireContext())
+                )
+            )
+        }
+    }
+
+    private fun setupMedicalRemindersAdapter() {
+        medicalRemindersAdapter = MedicalRemindersAdapter(
+            onEditClick = {
+
+            },
+            onDeleteClick = {
+                viewModel.deleteMedicalReminder(it.id)
+            }
+        )
+        binding.rvMedicalAppointmentsHistory.apply {
+            adapter = medicalRemindersAdapter
+            addItemDecoration(
+                VerticalMarginItemDecoration(
+                    dpToPx(24f, requireContext())
+                )
+            )
+        }
+    }
     private fun getCurrentHour(): Int {
         val currentDate = Calendar.getInstance()
         val timing = (currentDate.timeInMillis.timestampToTiming())
@@ -210,6 +295,14 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
         viewModel.getMedications()
     }
 
+    private fun getSymptoms() {
+        viewModel.getSymptoms()
+    }
+
+    private fun getMedicalReminders() {
+        viewModel.getMedicalReminders()
+    }
+
     private fun MaterialButton.updateUI() {
         resetUI()
         updateButtonUI(R.color.light_black, R.color.cold_white, R.color.primary_color)
@@ -223,6 +316,8 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
     private fun resetRecyclerUI() {
         binding.rvMedicationsHistory.changeVisibility(show = false, isGone = true)
         binding.rvSymptomsHistory.changeVisibility(show = false, isGone = true)
+        binding.rvRoutineTestsHistory.changeVisibility(show = false, isGone = true)
+        binding.rvMedicalAppointmentsHistory.changeVisibility(show = false, isGone = true)
     }
 
     private fun resetUI() {
@@ -264,8 +359,7 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
                 binding.tvScheduleHistory.updateUI(getString(R.string.history_s_routine_tests))
             }
             R.id.btn_medical_reminder -> {
-                binding.btnMedicalReminder.updateUI()
-                binding.tvScheduleHistory.updateUI(getString(R.string.history_s_medical_reminder))
+                enableMedicalReminders()
             }
         }
     }

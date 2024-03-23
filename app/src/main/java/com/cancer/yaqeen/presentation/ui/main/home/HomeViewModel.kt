@@ -8,6 +8,7 @@ import com.cancer.yaqeen.data.features.home.articles.models.Article
 import com.cancer.yaqeen.data.features.home.articles.room.Article as LocalArticle
 import com.cancer.yaqeen.data.features.home.articles.requests.BookmarkArticleRequest
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Medication
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.Schedule
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.data.network.base.Status
 import com.cancer.yaqeen.data.network.error.ErrorEntity
@@ -48,8 +49,8 @@ class HomeViewModel @Inject constructor(
 
     private var viewModelJob: Job? = null
 
-    private val _viewStateMedications = MutableStateFlow<List<Medication>>(listOf())
-    val viewStateMedications = _viewStateMedications.asStateFlow()
+    private val _viewStateSchedules = MutableStateFlow<List<Schedule>>(listOf())
+    val viewStateScheduleS = _viewStateSchedules.asStateFlow()
 
     private val _viewStateArticles = MutableStateFlow<List<Article>>(listOf())
     val viewStateArticles = _viewStateArticles.asStateFlow()
@@ -81,7 +82,7 @@ class HomeViewModel @Inject constructor(
                     Status.ERROR -> emitError(response.errorEntity)
                     Status.SUCCESS -> {
                         response.data?.let {
-                            _viewStateMedications.emit(it)
+                            _viewStateSchedules.emit(it)
                         }
                     }
 

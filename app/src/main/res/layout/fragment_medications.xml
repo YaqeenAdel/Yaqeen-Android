@@ -103,8 +103,6 @@
             app:boxStrokeColor="@color/medium_gray"
             app:endIconMode="clear_text"
             app:endIconTint="@color/dark_gray"
-            app:errorIconTint="@color/red"
-            app:errorTextColor="@color/red"
             android:hint="@string/name_of_the_capsule"
             android:layout_marginTop="@dimen/_6sdp"
             app:boxCornerRadiusTopEnd="@dimen/_8sdp"

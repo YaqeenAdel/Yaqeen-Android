@@ -16,10 +16,20 @@ import com.cancer.yaqeen.domain.features.home.articles.usecases.RemoveBookmarked
 import com.cancer.yaqeen.domain.features.home.articles.usecases.RemoveBookmarkedArticlesUseCase
 import com.cancer.yaqeen.domain.features.home.articles.usecases.SaveArticleUseCase
 import com.cancer.yaqeen.domain.features.home.articles.usecases.UnBookmarkArticleUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.AddMedicalReminderUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.DeleteScheduleUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.GetMedicalRemindersUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.AddMedicationUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.EditMedicationUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.GetTodayRemindersUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.GetMedicationRemindersUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.symptom.AddSymptomUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.symptom.AddSymptomWithoutPhotoUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.symptom.DeleteSymptomUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.symptom.EditSymptomUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.symptom.EditSymptomWithoutUploadUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.symptom.GetSymptomsTypesUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.symptom.GetSymptomsUseCase
 import com.cancer.yaqeen.domain.features.onboarding.usecases.GetResourcesUseCase
 import com.cancer.yaqeen.domain.features.onboarding.usecases.GetUniversitiesUseCase
 import com.cancer.yaqeen.domain.features.onboarding.usecases.GetUserProfileUseCase
@@ -127,6 +137,49 @@ object UseCaseModule {
     @Provides
     fun provideGetMedicationRemindersFromNowUseCase(repository: ScheduleRepositoryImpl) =
         GetTodayRemindersUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideGetSymptomsTypesUseCase(repository: ScheduleRepositoryImpl) =
+        GetSymptomsTypesUseCase(repository)
+
+    @Singleton
+    @Provides
+    fun provideAddSymptomUseCase(repository: ScheduleRepositoryImpl) =
+        AddSymptomUseCase(repository)
+
+    @Singleton
+    @Provides
+    fun provideAddSymptomWithoutPhotoUseCase(repository: ScheduleRepositoryImpl) =
+        AddSymptomWithoutPhotoUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideEditSymptomUseCase(repository: ScheduleRepositoryImpl) =
+        EditSymptomUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideEditSymptomWithoutUploadUseCase(repository: ScheduleRepositoryImpl) =
+        EditSymptomWithoutUploadUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideDeleteSymptomUseCase(repository: ScheduleRepositoryImpl) =
+        DeleteSymptomUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideGetSymptomsUseCase(repository: ScheduleRepositoryImpl) =
+        GetSymptomsUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideAddMedicalReminderUseCase(repository: ScheduleRepositoryImpl) =
+        AddMedicalReminderUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideGetMedicalRemindersUseCase(repository: ScheduleRepositoryImpl) =
+        GetMedicalRemindersUseCase(repository)
+
+    @Singleton
+    @Provides
+    fun provideDeleteScheduleUseCase(repository: ScheduleRepositoryImpl) =
+        DeleteScheduleUseCase(repository)
 
 
 }

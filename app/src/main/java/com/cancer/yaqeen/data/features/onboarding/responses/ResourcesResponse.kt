@@ -23,9 +23,6 @@ data class CancerStageResponse (
     @SerializedName("StageId")
     val stageID: Long?,
 
-    @SerializedName("StageName")
-    val stageName: String?,
-
     @SerializedName("LogoURL")
     val logoURL: String?,
 
@@ -40,6 +37,9 @@ data class CancerStageTranslationResponse (
 
 
 data class PurpleTranslationResponse (
+    @SerializedName("Info")
+    val info: String,
+
     @SerializedName("StageName")
     val stageName: String?
 )
@@ -47,9 +47,6 @@ data class PurpleTranslationResponse (
 data class CancerTypeResponse (
     @SerializedName("CancerId")
     val cancerID: Long?,
-
-    @SerializedName("CancerTypeName")
-    val cancerTypeName: String?,
 
     @SerializedName("LogoURL")
     val logoURL: String?,
@@ -64,7 +61,10 @@ data class CancerTypeTranslationResponse (
 
 
 data class FluffyTranslationResponse (
-    @SerializedName("CancerTypeName")
+    @SerializedName("Info")
+    val info: String,
+
+    @SerializedName("Name")
     val cancerTypeName: String?
 )
 
@@ -75,9 +75,6 @@ data class InterestResponse (
 
     @SerializedName("LogoURL")
     val logoURL: String?,
-
-    @SerializedName("Name")
-    val name: String?,
 
     @SerializedName("Translations")
     val translations: List<DoctorInterestTranslationResponse>?

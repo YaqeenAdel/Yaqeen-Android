@@ -1,0 +1,514 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        tools:context=".presentation.ui.main.treatment.add.medical_reminder.choose_time.ChooseTimeMedicalReminderFragment">
+
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/btn_next">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_16sdp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginHorizontal="@dimen/_6sdp"
+            android:background="@color/white"
+            tools:title="Dr/ Ahmed Essam"
+            app:titleTextAppearance="@style/ToolbarTitleStyle"
+            app:titleTextColor="@color/light_black"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:titleCentered="true"/>
+
+        <TextView
+            android:id="@+id/tv_doctor_phone_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="@id/toolbar"
+            app:layout_constraintStart_toStartOf="@id/toolbar"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            android:drawableStart="@drawable/ic_phone_outline2"
+            android:drawablePadding="@dimen/_4sdp"
+            android:fontFamily="sans-serif"
+            android:textColor="@color/light_black"
+            android:textSize="@dimen/_10ssp"
+            tools:text="01000419748"/>
+
+        <TextView
+            android:id="@+id/tv_doctor_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/_22sdp"
+            app:layout_constraintEnd_toEndOf="@id/toolbar"
+            app:layout_constraintStart_toStartOf="@id/toolbar"
+            app:layout_constraintTop_toBottomOf="@id/tv_doctor_phone_number"
+            android:drawableStart="@drawable/ic_location"
+            android:drawablePadding="@dimen/_8sdp"
+            android:fontFamily="sans-serif"
+            android:textColor="@color/light_black"
+            android:textSize="@dimen/_12ssp"
+            tools:text="Madeinty ,Cairo Egypt"/>
+
+
+        <TextView
+            android:id="@+id/tv_page_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:layout_marginStart="@dimen/_16sdp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_doctor_address"
+            android:textColor="@color/maiden_mist"
+            android:textSize="@dimen/_11ssp"
+            android:text="3/3"/>
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:layout_marginEnd="@dimen/_20sdp"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="@id/tv_page_number"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_page_number"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_2sdp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/primary_color_30"
+                android:background="@drawable/background_view_selected_colored"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_2sdp"
+                android:layout_weight="1"
+                android:layout_marginStart="@dimen/_4sdp"
+                android:backgroundTint="@color/primary_color_30"
+                android:background="@drawable/background_view_selected_colored"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_2sdp"
+                android:layout_weight="1"
+                android:layout_marginStart="@dimen/_4sdp"
+                android:background="@drawable/background_view_selected_colored"/>
+
+        </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/text_layout_start_from"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:hintTextColor="@color/light_black"
+            android:textColorHint="@color/light_black"
+            app:boxBackgroundColor="@color/white"
+            app:boxStrokeColor="@color/gray"
+            app:endIconDrawable="@drawable/ic_calender"
+            app:endIconMode="custom"
+            app:endIconTint="@color/primary_color"
+            android:layout_marginTop="@dimen/_14sdp"
+            app:boxCornerRadiusTopEnd="@dimen/_8sdp"
+            app:boxCornerRadiusTopStart="@dimen/_8sdp"
+            app:boxCornerRadiusBottomStart="@dimen/_8sdp"
+            app:boxCornerRadiusBottomEnd="@dimen/_8sdp"
+            app:layout_constraintStart_toStartOf="@id/linearLayout"
+            app:layout_constraintEnd_toEndOf="@id/linearLayout"
+            app:layout_constraintTop_toBottomOf="@id/linearLayout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_text_start_from"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:focusable="false"
+                android:layout_gravity="center"
+                android:hint="@string/start_from"
+                android:importantForAutofill="noExcludeDescendants"
+                android:inputType="text"
+                android:fontFamily="sans-serif"
+                android:paddingVertical="@dimen/_14sdp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/light_black"
+                android:textCursorDrawable="@color/xx_dark_gray"
+                android:textSize="@dimen/_12ssp"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/text_layout_time"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:hintTextColor="@color/light_black"
+            android:textColorHint="@color/light_black"
+            app:boxBackgroundColor="@color/white"
+            app:boxStrokeColor="@color/gray"
+            app:endIconDrawable="@drawable/ic_time"
+            app:endIconMode="custom"
+            app:endIconTint="@color/primary_color"
+            android:layout_marginTop="@dimen/_14sdp"
+            app:boxCornerRadiusTopEnd="@dimen/_8sdp"
+            app:boxCornerRadiusTopStart="@dimen/_8sdp"
+            app:boxCornerRadiusBottomStart="@dimen/_8sdp"
+            app:boxCornerRadiusBottomEnd="@dimen/_8sdp"
+            app:layout_constraintStart_toStartOf="@id/linearLayout"
+            app:layout_constraintEnd_toEndOf="@id/linearLayout"
+            app:layout_constraintTop_toBottomOf="@id/text_layout_start_from">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_text_time"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:focusable="false"
+                android:layout_gravity="center"
+                android:hint="@string/time"
+                android:importantForAutofill="noExcludeDescendants"
+                android:inputType="text"
+                android:fontFamily="sans-serif"
+                android:paddingVertical="@dimen/_14sdp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/light_black"
+                android:textCursorDrawable="@color/xx_dark_gray"
+                android:textSize="@dimen/_12ssp"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/tv_remind_before"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_14sdp"
+            app:layout_constraintEnd_toEndOf="@id/text_layout_time"
+            app:layout_constraintStart_toStartOf="@id/text_layout_time"
+            app:layout_constraintTop_toBottomOf="@id/text_layout_time"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/light_black"
+            android:textSize="@dimen/_14ssp"
+            android:text="@string/remind_before"/>
+
+        <TextView
+            android:id="@+id/tv_remind_me_before_test"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_6sdp"
+            app:layout_constraintEnd_toEndOf="@id/text_layout_time"
+            app:layout_constraintStart_toStartOf="@id/text_layout_time"
+            app:layout_constraintTop_toBottomOf="@id/tv_remind_before"
+            android:fontFamily="sans-serif"
+            android:textColor="@color/xx_dark_gray"
+            android:textSize="@dimen/_10ssp"
+            android:text="@string/remind_me_before_test"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_decrease"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Widget.Material3.Button.IconButton"
+                app:strokeWidth="@dimen/_1sdp"
+                app:strokeColor="@color/medium_gray"
+                app:backgroundTint="@color/light_gray"
+                app:icon="@drawable/ic_minus_small"
+                app:iconTint="@color/medium_gray"
+                app:cornerRadius="@dimen/_8sdp"
+                android:padding="@dimen/_12sdp"
+                android:layout_marginTop="@dimen/_4sdp"
+                app:layout_constraintStart_toStartOf="@id/text_layout_time"
+                app:layout_constraintTop_toTopOf="@id/text_layout_reminder_before_time"
+                app:layout_constraintBottom_toBottomOf="@id/text_layout_reminder_before_time"/>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/text_layout_reminder_before_time"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:hintTextColor="@color/x_dark_gray"
+            android:textColorHint="@color/x_dark_gray"
+            app:boxBackgroundColor="@color/white"
+            app:boxStrokeColor="@color/gray"
+            app:endIconMode="clear_text"
+            app:endIconTint="@color/x_dark_gray"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:layout_marginStart="@dimen/_2sdp"
+            android:layout_marginBottom="@dimen/_12sdp"
+            app:boxCornerRadiusTopEnd="@dimen/_8sdp"
+            app:boxCornerRadiusTopStart="@dimen/_8sdp"
+            app:boxCornerRadiusBottomStart="@dimen/_8sdp"
+            app:boxCornerRadiusBottomEnd="@dimen/_8sdp"
+            app:layout_constraintStart_toEndOf="@id/btn_decrease"
+            app:layout_constraintEnd_toStartOf="@id/btn_increase"
+            app:layout_constraintTop_toBottomOf="@id/tv_remind_me_before_test">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_text_reminder_before_time"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:focusable="false"
+                android:importantForAutofill="noExcludeDescendants"
+                android:inputType="text"
+                android:fontFamily="sans-serif"
+                android:paddingVertical="@dimen/_12sdp"
+                android:text="0"
+                android:textColor="@color/black"
+                android:textColorHint="@color/x_dark_gray"
+                android:textCursorDrawable="@color/xx_dark_gray"
+                android:textSize="@dimen/_12ssp"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_increase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Widget.Material3.Button.IconButton"
+                app:strokeWidth="@dimen/_1sdp"
+                app:strokeColor="@color/medium_gray"
+                app:backgroundTint="@color/light_gray"
+                app:icon="@drawable/ic_plus_small"
+                app:iconTint="@color/medium_gray"
+                app:cornerRadius="@dimen/_8sdp"
+                android:padding="@dimen/_12sdp"
+                android:layout_marginStart="@dimen/_2sdp"
+                android:layout_marginTop="@dimen/_4sdp"
+                app:layout_constraintEnd_toEndOf="@id/text_layout_time"
+                app:layout_constraintStart_toEndOf="@id/text_layout_reminder_before_time"
+                app:layout_constraintTop_toTopOf="@id/text_layout_reminder_before_time"
+                app:layout_constraintBottom_toBottomOf="@id/text_layout_reminder_before_time"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/text_layout_note"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:hintTextColor="@color/x_dark_gray"
+            android:textColorHint="@color/dark_gray"
+            app:boxBackgroundColor="@color/white"
+            app:boxStrokeColor="@color/gray"
+            app:endIconMode="clear_text"
+            app:endIconTint="@color/x_dark_gray"
+            android:hint="@string/notes"
+            app:expandedHintEnabled="false"
+            android:layout_marginTop="@dimen/_14sdp"
+            app:boxCornerRadiusTopEnd="@dimen/_8sdp"
+            app:boxCornerRadiusTopStart="@dimen/_8sdp"
+            app:boxCornerRadiusBottomStart="@dimen/_8sdp"
+            app:boxCornerRadiusBottomEnd="@dimen/_8sdp"
+            app:layout_constraintStart_toStartOf="@id/text_layout_time"
+            app:layout_constraintEnd_toEndOf="@id/text_layout_time"
+            app:layout_constraintTop_toBottomOf="@id/text_layout_reminder_before_time">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_text_note"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:hint="@string/add_notes"
+                android:importantForAutofill="noExcludeDescendants"
+                android:inputType="text"
+                android:fontFamily="sans-serif"
+                android:paddingVertical="@dimen/_14sdp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/x_dark_gray"
+                android:textCursorDrawable="@color/xx_dark_gray"
+                android:textSize="@dimen/_12ssp"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/group_symptom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="item_symptom, btn_delete_symptom"
+                android:visibility="gone"/>
+
+            <include
+                android:id="@+id/item_symptom"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                layout="@layout/item_symptom"
+                android:layout_marginTop="@dimen/_14sdp"
+                app:layout_constraintStart_toStartOf="@id/text_layout_time"
+                app:layout_constraintEnd_toEndOf="@id/text_layout_time"
+                app:layout_constraintTop_toBottomOf="@id/text_layout_note"/>
+
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_delete_symptom"
+                android:layout_width="@dimen/_32sdp"
+                android:layout_height="@dimen/_32sdp"
+                app:layout_constraintStart_toStartOf="@+id/item_symptom"
+                app:layout_constraintEnd_toEndOf="@id/item_symptom"
+                app:layout_constraintTop_toTopOf="@id/item_symptom"
+                app:layout_constraintBottom_toBottomOf="@id/item_symptom"
+                app:layout_constraintVertical_bias="0"
+                app:layout_constraintHorizontal_bias="1"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:layout_marginEnd="@dimen/_4sdp"
+                style="@style/Widget.Material3.Button.IconButton"
+                app:icon="@drawable/baseline_close_24"
+                app:iconTint="@color/medium_gray"
+                app:iconGravity="textStart"
+                app:strokeWidth="@dimen/_1sdp"
+                app:strokeColor="@color/gray"
+                app:cornerRadius="@dimen/_32sdp"/>
+            
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_add_symptom"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                android:gravity="center|start"
+                android:layout_marginTop="@dimen/_14sdp"
+                android:paddingStart="@dimen/_14sdp"
+                android:paddingEnd="@dimen/_4sdp"
+                android:paddingVertical="@dimen/_12sdp"
+                android:text="@string/add_symptoms_to_the_reminder"
+                android:textColor="@color/light_black"
+                android:textSize="@dimen/_14ssp"
+                android:fontFamily="sans-serif"
+                app:strokeColor="@color/gray"
+                app:strokeWidth="@dimen/_1sdp"
+                app:backgroundTint="@color/white"
+                app:cornerRadius="@dimen/_8sdp"
+                app:layout_constraintStart_toStartOf="@id/text_layout_time"
+                app:layout_constraintEnd_toEndOf="@id/text_layout_time"
+                app:layout_constraintTop_toBottomOf="@id/text_layout_note"/>
+
+        <LinearLayout
+            android:id="@+id/layout_toggle_group"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:background="@drawable/background_view_gray_radius_8"
+            android:layout_marginTop="@dimen/_14sdp"
+            app:layout_constraintStart_toStartOf="@id/text_layout_time"
+            app:layout_constraintEnd_toEndOf="@id/text_layout_time"
+            app:layout_constraintTop_toBottomOf="@id/text_layout_note">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/_14sdp"
+                android:layout_marginVertical="@dimen/_6sdp"
+                android:fontFamily="sans-serif"
+                android:textColor="@color/light_black"
+                android:textSize="@dimen/_14ssp"
+                android:text="@string/add_symptoms_to_the_reminder"/>
+
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/toggle_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:orientation="horizontal"
+                app:singleSelection="true"
+                android:layout_marginEnd="@dimen/_14sdp"
+                android:layout_marginStart="@dimen/_12sdp"
+                android:layout_marginVertical="@dimen/_10sdp"
+                app:layout_constraintHorizontal_bias="1"
+                app:layout_constraintBottom_toTopOf="@+id/btn_next"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/rv_minutes"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_am"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:minHeight="@dimen/_24sdp"
+                    android:minWidth="@dimen/_24sdp"
+                    app:backgroundTint="@color/toggle_button_color_selector"
+                    style="@style/Widget.Material3.Button.IconButton"
+                    app:icon="@drawable/ic_check"
+                    app:iconSize="@dimen/_12sdp"
+                    app:iconTint="@color/medium_gray"
+                    app:strokeWidth="@dimen/_1sdp"
+                    app:strokeColor="@color/gray"
+                    app:cornerRadius="@dimen/_8sdp"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_pm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:minHeight="@dimen/_24sdp"
+                    android:minWidth="@dimen/_24sdp"
+                    app:backgroundTint="@color/toggle_button_color_selector"
+                    style="@style/Widget.Material3.Button.IconButton"
+                    app:icon="@drawable/baseline_close_24"
+                    app:iconSize="@dimen/_12sdp"
+                    app:iconTint="@color/medium_gray"
+                    app:strokeWidth="@dimen/_1sdp"
+                    app:strokeColor="@color/gray"
+                    app:cornerRadius="@dimen/_8sdp"/>
+
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_next"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:paddingVertical="@dimen/_10sdp"
+            app:iconTint="@color/medium_gray"
+            app:icon="@drawable/ic_next"
+            app:iconGravity="textEnd"
+            app:iconPadding="@dimen/_12sdp"
+            android:text="@string/next"
+            android:textColor="@color/medium_gray"
+            android:textSize="@dimen/_14ssp"
+            android:fontFamily="sans-serif-medium"
+            app:backgroundTint="@color/light_gray"
+            app:cornerRadius="@dimen/_16sdp"
+            android:layout_marginVertical="@dimen/_18sdp"
+            android:layout_marginHorizontal="@dimen/_16sdp"
+            app:layout_constraintVertical_bias="1"
+            app:layout_constraintTop_toBottomOf="@id/scrollView"
+            app:layout_constraintStart_toStartOf="@id/scrollView"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/scrollView"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

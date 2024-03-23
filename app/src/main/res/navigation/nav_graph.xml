@@ -63,6 +63,9 @@
         <action
             android:id="@+id/action_homeFragment_to_treatmentHistoryFragment"
             app:destination="@id/treatmentHistoryFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_medicationDialogFragment"
+            app:destination="@id/medicationDialogFragment" />
     </fragment>
     <fragment
         android:id="@+id/selectUserTypeFragment"
@@ -186,6 +189,15 @@
         <action
             android:id="@+id/action_treatmentFragment_to_medicationsFragment"
             app:destination="@id/medicationsFragment" />
+        <action
+            android:id="@+id/action_treatmentFragment_to_symptomsTypesFragment"
+            app:destination="@id/symptomsTypesFragment" />
+        <action
+            android:id="@+id/action_treatmentFragment_to_medicalReminderInfoFragment"
+            app:destination="@id/medicalReminderInfoFragment" />
+        <action
+            android:id="@+id/action_treatmentFragment_to_routineTestInfoFragment"
+            app:destination="@id/routineTestInfoFragment" />
     </fragment>
     <fragment
         android:id="@+id/medicationsFragment"
@@ -214,12 +226,6 @@
         android:name="com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.strength.choose_time.ChooseTimeFragment"
         tools:layout="@layout/fragment_choose_time" >
         <action
-            android:id="@+id/action_chooseTimeFragment_to_calendarFragment"
-            app:destination="@id/calendarFragment" />
-        <action
-            android:id="@+id/action_chooseTimeFragment_to_timeFragment"
-            app:destination="@id/timeFragment" />
-        <action
             android:id="@+id/action_chooseTimeFragment_to_selectTimeFragment"
             app:destination="@id/selectTimeFragment" />
     </fragment>
@@ -229,11 +235,11 @@
         tools:layout="@layout/fragment_medication_confirmation" />
     <dialog
         android:id="@+id/calendarFragment"
-        android:name="com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.strength.choose_time.CalendarFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.main.treatment.add.common.CalendarFragment"
         tools:layout="@layout/fragment_calendar" />
     <dialog
         android:id="@+id/timeFragment"
-        android:name="com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.strength.choose_time.TimeFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.main.treatment.add.common.TimeFragment"
         tools:layout="@layout/fragment_time" />
     <fragment
         android:id="@+id/treatmentHistoryFragment"
@@ -245,6 +251,12 @@
         <action
             android:id="@+id/action_treatmentHistoryFragment_to_medicationDialogFragment"
             app:destination="@id/medicationDialogFragment" />
+        <action
+            android:id="@+id/action_treatmentHistoryFragment_to_symptomsTypesFragment"
+            app:destination="@id/symptomsTypesFragment" />
+        <action
+            android:id="@+id/action_treatmentHistoryFragment_to_medicalReminderInfoFragment"
+            app:destination="@id/medicalReminderInfoFragment" />
     </fragment>
     <fragment
         android:id="@+id/selectTimeFragment"
@@ -253,12 +265,6 @@
         <action
             android:id="@+id/action_selectTimeFragment_to_medicationConfirmationFragment"
             app:destination="@id/medicationConfirmationFragment" />
-        <action
-            android:id="@+id/action_selectTimeFragment_to_timeFragment"
-            app:destination="@id/timeFragment" />
-        <action
-            android:id="@+id/action_selectTimeFragment_to_calendarFragment"
-            app:destination="@id/calendarFragment" />
     </fragment>
     <dialog
         android:id="@+id/medicationDialogFragment"
@@ -300,5 +306,110 @@
             android:id="@+id/action_articlesFragment_to_articleDetailsFragment"
             app:destination="@id/articleDetailsFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/symptomsTypesFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.main.treatment.add.symptoms.SymptomsTypesFragment"
+        tools:layout="@layout/fragment_symptoms_types" >
+
+        <argument
+            android:name="symptom"
+            app:nullable="true"
+            app:argType="com.cancer.yaqeen.data.features.home.schedule.symptom.models.Symptom"/>
+
+        <action
+            android:id="@+id/action_symptomsTypesFragment_to_symptomsDetailsFragment"
+            app:destination="@id/symptomsDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/symptomsDetailsFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.main.treatment.add.symptoms.details.SymptomsDetailsFragment"
+        tools:layout="@layout/fragment_symptoms_details" >
+
+        <action
+            android:id="@+id/action_symptomsDetailsFragment_to_chooseTimeSymptomFragment"
+            app:destination="@id/chooseTimeSymptomFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/methodAttachedFileFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.main.treatment.add.common.MethodAttachedFileFragment"
+        tools:layout="@layout/fragment_method_attached_file" />
+    <fragment
+        android:id="@+id/chooseTimeSymptomFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.main.treatment.add.symptoms.details.choose_time.ChooseTimeSymptomFragment"
+        tools:layout="@layout/fragment_choose_time_symptom" >
+        <action
+            android:id="@+id/action_chooseTimeSymptomFragment_to_symptomConfirmationFragment"
+            app:destination="@id/symptomConfirmationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/photoFullScreenFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.main.treatment.add.common.PhotoFullScreenFragment"
+        tools:layout="@layout/fragment_photo_full_screen">
+
+        <argument
+            android:name="IMAGE_URI"
+            app:nullable="true"
+            app:argType="string"/>
+
+        <argument
+            android:name="IMAGE_URL"
+            app:nullable="true"
+            app:argType="string"/>
+    </fragment>
+    <fragment
+        android:id="@+id/symptomConfirmationFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.main.treatment.add.symptoms.details.choose_time.confirmation.SymptomConfirmationFragment"
+        tools:layout="@layout/fragment_symptom_confirmation" />
+    <fragment
+        android:id="@+id/cameraViewFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.main.treatment.add.common.CameraViewFragment"
+        tools:layout="@layout/fragment_camera_view" />
+    <fragment
+        android:id="@+id/medicalReminderInfoFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.main.treatment.add.medical_reminder.MedicalReminderInfoFragment"
+        tools:layout="@layout/fragment_medical_reminder_info" >
+        <action
+            android:id="@+id/action_medicalReminderInfoFragment_to_chooseTimeMedicalReminderFragment"
+            app:destination="@id/chooseTimeMedicalReminderFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chooseTimeMedicalReminderFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.main.treatment.add.medical_reminder.choose_time.ChooseTimeMedicalReminderFragment"
+        tools:layout="@layout/fragment_choose_time_medical_reminder" >
+        <action
+            android:id="@+id/action_chooseTimeMedicalReminderFragment_to_medicalReminderConfirmationFragment"
+            app:destination="@id/medicalReminderConfirmationFragment" />
+        <action
+            android:id="@+id/action_chooseTimeMedicalReminderFragment_to_symptomsHistoryFragment"
+            app:destination="@id/symptomsHistoryFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/medicalReminderConfirmationFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.main.treatment.add.medical_reminder.choose_time.confirmation.MedicalReminderConfirmationFragment"
+        tools:layout="@layout/fragment_medical_reminder_confirmation" />
+    <dialog
+        android:id="@+id/symptomsHistoryFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.main.treatment.add.symptoms.SymptomsHistoryFragment"
+        tools:layout="@layout/fragment_symptoms_history" />
+    <fragment
+        android:id="@+id/routineTestInfoFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.main.treatment.add.routine_test.RoutineTestInfoFragment"
+        tools:layout="@layout/fragment_routine_test_info" >
+        <action
+            android:id="@+id/action_routineTestInfoFragment_to_chooseTimeRoutineTestFragment"
+            app:destination="@id/chooseTimeRoutineTestFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chooseTimeRoutineTestFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.main.treatment.add.routine_test.choose_time.ChooseTimeRoutineTestFragment"
+        tools:layout="@layout/fragment_choose_time_routine_test" >
+        <action
+            android:id="@+id/action_chooseTimeRoutineTestFragment_to_routineTestConfirmationFragment"
+            app:destination="@id/routineTestConfirmationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/routineTestConfirmationFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.main.treatment.add.routine_test.choose_time.confirmation.RoutineTestConfirmationFragment"
+        tools:layout="@layout/fragment_routine_test_confirmation" />
 
 </navigation>

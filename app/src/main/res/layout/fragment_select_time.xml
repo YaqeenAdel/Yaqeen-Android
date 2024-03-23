@@ -330,7 +330,7 @@
             style="@style/Widget.Material3.Button.TextButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:enabled="true"
+            android:enabled="false"
             android:paddingVertical="@dimen/_10sdp"
             app:iconTint="@color/medium_gray"
             app:icon="@drawable/ic_next"
