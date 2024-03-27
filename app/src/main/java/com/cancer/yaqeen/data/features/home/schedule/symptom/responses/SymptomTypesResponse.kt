@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class SymptomTypesResponse (
     @SerializedName("SymptomLookups")
-    val symptomLookups: List<SymptomLookupResponse>?
+    val symptomLookups: List<SymptomLookupResponse>?,
 )
 
 data class SymptomLookupResponse (

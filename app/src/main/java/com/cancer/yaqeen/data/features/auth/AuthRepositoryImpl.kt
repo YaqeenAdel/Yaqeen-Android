@@ -7,8 +7,11 @@ import com.auth0.android.Auth0
 import com.auth0.android.authentication.AuthenticationAPIClient
 import com.auth0.android.authentication.AuthenticationException
 import com.auth0.android.authentication.storage.CredentialsManager
+import com.auth0.android.authentication.storage.CredentialsManagerException
 import com.auth0.android.authentication.storage.SharedPreferencesStorage
+import com.auth0.android.callback.BaseCallback
 import com.auth0.android.provider.WebAuthProvider
+import com.auth0.android.result.Credentials
 import com.cancer.yaqeen.BuildConfig
 import com.cancer.yaqeen.BuildConfig.AUTH_0_CLIENT_ID
 import com.cancer.yaqeen.BuildConfig.AUTH_0_SCHEMA
@@ -43,6 +46,9 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun login(context: Context): Flow<DataState<User>> =
         withContext(Dispatchers.IO){
             try {
+                val apiClient = AuthenticationAPIClient(auth0)
+                val manager = CredentialsManager(apiClient, SharedPreferencesStorage(context))
+
                 val credentials = WebAuthProvider.login(auth0)
                     .withScheme(AUTH_0_SCHEMA)
                     .withParameters(mapOf("prompt" to "select_account"))
@@ -58,6 +64,8 @@ class AuthRepositoryImpl @Inject constructor(
                     sharedPrefEncryptionUtil.setRefreshToken(credentials.refreshToken)
                     sharedPrefEncryptionUtil.setTokenType(credentials.type)
                     sharedPrefEncryptionUtil.setModelData(user, PREF_USER)
+                    manager.saveCredentials(credentials)
+
                     emit(
                         DataState.Success(
                             user
@@ -114,6 +122,70 @@ class AuthRepositoryImpl @Inject constructor(
             }
         }
 
+    override suspend fun refresh(context: Context){
+        val authenticationClient = AuthenticationAPIClient(auth0)
+        val credentialsManager = CredentialsManager(
+            authenticationClient,
+            SharedPreferencesStorage(context)
+        )
+        val refreshToken = sharedPrefEncryptionUtil.getRefreshToken()
+//        authenticationClient
+//            .renewAuth(refreshToken)
+//            .start(object : BaseCallback<Credentials, AuthenticationException> {
+//                override fun onSuccess(payload: Credentials) {
+//                    Log.d("TAG", "refresh: onSuccess: $payload")
+//                    // Save the new credentials
+//                    credentialsManager.saveCredentials(payload)
+//                    // Handle success - you have a new access token
+//                }
+//
+//                override fun onFailure(error: AuthenticationException) {
+//                    Log.d("TAG", "refresh: onFailure: $error")
+//                    // Handle failure
+//                }
+//            })
+        credentialsManager.getCredentials(object : BaseCallback<Credentials, CredentialsManagerException> {
+            override fun onSuccess(payload: Credentials) {
+                Log.d("TAG", "refresh: onSuccess1: $payload")
+                authenticationClient
+                    .renewAuth(payload.refreshToken.toString())
+                    .start(object : BaseCallback<Credentials, AuthenticationException> {
+                        override fun onSuccess(payload: Credentials) {
+                            Log.d("TAG", "refresh: onSuccess: $payload")
+                            // Save the new credentials
+                            credentialsManager.saveCredentials(payload)
+                            // Handle success - you have a new access token
+                        }
+
+                        override fun onFailure(error: AuthenticationException) {
+                            Log.d("TAG", "refresh: onFailure: $error")
+                            // Handle failure
+                        }
+                    })
+            }
+
+            override fun onFailure(error: CredentialsManagerException) {
+                // Handle failure
+                Log.d("TAG", "refresh: onFailure1: $error")
+
+                authenticationClient
+                    .renewAuth(refreshToken)
+                    .start(object : BaseCallback<Credentials, AuthenticationException> {
+                        override fun onSuccess(payload: Credentials) {
+                            Log.d("TAG", "refresh: onSuccess2: $payload")
+                            // Save the new credentials
+                            credentialsManager.saveCredentials(payload)
+                            // Handle success - you have a new access token
+                        }
+
+                        override fun onFailure(error: AuthenticationException) {
+                            Log.d("TAG", "refresh: onFailure2: $error")
+                            // Handle failure
+                        }
+                    })
+            }
+        })
+    }
     override suspend fun refreshToken(): Flow<DataState<RefreshTokenResponse>> {
         return flowStatus {
             getResultRestAPI{

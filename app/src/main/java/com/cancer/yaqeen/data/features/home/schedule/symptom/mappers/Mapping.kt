@@ -90,7 +90,7 @@ class MappingSymptomsRemoteAsModel: Mapper<SymptomsResponse, List<Symptom>> {
                 symptomTypes = listOf(
                     SymptomType(
                         id = symptomLookupID ?: 0,
-                        name = symptomLookup.translations?.firstOrNull()?.translation?.name ?: ""
+                        name = symptomLookups?.firstOrNull()?.details?.translations?.firstOrNull()?.translation?.name ?: ""
                     )
                 ),
                 photosList = createPhotosList(photoLink, downloadPhotoLink?.url, downloadPhotoLinks?.urls?.map { it.url }),

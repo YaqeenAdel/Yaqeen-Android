@@ -15,8 +15,8 @@ data class ScheduleSymptomRequest (
     @SerializedName("Details")
     val details: String,
 
-    @SerializedName("SymptomLookupId")
-    val symptomLookupId: Int,
+    @SerializedName("SymptomLookupIds")
+    val symptomLookupIds: List<Int>,
 
     @SerializedName("Notes")
     val notes: String,
@@ -41,7 +41,7 @@ data class AddSymptomRequestBuilder(
         AddSymptomRequest(
             symptom = ScheduleSymptomRequest(
                 details = details,
-                symptomLookupId = symptomLookupIds.first(),
+                symptomLookupIds = symptomLookupIds,
                 notes = doctorName,
                 photoLink = photos.map { it.pathURL }.joinToString(","),
                 time = "${startDate?.formatDateAPI() ?: ""} ${time?.formatTimeAPI() ?: ""}"

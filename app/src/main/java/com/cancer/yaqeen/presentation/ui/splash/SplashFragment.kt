@@ -20,7 +20,6 @@ import com.cronutils.builder.CronBuilder
 import com.cronutils.model.Cron
 import com.cronutils.model.CronType
 import com.cronutils.model.definition.CronDefinitionBuilder
-import com.cronutils.model.field.value.SpecialChar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import com.cronutils.model.field.expression.FieldExpressionFactory.*
@@ -67,7 +66,7 @@ class SplashFragment : BaseFragment() {
                         checkNotificationPermission()
                     }, 3000)
                 }else if(isLogged){
-                    viewModel.refreshToken()
+//                    viewModel.refreshToken(requireContext())
                     navController.navigate(
                         SplashFragmentDirections.actionSplashFragmentToQuoteFragment()
                     )

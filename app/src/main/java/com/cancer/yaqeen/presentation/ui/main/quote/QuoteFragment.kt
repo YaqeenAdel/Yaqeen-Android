@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
@@ -13,6 +14,7 @@ import com.cancer.yaqeen.databinding.FragmentQuoteBinding
 import com.cancer.yaqeen.databinding.FragmentSplashBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.ui.auth.OnBoardingFragmentDirections
+import com.cancer.yaqeen.presentation.ui.splash.SplashViewModel
 import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindResourceImage
@@ -26,6 +28,8 @@ class QuoteFragment : BaseFragment() {
     private var _binding: FragmentQuoteBinding by autoCleared()
 
     private lateinit var navController: NavController
+
+    private val viewModel: SplashViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,6 +52,8 @@ class QuoteFragment : BaseFragment() {
 
             )
         }
+
+        viewModel.refreshToken(requireContext())
 
         displayRandomView()
     }

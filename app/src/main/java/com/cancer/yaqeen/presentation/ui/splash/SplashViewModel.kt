@@ -1,12 +1,13 @@
 package com.cancer.yaqeen.presentation.ui.splash
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.domain.features.auth.login.usecases.RefreshTokenUseCase
+import com.cancer.yaqeen.domain.features.auth.login.usecases.RefreshTokenUseCase2
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -15,7 +16,8 @@ import javax.inject.Inject
 class SplashViewModel
 @Inject constructor(
     private val prefUtil: SharedPrefEncryptionUtil,
-    private val refreshTokenUseCase: RefreshTokenUseCase
+    private val refreshTokenUseCase: RefreshTokenUseCase,
+    private val refreshTokenUseCase2: RefreshTokenUseCase2
 ) : ViewModel() {
 
     private val _viewStateUserInfo = MutableStateFlow<Boolean?>(null)
@@ -31,11 +33,12 @@ class SplashViewModel
 
     }
 
-    fun refreshToken(){
+    fun refreshToken(requireContext: Context) {
         viewModelJob = viewModelScope.launch {
-            refreshTokenUseCase().onEach { response ->
-
-            }.launchIn(viewModelScope)
+            refreshTokenUseCase2(requireContext)
+//            refreshTokenUseCase().onEach { response ->
+//
+//            }.launchIn(viewModelScope)
         }
     }
 

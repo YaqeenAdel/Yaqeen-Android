@@ -137,6 +137,14 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
         getMedicalReminders()
     }
 
+    private fun enableRoutineTests(){
+        binding.btnRoutineTests.updateUI()
+        binding.tvScheduleHistory.updateUI(getString(R.string.history_s_routine_tests))
+        binding.rvRoutineTestsHistory.updateUI()
+        scheduledType = ScheduleType.ROUTINE_TESTS
+        getRoutineTests()
+    }
+
     private fun observeStates() {
         lifecycleScope {
             viewModel.viewStateLoading.collectLatest {
@@ -303,6 +311,10 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
         viewModel.getMedicalReminders()
     }
 
+    private fun getRoutineTests() {
+
+    }
+
     private fun MaterialButton.updateUI() {
         resetUI()
         updateButtonUI(R.color.light_black, R.color.cold_white, R.color.primary_color)
@@ -355,8 +367,7 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
                 enableSymptoms()
             }
             R.id.btn_routine_tests -> {
-                binding.btnRoutineTests.updateUI()
-                binding.tvScheduleHistory.updateUI(getString(R.string.history_s_routine_tests))
+                enableRoutineTests()
             }
             R.id.btn_medical_reminder -> {
                 enableMedicalReminders()
