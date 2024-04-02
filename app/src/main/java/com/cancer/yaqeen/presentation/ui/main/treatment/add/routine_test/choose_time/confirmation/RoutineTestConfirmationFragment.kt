@@ -14,6 +14,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
+import com.cancer.yaqeen.data.features.home.schedule.routine_test.models.ReminderBefore
 import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.databinding.FragmentRoutineTestConfirmationBinding
 import com.cancer.yaqeen.databinding.FragmentSymptomConfirmationBinding
@@ -80,7 +81,8 @@ class RoutineTestConfirmationFragment : BaseFragment() {
             binding.tvNotesVal.text = notes ?: ""
             binding.tvDaysVal.text = if (specificDays.isNullOrEmpty()) periodTime?.time ?: "" else specificDays!!.joinToString { it.name }
             binding.tvStartFromVal.text = startDate?.let { convertMilliSecondsToDate(it) } ?: ""
-            binding.tvReminderVal.text = getString(R.string.before_time, reminderBeforeTime ?: "")
+            val reminderBeforeTime = getReminderBeforeTime(reminderBefore)
+            binding.tvReminderVal.text = reminderBeforeTime
             binding.tvTimeVal.text = reminderTime?.run {
                 val timing = if (isAM) getString(R.string.am) else getString(R.string.pm)
                 "$text $timing"
@@ -96,6 +98,12 @@ class RoutineTestConfirmationFragment : BaseFragment() {
             }
         }
     }
+
+    private fun getReminderBeforeTime(reminderBefore: ReminderBefore): String =
+        if (reminderBefore.isMoreThanOrEqualHour)
+            getString(R.string.before_time_hour, reminderBefore.timeDigits)
+        else
+            getString(R.string.before_time_min, reminderBefore.timeDigits)
 
     private fun updateUI(url: String) {
         bindImage(binding.ivRoutine, url)
@@ -120,50 +128,46 @@ class RoutineTestConfirmationFragment : BaseFragment() {
             return
         }
 
-//        val medicationTrack = symptomsViewModel.getSymptomTrack()
-//        if (medicationTrack?.editable == true)
-//            symptomsViewModel.editSymptom()
-//        else
-//            symptomsViewModel.addSymptom()
+        routineTestViewModel.modifyRoutineTest()
     }
 
     private fun observeStates() {
         lifecycleScope {
-//            symptomsViewModel.viewStateLoading.collectLatest {
-//                onLoading(it)
-//            }
+            routineTestViewModel.viewStateLoading.collectLatest {
+                onLoading(it)
+            }
         }
         lifecycleScope {
-//            symptomsViewModel.viewStateError.collectLatest {
-//                handleResponseError(it)
-//            }
+            routineTestViewModel.viewStateError.collectLatest {
+                handleResponseError(it)
+            }
         }
 
-//        lifecycleScope {
-//            symptomsViewModel.viewStateAddSymptom.observe(viewLifecycleOwner) { response ->
-//                if(response == true){
-//                    Toast.makeText(requireContext(),
-//                        getString(R.string.symptom_added_successfully), Toast.LENGTH_SHORT).show()
-//                    navController.tryPopBackStack(
-//                        R.id.treatmentHistoryFragment,
-//                        false
-//                    )
-//                }
-//            }
-//        }
-//
-//        lifecycleScope {
-//            symptomsViewModel.viewStateEditSymptom.observe(viewLifecycleOwner) { response ->
-//                if(response == true){
-//                    Toast.makeText(requireContext(),
-//                        getString(R.string.symptom_edited_successfully), Toast.LENGTH_SHORT).show()
-//                    navController.tryPopBackStack(
-//                        R.id.treatmentHistoryFragment,
-//                        false
-//                    )
-//                }
-//            }
-//        }
+        lifecycleScope {
+            routineTestViewModel.viewStateAddRoutineTest.observe(viewLifecycleOwner) { response ->
+                if(response == true){
+                    Toast.makeText(requireContext(),
+                        getString(R.string.routine_test_added_successfully), Toast.LENGTH_SHORT).show()
+                    navController.tryPopBackStack(
+                        R.id.treatmentHistoryFragment,
+                        false
+                    )
+                }
+            }
+        }
+
+        lifecycleScope {
+            routineTestViewModel.viewStateEditRoutineTest.observe(viewLifecycleOwner) { response ->
+                if(response == true){
+                    Toast.makeText(requireContext(),
+                        getString(R.string.routine_test_edited_successfully), Toast.LENGTH_SHORT).show()
+                    navController.tryPopBackStack(
+                        R.id.treatmentHistoryFragment,
+                        false
+                    )
+                }
+            }
+        }
     }
     private fun handleResponseError(errorEntity: ErrorEntity?) {
         val errorMessage = handleError(errorEntity)

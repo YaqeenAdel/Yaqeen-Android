@@ -48,6 +48,8 @@ data class DownloadPhotoLinksResponse (
 )
 
 data class SignedUrlResponse (
+    val path: String?,
+
     @SerializedName("signed_url")
     val url: String?
 )

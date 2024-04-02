@@ -37,6 +37,18 @@ data class EntityResponse (
     val strengthTimes: Int?,
 
     @SerializedName("Notes")
-    val notes: String?
+    val notes: String?,
+
+    @SerializedName("Location")
+    val location: String?,
+
+    @SerializedName("Physician")
+    val physician: String?,
+
+    @SerializedName("PhoneNumber")
+    val phoneNumber: String?,
+
+    @SerializedName("NotifyBeforeMinutes")
+    val notifyBeforeMinutes: Int?
 )
 

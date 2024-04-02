@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,7 @@ import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.models.MedicalReminderTrack
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.ReminderTime
+import com.cancer.yaqeen.data.features.home.schedule.routine_test.models.ReminderBefore
 import com.cancer.yaqeen.data.features.home.schedule.symptom.models.Symptom
 import com.cancer.yaqeen.databinding.FragmentChooseTimeMedicalReminderBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
@@ -131,9 +133,8 @@ class ChooseTimeMedicalReminderFragment : BaseFragment() {
             if (reminderTime?.isNotEmpty() == true) {
                 binding.editTextTime.setText(reminderTime)
             }
-            if (reminderBeforeTime?.isNotEmpty() == true) {
-                binding.editTextReminderBeforeTime.setText(reminderBeforeTime)
-            }
+            val reminderBeforeTime = getReminderBeforeTime(reminderBefore)
+            binding.editTextReminderBeforeTime.setText(reminderBeforeTime)
             if (notes?.isNotEmpty() == true) {
                 binding.editTextNote.setText(notes)
             }
@@ -175,6 +176,19 @@ class ChooseTimeMedicalReminderFragment : BaseFragment() {
             binding.itemSymptom.linearLayout.changeVisibility(show = false, isGone = true)
         }
     }
+
+    private fun updateUI(reminderBefore: ReminderBefore?) {
+        reminderBefore?.run {
+            val reminderBeforeTime = getReminderBeforeTime(reminderBefore)
+            binding.editTextReminderBeforeTime.setText(reminderBeforeTime)
+        }
+    }
+
+    private fun getReminderBeforeTime(reminderBefore: ReminderBefore): String =
+        if (reminderBefore.isMoreThanOrEqualHour)
+            getString(R.string.reminder_before_hour, reminderBefore.time)
+        else
+            getString(R.string.reminder_before_min, reminderBefore.time)
 
     private fun setupPhotosAdapter(photosList: List<String>) {
         photosAdapter = SmallPhotosAdapter {
@@ -232,15 +246,22 @@ class ChooseTimeMedicalReminderFragment : BaseFragment() {
             updateUI(symptom = null)
             medicalReminderViewModel.setSymptom(null)
         }
+
+        binding.btnIncrease.setOnClickListener {
+            val reminderBefore = medicalReminderViewModel.increaseReminderBefore()
+            updateUI(reminderBefore)
+        }
+
+        binding.btnDecrease.setOnClickListener {
+            val reminderBefore = medicalReminderViewModel.decreaseReminderBefore()
+            updateUI(reminderBefore)
+        }
     }
 
     private fun saveMedicalData() {
-
-        val reminderBeforeTime = binding.editTextReminderBeforeTime.text.toString()
         val notes = binding.editTextNote.text.toString()
 
-        medicalReminderViewModel.setReminderBeforeTimeAndNotes(
-            reminderBeforeTime = reminderBeforeTime,
+        medicalReminderViewModel.setNotes(
             notes = notes
         )
     }

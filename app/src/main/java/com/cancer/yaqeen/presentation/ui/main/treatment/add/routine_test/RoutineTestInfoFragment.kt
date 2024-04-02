@@ -18,14 +18,17 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Day
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.DayEnum
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.PeriodTimeEnum
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Time
+import com.cancer.yaqeen.data.features.home.schedule.routine_test.mappers.MappingRoutineTestAsRoutineTestTrack
 import com.cancer.yaqeen.data.features.home.schedule.routine_test.models.RoutineTestTrack
 import com.cancer.yaqeen.databinding.FragmentRoutineTestInfoBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
+import com.cancer.yaqeen.presentation.ui.main.treatment.add.medical_reminder.MedicalReminderInfoFragmentArgs
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.strength.choose_time.DaysAdapter
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.strength.choose_time.MedicationTimesAdapter
 import com.cancer.yaqeen.presentation.util.Constants
@@ -53,6 +56,8 @@ class RoutineTestInfoFragment : BaseFragment() {
 
     private val routineTestViewModel: RoutineTestViewModel by activityViewModels()
 
+    private val args: RoutineTestInfoFragmentArgs by navArgs()
+
 
     private val getContentResultLauncher: ActivityResultLauncher<String?> =
         registerForActivityResult(
@@ -65,19 +70,19 @@ class RoutineTestInfoFragment : BaseFragment() {
 
         }
 
-//    private val medication by lazy {
-//        args.medication
-//    }
+    private val routineTest by lazy {
+        args.routineTest
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//        if (medicalReminder == null)
-        routineTestViewModel.resetRoutineTestTrack()
-//        else
-//            medicalReminderViewModel.setMedicalReminderTrack(
-//                MappingMedicationAsMedicationTrack(requireContext()).map(medication!!)
-//            )
+        if (routineTest == null)
+            routineTestViewModel.resetRoutineTestTrack()
+        else
+            routineTestViewModel.setRoutineTestTrack(
+                MappingRoutineTestAsRoutineTestTrack(requireContext()).map(routineTest!!)
+            )
     }
 
     override fun onCreateView(

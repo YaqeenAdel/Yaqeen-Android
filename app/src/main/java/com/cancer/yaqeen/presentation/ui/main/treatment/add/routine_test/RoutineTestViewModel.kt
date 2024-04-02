@@ -6,18 +6,21 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Day
-import com.cancer.yaqeen.data.features.home.schedule.medication.models.MedicationTrack
-import com.cancer.yaqeen.data.features.home.schedule.medication.models.MedicationType
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.PeriodTimeEnum
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Photo
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.ReminderTime
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Time
-import com.cancer.yaqeen.data.features.home.schedule.medication.models.UnitType
-import com.cancer.yaqeen.data.features.home.schedule.medication.requests.AddMedicationRequestBuilder
+import com.cancer.yaqeen.data.features.home.schedule.routine_test.models.ReminderBefore
+import com.cancer.yaqeen.data.features.home.schedule.routine_test.models.ReminderBefore.Companion.getReminderBefore
 import com.cancer.yaqeen.data.features.home.schedule.routine_test.models.RoutineTestTrack
+import com.cancer.yaqeen.data.features.home.schedule.routine_test.requests.AddRoutineTestRequestBuilder
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.data.network.base.Status
 import com.cancer.yaqeen.data.network.error.ErrorEntity
+import com.cancer.yaqeen.domain.features.home.schedule.routine_test.AddRoutineTestUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.routine_test.AddRoutineTestWithoutPhotoUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.routine_test.EditRoutineTestUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.routine_test.EditRoutineTestWithoutPhotoUseCase
 import com.cancer.yaqeen.presentation.util.SingleLiveEvent
 import com.cancer.yaqeen.presentation.util.generateFileName
 import com.cancer.yaqeen.presentation.util.getCurrentTimeMillis
@@ -35,6 +38,10 @@ import javax.inject.Inject
 @HiltViewModel
 class RoutineTestViewModel @Inject constructor(
     private val prefEncryptionUtil: SharedPrefEncryptionUtil,
+    private val addRoutineTestUseCase: AddRoutineTestUseCase,
+    private val addRoutineTestWithoutPhotoUseCase: AddRoutineTestWithoutPhotoUseCase,
+    private val editRoutineTestUseCase: EditRoutineTestUseCase,
+    private val editRoutineTestWithoutPhotoUseCase: EditRoutineTestWithoutPhotoUseCase,
 ) : ViewModel() {
 
     private var viewModelJob: Job? = null
@@ -100,10 +107,9 @@ class RoutineTestViewModel @Inject constructor(
             it.reminderTime = reminderTime
         }
 
-    fun selectNotesAndReminderBeforeTime(notes: String, reminderBeforeTime: String) =
+    fun selectNotes(notes: String) =
         routineTestTrackField.get()?.also {
             it.notes = notes
-            it.reminderBeforeTime = reminderBeforeTime
         }
 
     fun getRoutineTestTrack(): RoutineTestTrack? =
@@ -113,6 +119,184 @@ class RoutineTestViewModel @Inject constructor(
         routineTestTrackField.set(RoutineTestTrack())
     }
 
+    fun modifyRoutineTest() {
+        val routineTestTrack = getRoutineTestTrack()
+        if (routineTestTrack?.editable == true)
+            editRoutineTest()
+        else
+            addRoutineTest()
+    }
+
+    private fun addRoutineTest() {
+        viewModelJob = viewModelScope.launch {
+            val routineTestTrackField = getRoutineTestTrack()
+            val isReadyToUploading = (routineTestTrackField?.photo  != null) && (routineTestTrackField.photo?.uri != null)
+            if (isReadyToUploading)
+                addRoutineTestWithPhoto()
+            else
+                addRoutineTestWithoutPhoto()
+        }
+    }
+
+    private fun editRoutineTest() {
+        viewModelJob = viewModelScope.launch {
+            val routineTestTrackField = getRoutineTestTrack()
+            val isReadyToUploading = (routineTestTrackField?.photo  != null) && (routineTestTrackField.photo?.uri != null)
+            if (isReadyToUploading)
+                editRoutineTestWithPhoto()
+            else
+                editRoutineTestWithoutPhoto()
+        }
+    }
+
+    private fun addRoutineTestWithPhoto() {
+        viewModelJob = viewModelScope.launch {
+            val routineTestTrackField = getRoutineTestTrack()
+            routineTestTrackField?.run {
+                addRoutineTestUseCase(
+                    AddRoutineTestRequestBuilder(
+                        routineTestName = routineTestName ?: "",
+                        notifyBeforeMinutes = reminderBefore.timeInMinutes,
+                        photo = photo,
+                        cronExpression = createCronExpression(
+                            minutes = reminderTime?.minute ?: "0",
+                            startingHour = reminderTime?.hour24 ?: "0",
+                            time = periodTime,
+                            startingDate = startDate,
+                            specificDays = specificDays
+                        ),
+                        notes = notes ?: ""
+                    )
+                ).collect { response ->
+                    _viewStateLoading.emit(response.loading)
+                    when (response.status) {
+                        Status.ERROR -> emitError(response.errorEntity)
+                        Status.SUCCESS -> {
+                            response.data?.let {
+                                if (it.scheduleIsModified) {
+                                    resetRoutineTestTrack()
+                                    _viewStateAddRoutineTest.postValue(true)
+                                }
+                            }
+                        }
+
+                        else -> {}
+                    }
+                }
+            }
+        }
+    }
+
+    private fun editRoutineTestWithPhoto() {
+        viewModelJob = viewModelScope.launch {
+            val routineTestTrackField = getRoutineTestTrack()
+            routineTestTrackField?.run {
+                editRoutineTestUseCase(
+                    routineTestId ?: 0,
+                    AddRoutineTestRequestBuilder(
+                        routineTestName = routineTestName ?: "",
+                        notifyBeforeMinutes = reminderBefore.timeInMinutes,
+                        photo = photo,
+                        cronExpression = createCronExpression(
+                            minutes = reminderTime?.minute ?: "0",
+                            startingHour = reminderTime?.hour24 ?: "0",
+                            time = periodTime,
+                            startingDate = startDate,
+                            specificDays = specificDays
+                        ),
+                        notes = notes ?: ""
+                    )
+                ).collect { response ->
+                    _viewStateLoading.emit(response.loading)
+                    when (response.status) {
+                        Status.ERROR -> emitError(response.errorEntity)
+                        Status.SUCCESS -> {
+                            response.data?.let {
+                                if (it.scheduleIsModified) {
+                                    resetRoutineTestTrack()
+                                    _viewStateEditRoutineTest.postValue(true)
+                                }
+                            }
+                        }
+
+                        else -> {}
+                    }
+                }
+            }
+        }
+    }
+
+    private fun addRoutineTestWithoutPhoto() {
+        viewModelJob = viewModelScope.launch {
+            val routineTestTrackField = getRoutineTestTrack()
+            routineTestTrackField?.run {
+                addRoutineTestWithoutPhotoUseCase(
+                    AddRoutineTestRequestBuilder(
+                        routineTestName = routineTestName ?: "",
+                        notifyBeforeMinutes = reminderBefore.timeInMinutes,
+                        cronExpression = createCronExpression(
+                            minutes = reminderTime?.minute ?: "0",
+                            startingHour = reminderTime?.hour24 ?: "0",
+                            time = periodTime,
+                            startingDate = startDate,
+                            specificDays = specificDays
+                        ),
+                        notes = notes ?: ""
+                    ).buildRequestBody()
+                ).collect { response ->
+                    _viewStateLoading.emit(response.loading)
+                    when (response.status) {
+                        Status.ERROR -> emitError(response.errorEntity)
+                        Status.SUCCESS -> {
+                            if (response.data == true) {
+                                resetRoutineTestTrack()
+                                _viewStateAddRoutineTest.postValue(true)
+                            }
+                        }
+
+                        else -> {}
+                    }
+                }
+            }
+        }
+    }
+
+    private fun editRoutineTestWithoutPhoto() {
+        viewModelJob = viewModelScope.launch {
+            val routineTestTrackField = getRoutineTestTrack()
+            routineTestTrackField?.run {
+                editRoutineTestWithoutPhotoUseCase(
+                    routineTestId ?: 0,
+                    AddRoutineTestRequestBuilder(
+                        routineTestName = routineTestName ?: "",
+                        notifyBeforeMinutes = reminderBefore.timeInMinutes,
+                        photo = photo,
+                        cronExpression = createCronExpression(
+                            minutes = reminderTime?.minute ?: "0",
+                            startingHour = reminderTime?.hour24 ?: "0",
+                            time = periodTime,
+                            startingDate = startDate,
+                            specificDays = specificDays
+                        ),
+                        notes = notes ?: ""
+                    ).buildRequestBody()
+                ).collect { response ->
+                    _viewStateLoading.emit(response.loading)
+                    when (response.status) {
+                        Status.ERROR -> emitError(response.errorEntity)
+                        Status.SUCCESS -> {
+                            if (response.data == true) {
+                                resetRoutineTestTrack()
+                                _viewStateEditRoutineTest.postValue(true)
+                            }
+                        }
+
+                        else -> {}
+                    }
+                }
+            }
+        }
+    }
 
     private fun createCronExpression(
         minutes: String,
@@ -141,6 +325,26 @@ class RoutineTestViewModel @Inject constructor(
         routineTestTrackField.set(routineTestTrack)
     }
 
+    fun increaseReminderBefore(): ReminderBefore? {
+        routineTestTrackField.get()?.also { track ->
+            getReminderBefore(track.reminderBefore.id + 1)?.let {
+                track.reminderBefore = it
+            }
+        }
+
+        return getRoutineTestTrack()?.reminderBefore
+    }
+
+    fun decreaseReminderBefore(): ReminderBefore? {
+        routineTestTrackField.get()?.also { track ->
+            getReminderBefore(track.reminderBefore.id - 1)?.let {
+                track.reminderBefore = it
+            }
+        }
+
+        return getRoutineTestTrack()?.reminderBefore
+    }
+
     fun userIsLoggedIn() =
         prefEncryptionUtil.isLogged
 
@@ -153,4 +357,5 @@ class RoutineTestViewModel @Inject constructor(
         super.onCleared()
         viewModelJob = null
     }
+
 }

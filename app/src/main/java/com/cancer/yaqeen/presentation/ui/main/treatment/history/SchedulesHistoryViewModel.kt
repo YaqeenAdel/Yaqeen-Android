@@ -1,11 +1,13 @@
 package com.cancer.yaqeen.presentation.ui.main.treatment.history
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.models.MedicalReminder
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Medication
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.ScheduleType
+import com.cancer.yaqeen.data.features.home.schedule.routine_test.models.RoutineTest
 import com.cancer.yaqeen.data.features.home.schedule.symptom.models.Symptom
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.data.network.base.Status
@@ -13,6 +15,7 @@ import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.DeleteScheduleUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.GetMedicalRemindersUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.GetMedicationRemindersUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.routine_test.GetRoutineTestsUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.symptom.DeleteSymptomUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.symptom.GetSymptomsUseCase
 import com.cancer.yaqeen.presentation.util.SingleLiveEvent
@@ -29,6 +32,7 @@ class SchedulesHistoryViewModel @Inject constructor(
     private val getMedicationRemindersUseCase: GetMedicationRemindersUseCase,
     private val getSymptomsUseCase: GetSymptomsUseCase,
     private val getMedicalRemindersUseCase: GetMedicalRemindersUseCase,
+    private val getRoutineTestsUseCase: GetRoutineTestsUseCase,
     private val deleteSymptomUseCase: DeleteSymptomUseCase,
     private val deleteScheduleUseCase: DeleteScheduleUseCase,
 ) : ViewModel() {
@@ -43,6 +47,9 @@ class SchedulesHistoryViewModel @Inject constructor(
 
     private val _viewStateMedicalReminders = MutableStateFlow<List<MedicalReminder>>(listOf())
     val viewStateMedicalReminders = _viewStateMedicalReminders.asStateFlow()
+
+    private val _viewStateRoutineTests = MutableStateFlow<List<RoutineTest>>(listOf())
+    val viewStateRoutineTests = _viewStateRoutineTests.asStateFlow()
 
     private val _viewStateDeleteSymptom = SingleLiveEvent<Int?>()
     val viewStateDeleteSymptom: LiveData<Int?> = _viewStateDeleteSymptom
@@ -113,6 +120,26 @@ class SchedulesHistoryViewModel @Inject constructor(
                     Status.SUCCESS -> {
                         response.data?.let {
                             _viewStateMedicalReminders.emit(it)
+                        }
+                    }
+
+                    else -> {}
+                }
+            }
+        }
+    }
+
+    fun getRoutineTests() {
+        if (!userIsLoggedIn())
+            return
+        viewModelJob = viewModelScope.launch {
+            getRoutineTestsUseCase(scheduleType = ScheduleType.ROUTINE_TESTS.scheduleType).collect { response ->
+                _viewStateLoading.emit(response.loading)
+                when (response.status) {
+                    Status.ERROR -> emitError(response.errorEntity)
+                    Status.SUCCESS -> {
+                        response.data?.let {
+                            _viewStateRoutineTests.emit(it)
                         }
                     }
 

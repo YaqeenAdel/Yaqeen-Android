@@ -6,7 +6,10 @@ import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.net.Uri
 import com.cancer.yaqeen.R
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.Photo
 import com.cancer.yaqeen.data.network.error.ErrorEntity
+import com.cancer.yaqeen.presentation.util.generateFileName
+import com.cancer.yaqeen.presentation.util.getCurrentTimeMillis
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -322,4 +325,38 @@ fun calculateScaleFactor(
     val widthRatio = maxWidth.toFloat() / originalWidth
     val heightRatio = maxHeight.toFloat() / originalHeight
     return if (widthRatio < heightRatio) widthRatio else heightRatio
+}
+
+
+fun createPhotosList(photoPath: String?, url: String?, urls: List<String?>?): List<Photo> {
+    val photos: MutableList<Photo> = arrayListOf()
+    val photosPaths = photoPath?.split(",") ?: listOf()
+//        val photosUrls = url?.split(",") ?: listOf()
+
+    val photosUrls = urls ?: listOf()
+
+    val pathsSize = photosPaths.size
+    val urlsSize = photosUrls.size
+
+    val size = if(pathsSize < urlsSize) pathsSize else urlsSize
+
+    var pathURL = ""
+    var imageName = ""
+
+    for (index in 0 until size){
+        pathURL = photosPaths[index]
+        imageName = pathURL.substringAfterLast("/")
+        imageName = imageName.ifEmpty { generateFileName() }
+
+        photos.add(
+            Photo(
+                id = getCurrentTimeMillis(),
+                url = photosUrls[index],
+                pathURL = pathURL,
+                imageName = imageName
+            )
+        )
+    }
+
+    return photos
 }

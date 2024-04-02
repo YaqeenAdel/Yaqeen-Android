@@ -13,8 +13,6 @@ import com.cancer.yaqeen.data.features.home.schedule.symptom.requests.AddSymptom
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.data.network.base.Status
 import com.cancer.yaqeen.data.network.error.ErrorEntity
-import com.cancer.yaqeen.data.utils.formatDateAPI
-import com.cancer.yaqeen.data.utils.formatTimeAPI
 import com.cancer.yaqeen.domain.features.home.schedule.symptom.AddSymptomUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.symptom.AddSymptomWithoutPhotoUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.symptom.EditSymptomUseCase
@@ -131,7 +129,7 @@ class SymptomsViewModel @Inject constructor(
                         Status.ERROR -> emitError(response.errorEntity)
                         Status.SUCCESS -> {
                             response.data?.let {
-                                if (it.symptomIsModified) {
+                                if (it.scheduleIsModified) {
                                     resetSymptomTrack()
                                     _viewStateAddSymptom.postValue(true)
                                 }
@@ -184,9 +182,9 @@ class SymptomsViewModel @Inject constructor(
             val symptomTrackField = getSymptomTrack()
             val isReadyToUploading = symptomTrackField?.photosList?.any { it.uri != null } ?: false
             if (isReadyToUploading)
-                editSymptomWithoutUpload()
-            else
                 editSymptomWithUpload()
+            else
+                editSymptomWithoutUpload()
         }
     }
 

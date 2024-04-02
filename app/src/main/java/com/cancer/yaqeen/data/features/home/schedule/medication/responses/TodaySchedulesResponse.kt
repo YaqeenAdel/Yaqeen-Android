@@ -11,13 +11,13 @@ data class TodayScheduleResponse (
     val scheduleID: Int?,
 
     @SerializedName("ScheduledEvents")
-    val scheduledEvents: ScheduledEventsResponse,
+    val scheduledEvents: ScheduledEventsResponse?,
 
     @SerializedName("Entity")
     val entity: EntityResponse?,
 
     @SerializedName("EntityType")
-    val entityType: String
+    val entityType: String?
 )
 
 data class ScheduledEventsResponse(
@@ -27,6 +27,6 @@ data class ScheduledEventsResponse(
 
 data class ScheduledEventResponse(
     @SerializedName("scheduled_time")
-    val scheduledTime: String
+    val scheduledTime: String?
 )
 

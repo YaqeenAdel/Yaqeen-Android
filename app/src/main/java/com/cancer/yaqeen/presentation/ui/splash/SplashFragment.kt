@@ -66,7 +66,6 @@ class SplashFragment : BaseFragment() {
                         checkNotificationPermission()
                     }, 3000)
                 }else if(isLogged){
-//                    viewModel.refreshToken(requireContext())
                     navController.navigate(
                         SplashFragmentDirections.actionSplashFragmentToQuoteFragment()
                     )
@@ -79,11 +78,10 @@ class SplashFragment : BaseFragment() {
         }
     }
     private fun checkNotificationPermission(){
-        //TODO: Will replace != with ==
         if (PermissionChecker.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.POST_NOTIFICATIONS
-            ) != PermissionChecker.PERMISSION_GRANTED){
+            ) == PermissionChecker.PERMISSION_GRANTED){
             checkUserInfo()
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -98,41 +96,4 @@ class SplashFragment : BaseFragment() {
         viewModel.checkUserInfo()
     }
 
-    private fun createCronExpression() {
-        // Define your own cron: arbitrary fields are allowed and last field can be optional
-        // Define your own cron: arbitrary fields are allowed and last field can be optional
-        var cronDefinition = CronDefinitionBuilder.defineCron()
-            .withSeconds().and()
-            .withMinutes().and()
-            .withHours().and()
-            .withDayOfMonth()
-            .supportsHash().supportsL().supportsW().and()
-            .withMonth().and()
-            .withDayOfWeek()
-            .withIntMapping(7, 0) //we support non-standard non-zero-based numbers!
-            .supportsHash().supportsL().supportsW().and()
-            .withYear().optional().and()
-            .instance()
-
-// or get a predefined instance
-
-// or get a predefined instance
-        cronDefinition = CronDefinitionBuilder.instanceDefinitionFor(CronType.QUARTZ)
-
-        val cron: Cron =
-            CronBuilder.cron(CronDefinitionBuilder.instanceDefinitionFor(CronType.QUARTZ))
-                .withYear(always())
-                .withMonth(always())
-                .withDoM(questionMark())
-                .withDoW(every(2))
-                .withHour(on(1))
-                .withMinute(on(0))
-                .withSecond(on(0))
-                .instance()
-// Obtain the string expression
-// Obtain the string expression
-        val cronAsString: String = cron.asString()
-
-        Log.d("TAG", "createCronExpression: $cronAsString")
-    }
 }

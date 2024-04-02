@@ -88,12 +88,12 @@ class MoreFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
         binding.groupProfile.changeVisibility(show = isLogged, isGone = true)
         binding.groupGuest.changeVisibility(show = !isLogged, isGone = true)
 
-        binding.btnSavedArticles.updateButtonUI(isLogged)
-        binding.ivSavedArticles.updateButtonUI(isLogged)
-        binding.viewSavedArticles.updateButtonUI(isLogged)
-        binding.btnLogOut.updateButtonUI(isLogged)
-        binding.ivLogOut.updateButtonUI(isLogged)
-        binding.viewLogOut.updateButtonUI(isLogged)
+        binding.btnSavedArticles.changeVisibility(isLogged, isGone = true)
+        binding.ivSavedArticles.changeVisibility(isLogged, isGone = true)
+        binding.viewSavedArticles.changeVisibility(isLogged, isGone = true)
+        binding.btnLogOut.changeVisibility(isLogged, isGone = true)
+        binding.ivLogOut.changeVisibility(isLogged, isGone = true)
+        binding.viewLogOut.changeVisibility(isLogged, isGone = true)
 
         binding.tvNameUser.text = user?.name ?: ""
         binding.tvEmailUser.text = user?.email ?: ""
@@ -116,6 +116,12 @@ class MoreFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when(v?.id){
+            R.id.btn_medicine -> {
+                navController.tryNavigate(MoreFragmentDirections.actionMoreFragmentToMedicationsFragment(null))
+            }
+            R.id.btn_symptoms -> {
+                navController.tryNavigate(MoreFragmentDirections.actionMoreFragmentToSymptomsTypesFragment(null))
+            }
             R.id.btn_saved_articles -> {
                 navController.tryNavigate(MoreFragmentDirections.actionMoreFragmentToSavedArticlesFragment())
             }

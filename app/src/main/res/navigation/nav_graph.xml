@@ -162,6 +162,12 @@
         <action
             android:id="@+id/action_moreFragment_to_savedArticlesFragment"
             app:destination="@id/savedArticlesFragment" />
+        <action
+            android:id="@+id/action_moreFragment_to_medicationsFragment"
+            app:destination="@id/medicationsFragment" />
+        <action
+            android:id="@+id/action_moreFragment_to_symptomsTypesFragment"
+            app:destination="@id/symptomsTypesFragment" />
     </fragment>
     <fragment
         android:id="@+id/quoteFragment"
@@ -257,6 +263,9 @@
         <action
             android:id="@+id/action_treatmentHistoryFragment_to_medicalReminderInfoFragment"
             app:destination="@id/medicalReminderInfoFragment" />
+        <action
+            android:id="@+id/action_treatmentHistoryFragment_to_routineTestInfoFragment"
+            app:destination="@id/routineTestInfoFragment" />
     </fragment>
     <fragment
         android:id="@+id/selectTimeFragment"
@@ -368,6 +377,12 @@
         android:id="@+id/medicalReminderInfoFragment"
         android:name="com.cancer.yaqeen.presentation.ui.main.treatment.add.medical_reminder.MedicalReminderInfoFragment"
         tools:layout="@layout/fragment_medical_reminder_info" >
+
+        <argument
+            android:name="medicalReminder"
+            app:nullable="true"
+            app:argType="com.cancer.yaqeen.data.features.home.schedule.medical_reminder.models.MedicalReminder"/>
+
         <action
             android:id="@+id/action_medicalReminderInfoFragment_to_chooseTimeMedicalReminderFragment"
             app:destination="@id/chooseTimeMedicalReminderFragment" />
@@ -395,6 +410,13 @@
         android:id="@+id/routineTestInfoFragment"
         android:name="com.cancer.yaqeen.presentation.ui.main.treatment.add.routine_test.RoutineTestInfoFragment"
         tools:layout="@layout/fragment_routine_test_info" >
+
+        <argument
+            android:name="routineTest"
+            app:nullable="true"
+            app:argType="com.cancer.yaqeen.data.features.home.schedule.routine_test.models.RoutineTest"/>
+
+
         <action
             android:id="@+id/action_routineTestInfoFragment_to_chooseTimeRoutineTestFragment"
             app:destination="@id/chooseTimeRoutineTestFragment" />

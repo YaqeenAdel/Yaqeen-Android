@@ -19,11 +19,17 @@ import com.cancer.yaqeen.domain.features.home.articles.usecases.SaveArticleUseCa
 import com.cancer.yaqeen.domain.features.home.articles.usecases.UnBookmarkArticleUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.AddMedicalReminderUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.DeleteScheduleUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.EditMedicalReminderUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.GetMedicalRemindersUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.AddMedicationUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.EditMedicationUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.GetTodayRemindersUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.GetMedicationRemindersUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.routine_test.AddRoutineTestUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.routine_test.AddRoutineTestWithoutPhotoUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.routine_test.EditRoutineTestUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.routine_test.EditRoutineTestWithoutPhotoUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.routine_test.GetRoutineTestsUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.symptom.AddSymptomUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.symptom.AddSymptomWithoutPhotoUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.symptom.DeleteSymptomUseCase
@@ -179,6 +185,10 @@ object UseCaseModule {
         AddMedicalReminderUseCase(repository)
     @Singleton
     @Provides
+    fun provideEditMedicalReminderUseCase(repository: ScheduleRepositoryImpl) =
+        EditMedicalReminderUseCase(repository)
+    @Singleton
+    @Provides
     fun provideGetMedicalRemindersUseCase(repository: ScheduleRepositoryImpl) =
         GetMedicalRemindersUseCase(repository)
 
@@ -186,6 +196,29 @@ object UseCaseModule {
     @Provides
     fun provideDeleteScheduleUseCase(repository: ScheduleRepositoryImpl) =
         DeleteScheduleUseCase(repository)
+
+    @Singleton
+    @Provides
+    fun provideAddRoutineTestUseCase(repository: ScheduleRepositoryImpl) =
+        AddRoutineTestUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideAddRoutineTestWithoutPhotoUseCase(repository: ScheduleRepositoryImpl) =
+        AddRoutineTestWithoutPhotoUseCase(repository)
+
+    @Singleton
+    @Provides
+    fun provideEditRoutineTestUseCase(repository: ScheduleRepositoryImpl) =
+        EditRoutineTestUseCase(repository)
+
+    @Singleton
+    @Provides
+    fun provideEditRoutineTestWithoutPhotoUseCase(repository: ScheduleRepositoryImpl) =
+        EditRoutineTestWithoutPhotoUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideGetRoutineTestsUseCase(repository: ScheduleRepositoryImpl) =
+        GetRoutineTestsUseCase(repository)
 
 
 }

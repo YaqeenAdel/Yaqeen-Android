@@ -7,12 +7,14 @@ import com.cancer.yaqeen.data.network.base.DataState
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class AddMedicalReminderUseCase @Inject constructor(private val repository: IScheduleRepository) {
+class EditMedicalReminderUseCase @Inject constructor(private val repository: IScheduleRepository) {
     suspend operator fun invoke(
+        scheduleId: Int,
         request: AddMedicalReminderRequest,
         symptomId: Int?
     ): Flow<DataState<ModifyMedicalReminder?>> =
-        repository.addMedicalReminder(
+        repository.editMedicalReminder(
+            scheduleId,
             request,
             symptomId
         )

@@ -10,6 +10,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
+import com.cancer.yaqeen.data.features.home.schedule.routine_test.models.ReminderBefore
 import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.databinding.FragmentMedicalReminderConfirmationBinding
 import com.cancer.yaqeen.databinding.FragmentSymptomConfirmationBinding
@@ -73,7 +74,9 @@ class MedicalReminderConfirmationFragment : BaseFragment() {
             binding.tvLocationVal.text = location ?: ""
             binding.tvStartingDateVal.text = startDate ?: ""
             binding.tvTimeVal.text = reminderTime ?: ""
-            binding.tvReminderVal.text = reminderBeforeTime ?: ""
+
+            val reminderBeforeTime = getReminderBeforeTime(reminderBefore)
+            binding.tvReminderVal.text = reminderBeforeTime
 
 
             val symptomIsSelected = symptom != null
@@ -90,6 +93,12 @@ class MedicalReminderConfirmationFragment : BaseFragment() {
 
         }
     }
+
+    private fun getReminderBeforeTime(reminderBefore: ReminderBefore): String =
+        if (reminderBefore.isMoreThanOrEqualHour)
+            getString(R.string.before_time_hour, reminderBefore.timeDigits)
+        else
+            getString(R.string.before_time_min, reminderBefore.timeDigits)
 
     private fun observeStates() {
         lifecycleScope {

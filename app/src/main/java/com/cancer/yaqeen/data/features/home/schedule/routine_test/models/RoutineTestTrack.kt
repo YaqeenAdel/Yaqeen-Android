@@ -12,8 +12,9 @@ data class RoutineTestTrack(
     var specificDays: List<Day>? = null,
     var startDate: Long? = null,
     var reminderTime: ReminderTime? = null,
-    var reminderBeforeTime: String? = null,
+//    var reminderBeforeTime: String? = null,
+    var reminderBefore: ReminderBefore = ReminderBefore.MINUTES_0,
     var notes: String? = null,
     val editable: Boolean = false,
-    val medicationId: Int? = null
+    val routineTestId: Int? = null
 )

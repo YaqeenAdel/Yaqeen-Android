@@ -130,12 +130,12 @@ class TreatmentFragment : BaseFragment(showBottomMenu = true), View.OnClickListe
             }
             R.id.btn_routine_tests -> {
                 navController.tryNavigate(
-                    TreatmentFragmentDirections.actionTreatmentFragmentToRoutineTestInfoFragment()
+                    TreatmentFragmentDirections.actionTreatmentFragmentToRoutineTestInfoFragment(null)
                 )
             }
             R.id.btn_medical_appointment -> {
                 navController.tryNavigate(
-                    TreatmentFragmentDirections.actionTreatmentFragmentToMedicalReminderInfoFragment()
+                    TreatmentFragmentDirections.actionTreatmentFragmentToMedicalReminderInfoFragment(null)
                 )
             }
         }

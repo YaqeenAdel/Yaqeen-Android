@@ -109,8 +109,8 @@ class SymptomsAdapter(
 
         private fun setListener(item: Symptom) {
             itemBinding.btnShowMore.setOnClickListener {
-                itemBinding.layoutLess.changeVisibility(show = false, isGone = true)
                 itemBinding.layoutMore.changeVisibility(show = true)
+                itemBinding.layoutLess.changeVisibility(show = false, isGone = true)
             }
 
             itemBinding.btnShowLess.setOnClickListener {

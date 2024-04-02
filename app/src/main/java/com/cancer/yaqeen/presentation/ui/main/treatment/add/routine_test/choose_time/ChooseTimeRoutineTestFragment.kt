@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,11 +17,10 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.ReminderTime
+import com.cancer.yaqeen.data.features.home.schedule.routine_test.models.ReminderBefore
 import com.cancer.yaqeen.data.features.home.schedule.routine_test.models.RoutineTestTrack
 import com.cancer.yaqeen.databinding.FragmentChooseTimeRoutineTestBinding
-import com.cancer.yaqeen.databinding.FragmentSelectTimeBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
-import com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.strength.choose_time.select_time.SelectTimeFragmentDirections
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.routine_test.RoutineTestViewModel
 import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.autoCleared
@@ -109,8 +107,8 @@ class ChooseTimeRoutineTestFragment : BaseFragment() {
                 binding.toolbar.title = routineTestName
                 binding.tvRoutineDetails.text = routineTestName
             }
-            if (reminderBeforeTime?.isNotEmpty() == true)
-                binding.editTextReminderBeforeTime.setText(reminderBeforeTime)
+            val reminderBeforeTime = getReminderBeforeTime(reminderBefore)
+            binding.editTextReminderBeforeTime.setText(reminderBeforeTime)
             if (notes?.isNotEmpty() == true)
                 binding.editTextNote.setText(notes)
 
@@ -137,12 +135,26 @@ class ChooseTimeRoutineTestFragment : BaseFragment() {
         checkTimeData()
     }
 
+
+    private fun getReminderBeforeTime(reminderBefore: ReminderBefore): String =
+        if (reminderBefore.isMoreThanOrEqualHour)
+            getString(R.string.reminder_before_hour, reminderBefore.time)
+        else
+            getString(R.string.reminder_before_min, reminderBefore.time)
+
     private fun updateUI(url: String) {
         bindImage(binding.ivRoutine, url)
     }
 
     private fun updateUI(uri: Uri) {
         bindImageURI(binding.ivRoutine, uri)
+    }
+
+    private fun updateUI(reminderBefore: ReminderBefore?) {
+        reminderBefore?.run {
+            val reminderBeforeTime = getReminderBeforeTime(reminderBefore)
+            binding.editTextReminderBeforeTime.setText(reminderBeforeTime)
+        }
     }
 
     private fun setListener() {
@@ -152,8 +164,7 @@ class ChooseTimeRoutineTestFragment : BaseFragment() {
 
         binding.btnNext.setOnClickListener {
             val notes = binding.editTextNote.text.toString().trim()
-            val reminderBeforeTime = binding.editTextReminderBeforeTime.text.toString().trim()
-            routineTestViewModel.selectNotesAndReminderBeforeTime(notes = notes, reminderBeforeTime = reminderBeforeTime)
+            routineTestViewModel.selectNotes(notes = notes)
             navController.tryNavigate(
                 ChooseTimeRoutineTestFragmentDirections.actionChooseTimeRoutineTestFragmentToRoutineTestConfirmationFragment()
             )
@@ -172,6 +183,16 @@ class ChooseTimeRoutineTestFragment : BaseFragment() {
 
         binding.editTextNote.addTextChangedListener {
             checkTimeData()
+        }
+
+        binding.btnIncrease.setOnClickListener {
+            val reminderBefore = routineTestViewModel.increaseReminderBefore()
+            updateUI(reminderBefore)
+        }
+
+        binding.btnDecrease.setOnClickListener {
+            val reminderBefore = routineTestViewModel.decreaseReminderBefore()
+            updateUI(reminderBefore)
         }
     }
 

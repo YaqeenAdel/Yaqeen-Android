@@ -141,6 +141,9 @@
     <string name="appointment_added_successfully">Appointment Added Successfully</string>
     <string name="appointment_edited_successfully">Appointment Edited Successfully</string>
     <string name="appointment_deleted_successfully">Appointment Deleted Successfully</string>
+    <string name="routine_test_added_successfully">Routine Test Added Successfully</string>
+    <string name="routine_test_edited_successfully">Routine Test Edited Successfully</string>
+    <string name="routine_test_deleted_successfully">Routine Test Deleted Successfully</string>
     <string name="dosage">Dosage</string>
     <string name="starting_date">Starting Date</string>
     <string name="take">Take</string>
@@ -214,7 +217,10 @@
     <string name="what_time_do_you_follow_your_daily_routine">What time do you follow your daily routine?</string>
     <string name="notification_before">Notification before</string>
     <string name="how_early_should_we_notify_you">How early should we notify you?</string>
-    <string name="before_time">Before %s</string>
+    <string name="before_time_min">Before %d min</string>
+    <string name="before_time_hour">Before %d Hour</string>
+    <string name="reminder_before_min">%s min</string>
+    <string name="reminder_before_hour">%s Hour</string>
 
     <string-array name="languages_array">
         <item>English</item>

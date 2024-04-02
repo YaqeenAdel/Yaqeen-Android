@@ -223,6 +223,7 @@ class HomeFragment : BaseFragment(showBottomMenu = true) {
 
         lifecycleScope {
             homeViewModel.viewStateScheduleS.collect { schedules ->
+                Log.d("TAG", "observeStatessize: ${schedules.size}")
                 schedulesAdapter.submitList(schedules)
             }
         }

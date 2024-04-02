@@ -1,6 +1,7 @@
 package com.cancer.yaqeen.presentation.ui.main.treatment.history
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +23,7 @@ import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.ui.main.treatment.TimesAdapter
 import com.cancer.yaqeen.presentation.ui.main.treatment.history.adapters.MedicalRemindersAdapter
 import com.cancer.yaqeen.presentation.ui.main.treatment.history.adapters.MedicationsAdapter
+import com.cancer.yaqeen.presentation.ui.main.treatment.history.adapters.RoutineTestsAdapter
 import com.cancer.yaqeen.presentation.ui.main.treatment.history.adapters.SymptomsAdapter
 import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.autoCleared
@@ -47,6 +49,7 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
     private lateinit var medicationsAdapter: MedicationsAdapter
     private lateinit var symptomsAdapter: SymptomsAdapter
     private lateinit var medicalRemindersAdapter: MedicalRemindersAdapter
+    private lateinit var routineTestsAdapter: RoutineTestsAdapter
 
     private val viewModel: SchedulesHistoryViewModel by viewModels()
 
@@ -93,6 +96,7 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
         setupMedicationsAdapter()
         setupSymptomsAdapter()
         setupMedicalRemindersAdapter()
+        setupRoutineTestsAdapter()
     }
 
     override fun onResume() {
@@ -181,7 +185,7 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
         lifecycleScope {
             viewModel.viewStateDeleteMedicalReminder.observe(viewLifecycleOwner) { symptomId ->
                 symptomId?.let {
-                    Toast.makeText(requireContext(), getString(R.string.symptom_deleted_successfully), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.appointment_deleted_successfully), Toast.LENGTH_SHORT).show()
                     medicalRemindersAdapter.deleteMedicalReminder(symptomId)
                 }
             }
@@ -190,6 +194,21 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
         lifecycleScope {
             viewModel.viewStateMedicalReminders.collect { medicalReminders ->
                 medicalRemindersAdapter.setList(medicalReminders)
+            }
+        }
+
+        lifecycleScope {
+            viewModel.viewStateRoutineTests.collect { routineTests ->
+                routineTestsAdapter.setList(routineTests)
+            }
+        }
+
+        lifecycleScope {
+            viewModel.viewStateDeleteRoutineTest.observe(viewLifecycleOwner) { routineTestId ->
+                routineTestId?.let {
+                    Toast.makeText(requireContext(), getString(R.string.routine_test_deleted_successfully), Toast.LENGTH_SHORT).show()
+                    routineTestsAdapter.deleteRoutineTest(routineTestId)
+                }
             }
         }
     }
@@ -262,7 +281,9 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
     private fun setupMedicalRemindersAdapter() {
         medicalRemindersAdapter = MedicalRemindersAdapter(
             onEditClick = {
-
+                navController.tryNavigate(
+                    TreatmentHistoryFragmentDirections.actionTreatmentHistoryFragmentToMedicalReminderInfoFragment(it)
+                )
             },
             onDeleteClick = {
                 viewModel.deleteMedicalReminder(it.id)
@@ -270,6 +291,27 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
         )
         binding.rvMedicalAppointmentsHistory.apply {
             adapter = medicalRemindersAdapter
+            addItemDecoration(
+                VerticalMarginItemDecoration(
+                    dpToPx(24f, requireContext())
+                )
+            )
+        }
+    }
+
+    private fun setupRoutineTestsAdapter() {
+        routineTestsAdapter = RoutineTestsAdapter(
+            onEditClick = {
+                navController.tryNavigate(
+                    TreatmentHistoryFragmentDirections.actionTreatmentHistoryFragmentToRoutineTestInfoFragment(it)
+                )
+            },
+            onDeleteClick = {
+                viewModel.deleteRoutineTest(it.id)
+            }
+        )
+        binding.rvRoutineTestsHistory.apply {
+            adapter = routineTestsAdapter
             addItemDecoration(
                 VerticalMarginItemDecoration(
                     dpToPx(24f, requireContext())
@@ -312,7 +354,7 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
     }
 
     private fun getRoutineTests() {
-
+        viewModel.getRoutineTests()
     }
 
     private fun MaterialButton.updateUI() {
