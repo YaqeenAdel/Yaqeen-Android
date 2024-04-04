@@ -212,4 +212,4 @@ fun Bitmap.cropImageToSquare(): Bitmap {
 }
 
 fun String.isValidPhone() =
-    Patterns.PHONE.matcher(this).matches() && length < 11
+    Patterns.PHONE.matcher(this).matches() && length == 11

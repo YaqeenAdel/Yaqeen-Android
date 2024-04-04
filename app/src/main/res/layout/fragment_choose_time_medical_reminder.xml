@@ -331,7 +331,7 @@
                 android:layout_gravity="center"
                 android:hint="@string/add_notes"
                 android:importantForAutofill="noExcludeDescendants"
-                android:inputType="text"
+                android:inputType="textMultiLine|textImeMultiLine"
                 android:fontFamily="sans-serif"
                 android:paddingVertical="@dimen/_14sdp"
                 android:textColor="@color/black"

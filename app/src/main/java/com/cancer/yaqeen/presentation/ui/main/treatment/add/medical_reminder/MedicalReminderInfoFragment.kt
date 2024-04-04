@@ -156,7 +156,7 @@ class MedicalReminderInfoFragment : BaseFragment() {
         val textColorId: Int
         val backgroundColorId: Int
 
-        if (doctorName.isNotEmpty() && location.isNotEmpty() && phoneNumber.isNotEmpty() && phoneNumber.isValidPhone()) {
+        if (doctorName.isNotEmpty() && location.isNotEmpty() && phoneNumber.isNotEmpty()) {
             binding.btnNext.enable()
             textColorId = R.color.white
             backgroundColorId = R.color.primary_color

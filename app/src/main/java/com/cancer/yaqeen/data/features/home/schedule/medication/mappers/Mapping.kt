@@ -82,7 +82,7 @@ private fun mapRemindersFromNowRemoteByEvents(response: TodaySchedulesResponse):
     val schedules: MutableList<Schedule> = arrayListOf()
     response.schedules?.map { schedule ->
         schedule.scheduledEvents?.events?.distinctBy { it.scheduledTime.toString() }?.map { event ->
-//            if (event.scheduledTime?.isCurrentTodayAndAfterTimeNow() == true)
+            if (event.scheduledTime?.isCurrentTodayAndAfterTimeNow() == true)
                 schedules.add(
                     if (schedule.entityType == ScheduleType.MEDICATION.scheduleType)
                         MappingReminderTodayRemoteAsScheduleMedicationModel(event.scheduledTime).map(schedule)

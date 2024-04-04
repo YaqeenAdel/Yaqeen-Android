@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.PermissionChecker
 import androidx.fragment.app.viewModels
@@ -16,13 +17,9 @@ import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.databinding.FragmentSplashBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.util.autoCleared
-import com.cronutils.builder.CronBuilder
-import com.cronutils.model.Cron
-import com.cronutils.model.CronType
-import com.cronutils.model.definition.CronDefinitionBuilder
+import com.cancer.yaqeen.presentation.util.enableNotificationPermissions
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
-import com.cronutils.model.field.expression.FieldExpressionFactory.*
 
 
 @AndroidEntryPoint
@@ -34,7 +31,7 @@ class SplashFragment : BaseFragment() {
 
     private val viewModel: SplashViewModel by viewModels()
 
-    private val launcher = registerForActivityResult(
+    private val requestPermissionLauncher: ActivityResultLauncher<String?> = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         checkUserInfo()
@@ -85,7 +82,11 @@ class SplashFragment : BaseFragment() {
             checkUserInfo()
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                launcher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                //TODO: BUG
+//                enableNotificationPermissions(
+//                    requestPermissionLauncher
+//                )
+                checkUserInfo()
             }else {
                 checkUserInfo()
             }

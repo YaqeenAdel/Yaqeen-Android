@@ -85,3 +85,13 @@ fun enableCameraPermissions(requestPermissionLauncher: ActivityResultLauncher<St
         Manifest.permission.CAMERA
     )
 }
+
+
+fun enableNotificationPermissions(requestPermissionLauncher: ActivityResultLauncher<String?>) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        requestPermission(
+            requestPermissionLauncher,
+            Manifest.permission.POST_NOTIFICATIONS
+        )
+    }
+}
