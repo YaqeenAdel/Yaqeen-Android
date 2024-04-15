@@ -7,6 +7,7 @@ import com.cancer.yaqeen.data.features.home.articles.HomeRepositoryImpl
 import com.cancer.yaqeen.data.features.onboarding.OnboardingRepositoryImpl
 import com.cancer.yaqeen.data.features.profile.ProfileRepositoryImpl
 import com.cancer.yaqeen.data.features.home.schedule.ScheduleRepositoryImpl
+import com.cancer.yaqeen.data.features.home.schedule.data_sources.ScheduleLocalDataSourceImpl
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.data.network.apis.Auth0API
 import com.cancer.yaqeen.data.network.apis.YaqeenAPI
@@ -57,8 +58,9 @@ object RepositoryModule {
     fun provideScheduleRepository(
         @ApplicationContext context: Context,
         apiService: YaqeenAPI,
+        scheduleLocalDataSourceImpl: ScheduleLocalDataSourceImpl,
         errorHandlerImpl: ErrorHandlerImpl,
         sharedPrefEncryptionUtil: SharedPrefEncryptionUtil
-    ) = ScheduleRepositoryImpl(context, apiService, errorHandlerImpl, sharedPrefEncryptionUtil)
+    ) = ScheduleRepositoryImpl(context, apiService, scheduleLocalDataSourceImpl, errorHandlerImpl, sharedPrefEncryptionUtil)
 
 }

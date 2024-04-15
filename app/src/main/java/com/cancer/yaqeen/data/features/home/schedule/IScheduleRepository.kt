@@ -3,12 +3,15 @@ package com.cancer.yaqeen.data.features.home.schedule
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.models.ModifyMedicalReminder
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.models.MedicalReminder
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.requests.AddMedicalReminderRequest
+import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.room.MedicalAppointmentDB
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Medication
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Schedule
 import com.cancer.yaqeen.data.features.home.schedule.medication.requests.AddMedicationRequest
+import com.cancer.yaqeen.data.features.home.schedule.medication.room.MedicationDB
 import com.cancer.yaqeen.data.features.home.schedule.routine_test.models.RoutineTest
 import com.cancer.yaqeen.data.features.home.schedule.routine_test.requests.AddRoutineTestRequest
 import com.cancer.yaqeen.data.features.home.schedule.routine_test.requests.AddRoutineTestRequestBuilder
+import com.cancer.yaqeen.data.features.home.schedule.routine_test.room.RoutineTestDB
 import com.cancer.yaqeen.data.features.home.schedule.symptom.models.ModifyScheduleResponse
 import com.cancer.yaqeen.data.features.home.schedule.symptom.models.Symptom
 import com.cancer.yaqeen.data.features.home.schedule.symptom.models.SymptomType
@@ -18,7 +21,7 @@ import com.cancer.yaqeen.data.network.base.DataState
 import kotlinx.coroutines.flow.Flow
 
 interface IScheduleRepository {
-     suspend fun addMedication(request: AddMedicationRequest): Flow<DataState<Boolean>>
+     suspend fun addMedication(request: AddMedicationRequest): Flow<DataState<Int?>>
      suspend fun getMedicationsReminders(scheduleType: String): Flow<DataState<List<Medication>>>
      suspend fun getTodayReminders(): Flow<DataState<List<Schedule>>>
      suspend fun editMedication(scheduleId: Int, request: AddMedicationRequest): Flow<DataState<Boolean>>
@@ -33,9 +36,15 @@ interface IScheduleRepository {
      suspend fun getMedicalReminders(scheduleType: String): Flow<DataState<List<MedicalReminder>>>
      suspend fun deleteSchedule(scheduleId: Int): Flow<DataState<Boolean>>
      suspend fun addRoutineTest(builder: AddRoutineTestRequestBuilder): Flow<DataState<ModifyScheduleResponse?>>
-     suspend fun addRoutineTestWithoutPhoto(request: AddRoutineTestRequest): Flow<DataState<Boolean>>
+     suspend fun addRoutineTestWithoutPhoto(request: AddRoutineTestRequest): Flow<DataState<Int?>>
      suspend fun getRoutineTests(scheduleType: String): Flow<DataState<List<RoutineTest>>>
      suspend fun editRoutineTest(scheduleId: Int, request: AddRoutineTestRequestBuilder): Flow<DataState<ModifyScheduleResponse?>>
      suspend fun editRoutineTestWithoutUpload(scheduleId: Int, request: AddRoutineTestRequest): Flow<DataState<Boolean>>
      suspend fun editMedicalReminder(scheduleId: Int, request: AddMedicalReminderRequest, symptomId: Int?): Flow<DataState<ModifyMedicalReminder?>>
+
+
+     // Local Database
+     suspend fun saveMedication(medication: MedicationDB): Flow<DataState<Long>>
+     suspend fun saveRoutineTest(routineTest: RoutineTestDB): Flow<DataState<Long>>
+     suspend fun saveMedicalAppointment(medicalAppointment: MedicalAppointmentDB): Flow<DataState<Long>>
 }

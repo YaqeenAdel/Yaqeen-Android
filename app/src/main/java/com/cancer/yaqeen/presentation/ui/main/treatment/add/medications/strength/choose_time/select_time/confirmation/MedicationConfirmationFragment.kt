@@ -1,6 +1,9 @@
 package com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.strength.choose_time.select_time.confirmation
 
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,10 +15,13 @@ import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.databinding.FragmentMedicationConfirmationBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
+import com.cancer.yaqeen.presentation.service.WorkerManager
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.MedicationsViewModel
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindResourceImage
 import com.cancer.yaqeen.presentation.util.convertMilliSecondsToDate
+import com.cancer.yaqeen.presentation.util.drawOverlaysPermissionAreGranted
+import com.cancer.yaqeen.presentation.util.enableDrawOverlaysPermission
 import com.cancer.yaqeen.presentation.util.tryPopBackStack
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -76,11 +82,15 @@ class MedicationConfirmationFragment : BaseFragment() {
         }
 
         binding.btnConfirm.setOnClickListener {
-            val medicationTrack = medicationsViewModel.getMedicationTrack()
-            if (medicationTrack?.editable == true)
-                medicationsViewModel.editMedication()
-            else
-                medicationsViewModel.addMedication()
+            if (drawOverlaysPermissionAreGranted(requireContext())) {
+                val medicationTrack = medicationsViewModel.getMedicationTrack()
+                if (medicationTrack?.editable == true)
+                    medicationsViewModel.editMedication()
+                else
+                    medicationsViewModel.addMedication()
+            }else {
+                enableDrawOverlaysPermission(requireContext())
+            }
         }
     }
 
@@ -98,13 +108,18 @@ class MedicationConfirmationFragment : BaseFragment() {
 
         lifecycleScope {
             medicationsViewModel.viewStateAddMedication.observe(viewLifecycleOwner) { response ->
-                if(response == true){
-                    Toast.makeText(requireContext(),
-                        getString(R.string.medication_added_successfully), Toast.LENGTH_SHORT).show()
-                    navController.tryPopBackStack(
-                        R.id.treatmentHistoryFragment,
-                        false
-                    )
+                response?.let { (added, medication) ->
+                    if(added){
+                        val workerManager = WorkerManager(requireContext())
+                        val uuid = workerManager.setPeriodScheduleForMedication(medication)
+                        medicationsViewModel.saveLocalMedication(medication, uuid)
+                        Toast.makeText(requireContext(),
+                            getString(R.string.medication_added_successfully), Toast.LENGTH_SHORT).show()
+                        navController.tryPopBackStack(
+                            R.id.treatmentHistoryFragment,
+                            false
+                        )
+                    }
                 }
             }
         }

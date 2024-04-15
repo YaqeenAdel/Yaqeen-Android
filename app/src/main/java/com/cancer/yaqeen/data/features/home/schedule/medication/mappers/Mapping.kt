@@ -26,9 +26,9 @@ import com.cancer.yaqeen.presentation.ui.main.treatment.getUnitType
 
 
 class MappingAddMedicationRemoteAsUIModel :
-    Mapper<AddMedicationResponse, Boolean> {
-    override fun map(input: AddMedicationResponse): Boolean {
-        return input.response != null
+    Mapper<AddMedicationResponse, Int?> {
+    override fun map(input: AddMedicationResponse): Int? {
+        return input.response?.scheduleID
     }
 }
 

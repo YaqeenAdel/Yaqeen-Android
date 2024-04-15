@@ -146,7 +146,8 @@ class SymptomConfirmationFragment : BaseFragment() {
     }
 
     private fun confirmSymptom() {
-        if (!storagePermissionsAreGranted(requireContext())) {
+        val symptomTrack = symptomsViewModel.getSymptomTrack()
+        if (!storagePermissionsAreGranted(requireContext())&& symptomTrack?.photosList?.any { it.uri != null } == true) {
             enableStoragePermissions(requestMultiplePermissionsLauncher)
             return
         }

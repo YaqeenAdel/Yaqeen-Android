@@ -1,7 +1,5 @@
 package com.cancer.yaqeen.presentation.ui.main.treatment.add.medications
 
-import android.os.Build
-import android.util.Log
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
@@ -11,15 +9,18 @@ import com.cancer.yaqeen.data.features.home.schedule.medication.models.Medicatio
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.MedicationType
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.PeriodTimeEnum
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.ReminderTime
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.ScheduleType
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Time
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.UnitType
 import com.cancer.yaqeen.data.features.home.schedule.medication.requests.AddMedicationRequestBuilder
+import com.cancer.yaqeen.data.features.home.schedule.medication.room.MedicationDB
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.data.network.base.Status
 import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.domain.features.home.schedule.medication.AddMedicationUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.EditMedicationUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.GetMedicationRemindersUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.medication.SaveLocalMedicationUseCase
 import com.cancer.yaqeen.presentation.util.SingleLiveEvent
 import com.cancer.yaqeen.presentation.util.timestampToDay
 import com.cancer.yaqeen.presentation.util.timestampToMonth
@@ -28,9 +29,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import java.time.ZonedDateTime
-import java.time.temporal.ChronoUnit
+import java.util.UUID
 import javax.inject.Inject
 
 
@@ -40,12 +41,13 @@ class MedicationsViewModel @Inject constructor(
     private val addMedicationUseCase: AddMedicationUseCase,
     private val editMedicationUseCase: EditMedicationUseCase,
     private val getMedicationRemindersUseCase: GetMedicationRemindersUseCase,
+    private val saveLocalMedicationUseCase: SaveLocalMedicationUseCase,
 ) : ViewModel() {
 
     private var viewModelJob: Job? = null
 
-    private val _viewStateAddMedication = SingleLiveEvent<Boolean?>()
-    val viewStateAddMedication: LiveData<Boolean?> = _viewStateAddMedication
+    private val _viewStateAddMedication = SingleLiveEvent<Pair<Boolean, MedicationDB>?>()
+    val viewStateAddMedication: LiveData<Pair<Boolean, MedicationDB>?> = _viewStateAddMedication
 
     private val _viewStateEditMedication = SingleLiveEvent<Boolean?>()
     val viewStateEditMedication: LiveData<Boolean?> = _viewStateEditMedication
@@ -112,30 +114,39 @@ class MedicationsViewModel @Inject constructor(
         viewModelJob = viewModelScope.launch {
             val medicationTrackField = getMedicationTrack()
             medicationTrackField?.run {
+                val requestBuilder = AddMedicationRequestBuilder(
+                    medicationName = medicationName ?: "",
+                    medicationTypeName = medicationType?.nameEn ?: "",
+                    unitTypeName = unitType?.name ?: "",
+                    strengthAmount = strengthAmount ?: "",
+                    dosageAmount = dosageAmount ?: "",
+                    cronExpression = createCronExpression(
+                        minutes = reminderTime?.minute ?: "0",
+                        startingHour = reminderTime?.hour24 ?: "0",
+                        time = periodTime,
+                        startingDate = startDate,
+                        specificDays = specificDays
+                    ),
+                    notes = notes ?: ""
+                )
                 addMedicationUseCase(
-                    AddMedicationRequestBuilder(
-                        medicationName = medicationName ?: "",
-                        medicationTypeName = medicationType?.nameEn ?: "",
-                        unitTypeName = unitType?.name ?: "",
-                        strengthAmount = strengthAmount ?: "",
-                        dosageAmount = dosageAmount ?: "",
-                        cronExpression = createCronExpression(
-                            minutes = reminderTime?.minute ?: "0",
-                            startingHour = reminderTime?.hour24 ?: "0",
-                            time = periodTime,
-                            startingDate = startDate,
-                            specificDays = specificDays
-                        ),
-                        notes = notes ?: ""
-                    ).buildRequestBody()
+                    requestBuilder.buildRequestBody()
                 ).collect { response ->
                     _viewStateLoading.emit(response.loading)
                     when (response.status) {
                         Status.ERROR -> emitError(response.errorEntity)
                         Status.SUCCESS -> {
-                            if (response.data == true) {
+                            response.data?.let {
+                                val medicationDB =
+                                    createMedicationDB(
+                                        requestBuilder,
+                                        startDate,
+                                        reminderTime,
+                                        periodTime?.id,
+                                        it
+                                    )
                                 resetMedicationTrack()
-                                _viewStateAddMedication.postValue(true)
+                                _viewStateAddMedication.postValue(true to medicationDB)
                             }
                         }
 
@@ -143,6 +154,41 @@ class MedicationsViewModel @Inject constructor(
                     }
                 }
             }
+        }
+    }
+
+    private fun createMedicationDB(
+        builder: AddMedicationRequestBuilder,
+        startDate: Long?,
+        reminderTime: ReminderTime?,
+        periodTimeId: Int?,
+        medicationId: Int,
+    ): MedicationDB =
+        builder.run {
+            MedicationDB(
+                medicationId = medicationId,
+                medicationName = medicationName,
+                medicationType = medicationTypeName,
+                strengthAmount = strengthAmount,
+                unitType = unitTypeName,
+                dosageAmount = dosageAmount,
+                notes = notes,
+                scheduleType = ScheduleType.MEDICATION.scheduleType,
+                cronExpression = cronExpression,
+                startDate = startDate ?: 0L,
+                hour24 = reminderTime?.hour24?.toIntOrNull() ?: 0,
+                minute = reminderTime?.minute?.toIntOrNull() ?: 0,
+                periodTimeId = periodTimeId
+            )
+        }
+
+    fun saveLocalMedication(medication: MedicationDB, uuid: UUID) {
+        viewModelJob = viewModelScope.launch {
+            saveLocalMedicationUseCase(
+                medication.apply {
+                    workID = uuid
+                }
+            ).collect()
         }
     }
 

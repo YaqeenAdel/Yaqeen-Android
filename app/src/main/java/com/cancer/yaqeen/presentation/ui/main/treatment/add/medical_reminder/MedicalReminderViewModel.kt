@@ -6,19 +6,28 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.models.MedicalReminderTrack
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.requests.AddMedicalReminderRequestBuilder
+import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.room.MedicalAppointmentDB
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.ReminderTime
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.ScheduleType
 import com.cancer.yaqeen.data.features.home.schedule.routine_test.models.ReminderBefore
+import com.cancer.yaqeen.data.features.home.schedule.routine_test.room.RoutineTestDB
 import com.cancer.yaqeen.data.features.home.schedule.symptom.models.Symptom
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.data.network.base.Status
 import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.AddMedicalReminderUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.EditMedicalReminderUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.SaveLocalMedicalAppointmentUseCase
+import com.cancer.yaqeen.presentation.ui.main.treatment.getReminderTimeFromTime
 import com.cancer.yaqeen.presentation.util.SingleLiveEvent
+import com.cancer.yaqeen.presentation.util.convertDateToMilliSeconds
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 
@@ -27,12 +36,13 @@ class MedicalReminderViewModel @Inject constructor(
     private val prefEncryptionUtil: SharedPrefEncryptionUtil,
     private val addMedicalReminderUseCase: AddMedicalReminderUseCase,
     private val editMedicalReminderUseCase: EditMedicalReminderUseCase,
+    private val saveLocalMedicalAppointmentUseCase: SaveLocalMedicalAppointmentUseCase,
 ) : ViewModel() {
 
     private var viewModelJob: Job? = null
 
-    private val _viewStateAddMedicalReminder = SingleLiveEvent<Boolean?>()
-    val viewStateAddMedicalReminder: LiveData<Boolean?> = _viewStateAddMedicalReminder
+    private val _viewStateAddMedicalReminder = SingleLiveEvent<Pair<Boolean, MedicalAppointmentDB>?>()
+    val viewStateAddMedicalReminder: LiveData<Pair<Boolean, MedicalAppointmentDB>?> = _viewStateAddMedicalReminder
 
     private val _viewStateEditMedicalReminder = SingleLiveEvent<Boolean?>()
     val viewStateEditMedicalReminder: LiveData<Boolean?> = _viewStateEditMedicalReminder
@@ -116,16 +126,17 @@ class MedicalReminderViewModel @Inject constructor(
         viewModelJob = viewModelScope.launch {
             val medicalReminderTrackField = getMedicalReminderTrack()
             medicalReminderTrackField?.run {
+                val requestBuilder = AddMedicalReminderRequestBuilder(
+                    doctorName = doctorName ?: "",
+                    location = location ?: "",
+                    phoneNumber = phoneNumber ?: "",
+                    startDate = startDate,
+                    time = reminderTime,
+                    notifyBeforeMinutes = reminderBefore.timeInMinutes,
+                    notes = notes ?: "",
+                )
                 addMedicalReminderUseCase(
-                    AddMedicalReminderRequestBuilder(
-                        doctorName = doctorName ?: "",
-                        location = location ?: "",
-                        phoneNumber = phoneNumber ?: "",
-                        startDate = startDate,
-                        time = reminderTime,
-                        notifyBeforeMinutes = reminderBefore.timeInMinutes,
-                        notes = notes ?: "",
-                    ).buildRequestBody(),
+                    requestBuilder.buildRequestBody(),
                     symptom?.id
                 ).collect { response ->
                     _viewStateLoading.emit(response.loading)
@@ -133,8 +144,16 @@ class MedicalReminderViewModel @Inject constructor(
                         Status.ERROR -> emitError(response.errorEntity)
                         Status.SUCCESS -> {
                             response.data?.let {
+                                val medicalAppointmentDB =
+                                    createMedicalAppointmentDB(
+                                        requestBuilder,
+                                        convertDateToMilliSeconds(startDate ?: ""),
+                                        getReminderTimeFromTime(reminderTime ?: ""),
+                                        reminderBefore.timeInMinutes,
+                                        it.scheduleID
+                                    )
                                 resetMedicalReminderTrack()
-                                _viewStateAddMedicalReminder.postValue(true)
+                                _viewStateAddMedicalReminder.postValue(true to medicalAppointmentDB)
                             }
                         }
 
@@ -144,6 +163,28 @@ class MedicalReminderViewModel @Inject constructor(
             }
         }
     }
+
+    private fun createMedicalAppointmentDB(
+        builder: AddMedicalReminderRequestBuilder,
+        startDate: Long?,
+        reminderTime: ReminderTime?,
+        reminderBeforeInMinutes: Int,
+        medicalReminderId: Int,
+    ): MedicalAppointmentDB =
+        builder.run {
+            MedicalAppointmentDB(
+                medicalAppointmentId = medicalReminderId,
+                doctorName = doctorName,
+                location = location,
+                phoneNumber = phoneNumber,
+                notes = notes,
+                scheduleType = ScheduleType.MEDICAL_REMINDER.scheduleType,
+                startDate = startDate ?: 0L,
+                hour24 = reminderTime?.hour24?.toIntOrNull() ?: 0,
+                minute = reminderTime?.minute?.toIntOrNull() ?: 0,
+                reminderBeforeInMinutes = reminderBeforeInMinutes
+            )
+        }
 
     private fun editMedicalReminder() {
         viewModelJob = viewModelScope.launch {
@@ -176,6 +217,16 @@ class MedicalReminderViewModel @Inject constructor(
                     }
                 }
             }
+        }
+    }
+
+    fun saveLocalMedicalAppointment(medicalAppointment: MedicalAppointmentDB, uuid: UUID) {
+        viewModelJob = viewModelScope.launch {
+            saveLocalMedicalAppointmentUseCase(
+                medicalAppointment.apply {
+                    workID = uuid
+                }
+            ).collect()
         }
     }
 

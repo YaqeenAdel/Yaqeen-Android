@@ -3,7 +3,6 @@ package com.cancer.yaqeen.presentation.ui.main.treatment.add.routine_test.choose
 import android.Manifest
 import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,13 +16,12 @@ import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.schedule.routine_test.models.ReminderBefore
 import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.databinding.FragmentRoutineTestConfirmationBinding
-import com.cancer.yaqeen.databinding.FragmentSymptomConfirmationBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
+import com.cancer.yaqeen.presentation.service.WorkerManager
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.routine_test.RoutineTestViewModel
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindImage
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindImageURI
-import com.cancer.yaqeen.presentation.util.binding_adapters.bindResourceImage
 import com.cancer.yaqeen.presentation.util.convertMilliSecondsToDate
 import com.cancer.yaqeen.presentation.util.enableStoragePermissions
 import com.cancer.yaqeen.presentation.util.storagePermissionsAreGranted
@@ -123,7 +121,8 @@ class RoutineTestConfirmationFragment : BaseFragment() {
     }
 
     private fun confirmRoutineTest() {
-        if (!storagePermissionsAreGranted(requireContext())) {
+        val routineTestTrack = routineTestViewModel.getRoutineTestTrack()
+        if (!storagePermissionsAreGranted(requireContext()) && routineTestTrack?.photo?.uri != null) {
             enableStoragePermissions(requestMultiplePermissionsLauncher)
             return
         }
@@ -145,13 +144,18 @@ class RoutineTestConfirmationFragment : BaseFragment() {
 
         lifecycleScope {
             routineTestViewModel.viewStateAddRoutineTest.observe(viewLifecycleOwner) { response ->
-                if(response == true){
-                    Toast.makeText(requireContext(),
-                        getString(R.string.routine_test_added_successfully), Toast.LENGTH_SHORT).show()
-                    navController.tryPopBackStack(
-                        R.id.treatmentHistoryFragment,
-                        false
-                    )
+                response?.let { (added, routineTest) ->
+                    if (added) {
+                        val workerManager = WorkerManager(requireContext())
+                        val uuid = workerManager.setPeriodScheduleForRoutineTest(routineTest)
+                        routineTestViewModel.saveLocalRoutineTest(routineTest, uuid)
+                        Toast.makeText(requireContext(),
+                            getString(R.string.routine_test_added_successfully), Toast.LENGTH_SHORT).show()
+                        navController.tryPopBackStack(
+                            R.id.treatmentHistoryFragment,
+                            false
+                        )
+                    }
                 }
             }
         }

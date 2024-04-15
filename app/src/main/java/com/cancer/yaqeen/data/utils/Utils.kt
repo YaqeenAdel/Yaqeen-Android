@@ -46,7 +46,12 @@ fun Context.handleError(errorEntity: ErrorEntity?, onAccessDenied: () -> Unit = 
 
         is ErrorEntity.ApiError.ServerErrorResponse -> {
             errorEntity.error.run {
-                errorsStr ?: getString(R.string.error_occurred)
+                if (errorsStr?.contains("Expire") == true){
+                    onAccessDenied()
+                    null
+                }else{
+                    errorsStr ?: getString(R.string.error_occurred)
+                }
             }
         }
 
@@ -61,8 +66,12 @@ fun Context.handleError(errorEntity: ErrorEntity?, onAccessDenied: () -> Unit = 
     }
 }
 
-fun <A> String.fromJson(type: Class<A>): A =
-    Gson().fromJson(this, type)
+fun <A> String.fromJson(type: Class<A>): A? =
+    try {
+        Gson().fromJson(this, type)
+    }catch (_: Exception){
+        null
+    }
 
 fun <A> A.toJson(): String = Gson().toJson(this)
 
@@ -147,8 +156,8 @@ fun String.formatDate(): String {
 
 fun String.formatDateAPI(): String {
     return try {
-        val inputDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-        val outputDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val inputDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
+        val outputDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
 
         val inputDate = inputDateFormat.parse(this)
         outputDateFormat.format(inputDate)
@@ -171,8 +180,8 @@ fun String.formatTime(): String {
 
 fun String.formatTimeAPI(): String {
     return try {
-        val inputDateFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
-        val outputTimeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+        val inputDateFormat = SimpleDateFormat("hh:mm a", Locale.ENGLISH)
+        val outputTimeFormat = SimpleDateFormat("HH:mm", Locale.ENGLISH)
 
         val inputDate = inputDateFormat.parse(this)
         outputTimeFormat.format(inputDate)

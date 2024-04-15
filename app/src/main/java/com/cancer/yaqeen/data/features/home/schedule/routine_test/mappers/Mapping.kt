@@ -25,14 +25,15 @@ class MappingAddRoutineTestWithUploadRemoteAsUIModel :
     override fun map(input: AddRoutineTestResponse): ModifyScheduleResponse? {
         return ModifyScheduleResponse(
             photoIsUploaded = true,
-            scheduleIsModified = input.response != null
+            scheduleIsModified = input.response != null,
+            routineTestId = input.response?.scheduleID
         )
     }
 }
 class MappingAddRoutineTestRemoteAsUIModel :
-    Mapper<AddRoutineTestResponse, Boolean> {
-    override fun map(input: AddRoutineTestResponse): Boolean {
-        return input.response != null
+    Mapper<AddRoutineTestResponse, Int?> {
+    override fun map(input: AddRoutineTestResponse): Int? {
+        return input.response?.scheduleID
     }
 }
 

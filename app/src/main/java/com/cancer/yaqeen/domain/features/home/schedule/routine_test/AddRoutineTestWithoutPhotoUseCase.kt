@@ -10,7 +10,7 @@ import javax.inject.Inject
 class AddRoutineTestWithoutPhotoUseCase @Inject constructor(private val repository: IScheduleRepository) {
     suspend operator fun invoke(
         request: AddRoutineTestRequest
-    ): Flow<DataState<Boolean>> =
+    ): Flow<DataState<Int?>> =
         repository.addRoutineTestWithoutPhoto(
             request
         )

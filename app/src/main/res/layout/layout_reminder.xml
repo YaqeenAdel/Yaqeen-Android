@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="@dimen/_10sdp"
+        android:paddingHorizontal="@dimen/_8sdp">
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="@dimen/_14sdp">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/item_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/light_black">
+
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:layout_marginEnd="@dimen/_6sdp"
+            android:drawablePadding="@dimen/_6sdp"
+            android:gravity="center|start"
+            tools:text="10:00 pm"
+            android:layout_marginTop="@dimen/_14sdp"
+            android:textColor="@color/cold_white"
+            android:textSize="@dimen/_11ssp"
+            android:fontFamily="sans-serif"
+            app:layout_constraintEnd_toStartOf="@id/iv_setting"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:drawableStartCompat="@drawable/ic_time_square" />
+
+        <ImageView
+            android:id="@+id/iv_setting"
+            android:layout_width="@dimen/_24sdp"
+            android:layout_height="@dimen/_24sdp"
+            android:padding="@dimen/_2sdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_time"
+            app:layout_constraintBottom_toBottomOf="@id/tv_time"
+            android:layout_marginEnd="@dimen/_14sdp"
+            android:src="@drawable/baseline_close_24"
+            app:tint="@color/rose_penk" />
+
+        <TextView
+            android:id="@+id/tv_medication_details"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center|start"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:layout_marginEnd="@dimen/_4sdp"
+            android:paddingVertical="@dimen/_4sdp"
+            tools:text="CINNARIZINE, 5 MG "
+            android:textColor="@color/white"
+            android:textSize="@dimen/_12ssp"
+            android:fontFamily="sans-serif-medium"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tv_time"
+            app:layout_constraintTop_toBottomOf="@+id/tv_time" />
+
+        <TextView
+            android:id="@+id/tv_notes"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center|start"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:layout_marginTop="@dimen/_4sdp"
+            android:paddingVertical="@dimen/_2sdp"
+            tools:text="After breakfast, drinking water"
+            android:textColor="@color/teal_700"
+            android:textSize="@dimen/_10ssp"
+            android:fontFamily="sans-serif"
+            app:layout_constraintVertical_bias="0"
+            android:layout_marginBottom="@dimen/_14sdp"
+            app:layout_constraintEnd_toStartOf="@id/linearLayout"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tv_medication_details"
+            app:layout_constraintTop_toBottomOf="@+id/tv_medication_details" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginHorizontal="@dimen/_4sdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_notes"
+            app:layout_constraintTop_toTopOf="@id/tv_notes"
+            app:layout_constraintBottom_toBottomOf="@id/tv_notes">
+
+            <ImageView
+                android:id="@+id/iv_medication_icon"
+                android:layout_width="@dimen/_14sdp"
+                android:layout_height="@dimen/_14sdp"
+                android:layout_marginEnd="@dimen/_4sdp"
+                tools:src="@drawable/ic_capsule"
+                app:tint="@color/rose_penk" />
+            <TextView
+                android:id="@+id/tv_dosage_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="2 capsules"
+                android:textColor="@color/cold_white"
+                android:textSize="@dimen/_10ssp"
+                android:fontFamily="sans-serif" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    </FrameLayout>
+</layout>

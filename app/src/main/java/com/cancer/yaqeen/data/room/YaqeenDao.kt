@@ -5,6 +5,9 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.cancer.yaqeen.data.features.home.articles.room.Article
+import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.room.MedicalAppointmentDB
+import com.cancer.yaqeen.data.features.home.schedule.medication.room.MedicationDB
+import com.cancer.yaqeen.data.features.home.schedule.routine_test.room.RoutineTestDB
 
 @Dao
 interface YaqeenDao {
@@ -23,5 +26,15 @@ interface YaqeenDao {
 
     @Query("DELETE FROM Article")
     suspend fun removeArticles(): Int
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertMedication(medication: MedicationDB): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertRoutineTest(routineTest: RoutineTestDB): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertMedicalAppointment(medicalAppointment: MedicalAppointmentDB): Long
+
 
 }

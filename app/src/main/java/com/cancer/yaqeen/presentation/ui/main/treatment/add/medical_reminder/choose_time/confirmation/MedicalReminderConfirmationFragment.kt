@@ -15,6 +15,7 @@ import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.databinding.FragmentMedicalReminderConfirmationBinding
 import com.cancer.yaqeen.databinding.FragmentSymptomConfirmationBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
+import com.cancer.yaqeen.presentation.service.WorkerManager
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.medical_reminder.MedicalReminderViewModel
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.symptoms.SymptomsViewModel
 import com.cancer.yaqeen.presentation.ui.main.treatment.history.adapters.PhotosAdapter
@@ -114,13 +115,18 @@ class MedicalReminderConfirmationFragment : BaseFragment() {
 
         lifecycleScope {
             medicalReminderViewModel.viewStateAddMedicalReminder.observe(viewLifecycleOwner) { response ->
-                if(response == true){
-                    Toast.makeText(requireContext(),
-                        getString(R.string.appointment_added_successfully), Toast.LENGTH_SHORT).show()
-                    navController.tryPopBackStack(
-                        R.id.treatmentHistoryFragment,
-                        false
-                    )
+                response?.let { (added, medicalAppointment) ->
+                    if (added) {
+                        val workerManager = WorkerManager(requireContext())
+                        val uuid = workerManager.setPeriodScheduleForMedicalAppointment(medicalAppointment)
+                        medicalReminderViewModel.saveLocalMedicalAppointment(medicalAppointment, uuid)
+                        Toast.makeText(requireContext(),
+                            getString(R.string.appointment_added_successfully), Toast.LENGTH_SHORT).show()
+                        navController.tryPopBackStack(
+                            R.id.treatmentHistoryFragment,
+                            false
+                        )
+                    }
                 }
             }
         }

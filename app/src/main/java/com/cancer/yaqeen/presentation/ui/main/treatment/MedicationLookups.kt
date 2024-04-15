@@ -99,7 +99,9 @@ fun getReminderTimeFromCronExpression(cronExpression: String): ReminderTime {
         hourField
     }
 
-    val (hour12, isAM) = if (hour24.toInt() < 12){
+    val (hour12, isAM) = if (hour24.toInt() == 0){
+        "12" to true
+    } else if (hour24.toInt() < 12){
         hour24 to true
     }else {
         (hour24.toInt() - 12).toString() to false
@@ -190,4 +192,19 @@ fun getSpecificDaysFromCronExpression(cronExpression: String): List<Day>? {
         val day = DayEnum.getDay(it.toInt())
         Day(day.id, it)
     }
+}
+fun getReminderTimeFromTime(time: String): ReminderTime {
+    if(time.isEmpty())
+        return ReminderTime(
+            "0", "0", "0", "", true, "00:00"
+        )
+    val isAM = time.lowercase().contains("am")
+    val hour12 = time.substringBefore(":")
+    val hour24 = ((hour12.toIntOrNull() ?: 0) + 12).toString()
+    val minute = time.substringAfter(":").subSequence(0, 2).toString()
+
+
+    return ReminderTime(
+        hour12, hour24, minute, "", isAM, "$hour12:$minute"
+    )
 }

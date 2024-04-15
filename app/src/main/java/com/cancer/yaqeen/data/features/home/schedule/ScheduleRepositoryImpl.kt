@@ -3,6 +3,7 @@ package com.cancer.yaqeen.data.features.home.schedule
 import android.content.Context
 import android.net.Uri
 import android.webkit.MimeTypeMap
+import com.cancer.yaqeen.data.features.home.schedule.data_sources.ScheduleLocalDataSourceImpl
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.mappers.MappingAddMedicalReminderRemoteAsUIModel
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.mappers.MappingAddSymptomToMedicalReminderRemoteAsUIModel
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.mappers.MappingDeleteScheduleRemoteAsUIModel
@@ -12,6 +13,7 @@ import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.models.Mod
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.models.MedicalReminder
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.requests.AddMedicalReminderRequest
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.requests.AddSymptomToMedicalReminderRequestBuilder
+import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.room.MedicalAppointmentDB
 import com.cancer.yaqeen.data.features.home.schedule.medication.mappers.MappingAddMedicationRemoteAsUIModel
 import com.cancer.yaqeen.data.features.home.schedule.medication.mappers.MappingEditMedicationRemoteAsUIModel
 import com.cancer.yaqeen.data.features.home.schedule.medication.mappers.MappingRemindersFromNowRemoteAsModel
@@ -20,6 +22,7 @@ import com.cancer.yaqeen.data.features.home.schedule.medication.models.Medicatio
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Photo
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Schedule
 import com.cancer.yaqeen.data.features.home.schedule.medication.requests.AddMedicationRequest
+import com.cancer.yaqeen.data.features.home.schedule.medication.room.MedicationDB
 import com.cancer.yaqeen.data.features.home.schedule.routine_test.mappers.MappingAddRoutineTestRemoteAsUIModel
 import com.cancer.yaqeen.data.features.home.schedule.routine_test.mappers.MappingAddRoutineTestWithUploadRemoteAsUIModel
 import com.cancer.yaqeen.data.features.home.schedule.routine_test.mappers.MappingEditRoutineTestRemoteAsUIModel
@@ -28,6 +31,7 @@ import com.cancer.yaqeen.data.features.home.schedule.routine_test.mappers.Mappin
 import com.cancer.yaqeen.data.features.home.schedule.routine_test.models.RoutineTest
 import com.cancer.yaqeen.data.features.home.schedule.routine_test.requests.AddRoutineTestRequest
 import com.cancer.yaqeen.data.features.home.schedule.routine_test.requests.AddRoutineTestRequestBuilder
+import com.cancer.yaqeen.data.features.home.schedule.routine_test.room.RoutineTestDB
 import com.cancer.yaqeen.data.features.home.schedule.symptom.mappers.MappingAddSymptomRemoteAsUIModel
 import com.cancer.yaqeen.data.features.home.schedule.symptom.mappers.MappingAddSymptomWithUploadRemoteAsUIModel
 import com.cancer.yaqeen.data.features.home.schedule.symptom.mappers.MappingCreateAnUploadLocationRemoteAsUIModel
@@ -68,12 +72,13 @@ import javax.inject.Inject
 class ScheduleRepositoryImpl @Inject constructor(
     private val context: Context,
     private val apiService: YaqeenAPI,
+    private val scheduleLocalDataSource: ScheduleLocalDataSourceImpl,
     errorHandler: ErrorHandlerImpl,
     private val prefEncryptionUtil: SharedPrefEncryptionUtil
 ) : BaseDataSource(errorHandler), IScheduleRepository {
 
 
-    override suspend fun addMedication(request: AddMedicationRequest): Flow<DataState<Boolean>> =
+    override suspend fun addMedication(request: AddMedicationRequest): Flow<DataState<Int?>> =
         flowStatus {
             getResultRestAPI(MappingAddMedicationRemoteAsUIModel()) {
                 apiService.addMedication(request)
@@ -412,7 +417,7 @@ class ScheduleRepositoryImpl @Inject constructor(
             }
         }
 
-    override suspend fun addRoutineTestWithoutPhoto(request: AddRoutineTestRequest): Flow<DataState<Boolean>> =
+    override suspend fun addRoutineTestWithoutPhoto(request: AddRoutineTestRequest): Flow<DataState<Int?>> =
         flowStatus {
             getResultRestAPI(MappingAddRoutineTestRemoteAsUIModel()) {
                 apiService.addRoutineTest(request)
@@ -465,4 +470,20 @@ class ScheduleRepositoryImpl @Inject constructor(
                 apiService.getRoutineTests(scheduleType)
             }
         }
+
+    override suspend fun saveMedication(medication: MedicationDB): Flow<DataState<Long>> =
+        flowStatus {
+            scheduleLocalDataSource.saveMedication(medication)
+        }
+
+    override suspend fun saveRoutineTest(routineTest: RoutineTestDB): Flow<DataState<Long>> =
+        flowStatus {
+            scheduleLocalDataSource.saveRoutineTest(routineTest)
+        }
+
+    override suspend fun saveMedicalAppointment(medicalAppointment: MedicalAppointmentDB): Flow<DataState<Long>> =
+        flowStatus {
+            scheduleLocalDataSource.saveMedicalAppointment(medicalAppointment)
+        }
+
 }

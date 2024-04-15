@@ -18,7 +18,7 @@ data class InsertScheduleMedicationResponse (
     val entityType: String?,
 
     @SerializedName("ScheduleId")
-    val scheduleID: Long?
+    val scheduleID: Int?
 )
 
 data class EntityMedicationResponse (
@@ -32,10 +32,10 @@ data class EntityMedicationResponse (
     val unit: String?,
 
     @SerializedName("DosageTimes100")
-    val dosageTimes100: Long?,
+    val dosageTimes100: Int?,
 
     @SerializedName("StrengthTimes100")
-    val strengthTimes100: Long?,
+    val strengthTimes100: Int?,
 
     @SerializedName("Notes")
     val notes: String?
