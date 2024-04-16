@@ -74,13 +74,11 @@ class SymptomsViewModel @Inject constructor(
                     Status.SUCCESS -> {
                         response.data?.let {
                             val symptomTypes = symptomTrackField.get()?.symptomTypes
-                            Log.d("TAG", "getSymptomsTypes: $symptomTypes")
                             symptomTypes?.forEach { type ->
                                 it.firstOrNull {
                                     it.id == type.id
                                 }?.selected = true
                             }
-                            Log.d("TAG", "getSymptomsTypes: $it")
 
                             _viewStateSymptomsTypes.emit(it)
                         }
@@ -123,7 +121,6 @@ class SymptomsViewModel @Inject constructor(
                         photos = photosList ?: listOf(),
                     )
                 ).onEach { response ->
-                    Log.d("TAG", "addSymptomFailed: ${response.errorEntity}")
                     _viewStateLoading.emit(response.loading)
                     when (response.status) {
                         Status.ERROR -> emitError(response.errorEntity)

@@ -94,7 +94,6 @@ class RoutineTestsAdapter(
                 itemBinding.tvRoutineTestName.text = routineTestName
                 itemBinding.tvRoutineTestName2.text = routineTestName
                 itemBinding.tvNotesVal.text = notes
-                Log.d("TAG", "bindreminderTime: $reminderTime")
                 reminderTime?.run {
                     timingStr = if (isAM) _context.getString(R.string.am) else _context.getString(R.string.pm)
                     itemBinding.tvTimeVal.text = "$text $timingStr"

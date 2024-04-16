@@ -9,6 +9,7 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkRequest
 import androidx.work.workDataOf
+import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.room.MedicalAppointmentDB
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.PeriodTimeEnum
 import com.cancer.yaqeen.data.features.home.schedule.medication.room.MedicationDB
@@ -43,8 +44,8 @@ class WorkerManager(
             .setInitialDelay(timeDelayInSeconds, TimeUnit.MILLISECONDS)
             .setInputData(
                 workDataOf(
-                    TITLE_KEY to "Medication Reminder",
-                    BODY_KEY to "Hello! Just a friendly reminder to take your medicine now as prescribed today. Your health is important, so let's stay on track together. \uD83D\uDE0A",
+                    TITLE_KEY to context.getString(R.string.medication_reminder),
+                    BODY_KEY to context.getString(R.string.reminder_text_message),
                     MEDICATION to medication.toJson()
                 )
             )
@@ -63,8 +64,8 @@ class WorkerManager(
             .setInitialDelay(timeDelayInSeconds, TimeUnit.MILLISECONDS)
             .setInputData(
                 workDataOf(
-                    TITLE_KEY to "Medication Reminder",
-                    BODY_KEY to "Hello! Just a friendly reminder to take your medicine now as prescribed today. Your health is important, so let's stay on track together. \uD83D\uDE0A",
+                    TITLE_KEY to context.getString(R.string.medication_reminder),
+                    BODY_KEY to context.getString(R.string.reminder_text_message),
                     MEDICATION to medication.toJson()
                 )
             ).build()
@@ -85,8 +86,8 @@ class WorkerManager(
             .setInitialDelay(timeDelayInSeconds, TimeUnit.MILLISECONDS)
             .setInputData(
                 workDataOf(
-                    TITLE_KEY to "Routine Test Reminder",
-                    BODY_KEY to "Hello! Just a friendly reminder to take your medicine now as prescribed today. Your health is important, so let's stay on track together. \uD83D\uDE0A",
+                    TITLE_KEY to context.getString(R.string.routine_test_reminder),
+                    BODY_KEY to context.getString(R.string.reminder_text_message),
                     ROUTINE_TEST to routineTest.toJson()
                 )
             ).build()
@@ -107,8 +108,8 @@ class WorkerManager(
             .setInitialDelay(timeDelayInSeconds, TimeUnit.MILLISECONDS)
             .setInputData(
                 workDataOf(
-                    TITLE_KEY to "Medical Appointment",
-                    BODY_KEY to "Hello! Just a friendly reminder to take your medicine now as prescribed today. Your health is important, so let's stay on track together. \uD83D\uDE0A",
+                    TITLE_KEY to context.getString(R.string.medical_appointment),
+                    BODY_KEY to context.getString(R.string.reminder_text_message),
                     MEDICAL_APPOINTMENT to medicalAppointment.toJson()
                 )
             )
@@ -131,8 +132,8 @@ class WorkerManager(
             .setInitialDelay(timeDelayInSeconds, TimeUnit.MILLISECONDS)
             .setInputData(
                 workDataOf(
-                    TITLE_KEY to "Medical Appointment Reminder Before",
-                    BODY_KEY to "Hello! Just a friendly reminder to take your medicine now as prescribed today. Your health is important, so let's stay on track together. \uD83D\uDE0A",
+                    TITLE_KEY to context.getString(R.string.medical_appointment_reminder),
+                    BODY_KEY to context.getString(R.string.reminder_text_message),
                     MEDICAL_APPOINTMENT to medicalAppointment.toJson()
                 )
             )
@@ -155,8 +156,8 @@ class WorkerManager(
             .setInitialDelay(timeDelayInSeconds, TimeUnit.MILLISECONDS)
             .setInputData(
                 workDataOf(
-                    TITLE_KEY to "Routine Test Reminder Before",
-                    BODY_KEY to "Hello! Just a friendly reminder to take your medicine now as prescribed today. Your health is important, so let's stay on track together. \uD83D\uDE0A",
+                    TITLE_KEY to context.getString(R.string.routine_test_reminder),
+                    BODY_KEY to context.getString(R.string.reminder_text_message),
                     ROUTINE_TEST to routineTest.toJson()
                 )
             )

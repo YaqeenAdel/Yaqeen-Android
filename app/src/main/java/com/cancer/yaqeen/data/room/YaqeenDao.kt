@@ -30,11 +30,29 @@ interface YaqeenDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMedication(medication: MedicationDB): Long
 
+    @Query("DELETE FROM Medication WHERE medicationId = :medicationId")
+    suspend fun deleteMedication(medicationId: Int): Int
+
+    @Query("DELETE FROM Medication")
+    suspend fun deleteMedications(): Int
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRoutineTest(routineTest: RoutineTestDB): Long
 
+    @Query("DELETE FROM RoutineTest WHERE routineTestId = :routineTestId")
+    suspend fun deleteRoutineTest(routineTestId: Int): Int
+
+    @Query("DELETE FROM RoutineTest")
+    suspend fun deleteRoutineTests(): Int
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMedicalAppointment(medicalAppointment: MedicalAppointmentDB): Long
+
+    @Query("DELETE FROM MedicalAppointment WHERE medicalAppointmentId = :medicalAppointmentId")
+    suspend fun deleteMedicalAppointment(medicalAppointmentId: Int): Int
+
+    @Query("DELETE FROM MedicalAppointment")
+    suspend fun deleteMedicalAppointments(): Int
 
 
 }

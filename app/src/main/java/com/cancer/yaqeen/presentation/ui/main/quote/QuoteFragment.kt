@@ -61,8 +61,6 @@ class QuoteFragment : BaseFragment() {
         viewModel.refreshToken(requireContext())
 
         displayRandomView()
-
-//        createWorkRequest("Test", 5)
     }
 
     private fun displayRandomView() {
@@ -94,18 +92,5 @@ class QuoteFragment : BaseFragment() {
     private fun getRandomIntInRange(startInclusive: Int, endExclusive: Int): Int {
         require(startInclusive < endExclusive) { "Invalid range" }
         return Random.nextInt(startInclusive, endExclusive)
-    }
-
-    private fun createWorkRequest(message: String,timeDelayInSeconds: Long) {
-        val myWorkRequest = OneTimeWorkRequestBuilder<ReminderWorker>()
-            .setInitialDelay(timeDelayInSeconds, TimeUnit.SECONDS)
-            .setInputData(workDataOf(
-                "title" to "Reminder",
-                "message" to message,
-            )
-            )
-            .build()
-
-        WorkManager.getInstance(requireContext()).enqueue(myWorkRequest)
     }
 }

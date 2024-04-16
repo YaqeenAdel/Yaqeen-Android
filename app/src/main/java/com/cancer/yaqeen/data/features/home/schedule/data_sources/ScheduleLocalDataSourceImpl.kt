@@ -19,6 +19,9 @@ class ScheduleLocalDataSourceImpl @Inject constructor(
     override suspend fun saveMedication(medication: MedicationDB): DataState<Long> =
         getResultDao { yaqeenDao.insertMedication(medication) }
 
+//    override suspend fun removeMedication(medicationId: Int): DataState<Int> =
+//        getResultDao { yaqeenDao.deleteMedication(medicationId) }
+
     override suspend fun saveRoutineTest(routineTest: RoutineTestDB): DataState<Long> =
         getResultDao { yaqeenDao.insertRoutineTest(routineTest) }
 

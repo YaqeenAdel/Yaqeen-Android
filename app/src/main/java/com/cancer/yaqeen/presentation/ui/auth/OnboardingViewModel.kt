@@ -177,7 +177,6 @@ class OnboardingViewModel @Inject constructor(
                     }
 
                     Status.SUCCESS -> {
-                        Log.d("TAG", "getProfile: ${response.data}")
                         response.data?.let {
                             with(it) {
                                 if(patient?.cancerTypeID == null || patient.cancerStageID == null || userInterests.isNullOrEmpty()

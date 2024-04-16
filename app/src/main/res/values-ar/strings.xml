@@ -214,6 +214,22 @@
     <string name="reminder_before_min">%s min</string>
     <string name="reminder_before_hour">%s Hour</string>
     <string name="please_enable_permission_to_draw_over_other_apps">Please enable permission to draw over other apps</string>
+    <string name="ignore">Ignore</string>
+    <string name="medication_reminder">Medication Reminder</string>
+    <string name="reminder_text_message">Hello! Just a friendly reminder to take your medicine now as prescribed today. Your health is important, so let\'s stay on track together. 😊</string>
+    <string name="routine_test_reminder">Routine Test Reminder</string>
+    <string name="medical_appointment_reminder">Medical Appointment Reminder</string>
+    <string name="no_app_found_to_share_it">No app found to share it</string>
+    <string name="share_via">Share Via</string>
+    <string name="non_hodgkin_s_lymphoma">Non-Hodgkin’s Lymphoma</string>
+    <string name="prostate">Prostate</string>
+    <string name="lung_cancer">Lung Cancer</string>
+    <string name="pancreatic">Pancreatic</string>
+    <string name="leukaemia">Leukaemia</string>
+    <string name="kidney">Kidney</string>
+    <string name="testicular">Testicular</string>
+    <string name="multiple_myeloma">Multiple Myeloma</string>
+    <string name="thyroid">Thyroid</string>
 
     <string-array name="languages_array">
         <item>English</item>
