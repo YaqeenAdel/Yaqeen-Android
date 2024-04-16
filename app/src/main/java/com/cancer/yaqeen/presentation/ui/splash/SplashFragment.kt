@@ -34,7 +34,8 @@ class SplashFragment : BaseFragment() {
     private val requestPermissionLauncher: ActivityResultLauncher<String?> = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
-        checkUserInfo()
+        if (isGranted == true)
+            checkUserInfo()
     }
 
     override fun onCreateView(
@@ -52,16 +53,14 @@ class SplashFragment : BaseFragment() {
         navController = findNavController()
 
         observeUiState()
-//        createCronExpression()
+        checkNotificationPermission()
     }
 
     private fun observeUiState() {
         lifecycleScope {
             viewModel.viewStateUserInfo.collectLatest { isLogged ->
                 if (isLogged == null){
-                    Handler().postDelayed({
-                        checkNotificationPermission()
-                    }, 3000)
+                    Handler().postDelayed({}, 3000)
                 }else if(isLogged){
                     navController.navigate(
                         SplashFragmentDirections.actionSplashFragmentToQuoteFragment()
@@ -82,11 +81,9 @@ class SplashFragment : BaseFragment() {
             checkUserInfo()
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                //TODO: BUG
-//                enableNotificationPermissions(
-//                    requestPermissionLauncher
-//                )
-                checkUserInfo()
+                enableNotificationPermissions(
+                    requestPermissionLauncher
+                )
             }else {
                 checkUserInfo()
             }

@@ -10,13 +10,13 @@ import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.room.Medic
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.ReminderTime
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.ScheduleType
 import com.cancer.yaqeen.data.features.home.schedule.routine_test.models.ReminderBefore
-import com.cancer.yaqeen.data.features.home.schedule.routine_test.room.RoutineTestDB
 import com.cancer.yaqeen.data.features.home.schedule.symptom.models.Symptom
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.data.network.base.Status
 import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.AddMedicalReminderUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.EditMedicalReminderUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.GetLocalMedicalAppointmentUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.SaveLocalMedicalAppointmentUseCase
 import com.cancer.yaqeen.presentation.ui.main.treatment.getReminderTimeFromTime
 import com.cancer.yaqeen.presentation.util.SingleLiveEvent
@@ -37,6 +37,7 @@ class MedicalReminderViewModel @Inject constructor(
     private val addMedicalReminderUseCase: AddMedicalReminderUseCase,
     private val editMedicalReminderUseCase: EditMedicalReminderUseCase,
     private val saveLocalMedicalAppointmentUseCase: SaveLocalMedicalAppointmentUseCase,
+    private val getLocalMedicalAppointmentUseCase: GetLocalMedicalAppointmentUseCase,
 ) : ViewModel() {
 
     private var viewModelJob: Job? = null
@@ -46,6 +47,9 @@ class MedicalReminderViewModel @Inject constructor(
 
     private val _viewStateEditMedicalReminder = SingleLiveEvent<Boolean?>()
     val viewStateEditMedicalReminder: LiveData<Boolean?> = _viewStateEditMedicalReminder
+
+    private val _viewStateWorkIds = SingleLiveEvent<Pair<UUID, UUID?>?>()
+    val viewStateWorkIds: LiveData<Pair<UUID, UUID?>?> = _viewStateWorkIds
 
     private val _viewStateLoading = MutableStateFlow<Boolean>(false)
     val viewStateLoading = _viewStateLoading.asStateFlow()
@@ -208,6 +212,9 @@ class MedicalReminderViewModel @Inject constructor(
                         Status.ERROR -> emitError(response.errorEntity)
                         Status.SUCCESS -> {
                             response.data?.let {
+                                medicalReminderId?.let {
+                                    getLocalMedicalReminder(medicalReminderId)
+                                }
                                 resetMedicalReminderTrack()
                                 _viewStateEditMedicalReminder.postValue(true)
                             }
@@ -220,11 +227,36 @@ class MedicalReminderViewModel @Inject constructor(
         }
     }
 
-    fun saveLocalMedicalAppointment(medicalAppointment: MedicalAppointmentDB, uuid: UUID) {
+    private fun getLocalMedicalReminder(medicalAppointmentId: Int) {
+        viewModelJob = viewModelScope.launch {
+            getLocalMedicalAppointmentUseCase(
+                medicalAppointmentId = medicalAppointmentId
+            ).collect { response ->
+                when (response.status) {
+                    Status.ERROR -> {}
+                    Status.SUCCESS -> {
+                        response.data?.workID?.let {
+                            _viewStateWorkIds.postValue(it to response.data.workBeforeID)
+                        }
+
+//                        editLocalMedicalReminder(medicalAppointmentId)
+                    }
+                    else -> {}
+                }
+            }
+        }
+    }
+
+    fun saveLocalMedicalAppointment(
+        medicalAppointment: MedicalAppointmentDB,
+        workID: UUID,
+        workBeforeID: UUID?
+    ) {
         viewModelJob = viewModelScope.launch {
             saveLocalMedicalAppointmentUseCase(
                 medicalAppointment.apply {
-                    workID = uuid
+                    this.workID = workID
+                    this.workBeforeID = workBeforeID
                 }
             ).collect()
         }

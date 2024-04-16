@@ -19,12 +19,24 @@ class ScheduleLocalDataSourceImpl @Inject constructor(
     override suspend fun saveMedication(medication: MedicationDB): DataState<Long> =
         getResultDao { yaqeenDao.insertMedication(medication) }
 
-//    override suspend fun removeMedication(medicationId: Int): DataState<Int> =
-//        getResultDao { yaqeenDao.deleteMedication(medicationId) }
+    override suspend fun removeMedication(medicationId: Int): DataState<Int> =
+        getResultDao { yaqeenDao.deleteMedication(medicationId) }
+
+    override suspend fun getRoutineTest(routineTestId: Int): DataState<RoutineTestDB?> =
+        getResultDao { yaqeenDao.selectRoutineTest(routineTestId) }
 
     override suspend fun saveRoutineTest(routineTest: RoutineTestDB): DataState<Long> =
         getResultDao { yaqeenDao.insertRoutineTest(routineTest) }
 
+    override suspend fun removeRoutineTest(routineTestId: Int): DataState<Int> =
+        getResultDao { yaqeenDao.deleteRoutineTest(routineTestId) }
+
+    override suspend fun getMedicalAppointment(medicalAppointmentId: Int): DataState<MedicalAppointmentDB?> =
+        getResultDao { yaqeenDao.selectMedicalAppointment(medicalAppointmentId) }
+
     override suspend fun saveMedicalAppointment(medicalAppointment: MedicalAppointmentDB): DataState<Long> =
         getResultDao { yaqeenDao.insertMedicalAppointment(medicalAppointment) }
+
+    override suspend fun removeMedicalAppointment(medicalAppointmentId: Int): DataState<Int> =
+        getResultDao { yaqeenDao.deleteMedicalAppointment(medicalAppointmentId) }
 }

@@ -50,6 +50,9 @@ class RoutineTestConfirmationFragment : BaseFragment() {
             }
         }
 
+    private val workerManager by lazy {
+        WorkerManager(requireContext())
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -146,9 +149,8 @@ class RoutineTestConfirmationFragment : BaseFragment() {
             routineTestViewModel.viewStateAddRoutineTest.observe(viewLifecycleOwner) { response ->
                 response?.let { (added, routineTest) ->
                     if (added) {
-                        val workerManager = WorkerManager(requireContext())
-                        val uuid = workerManager.setPeriodScheduleForRoutineTest(routineTest)
-                        routineTestViewModel.saveLocalRoutineTest(routineTest, uuid)
+                        val (periodicWorkID, workBeforeID) = workerManager.setPeriodScheduleForRoutineTest(routineTest)
+                        routineTestViewModel.saveLocalRoutineTest(routineTest, periodicWorkID, workBeforeID)
                         Toast.makeText(requireContext(),
                             getString(R.string.routine_test_added_successfully), Toast.LENGTH_SHORT).show()
                         navController.tryPopBackStack(
@@ -169,6 +171,17 @@ class RoutineTestConfirmationFragment : BaseFragment() {
                         R.id.treatmentHistoryFragment,
                         false
                     )
+                }
+            }
+        }
+
+        lifecycleScope {
+            routineTestViewModel.viewStateWorkIds.observe(viewLifecycleOwner) { workIDs ->
+                workIDs?.run {
+                    workerManager.cancelWork(first)
+                    second?.let {
+                        workerManager.cancelWork(it)
+                    }
                 }
             }
         }

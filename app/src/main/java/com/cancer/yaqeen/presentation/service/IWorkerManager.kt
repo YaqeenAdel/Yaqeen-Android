@@ -8,9 +8,9 @@ import java.util.UUID
 interface IWorkerManager {
     fun setScheduleMedication(medication: MedicationDB): UUID
     fun setPeriodScheduleForMedication(medication: MedicationDB): UUID
-    fun setPeriodScheduleForRoutineTest(routineTest: RoutineTestDB): UUID
+    fun setPeriodScheduleForRoutineTest(routineTest: RoutineTestDB): Pair<UUID, UUID?>
     fun scheduleReminderForRoutineTest(routineTest: RoutineTestDB): UUID
-    fun setPeriodScheduleForMedicalAppointment(medicalAppointment: MedicalAppointmentDB): UUID
+    fun setPeriodScheduleForMedicalAppointment(medicalAppointment: MedicalAppointmentDB): Pair<UUID, UUID?>
     fun scheduleReminderForMedicalAppointment(medicalAppointment: MedicalAppointmentDB): UUID
     fun cancelWork(workRequestId: UUID)
 }

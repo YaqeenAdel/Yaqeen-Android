@@ -1,7 +1,6 @@
 package com.cancer.yaqeen.presentation.ui.main.treatment.history
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +19,7 @@ import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.data.utils.getTodayDate
 import com.cancer.yaqeen.databinding.FragmentTreatmentHistoryBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
+import com.cancer.yaqeen.presentation.service.WorkerManager
 import com.cancer.yaqeen.presentation.ui.main.treatment.TimesAdapter
 import com.cancer.yaqeen.presentation.ui.main.treatment.history.adapters.MedicalRemindersAdapter
 import com.cancer.yaqeen.presentation.ui.main.treatment.history.adapters.MedicationsAdapter
@@ -54,6 +54,12 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
     private val viewModel: SchedulesHistoryViewModel by viewModels()
 
     private var scheduledType: ScheduleType = ScheduleType.MEDICATION
+
+
+    private val workerManager by lazy {
+        WorkerManager(requireContext())
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -183,10 +189,10 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
         }
 
         lifecycleScope {
-            viewModel.viewStateDeleteMedicalReminder.observe(viewLifecycleOwner) { symptomId ->
-                symptomId?.let {
+            viewModel.viewStateDeleteMedicalReminder.observe(viewLifecycleOwner) { medicalReminderId ->
+                medicalReminderId?.let {
                     Toast.makeText(requireContext(), getString(R.string.appointment_deleted_successfully), Toast.LENGTH_SHORT).show()
-                    medicalRemindersAdapter.deleteMedicalReminder(symptomId)
+                    medicalRemindersAdapter.deleteMedicalReminder(medicalReminderId)
                 }
             }
         }
@@ -208,6 +214,17 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
                 routineTestId?.let {
                     Toast.makeText(requireContext(), getString(R.string.routine_test_deleted_successfully), Toast.LENGTH_SHORT).show()
                     routineTestsAdapter.deleteRoutineTest(routineTestId)
+                }
+            }
+        }
+
+        lifecycleScope {
+            viewModel.viewStateWorkIds.observe(viewLifecycleOwner) { workIDs ->
+                workIDs?.run {
+                    workerManager.cancelWork(first)
+                    second?.let {
+                        workerManager.cancelWork(it)
+                    }
                 }
             }
         }

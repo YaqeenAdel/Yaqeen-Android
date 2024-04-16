@@ -75,10 +75,11 @@ class WorkerManager(
         return periodicWorkRequest.id
     }
 
-    override fun setPeriodScheduleForRoutineTest(routineTest: RoutineTestDB): UUID {
-        if (routineTest.reminderBeforeInMinutes > 0) {
+    override fun setPeriodScheduleForRoutineTest(routineTest: RoutineTestDB): Pair<UUID, UUID?> {
+        val workBeforeID = if (routineTest.reminderBeforeInMinutes > 0) {
             scheduleReminderForRoutineTest(routineTest)
-        }
+        }else{ null }
+
         val timeDelayInSeconds =
             calculateInitialDelay(routineTest.startDate, routineTest.hour24, routineTest.minute)
 
@@ -94,15 +95,20 @@ class WorkerManager(
 
         enqueueWork(periodicWorkRequest)
 
-        return periodicWorkRequest.id
+        return periodicWorkRequest.id to workBeforeID
     }
 
-    override fun setPeriodScheduleForMedicalAppointment(medicalAppointment: MedicalAppointmentDB): UUID {
-        if (medicalAppointment.reminderBeforeInMinutes > 0) {
+    override fun setPeriodScheduleForMedicalAppointment(medicalAppointment: MedicalAppointmentDB): Pair<UUID, UUID?> {
+        val workBeforeID = if (medicalAppointment.reminderBeforeInMinutes > 0) {
             scheduleReminderForMedicalAppointment(medicalAppointment)
-        }
+        }else{ null }
+
         val timeDelayInSeconds =
-            calculateInitialDelay(medicalAppointment.startDate, medicalAppointment.hour24, medicalAppointment.minute)
+            calculateInitialDelay(
+                medicalAppointment.startDate,
+                medicalAppointment.hour24,
+                medicalAppointment.minute
+            )
 
         val workRequest = OneTimeWorkRequestBuilder<ReminderWorker>()
             .setInitialDelay(timeDelayInSeconds, TimeUnit.MILLISECONDS)
@@ -117,15 +123,18 @@ class WorkerManager(
 
         enqueueWork(workRequest)
 
-        return workRequest.id
+        return workRequest.id to workBeforeID
     }
 
     override fun scheduleReminderForMedicalAppointment(medicalAppointment: MedicalAppointmentDB): UUID {
+        val (hour24, minute) = if (medicalAppointment.minute >= medicalAppointment.reminderBeforeInMinutes)
+            (medicalAppointment.hour24) to (medicalAppointment.minute - medicalAppointment.reminderBeforeInMinutes)
+        else (medicalAppointment.hour24 - 1) to (medicalAppointment.minute - medicalAppointment.reminderBeforeInMinutes + 60)
         val timeDelayInSeconds =
             calculateInitialDelay(
                 medicalAppointment.startDate,
-                medicalAppointment.hour24,
-                medicalAppointment.minute - medicalAppointment.reminderBeforeInMinutes
+                hour24,
+                minute
             )
 
         val workRequest = OneTimeWorkRequestBuilder<ReminderWorker>()
@@ -145,11 +154,14 @@ class WorkerManager(
     }
 
     override fun scheduleReminderForRoutineTest(routineTest: RoutineTestDB): UUID {
+        val (hour24, minute) = if (routineTest.minute >= routineTest.reminderBeforeInMinutes)
+            (routineTest.hour24) to (routineTest.minute - routineTest.reminderBeforeInMinutes)
+        else (routineTest.hour24 - 1) to (routineTest.minute - routineTest.reminderBeforeInMinutes + 60)
         val timeDelayInSeconds =
             calculateInitialDelay(
                 routineTest.startDate,
-                routineTest.hour24,
-                routineTest.minute - routineTest.reminderBeforeInMinutes
+                hour24,
+                minute
             )
 
         val workRequest = OneTimeWorkRequestBuilder<ReminderWorker>()
@@ -221,23 +233,31 @@ class WorkerManager(
     }
 
     private fun calculateInitialDelay(startDate: Long, hour24: Int, minute: Int): Long {
-        val (year, month, day) = startDate.convertMillisecondsToDateComponents()
+        Log.d("TAG", "calculateInitialDelay: $startDate / $hour24 / $minute")
+        return try {
+            val (year, month, day) = startDate.convertMillisecondsToDateComponents()
 
-        val milliSecondsBetween = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val scheduleDateTime = LocalDateTime.of(year, month, day, hour24, minute, 0)
-            val currentDateTime = LocalDateTime.now()
-            val duration = Duration.between(currentDateTime, scheduleDateTime)
+            val milliSecondsBetween = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val scheduleDateTime = LocalDateTime.of(year, month, day, hour24, minute, 0)
+                val currentDateTime = LocalDateTime.now()
+                val duration = Duration.between(currentDateTime, scheduleDateTime)
 
-            duration.toMillis()
-        }else {
-            val currentDateTime = Calendar.getInstance(TimeZone.getDefault())
-            val currentTimeInMillis = currentDateTime.time.time
-            currentDateTime.set(year, month - 1, day, hour24, minute, 0)
-            val difference = currentDateTime.time.time - currentTimeInMillis
+                duration.toMillis()
+            } else {
+                val currentDateTime = Calendar.getInstance(TimeZone.getDefault())
+                val currentTimeInMillis = currentDateTime.time.time
+                currentDateTime.set(year, month - 1, day, hour24, minute, 0)
+                val difference = currentDateTime.time.time - currentTimeInMillis
 
-            difference
+                difference
+            }
+
+            milliSecondsBetween + 500L
+        } catch (e: Exception) {
+
+            Log.d("TAG", "calculateInitialDelay: $e")
+            0L
         }
 
-        return milliSecondsBetween + 500L
     }
 }

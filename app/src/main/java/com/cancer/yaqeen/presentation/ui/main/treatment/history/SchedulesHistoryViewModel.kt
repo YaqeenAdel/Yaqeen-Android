@@ -1,6 +1,5 @@
 package com.cancer.yaqeen.presentation.ui.main.treatment.history
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,9 +12,13 @@ import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.data.network.base.Status
 import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.DeleteScheduleUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.GetLocalMedicalAppointmentUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.GetMedicalRemindersUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.RemoveLocalMedicalAppointmentUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.GetMedicationRemindersUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.routine_test.GetLocalRoutineTestUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.routine_test.GetRoutineTestsUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.routine_test.RemoveLocalRoutineTestUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.symptom.DeleteSymptomUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.symptom.GetSymptomsUseCase
 import com.cancer.yaqeen.presentation.util.SingleLiveEvent
@@ -24,6 +27,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,6 +39,10 @@ class SchedulesHistoryViewModel @Inject constructor(
     private val getRoutineTestsUseCase: GetRoutineTestsUseCase,
     private val deleteSymptomUseCase: DeleteSymptomUseCase,
     private val deleteScheduleUseCase: DeleteScheduleUseCase,
+    private val getLocalRoutineTestUseCase: GetLocalRoutineTestUseCase,
+    private val getLocalMedicalAppointmentUseCase: GetLocalMedicalAppointmentUseCase,
+    private val removeLocalRoutineTestUseCase: RemoveLocalRoutineTestUseCase,
+    private val removeLocalMedicalAppointmentUseCase: RemoveLocalMedicalAppointmentUseCase,
 ) : ViewModel() {
 
     private var viewModelJob: Job? = null
@@ -59,6 +67,9 @@ class SchedulesHistoryViewModel @Inject constructor(
 
     private val _viewStateDeleteRoutineTest = SingleLiveEvent<Int?>()
     val viewStateDeleteRoutineTest: LiveData<Int?> = _viewStateDeleteRoutineTest
+
+    private val _viewStateWorkIds = SingleLiveEvent<Pair<UUID, UUID?>?>()
+    val viewStateWorkIds: LiveData<Pair<UUID, UUID?>?> = _viewStateWorkIds
 
     private val _viewStateLoading = MutableStateFlow<Boolean>(false)
     val viewStateLoading = _viewStateLoading.asStateFlow()
@@ -176,6 +187,7 @@ class SchedulesHistoryViewModel @Inject constructor(
                     Status.ERROR -> emitError(response.errorEntity)
                     Status.SUCCESS -> {
                         if (response.data == true) {
+                            getLocalMedicalReminder(scheduleId)
                             _viewStateDeleteMedicalReminder.postValue(scheduleId)
                         }
                     }
@@ -184,6 +196,36 @@ class SchedulesHistoryViewModel @Inject constructor(
             }
         }
     }
+
+
+    private fun getLocalMedicalReminder(medicalAppointmentId: Int) {
+        viewModelJob = viewModelScope.launch {
+            getLocalMedicalAppointmentUseCase(
+                medicalAppointmentId = medicalAppointmentId
+            ).collect { response ->
+                when (response.status) {
+                    Status.ERROR -> {}
+                    Status.SUCCESS -> {
+                        response.data?.workID?.let {
+                            _viewStateWorkIds.postValue(it to response.data.workBeforeID)
+                        }
+
+                        removeLocalMedicalReminder(medicalAppointmentId)
+                    }
+                    else -> {}
+                }
+            }
+        }
+    }
+
+    private fun removeLocalMedicalReminder(medicalAppointmentId: Int) {
+        viewModelJob = viewModelScope.launch {
+            removeLocalMedicalAppointmentUseCase(
+                medicalAppointmentId = medicalAppointmentId
+            ).collect {}
+        }
+    }
+
     fun deleteRoutineTest(scheduleId: Int) {
         viewModelJob = viewModelScope.launch {
             deleteScheduleUseCase(
@@ -194,12 +236,43 @@ class SchedulesHistoryViewModel @Inject constructor(
                     Status.ERROR -> emitError(response.errorEntity)
                     Status.SUCCESS -> {
                         if (response.data == true) {
+                            getLocalRoutineTest(scheduleId)
                             _viewStateDeleteRoutineTest.postValue(scheduleId)
                         }
                     }
                     else -> {}
                 }
             }
+        }
+    }
+
+
+    private fun getLocalRoutineTest(routineTestId: Int) {
+        viewModelJob = viewModelScope.launch {
+            getLocalRoutineTestUseCase(
+                routineTestId = routineTestId
+            ).collect { response ->
+                when (response.status) {
+                    Status.ERROR -> {}
+                    Status.SUCCESS -> {
+                        response.data?.workID?.let {
+                            _viewStateWorkIds.postValue(it to response.data.workBeforeID)
+                        }
+
+                        removeLocalRoutineTest(routineTestId)
+                    }
+                    else -> {}
+                }
+            }
+        }
+    }
+
+
+    private fun removeLocalRoutineTest(routineTestId: Int) {
+        viewModelJob = viewModelScope.launch {
+            removeLocalRoutineTestUseCase(
+                routineTestId = routineTestId
+            ).collect {}
         }
     }
 

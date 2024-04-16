@@ -63,6 +63,9 @@ class SymptomsAdapter(
     fun deleteSymptom(symptomId: Int) {
         val position = items.indexOfFirst { it.id == symptomId }
 
+        if (position == -1)
+            return
+
         items.removeAt(position)
         super.submitList(items)
         notifyDataSetChanged()

@@ -1,7 +1,6 @@
 package com.cancer.yaqeen.presentation.ui.main.treatment.add.medical_reminder.choose_time.confirmation
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,12 +12,9 @@ import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.schedule.routine_test.models.ReminderBefore
 import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.databinding.FragmentMedicalReminderConfirmationBinding
-import com.cancer.yaqeen.databinding.FragmentSymptomConfirmationBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.service.WorkerManager
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.medical_reminder.MedicalReminderViewModel
-import com.cancer.yaqeen.presentation.ui.main.treatment.add.symptoms.SymptomsViewModel
-import com.cancer.yaqeen.presentation.ui.main.treatment.history.adapters.PhotosAdapter
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindImage
 import com.cancer.yaqeen.presentation.util.changeVisibility
@@ -36,6 +32,9 @@ class MedicalReminderConfirmationFragment : BaseFragment() {
 
     private val medicalReminderViewModel: MedicalReminderViewModel by activityViewModels()
 
+    private val workerManager by lazy {
+        WorkerManager(requireContext())
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -117,9 +116,8 @@ class MedicalReminderConfirmationFragment : BaseFragment() {
             medicalReminderViewModel.viewStateAddMedicalReminder.observe(viewLifecycleOwner) { response ->
                 response?.let { (added, medicalAppointment) ->
                     if (added) {
-                        val workerManager = WorkerManager(requireContext())
-                        val uuid = workerManager.setPeriodScheduleForMedicalAppointment(medicalAppointment)
-                        medicalReminderViewModel.saveLocalMedicalAppointment(medicalAppointment, uuid)
+                        val (workID, workBeforeID) = workerManager.setPeriodScheduleForMedicalAppointment(medicalAppointment)
+                        medicalReminderViewModel.saveLocalMedicalAppointment(medicalAppointment, workID, workBeforeID)
                         Toast.makeText(requireContext(),
                             getString(R.string.appointment_added_successfully), Toast.LENGTH_SHORT).show()
                         navController.tryPopBackStack(
@@ -140,6 +138,17 @@ class MedicalReminderConfirmationFragment : BaseFragment() {
                         R.id.treatmentHistoryFragment,
                         false
                     )
+                }
+            }
+        }
+
+        lifecycleScope {
+            medicalReminderViewModel.viewStateWorkIds.observe(viewLifecycleOwner) { workIDs ->
+                workIDs?.run {
+                    workerManager.cancelWork(first)
+                    second?.let {
+                        workerManager.cancelWork(it)
+                    }
                 }
             }
         }

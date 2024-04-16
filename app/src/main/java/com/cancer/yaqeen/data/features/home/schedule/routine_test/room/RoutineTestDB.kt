@@ -21,5 +21,6 @@ data class RoutineTestDB(
     val minute: Int,
     val periodTimeId: Int?,
     val reminderBeforeInMinutes: Int,
-    var workID: UUID? = null
+    var workID: UUID? = null,
+    var workBeforeID: UUID? = null
 ): Parcelable

@@ -11,7 +11,6 @@ import com.cancer.yaqeen.data.features.home.schedule.medication.models.Photo
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.ReminderTime
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.ScheduleType
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Time
-import com.cancer.yaqeen.data.features.home.schedule.medication.room.MedicationDB
 import com.cancer.yaqeen.data.features.home.schedule.routine_test.models.ReminderBefore
 import com.cancer.yaqeen.data.features.home.schedule.routine_test.models.ReminderBefore.Companion.getReminderBefore
 import com.cancer.yaqeen.data.features.home.schedule.routine_test.models.RoutineTestTrack
@@ -24,6 +23,7 @@ import com.cancer.yaqeen.domain.features.home.schedule.routine_test.AddRoutineTe
 import com.cancer.yaqeen.domain.features.home.schedule.routine_test.AddRoutineTestWithoutPhotoUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.routine_test.EditRoutineTestUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.routine_test.EditRoutineTestWithoutPhotoUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.routine_test.GetLocalRoutineTestUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.routine_test.SaveLocalRoutineTestUseCase
 import com.cancer.yaqeen.presentation.util.SingleLiveEvent
 import com.cancer.yaqeen.presentation.util.generateFileName
@@ -48,7 +48,8 @@ class RoutineTestViewModel @Inject constructor(
     private val addRoutineTestWithoutPhotoUseCase: AddRoutineTestWithoutPhotoUseCase,
     private val editRoutineTestUseCase: EditRoutineTestUseCase,
     private val editRoutineTestWithoutPhotoUseCase: EditRoutineTestWithoutPhotoUseCase,
-    private val saveLocalRoutineTestUseCase: SaveLocalRoutineTestUseCase
+    private val saveLocalRoutineTestUseCase: SaveLocalRoutineTestUseCase,
+    private val getLocalRoutineTestUseCase: GetLocalRoutineTestUseCase,
 ) : ViewModel() {
 
     private var viewModelJob: Job? = null
@@ -58,6 +59,9 @@ class RoutineTestViewModel @Inject constructor(
 
     private val _viewStateEditRoutineTest = SingleLiveEvent<Boolean?>()
     val viewStateEditRoutineTest: LiveData<Boolean?> = _viewStateEditRoutineTest
+
+    private val _viewStateWorkIds = SingleLiveEvent<Pair<UUID, UUID?>?>()
+    val viewStateWorkIds: LiveData<Pair<UUID, UUID?>?> = _viewStateWorkIds
 
     private val _viewStateLoading = MutableStateFlow<Boolean>(false)
     val viewStateLoading = _viewStateLoading.asStateFlow()
@@ -253,6 +257,9 @@ class RoutineTestViewModel @Inject constructor(
                         Status.SUCCESS -> {
                             response.data?.let {
                                 if (it.scheduleIsModified) {
+                                    routineTestId?.let {
+                                        getLocalRoutineTest(routineTestId)
+                                    }
                                     resetRoutineTestTrack()
                                     _viewStateEditRoutineTest.postValue(true)
                                 }
@@ -336,6 +343,9 @@ class RoutineTestViewModel @Inject constructor(
                         Status.ERROR -> emitError(response.errorEntity)
                         Status.SUCCESS -> {
                             if (response.data == true) {
+                                routineTestId?.let {
+                                    getLocalRoutineTest(routineTestId)
+                                }
                                 resetRoutineTestTrack()
                                 _viewStateEditRoutineTest.postValue(true)
                             }
@@ -343,6 +353,27 @@ class RoutineTestViewModel @Inject constructor(
 
                         else -> {}
                     }
+                }
+            }
+        }
+    }
+
+
+    private fun getLocalRoutineTest(routineTestId: Int) {
+        viewModelJob = viewModelScope.launch {
+            getLocalRoutineTestUseCase(
+                routineTestId = routineTestId
+            ).collect { response ->
+                when (response.status) {
+                    Status.ERROR -> {}
+                    Status.SUCCESS -> {
+                        response.data?.workID?.let {
+                            _viewStateWorkIds.postValue(it to response.data.workBeforeID)
+                        }
+
+//                        editLocalRoutineTest(routineTestId)
+                    }
+                    else -> {}
                 }
             }
         }
@@ -395,11 +426,12 @@ class RoutineTestViewModel @Inject constructor(
         return getRoutineTestTrack()?.reminderBefore
     }
 
-    fun saveLocalRoutineTest(routineTest: RoutineTestDB, uuid: UUID) {
+    fun saveLocalRoutineTest(routineTest: RoutineTestDB, periodicWorkID: UUID, workBeforeID: UUID?) {
         viewModelJob = viewModelScope.launch {
             saveLocalRoutineTestUseCase(
                 routineTest.apply {
-                    workID = uuid
+                    workID = periodicWorkID
+                    this.workBeforeID = workBeforeID
                 }
             ).collect()
         }

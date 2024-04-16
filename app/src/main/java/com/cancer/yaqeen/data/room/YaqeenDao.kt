@@ -36,6 +36,9 @@ interface YaqeenDao {
     @Query("DELETE FROM Medication")
     suspend fun deleteMedications(): Int
 
+    @Query("SELECT * FROM RoutineTest WHERE routineTestId = :routineTestId")
+    suspend fun selectRoutineTest(routineTestId: Int): RoutineTestDB?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRoutineTest(routineTest: RoutineTestDB): Long
 
@@ -44,6 +47,9 @@ interface YaqeenDao {
 
     @Query("DELETE FROM RoutineTest")
     suspend fun deleteRoutineTests(): Int
+
+    @Query("SELECT * FROM MedicalAppointment WHERE medicalAppointmentId = :medicalAppointmentId")
+    suspend fun selectMedicalAppointment(medicalAppointmentId: Int): MedicalAppointmentDB?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMedicalAppointment(medicalAppointment: MedicalAppointmentDB): Long

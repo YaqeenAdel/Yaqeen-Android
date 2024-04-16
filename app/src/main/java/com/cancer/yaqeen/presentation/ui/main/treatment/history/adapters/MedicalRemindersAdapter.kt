@@ -85,6 +85,9 @@ class MedicalRemindersAdapter(
     fun deleteMedicalReminder(medicalReminderId: Int) {
         val position = items.indexOfFirst { it.id == medicalReminderId }
 
+        if (position == -1)
+            return
+
         items.removeAt(position)
         super.submitList(items)
         notifyDataSetChanged()

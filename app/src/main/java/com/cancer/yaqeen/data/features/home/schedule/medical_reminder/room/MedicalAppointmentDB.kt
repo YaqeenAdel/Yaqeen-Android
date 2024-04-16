@@ -21,5 +21,6 @@ data class MedicalAppointmentDB(
     val hour24: Int,
     val minute: Int,
     val reminderBeforeInMinutes: Int,
-    var workID: UUID? = null
+    var workID: UUID? = null,
+    var workBeforeID: UUID? = null
 ): Parcelable

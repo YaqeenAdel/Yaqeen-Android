@@ -20,18 +20,23 @@ import com.cancer.yaqeen.domain.features.home.articles.usecases.UnBookmarkArticl
 import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.AddMedicalReminderUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.DeleteScheduleUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.EditMedicalReminderUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.GetLocalMedicalAppointmentUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.GetMedicalRemindersUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.RemoveLocalMedicalAppointmentUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.SaveLocalMedicalAppointmentUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.AddMedicationUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.EditMedicationUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.GetTodayRemindersUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.GetMedicationRemindersUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.medication.RemoveLocalMedicationUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.SaveLocalMedicationUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.routine_test.AddRoutineTestUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.routine_test.AddRoutineTestWithoutPhotoUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.routine_test.EditRoutineTestUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.routine_test.EditRoutineTestWithoutPhotoUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.routine_test.GetLocalRoutineTestUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.routine_test.GetRoutineTestsUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.routine_test.RemoveLocalRoutineTestUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.routine_test.SaveLocalRoutineTestUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.symptom.AddSymptomUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.symptom.AddSymptomWithoutPhotoUseCase
@@ -234,6 +239,26 @@ object UseCaseModule {
     @Provides
     fun provideSaveLocalMedicalAppointmentUseCase(repository: ScheduleRepositoryImpl) =
         SaveLocalMedicalAppointmentUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideRemoveLocalMedicationUseCase(repository: ScheduleRepositoryImpl) =
+        RemoveLocalMedicationUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideRemoveLocalRoutineTestUseCase(repository: ScheduleRepositoryImpl) =
+        RemoveLocalRoutineTestUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideRemoveLocalMedicalAppointmentUseCase(repository: ScheduleRepositoryImpl) =
+        RemoveLocalMedicalAppointmentUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideGetLocalRoutineTestUseCase(repository: ScheduleRepositoryImpl) =
+        GetLocalRoutineTestUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideGetLocalMedicalAppointmentUseCase(repository: ScheduleRepositoryImpl) =
+        GetLocalMedicalAppointmentUseCase(repository)
 
 
 }

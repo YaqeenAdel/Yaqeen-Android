@@ -3,10 +3,13 @@ package com.cancer.yaqeen.presentation.util
 import android.content.Context
 import android.content.Context.WINDOW_SERVICE
 import android.graphics.PixelFormat
+import android.media.AudioAttributes
 import android.media.Ringtone
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -28,6 +31,7 @@ class Window(private val context: Context) {
     private var mWindowManager: WindowManager? = null
     private var layoutReminderBinding: LayoutReminderBinding? = null
     private var ringtone: Ringtone? = null
+    private var vibrator: Vibrator? = null
 
     init {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -89,6 +93,7 @@ class Window(private val context: Context) {
     private fun close() {
         try {
             ringtone?.stop()
+            vibrator?.cancel()
             (context.getSystemService(WINDOW_SERVICE) as WindowManager).removeView(mView)
             mView?.invalidate()
             (mView?.parent as ViewGroup).removeAllViews()
@@ -103,9 +108,37 @@ class Window(private val context: Context) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 ringtone?.isLooping = true
             }
+            ringtone?.audioAttributes = AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_ALARM)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .build()
             ringtone?.play()
+            playVibration()
         } catch (e: Exception) {
             e.printStackTrace()
+        }
+    }
+
+    private fun playVibration(){
+        try {
+            val vibrationPattern = longArrayOf(0, 500, 500, 500, 500)
+            val repeatCount = 3
+            vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            if (vibrator?.hasVibrator() == true) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    vibrator?.vibrate(
+                        VibrationEffect.createWaveform(
+                            vibrationPattern,
+                            repeatCount
+                        )
+                    )
+                } else {
+                    @Suppress("DEPRECATION")
+                    vibrator?.vibrate(vibrationPattern, repeatCount)
+                }
+            }
+        }catch (e: Exception){
+
         }
     }
 }

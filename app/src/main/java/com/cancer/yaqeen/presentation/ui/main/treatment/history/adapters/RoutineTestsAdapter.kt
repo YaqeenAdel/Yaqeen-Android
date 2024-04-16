@@ -64,6 +64,9 @@ class RoutineTestsAdapter(
     fun deleteRoutineTest(RoutineTestId: Int) {
         val position = items.indexOfFirst { it.id == RoutineTestId }
 
+        if (position == -1)
+            return
+
         items.removeAt(position)
         super.submitList(items)
         notifyDataSetChanged()
