@@ -19,6 +19,8 @@ data class RoutineTestDB(
     val startDate: Long,
     val hour24: Int,
     val minute: Int,
+    val isAM: Boolean,
+    val time: String,
     val periodTimeId: Int?,
     val reminderBeforeInMinutes: Int,
     var workID: UUID? = null,

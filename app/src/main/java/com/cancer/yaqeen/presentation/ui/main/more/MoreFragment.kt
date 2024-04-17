@@ -129,6 +129,9 @@ class MoreFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
                 moreViewModel.switchLanguage()
                 (requireActivity() as? MainActivity)?.changeLanguageByDestination(R.id.moreFragment)
             }
+            R.id.btn_help -> {
+                navController.tryNavigate(MoreFragmentDirections.actionMoreFragmentToHelpFragment())
+            }
             R.id.btn_log_out -> {
                 moreViewModel.logout(requireContext())
             }

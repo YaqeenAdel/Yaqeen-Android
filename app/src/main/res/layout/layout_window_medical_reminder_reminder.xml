@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/Theme.MaterialComponents.Light"
+        android:paddingVertical="@dimen/_8sdp"
+        android:paddingHorizontal="@dimen/_8sdp">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/light_black"
+            app:cardCornerRadius="@dimen/_14sdp">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/item_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/light_black">
+
+
+        <ImageView
+            android:id="@+id/iv_time_icon"
+            android:layout_width="@dimen/_14sdp"
+            android:layout_height="@dimen/_14sdp"
+            android:layout_marginStart="@dimen/_12sdp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_time"
+            app:layout_constraintBottom_toBottomOf="@id/tv_time"
+            android:src="@drawable/ic_time_circle"/>
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_6sdp"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:layout_marginEnd="@dimen/_6sdp"
+            android:drawablePadding="@dimen/_6sdp"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center|start"
+            android:textColor="@color/cold_white"
+            android:textSize="@dimen/_13ssp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@id/iv_time_icon"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="10:00 pm" />
+
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/iv_medication_background"
+            android:layout_width="@dimen/_64sdp"
+            android:layout_height="@dimen/_64sdp"
+            android:layout_marginTop="@dimen/_14sdp"
+            android:background="@color/super_silver3"
+            app:layout_constraintStart_toStartOf="@id/iv_time_icon"
+            app:layout_constraintTop_toBottomOf="@id/tv_time"
+            app:riv_mutate_background="true"
+            app:riv_oval="true"
+            app:riv_tile_mode="clamp" />
+
+        <ImageView
+            android:id="@+id/iv_appointment_icon"
+            android:layout_width="@dimen/_64sdp"
+            android:layout_height="@dimen/_64sdp"
+            android:padding="@dimen/_14sdp"
+            android:src="@drawable/ic_medical_reminder"
+            app:layout_constraintBottom_toBottomOf="@id/iv_medication_background"
+            app:layout_constraintStart_toStartOf="@id/iv_medication_background"
+            app:layout_constraintEnd_toEndOf="@id/iv_medication_background"
+            app:layout_constraintTop_toTopOf="@id/iv_medication_background" />
+
+        <TextView
+            android:id="@+id/tv_doctor_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginEnd="@dimen/_4sdp"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center|start"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:paddingVertical="@dimen/_4sdp"
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_12ssp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@id/iv_medication_background"
+            app:layout_constraintTop_toTopOf="@+id/iv_medication_background"
+            tools:text="Dr/ Ahmed Essam" />
+
+        <ImageView
+            android:id="@+id/iv_date"
+            android:layout_width="@dimen/_14sdp"
+            android:layout_height="@dimen/_14sdp"
+            android:layout_marginTop="@dimen/_4sdp"
+            app:layout_constraintStart_toStartOf="@id/tv_doctor_name"
+            app:layout_constraintTop_toBottomOf="@id/tv_doctor_name"
+            android:src="@drawable/ic_calender_penk" />
+        <TextView
+            android:id="@+id/tv_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/iv_date"
+            app:layout_constraintBottom_toBottomOf="@id/iv_date"
+            app:layout_constraintEnd_toEndOf="@id/tv_doctor_name"
+            app:layout_constraintStart_toEndOf="@id/iv_date"
+            android:layout_marginStart="@dimen/_4sdp"
+            tools:text="Tomorrow 02/10"
+            android:textColor="@color/cold_white"
+            android:textSize="@dimen/_10ssp"
+            android:fontFamily="sans-serif" />
+
+        <TextView
+            android:id="@+id/tv_notes"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center|start"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:paddingVertical="@dimen/_2sdp"
+            tools:text="After breakfast, drinking water"
+            android:textColor="@color/teal_700"
+            android:textSize="@dimen/_10ssp"
+            android:fontFamily="sans-serif"
+            app:layout_constraintEnd_toEndOf="@id/tv_doctor_name"
+            app:layout_constraintStart_toStartOf="@id/tv_doctor_name"
+            app:layout_constraintTop_toBottomOf="@+id/tv_date" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_ok"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_8sdp"
+            android:layout_marginEnd="@dimen/_6sdp"
+            android:layout_marginTop="@dimen/_4sdp"
+            app:layout_constraintHorizontal_bias="1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/tv_notes"
+            app:layout_constraintStart_toStartOf="@id/iv_appointment_icon"
+            app:layout_constraintTop_toBottomOf="@+id/tv_notes"
+            app:iconSize="@dimen/_16sdp"
+            app:iconTint="@color/rose_penk"
+            app:icon="@drawable/ic_check"
+            app:iconGravity="textStart"
+            app:iconPadding="@dimen/_4sdp"
+            android:text="@string/ok"
+            android:textColor="@color/xx_dark_gray"
+            android:textSize="@dimen/_12ssp"
+            android:fontFamily="sans-serif"
+            app:backgroundTint="@color/white"
+            app:cornerRadius="@dimen/_8sdp"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    </FrameLayout>
+</layout>

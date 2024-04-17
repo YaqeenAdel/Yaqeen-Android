@@ -230,6 +230,7 @@
     <string name="testicular">Testicular</string>
     <string name="multiple_myeloma">Multiple Myeloma</string>
     <string name="thyroid">Thyroid</string>
+    <string name="ok">OK</string>
 
     <string-array name="languages_array">
         <item>English</item>

@@ -226,6 +226,8 @@ class RoutineTestViewModel @Inject constructor(
                 startDate = startDate ?: 0L,
                 hour24 = reminderTime?.hour24?.toIntOrNull() ?: 0,
                 minute = reminderTime?.minute?.toIntOrNull() ?: 0,
+                isAM = reminderTime?.isAM ?: false,
+                time = reminderTime?.text.toString(),
                 periodTimeId = periodTimeId,
                 reminderBeforeInMinutes = reminderBeforeInMinutes
             )

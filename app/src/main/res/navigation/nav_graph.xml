@@ -168,6 +168,9 @@
         <action
             android:id="@+id/action_moreFragment_to_symptomsTypesFragment"
             app:destination="@id/symptomsTypesFragment" />
+        <action
+            android:id="@+id/action_moreFragment_to_helpFragment"
+            app:destination="@id/helpFragment" />
     </fragment>
     <fragment
         android:id="@+id/quoteFragment"
@@ -433,5 +436,9 @@
         android:id="@+id/routineTestConfirmationFragment"
         android:name="com.cancer.yaqeen.presentation.ui.main.treatment.add.routine_test.choose_time.confirmation.RoutineTestConfirmationFragment"
         tools:layout="@layout/fragment_routine_test_confirmation" />
+    <fragment
+        android:id="@+id/helpFragment"
+        android:name="com.cancer.yaqeen.presentation.ui.main.more.help.HelpFragment"
+        tools:layout="@layout/fragment_help" />
 
 </navigation>

@@ -19,7 +19,10 @@ import com.cancer.yaqeen.presentation.util.Constants.OPEN_MEDICAL_APPOINTMENT_WI
 import com.cancer.yaqeen.presentation.util.Constants.ROUTINE_TEST
 import com.cancer.yaqeen.presentation.util.Constants.TITLE_KEY
 import com.cancer.yaqeen.presentation.util.NotificationUtils
-import com.cancer.yaqeen.presentation.util.Window
+import com.cancer.yaqeen.presentation.util.windows.MedicalAppointmentWindow
+import com.cancer.yaqeen.presentation.util.windows.MedicationWindow
+import com.cancer.yaqeen.presentation.util.windows.RoutineTestWindow
+import com.cancer.yaqeen.presentation.util.windows.Window
 
 
 class NotificationReceiver : BroadcastReceiver() {
@@ -39,7 +42,7 @@ class NotificationReceiver : BroadcastReceiver() {
                 val bundle: Bundle? = intent.getBundleExtra(BUNDLE_DATA)
                 val medication: MedicationDB? = bundle?.getParcelable(MEDICATION)
 
-                val window = Window(context)
+                val window = MedicationWindow(context)
                 window.setMedication(medication)
                 window.open()
             }
@@ -49,8 +52,8 @@ class NotificationReceiver : BroadcastReceiver() {
                 val bundle: Bundle? = intent.getBundleExtra(BUNDLE_DATA)
                 val routineTest: RoutineTestDB? = bundle?.getParcelable(ROUTINE_TEST)
 
-                val window = Window(context)
-                window.setRoutineTestDB(routineTest)
+                val window = RoutineTestWindow(context)
+                window.setRoutineTest(routineTest)
                 window.open()
             }
             OPEN_MEDICAL_APPOINTMENT_WINDOW_ACTION -> {
@@ -59,8 +62,8 @@ class NotificationReceiver : BroadcastReceiver() {
                 val bundle: Bundle? = intent.getBundleExtra(BUNDLE_DATA)
                 val medicalAppointment: MedicalAppointmentDB? = bundle?.getParcelable(MEDICAL_APPOINTMENT)
 
-                val window = Window(context)
-                window.setMedicalAppointmentDB(medicalAppointment)
+                val window = MedicalAppointmentWindow(context)
+                window.setMedicalAppointment(medicalAppointment)
                 window.open()
             }
         }

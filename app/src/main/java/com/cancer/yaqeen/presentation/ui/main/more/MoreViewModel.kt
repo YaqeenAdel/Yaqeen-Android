@@ -81,6 +81,9 @@ class MoreViewModel @Inject constructor(
                             _viewStateLogoutSuccess.postValue(it)
                             if (it){
                                 removeBookmarkedArticles()
+                                removeLocalMedications()
+                                removeLocalRoutineTests()
+                                removeLocalMedicalAppointments()
                             }
                         }
                     }
@@ -90,6 +93,24 @@ class MoreViewModel @Inject constructor(
             }.catch {
 
             }.launchIn(viewModelScope)
+        }
+    }
+
+    private fun removeLocalMedications() {
+        viewModelJob = viewModelScope.launch {
+
+        }
+    }
+
+    private fun removeLocalRoutineTests() {
+        viewModelJob = viewModelScope.launch {
+
+        }
+    }
+
+    private fun removeLocalMedicalAppointments() {
+        viewModelJob = viewModelScope.launch {
+
         }
     }
 

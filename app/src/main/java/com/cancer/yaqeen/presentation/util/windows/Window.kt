@@ -1,4 +1,4 @@
-package com.cancer.yaqeen.presentation.util
+package com.cancer.yaqeen.presentation.util.windows
 
 import android.content.Context
 import android.content.Context.WINDOW_SERVICE
@@ -25,11 +25,11 @@ import com.cancer.yaqeen.presentation.ui.main.treatment.getMedicationType
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindResourceImage
 
 
-class Window(private val context: Context) {
+abstract class Window(private val context: Context) {
     private var mView: View? = null
     private var mParams: WindowManager.LayoutParams? = null
     private var mWindowManager: WindowManager? = null
-    private var layoutReminderBinding: LayoutReminderBinding? = null
+//    private var layoutReminderBinding: LayoutReminderBinding? = null
     private var ringtone: Ringtone? = null
     private var vibrator: Vibrator? = null
 
@@ -45,36 +45,12 @@ class Window(private val context: Context) {
                 PixelFormat.TRANSLUCENT
             )
         }
-        val layoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        layoutReminderBinding = LayoutReminderBinding.inflate(layoutInflater)
-        mView = layoutReminderBinding?.root
-        layoutReminderBinding?.ivSetting?.setOnClickListener { close() }
         mParams?.gravity = Gravity.TOP
         mWindowManager = context.getSystemService(WINDOW_SERVICE) as WindowManager
     }
 
-    fun setMedication(medication: MedicationDB?) {
-        layoutReminderBinding?.run {
-            medication?.let {
-                val (timing, hour12) = if(it.hour24 < 12) context.getString(R.string.am) to it.hour24 else context.getString(
-                    R.string.pm) to (it.hour24 - 12)
-                tvTime.text = "$hour12:${it.minute} $timing"
-                tvMedicationDetails.text = "${it.medicationName} ${it.strengthAmount} ${it.unitType}"
-                tvNotes.text = it.notes
-                tvDosageAmount.text = "${it.dosageAmount} ${it.medicationType}"
-                getMedicationType(context, it.medicationType)?.run { iconResId
-                    bindResourceImage(ivMedicationIcon, iconResId)
-                }
-            }
-        }
-    }
-
-    fun setRoutineTestDB(routineTest: RoutineTestDB?) {
-
-    }
-
-    fun setMedicalAppointmentDB(medicalAppointment: MedicalAppointmentDB?) {
-
+    protected fun setView(view: View?){
+        mView = view
     }
 
     fun open() {
@@ -90,7 +66,7 @@ class Window(private val context: Context) {
         }
     }
 
-    private fun close() {
+    protected fun close() {
         try {
             ringtone?.stop()
             vibrator?.cancel()

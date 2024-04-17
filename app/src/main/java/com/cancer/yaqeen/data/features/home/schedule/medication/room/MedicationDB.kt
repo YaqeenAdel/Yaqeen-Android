@@ -24,6 +24,8 @@ data class MedicationDB(
     val startDate: Long,
     val hour24: Int,
     val minute: Int,
+    val isAM: Boolean,
+    val time: String,
     val periodTimeId: Int?,
     var workID: UUID? = null
 ): Parcelable
