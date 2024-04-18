@@ -16,6 +16,7 @@ import com.cancer.yaqeen.data.features.auth.models.User
 import com.cancer.yaqeen.databinding.FragmentHomeBinding
 import com.cancer.yaqeen.databinding.FragmentMoreBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
+import com.cancer.yaqeen.presentation.service.WorkerManager
 import com.cancer.yaqeen.presentation.ui.MainActivity
 import com.cancer.yaqeen.presentation.ui.main.home.HomeViewModel
 import com.cancer.yaqeen.presentation.util.autoCleared
@@ -36,6 +37,10 @@ class MoreFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
     private lateinit var navController: NavController
 
     private val moreViewModel: MoreViewModel by viewModels()
+
+    private val workerManager by lazy {
+        WorkerManager(requireContext())
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -75,6 +80,7 @@ class MoreFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
         lifecycleScope {
             moreViewModel.viewStateLogoutSuccess.observe(viewLifecycleOwner) { response ->
                 if(response == true){
+                    workerManager.cancelAllWorks()
                     navController.tryNavigate(MoreFragmentDirections.actionMoreFragmentToOnBoardingFragment())
                 }
             }

@@ -13,4 +13,5 @@ interface IWorkerManager {
     fun setPeriodScheduleForMedicalAppointment(medicalAppointment: MedicalAppointmentDB): Pair<UUID, UUID?>
     fun scheduleReminderForMedicalAppointment(medicalAppointment: MedicalAppointmentDB): UUID
     fun cancelWork(workRequestId: UUID)
+    fun cancelAllWorks()
 }

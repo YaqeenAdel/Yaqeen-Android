@@ -471,14 +471,29 @@ class ScheduleRepositoryImpl @Inject constructor(
             }
         }
 
+    override suspend fun getMedication(medicationId: Int): Flow<DataState<MedicationDB?>> =
+        flowStatus {
+            scheduleLocalDataSource.getMedication(medicationId)
+        }
+
     override suspend fun saveMedication(medication: MedicationDB): Flow<DataState<Long>> =
         flowStatus {
             scheduleLocalDataSource.saveMedication(medication)
         }
 
+    override suspend fun editMedication(medication: MedicationDB): Flow<DataState<Int>> =
+        flowStatus {
+            scheduleLocalDataSource.editMedication(medication)
+        }
+
     override suspend fun removeMedication(medicationId: Int): Flow<DataState<Int>> =
         flowStatus {
             scheduleLocalDataSource.removeMedication(medicationId)
+        }
+
+    override suspend fun removeMedications(): Flow<DataState<Int>> =
+        flowStatus {
+            scheduleLocalDataSource.removeMedications()
         }
 
     override suspend fun getRoutineTest(routineTestId: Int): Flow<DataState<RoutineTestDB?>> =
@@ -491,9 +506,19 @@ class ScheduleRepositoryImpl @Inject constructor(
             scheduleLocalDataSource.saveRoutineTest(routineTest)
         }
 
+    override suspend fun editRoutineTest(routineTest: RoutineTestDB): Flow<DataState<Int>> =
+        flowStatus {
+            scheduleLocalDataSource.editRoutineTest(routineTest)
+        }
+
     override suspend fun removeRoutineTest(routineTestId: Int): Flow<DataState<Int>> =
         flowStatus {
             scheduleLocalDataSource.removeRoutineTest(routineTestId)
+        }
+
+    override suspend fun removeRoutineTests(): Flow<DataState<Int>> =
+        flowStatus {
+            scheduleLocalDataSource.removeRoutineTests()
         }
 
     override suspend fun getMedicalAppointment(medicalAppointmentId: Int): Flow<DataState<MedicalAppointmentDB?>> =
@@ -506,9 +531,19 @@ class ScheduleRepositoryImpl @Inject constructor(
             scheduleLocalDataSource.saveMedicalAppointment(medicalAppointment)
         }
 
+    override suspend fun editMedicalAppointment(medicalAppointment: MedicalAppointmentDB): Flow<DataState<Int>> =
+        flowStatus {
+            scheduleLocalDataSource.editMedicalAppointment(medicalAppointment)
+        }
+
     override suspend fun removeMedicalAppointment(medicalAppointmentId: Int): Flow<DataState<Int>> =
         flowStatus {
             scheduleLocalDataSource.removeMedicalAppointment(medicalAppointmentId)
+        }
+
+    override suspend fun removeMedicalAppointments(): Flow<DataState<Int>> =
+        flowStatus {
+            scheduleLocalDataSource.removeMedicalAppointments()
         }
 
 }

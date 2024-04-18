@@ -21,6 +21,7 @@ import com.cancer.yaqeen.data.network.base.Status
 import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.domain.features.home.schedule.routine_test.AddRoutineTestUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.routine_test.AddRoutineTestWithoutPhotoUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.routine_test.EditLocalRoutineTestUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.routine_test.EditRoutineTestUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.routine_test.EditRoutineTestWithoutPhotoUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.routine_test.GetLocalRoutineTestUseCase
@@ -49,6 +50,7 @@ class RoutineTestViewModel @Inject constructor(
     private val editRoutineTestUseCase: EditRoutineTestUseCase,
     private val editRoutineTestWithoutPhotoUseCase: EditRoutineTestWithoutPhotoUseCase,
     private val saveLocalRoutineTestUseCase: SaveLocalRoutineTestUseCase,
+    private val editLocalRoutineTestUseCase: EditLocalRoutineTestUseCase,
     private val getLocalRoutineTestUseCase: GetLocalRoutineTestUseCase,
 ) : ViewModel() {
 
@@ -57,8 +59,8 @@ class RoutineTestViewModel @Inject constructor(
     private val _viewStateAddRoutineTest = SingleLiveEvent<Pair<Boolean, RoutineTestDB>?>()
     val viewStateAddRoutineTest: LiveData<Pair<Boolean, RoutineTestDB>?> = _viewStateAddRoutineTest
 
-    private val _viewStateEditRoutineTest = SingleLiveEvent<Boolean?>()
-    val viewStateEditRoutineTest: LiveData<Boolean?> = _viewStateEditRoutineTest
+    private val _viewStateEditRoutineTest = SingleLiveEvent<Pair<Boolean, RoutineTestDB>?>()
+    val viewStateEditRoutineTest: LiveData<Pair<Boolean, RoutineTestDB>?> = _viewStateEditRoutineTest
 
     private val _viewStateWorkIds = SingleLiveEvent<Pair<UUID, UUID?>?>()
     val viewStateWorkIds: LiveData<Pair<UUID, UUID?>?> = _viewStateWorkIds
@@ -237,21 +239,22 @@ class RoutineTestViewModel @Inject constructor(
         viewModelJob = viewModelScope.launch {
             val routineTestTrackField = getRoutineTestTrack()
             routineTestTrackField?.run {
+                val requestBuilder = AddRoutineTestRequestBuilder(
+                    routineTestName = routineTestName ?: "",
+                    notifyBeforeMinutes = reminderBefore.timeInMinutes,
+                    photo = photo,
+                    cronExpression = createCronExpression(
+                        minutes = reminderTime?.minute ?: "0",
+                        startingHour = reminderTime?.hour24 ?: "0",
+                        time = periodTime,
+                        startingDate = startDate,
+                        specificDays = specificDays
+                    ),
+                    notes = notes ?: ""
+                )
                 editRoutineTestUseCase(
                     routineTestId ?: 0,
-                    AddRoutineTestRequestBuilder(
-                        routineTestName = routineTestName ?: "",
-                        notifyBeforeMinutes = reminderBefore.timeInMinutes,
-                        photo = photo,
-                        cronExpression = createCronExpression(
-                            minutes = reminderTime?.minute ?: "0",
-                            startingHour = reminderTime?.hour24 ?: "0",
-                            time = periodTime,
-                            startingDate = startDate,
-                            specificDays = specificDays
-                        ),
-                        notes = notes ?: ""
-                    )
+                    requestBuilder
                 ).collect { response ->
                     _viewStateLoading.emit(response.loading)
                     when (response.status) {
@@ -259,11 +262,17 @@ class RoutineTestViewModel @Inject constructor(
                         Status.SUCCESS -> {
                             response.data?.let {
                                 if (it.scheduleIsModified) {
-                                    routineTestId?.let {
-                                        getLocalRoutineTest(routineTestId)
-                                    }
+                                    val routineTestDB =
+                                        createRoutineTestDB(
+                                            requestBuilder,
+                                            startDate,
+                                            reminderTime,
+                                            periodTime?.id,
+                                            reminderBefore.timeInMinutes,
+                                            it.routineTestId ?: 0
+                                        )
+                                    getLocalRoutineTest(it.routineTestId ?: 0, routineTestDB)
                                     resetRoutineTestTrack()
-                                    _viewStateEditRoutineTest.postValue(true)
                                 }
                             }
                         }
@@ -324,32 +333,39 @@ class RoutineTestViewModel @Inject constructor(
         viewModelJob = viewModelScope.launch {
             val routineTestTrackField = getRoutineTestTrack()
             routineTestTrackField?.run {
+                val requestBuilder = AddRoutineTestRequestBuilder(
+                    routineTestName = routineTestName ?: "",
+                    notifyBeforeMinutes = reminderBefore.timeInMinutes,
+                    photo = photo,
+                    cronExpression = createCronExpression(
+                        minutes = reminderTime?.minute ?: "0",
+                        startingHour = reminderTime?.hour24 ?: "0",
+                        time = periodTime,
+                        startingDate = startDate,
+                        specificDays = specificDays
+                    ),
+                    notes = notes ?: ""
+                )
                 editRoutineTestWithoutPhotoUseCase(
                     routineTestId ?: 0,
-                    AddRoutineTestRequestBuilder(
-                        routineTestName = routineTestName ?: "",
-                        notifyBeforeMinutes = reminderBefore.timeInMinutes,
-                        photo = photo,
-                        cronExpression = createCronExpression(
-                            minutes = reminderTime?.minute ?: "0",
-                            startingHour = reminderTime?.hour24 ?: "0",
-                            time = periodTime,
-                            startingDate = startDate,
-                            specificDays = specificDays
-                        ),
-                        notes = notes ?: ""
-                    ).buildRequestBody()
+                    requestBuilder.buildRequestBody()
                 ).collect { response ->
                     _viewStateLoading.emit(response.loading)
                     when (response.status) {
                         Status.ERROR -> emitError(response.errorEntity)
                         Status.SUCCESS -> {
                             if (response.data == true) {
-                                routineTestId?.let {
-                                    getLocalRoutineTest(routineTestId)
-                                }
+                                val routineTestDB =
+                                    createRoutineTestDB(
+                                        requestBuilder,
+                                        startDate,
+                                        reminderTime,
+                                        periodTime?.id,
+                                        reminderBefore.timeInMinutes,
+                                        routineTestId ?: 0
+                                    )
+                                getLocalRoutineTest(routineTestId ?: 0, routineTestDB)
                                 resetRoutineTestTrack()
-                                _viewStateEditRoutineTest.postValue(true)
                             }
                         }
 
@@ -361,19 +377,20 @@ class RoutineTestViewModel @Inject constructor(
     }
 
 
-    private fun getLocalRoutineTest(routineTestId: Int) {
+    private fun getLocalRoutineTest(routineTestId: Int, routineTestDB: RoutineTestDB) {
         viewModelJob = viewModelScope.launch {
             getLocalRoutineTestUseCase(
                 routineTestId = routineTestId
             ).collect { response ->
                 when (response.status) {
-                    Status.ERROR -> {}
+                    Status.ERROR -> {
+                        _viewStateEditRoutineTest.postValue(true to routineTestDB)
+                    }
                     Status.SUCCESS -> {
                         response.data?.workID?.let {
+                            _viewStateEditRoutineTest.postValue(true to routineTestDB)
                             _viewStateWorkIds.postValue(it to response.data.workBeforeID)
                         }
-
-//                        editLocalRoutineTest(routineTestId)
                     }
                     else -> {}
                 }
@@ -431,6 +448,17 @@ class RoutineTestViewModel @Inject constructor(
     fun saveLocalRoutineTest(routineTest: RoutineTestDB, periodicWorkID: UUID, workBeforeID: UUID?) {
         viewModelJob = viewModelScope.launch {
             saveLocalRoutineTestUseCase(
+                routineTest.apply {
+                    workID = periodicWorkID
+                    this.workBeforeID = workBeforeID
+                }
+            ).collect()
+        }
+    }
+
+    fun editLocalRoutineTest(routineTest: RoutineTestDB, periodicWorkID: UUID, workBeforeID: UUID?) {
+        viewModelJob = viewModelScope.launch {
+            editLocalRoutineTestUseCase(
                 routineTest.apply {
                     workID = periodicWorkID
                     this.workBeforeID = workBeforeID

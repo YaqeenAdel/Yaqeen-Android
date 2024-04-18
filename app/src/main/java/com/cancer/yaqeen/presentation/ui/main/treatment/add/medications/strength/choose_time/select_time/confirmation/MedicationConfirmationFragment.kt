@@ -36,6 +36,10 @@ class MedicationConfirmationFragment : BaseFragment() {
 
     private val medicationsViewModel: MedicationsViewModel by activityViewModels()
 
+    private val workerManager by lazy {
+        WorkerManager(requireContext())
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -110,7 +114,6 @@ class MedicationConfirmationFragment : BaseFragment() {
             medicationsViewModel.viewStateAddMedication.observe(viewLifecycleOwner) { response ->
                 response?.let { (added, medication) ->
                     if(added){
-                        val workerManager = WorkerManager(requireContext())
                         val uuid = workerManager.setPeriodScheduleForMedication(medication)
                         medicationsViewModel.saveLocalMedication(medication, uuid)
                         Toast.makeText(requireContext(),
@@ -126,13 +129,26 @@ class MedicationConfirmationFragment : BaseFragment() {
 
         lifecycleScope {
             medicationsViewModel.viewStateEditMedication.observe(viewLifecycleOwner) { response ->
-                if(response == true){
-                    Toast.makeText(requireContext(),
-                        getString(R.string.medication_edited_successfully), Toast.LENGTH_SHORT).show()
-                    navController.tryPopBackStack(
-                        R.id.treatmentHistoryFragment,
-                        false
-                    )
+                response?.let { (edited, medication) ->
+                    if (edited) {
+                        val uuid = workerManager.setPeriodScheduleForMedication(medication)
+                        medicationsViewModel.editLocalMedication(medication, uuid)
+
+                        Toast.makeText(requireContext(),
+                            getString(R.string.medication_edited_successfully), Toast.LENGTH_SHORT).show()
+                        navController.tryPopBackStack(
+                            R.id.treatmentHistoryFragment,
+                            false
+                        )
+                    }
+                }
+            }
+        }
+
+        lifecycleScope {
+            medicationsViewModel.viewStateWorkId.observe(viewLifecycleOwner) { workID ->
+                workID?.run {
+                    workerManager.cancelWork(workID)
                 }
             }
         }

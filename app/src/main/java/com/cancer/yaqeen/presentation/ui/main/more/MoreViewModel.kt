@@ -11,6 +11,9 @@ import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.data.network.base.Status
 import com.cancer.yaqeen.domain.features.auth.login.usecases.LogoutUseCase
 import com.cancer.yaqeen.domain.features.home.articles.usecases.RemoveBookmarkedArticlesUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.RemoveLocalMedicalAppointmentsUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.medication.RemoveLocalMedicationsUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.routine_test.RemoveLocalRoutineTestsUseCase
 import com.cancer.yaqeen.presentation.util.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -29,6 +32,9 @@ class MoreViewModel @Inject constructor(
     private val prefEncryptionUtil: SharedPrefEncryptionUtil,
     private val logoutUseCase: LogoutUseCase,
     private val removeBookmarkedArticlesUseCase: RemoveBookmarkedArticlesUseCase,
+    private val removeLocalMedicationsUseCase: RemoveLocalMedicationsUseCase,
+    private val removeLocalRoutineTestsUseCase: RemoveLocalRoutineTestsUseCase,
+    private val removeLocalMedicalAppointmentsUseCase: RemoveLocalMedicalAppointmentsUseCase,
 ) : ViewModel() {
 
     private var viewModelJob: Job? = null
@@ -98,19 +104,19 @@ class MoreViewModel @Inject constructor(
 
     private fun removeLocalMedications() {
         viewModelJob = viewModelScope.launch {
-
+            removeLocalMedicationsUseCase().collect()
         }
     }
 
     private fun removeLocalRoutineTests() {
         viewModelJob = viewModelScope.launch {
-
+            removeLocalRoutineTestsUseCase().collect()
         }
     }
 
     private fun removeLocalMedicalAppointments() {
         viewModelJob = viewModelScope.launch {
-
+            removeLocalMedicalAppointmentsUseCase().collect()
         }
     }
 

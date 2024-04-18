@@ -1,6 +1,7 @@
 package com.cancer.yaqeen.presentation.ui.main.treatment.add.medical_reminder.choose_time.confirmation
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -131,13 +132,18 @@ class MedicalReminderConfirmationFragment : BaseFragment() {
 
         lifecycleScope {
             medicalReminderViewModel.viewStateEditMedicalReminder.observe(viewLifecycleOwner) { response ->
-                if(response == true){
-                    Toast.makeText(requireContext(),
-                        getString(R.string.appointment_edited_successfully), Toast.LENGTH_SHORT).show()
-                    navController.tryPopBackStack(
-                        R.id.treatmentHistoryFragment,
-                        false
-                    )
+                response?.let { (edited, medicalAppointment) ->
+                    if (edited) {
+                        val (workID, workBeforeID) = workerManager.setPeriodScheduleForMedicalAppointment(medicalAppointment)
+                        Log.d("TAG", "observeStatesmedicalAppointment: $workID")
+                        medicalReminderViewModel.editLocalMedicalAppointment(medicalAppointment, workID, workBeforeID)
+                        Toast.makeText(requireContext(),
+                            getString(R.string.appointment_edited_successfully), Toast.LENGTH_SHORT).show()
+                        navController.tryPopBackStack(
+                            R.id.treatmentHistoryFragment,
+                            false
+                        )
+                    }
                 }
             }
         }
@@ -145,6 +151,7 @@ class MedicalReminderConfirmationFragment : BaseFragment() {
         lifecycleScope {
             medicalReminderViewModel.viewStateWorkIds.observe(viewLifecycleOwner) { workIDs ->
                 workIDs?.run {
+                    Log.d("TAG", "observeStatesmedicalAppointment: $first")
                     workerManager.cancelWork(first)
                     second?.let {
                         workerManager.cancelWork(it)

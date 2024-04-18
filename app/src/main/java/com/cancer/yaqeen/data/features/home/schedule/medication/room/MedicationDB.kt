@@ -10,9 +10,8 @@ import java.util.UUID
 @Parcelize
 @Entity(tableName = "Medication")
 data class MedicationDB(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0L,
-    val medicationId: Int? = null,
+    @PrimaryKey
+    val medicationId: Int = 0,
     val medicationName: String,
     val medicationType: String,
     val strengthAmount: String,

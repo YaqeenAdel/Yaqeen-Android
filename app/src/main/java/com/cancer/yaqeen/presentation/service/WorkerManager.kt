@@ -184,6 +184,10 @@ class WorkerManager(
         workManager.cancelWorkById(workRequestId)
     }
 
+    override fun cancelAllWorks() {
+        workManager.cancelAllWork()
+    }
+
     private fun buildPeriodicWorkRequestBuilder(periodTimeId: Int?): PeriodicWorkRequest.Builder =
         when (periodTimeId) {
             PeriodTimeEnum.EVERY_DAY.id -> {

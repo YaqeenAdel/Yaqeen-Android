@@ -18,9 +18,9 @@ import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.data.network.base.Status
 import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.domain.features.home.schedule.medication.AddMedicationUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.medication.EditLocalMedicationUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.EditMedicationUseCase
-import com.cancer.yaqeen.domain.features.home.schedule.medication.GetMedicationRemindersUseCase
-import com.cancer.yaqeen.domain.features.home.schedule.medication.RemoveLocalMedicationUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.medication.GetLocalMedicationUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.SaveLocalMedicationUseCase
 import com.cancer.yaqeen.presentation.util.SingleLiveEvent
 import com.cancer.yaqeen.presentation.util.timestampToDay
@@ -41,8 +41,9 @@ class MedicationsViewModel @Inject constructor(
     private val prefEncryptionUtil: SharedPrefEncryptionUtil,
     private val addMedicationUseCase: AddMedicationUseCase,
     private val editMedicationUseCase: EditMedicationUseCase,
-    private val getMedicationRemindersUseCase: GetMedicationRemindersUseCase,
+    private val getLocalMedicationUseCase: GetLocalMedicationUseCase,
     private val saveLocalMedicationUseCase: SaveLocalMedicationUseCase,
+    private val editLocalMedicationUseCase: EditLocalMedicationUseCase,
 ) : ViewModel() {
 
     private var viewModelJob: Job? = null
@@ -50,8 +51,11 @@ class MedicationsViewModel @Inject constructor(
     private val _viewStateAddMedication = SingleLiveEvent<Pair<Boolean, MedicationDB>?>()
     val viewStateAddMedication: LiveData<Pair<Boolean, MedicationDB>?> = _viewStateAddMedication
 
-    private val _viewStateEditMedication = SingleLiveEvent<Boolean?>()
-    val viewStateEditMedication: LiveData<Boolean?> = _viewStateEditMedication
+    private val _viewStateEditMedication = SingleLiveEvent<Pair<Boolean, MedicationDB>?>()
+    val viewStateEditMedication: LiveData<Pair<Boolean, MedicationDB>?> = _viewStateEditMedication
+
+    private val _viewStateWorkId = SingleLiveEvent<UUID?>()
+    val viewStateWorkId: LiveData<UUID?> = _viewStateWorkId
 
     private val _viewStateLoading = MutableStateFlow<Boolean>(false)
     val viewStateLoading = _viewStateLoading.asStateFlow()
@@ -199,31 +203,40 @@ class MedicationsViewModel @Inject constructor(
         viewModelJob = viewModelScope.launch {
             val medicationTrackField = getMedicationTrack()
             medicationTrackField?.run {
+                val requestBuilder = AddMedicationRequestBuilder(
+                    medicationName = medicationName ?: "",
+                    medicationTypeName = medicationType?.nameEn ?: "",
+                    unitTypeName = unitType?.name ?: "",
+                    strengthAmount = strengthAmount ?: "",
+                    dosageAmount = dosageAmount ?: "",
+                    cronExpression = createCronExpression(
+                        minutes = reminderTime?.minute ?: "0",
+                        startingHour = reminderTime?.hour24 ?: "0",
+                        time = periodTime,
+                        startingDate = startDate,
+                        specificDays = specificDays
+                    ),
+                    notes = notes ?: ""
+                )
                 editMedicationUseCase(
                     scheduleId = medicationId ?: 0,
-                    request = AddMedicationRequestBuilder(
-                        medicationName = medicationName ?: "",
-                        medicationTypeName = medicationType?.nameEn ?: "",
-                        unitTypeName = unitType?.name ?: "",
-                        strengthAmount = strengthAmount ?: "",
-                        dosageAmount = dosageAmount ?: "",
-                        cronExpression = createCronExpression(
-                            minutes = reminderTime?.minute ?: "0",
-                            startingHour = reminderTime?.hour24 ?: "0",
-                            time = periodTime,
-                            startingDate = startDate,
-                            specificDays = specificDays
-                        ),
-                        notes = notes ?: ""
-                    ).buildRequestBody()
+                    request = requestBuilder.buildRequestBody()
                 ).collect { response ->
                     _viewStateLoading.emit(response.loading)
                     when (response.status) {
                         Status.ERROR -> emitError(response.errorEntity)
                         Status.SUCCESS -> {
                             if (response.data == true) {
+                                val medicationDB =
+                                    createMedicationDB(
+                                        requestBuilder,
+                                        startDate,
+                                        reminderTime,
+                                        periodTime?.id,
+                                        medicationId ?: 0
+                                    )
+                                getLocalMedication(medicationId ?: 0, medicationDB)
                                 resetMedicationTrack()
-                                _viewStateEditMedication.postValue(true)
                             }
                         }
 
@@ -255,6 +268,41 @@ class MedicationsViewModel @Inject constructor(
         val year = "$startingYear/1"
 
         return "$minutes $hours $dayOfMonth $month $dayOfWeek"
+    }
+
+    private fun getLocalMedication(
+        medicationId: Int,
+        medicationDB: MedicationDB
+    ) {
+        viewModelJob = viewModelScope.launch {
+            getLocalMedicationUseCase(
+                medicationId = medicationId
+            ).collect { response ->
+                when (response.status) {
+                    Status.ERROR -> {
+                        _viewStateEditMedication.postValue(true to medicationDB)
+                    }
+                    Status.SUCCESS -> {
+                        response.data?.workID?.let {
+                            _viewStateEditMedication.postValue(true to medicationDB)
+                            _viewStateWorkId.postValue(it)
+                        }
+                    }
+
+                    else -> {}
+                }
+            }
+        }
+    }
+
+    fun editLocalMedication(medication: MedicationDB, uuid: UUID) {
+        viewModelJob = viewModelScope.launch {
+            editLocalMedicationUseCase(
+                medication.apply {
+                    workID = uuid
+                }
+            ).collect()
+        }
     }
 
     fun setMedicationTrack(medicationTrack: MedicationTrack) {

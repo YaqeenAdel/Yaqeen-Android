@@ -9,9 +9,8 @@ import java.util.UUID
 @Parcelize
 @Entity(tableName = "MedicalAppointment")
 data class MedicalAppointmentDB(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0L,
-    val medicalAppointmentId: Int? = null,
+    @PrimaryKey
+    val medicalAppointmentId: Int = 0,
     var doctorName: String,
     val location: String,
     val phoneNumber: String,

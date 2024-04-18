@@ -164,13 +164,23 @@ class RoutineTestConfirmationFragment : BaseFragment() {
 
         lifecycleScope {
             routineTestViewModel.viewStateEditRoutineTest.observe(viewLifecycleOwner) { response ->
-                if(response == true){
-                    Toast.makeText(requireContext(),
-                        getString(R.string.routine_test_edited_successfully), Toast.LENGTH_SHORT).show()
-                    navController.tryPopBackStack(
-                        R.id.treatmentHistoryFragment,
-                        false
-                    )
+                response?.let { (edited, routineTest) ->
+                    if (edited) {
+                        val (periodicWorkID, workBeforeID) = workerManager.setPeriodScheduleForRoutineTest(
+                            routineTest
+                        )
+                        routineTestViewModel.editLocalRoutineTest(
+                            routineTest,
+                            periodicWorkID,
+                            workBeforeID
+                        )
+                        Toast.makeText(requireContext(),
+                            getString(R.string.routine_test_edited_successfully), Toast.LENGTH_SHORT).show()
+                        navController.tryPopBackStack(
+                            R.id.treatmentHistoryFragment,
+                            false
+                        )
+                    }
                 }
             }
         }

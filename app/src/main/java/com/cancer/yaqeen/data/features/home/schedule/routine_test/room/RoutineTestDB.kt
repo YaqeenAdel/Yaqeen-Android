@@ -9,9 +9,8 @@ import java.util.UUID
 @Parcelize
 @Entity(tableName = "RoutineTest")
 data class RoutineTestDB(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0L,
-    val routineTestId: Int? = null,
+    @PrimaryKey
+    val routineTestId: Int = 0,
     val routineTestName: String,
     val notes: String,
     val scheduleType: String,

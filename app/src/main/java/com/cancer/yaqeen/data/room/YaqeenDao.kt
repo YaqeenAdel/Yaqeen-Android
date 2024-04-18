@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.cancer.yaqeen.data.features.home.articles.room.Article
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.room.MedicalAppointmentDB
 import com.cancer.yaqeen.data.features.home.schedule.medication.room.MedicationDB
@@ -27,8 +28,14 @@ interface YaqeenDao {
     @Query("DELETE FROM Article")
     suspend fun removeArticles(): Int
 
+    @Query("SELECT * FROM Medication WHERE medicationId = :medicationId")
+    suspend fun selectMedication(medicationId: Int): MedicationDB?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMedication(medication: MedicationDB): Long
+
+    @Update
+    suspend fun updateMedication(medication: MedicationDB): Int
 
     @Query("DELETE FROM Medication WHERE medicationId = :medicationId")
     suspend fun deleteMedication(medicationId: Int): Int
@@ -42,6 +49,9 @@ interface YaqeenDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRoutineTest(routineTest: RoutineTestDB): Long
 
+    @Update
+    suspend fun updateRoutineTest(routineTest: RoutineTestDB): Int
+
     @Query("DELETE FROM RoutineTest WHERE routineTestId = :routineTestId")
     suspend fun deleteRoutineTest(routineTestId: Int): Int
 
@@ -53,6 +63,9 @@ interface YaqeenDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMedicalAppointment(medicalAppointment: MedicalAppointmentDB): Long
+
+    @Update
+    suspend fun updateMedicalAppointment(medicalAppointment: MedicalAppointmentDB): Int
 
     @Query("DELETE FROM MedicalAppointment WHERE medicalAppointmentId = :medicalAppointmentId")
     suspend fun deleteMedicalAppointment(medicalAppointmentId: Int): Int
