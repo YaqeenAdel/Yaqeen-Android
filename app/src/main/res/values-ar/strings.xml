@@ -138,19 +138,19 @@
     <string name="symptom_added_successfully">تم إضافة علامة المرض بنجاح</string>
     <string name="symptom_edited_successfully">تم تعديل علامة المرض بنجاح</string>
     <string name="symptom_deleted_successfully">تم حدف علامة المرض بنجاح</string>
-    <string name="appointment_added_successfully">Appointment Added Successfully</string>
-    <string name="appointment_edited_successfully">Appointment Edited Successfully</string>
-    <string name="appointment_deleted_successfully">Appointment Deleted Successfully</string>
-    <string name="routine_test_added_successfully">Routine Test Added Successfully</string>
-    <string name="routine_test_edited_successfully">Routine Test Edited Successfully</string>
-    <string name="routine_test_deleted_successfully">Routine Test Deleted Successfully</string>
+    <string name="appointment_added_successfully">تمت إضافة الموعد بنجاح</string>
+    <string name="appointment_edited_successfully">تم تعديل الموعد بنجاح</string>
+    <string name="appointment_deleted_successfully">تم مسح الموعد بنجاح</string>
+    <string name="routine_test_added_successfully">تمت إضافة الاختبار الروتيني بنجاح</string>
+    <string name="routine_test_edited_successfully">تمت تعديل الاختبار الروتيني بنجاح</string>
+    <string name="routine_test_deleted_successfully">تمت مسح الاختبار الروتيني بنجاحy</string>
     <string name="dosage">جرعة</string>
     <string name="starting_date">ابتداء من</string>
-    <string name="take">Take</string>
-    <string name="quote_title_1">“When we long for life without difficulties, remind us that oaks grow strong in contrary winds, and diamonds are made under pressure.”</string>
-    <string name="quote_title_2">“You have to be willing to give up the life you planned, and instead, greet the life that is waiting for you.”</string>
-    <string name="quote_owner_1">Peter Marshall</string>
-    <string name="quote_owner_2">Joseph Campbell</string>
+    <string name="take">خذ</string>
+    <string name="quote_title_1">"عندما نشتاق إلى حياة خالية من الصعوبات، تذكر أن أشجار البلوط تنمو بقوة في الرياح المعاكسة، وأن الألماس يُصنع تحت الضغط."</string>
+    <string name="quote_title_2">"عليك أن تكون على استعداد للتخلي عن الحياة التي خططت لها، وبدلاً من ذلك، استقبل الحياة التي تنتظرك."</string>
+    <string name="quote_owner_1">بيتر مارشيل</string>
+    <string name="quote_owner_2">جوزيف كامبيل</string>
 
     <string name="white">#FFFFFFFF</string>
     <string name="black">#FF000000</string>
@@ -180,57 +180,57 @@
     <string name="day_after_day">يوم بعد يوم</string>
 
     <string name="name_articles">"%sمقالات ال"</string>
-    <string name="common_of_symptoms">Common of Symptoms.</string>
-    <string name="symptoms_details">Symptoms Details</string>
-    <string name="details">Details</string>
-    <string name="symptoms_details_hint">Adding your feelings and details is crucial when providing information to the doctor during your appointment...</string>
-    <string name="attach_image_text">Include a photo to help the doctor in visualizing the issue.</string>
-    <string name="camera">Camera</string>
-    <string name="my_file">My File</string>
-    <string name="select_attached_files">Select attached files</string>
-    <string name="remind">Remind</string>
+    <string name="common_of_symptoms">الأعراض الشائعة.</string>
+    <string name="symptoms_details">تفاصيل الأعراض</string>
+    <string name="details">تفاصيل</string>
+    <string name="symptoms_details_hint">إن إضافة مشاعرك وتفاصيلك أمر بالغ الأهمية عند تقديم المعلومات للطبيب خلال موعدك...</string>
+    <string name="attach_image_text">قم بتضمين صورة لمساعدة الطبيب في تصور المشكلة.</string>
+    <string name="camera">الكاميرا</string>
+    <string name="my_file">ملفي</string>
+    <string name="select_attached_files">حدد الملفات المرفقة</string>
+    <string name="remind">ذكرني</string>
     <string name="would_you_like_a_reminder_for_your_upcoming_doctor_s_appointment">Would you like a reminder for your upcoming doctor\'s appointment?</string>
-    <string name="doctor_s_name">Doctor’s Name</string>
-    <string name="day_and_time">Day and time</string>
-    <string name="delete">Delete</string>
-    <string name="flash_is_not_available">Flash is Not Available</string>
-    <string name="healthcare_alert">Healthcare Alert</string>
-    <string name="location">Location</string>
-    <string name="phone_number">Phone Number</string>
-    <string name="remind_before">Remind before</string>
-    <string name="remind_me_before_test">Remind me before test</string>
-    <string name="add_notes">Add Notes</string>
-    <string name="add_symptoms_to_the_reminder">Add Symptoms to the Reminder</string>
-    <string name="show_more">Show More</string>
-    <string name="show_less">Show less</string>
-    <string name="regular_health_check">Regular Health Check</string>
-    <string name="routine_test_name">Routine Test Name</string>
-    <string name="add_picture">Add Picture</string>
-    <string name="what_time_do_you_follow_your_daily_routine">What time do you follow your daily routine?</string>
-    <string name="notification_before">Notification before</string>
-    <string name="how_early_should_we_notify_you">How early should we notify you?</string>
-    <string name="before_time_min">Before %d min</string>
-    <string name="before_time_hour">Before %d Hour</string>
-    <string name="reminder_before_min">%s min</string>
-    <string name="reminder_before_hour">%s Hour</string>
-    <string name="please_enable_permission_to_draw_over_other_apps">Please enable permission to draw over other apps</string>
-    <string name="ignore">Ignore</string>
-    <string name="medication_reminder">Medication Reminder</string>
-    <string name="reminder_text_message">Hello! Just a friendly reminder to take your medicine now as prescribed today. Your health is important, so let\'s stay on track together. 😊</string>
-    <string name="routine_test_reminder">Routine Test Reminder</string>
-    <string name="medical_appointment_reminder">Medical Appointment Reminder</string>
-    <string name="no_app_found_to_share_it">No app found to share it</string>
-    <string name="share_via">Share Via</string>
-    <string name="non_hodgkin_s_lymphoma">Non-Hodgkin’s Lymphoma</string>
-    <string name="prostate">Prostate</string>
-    <string name="lung_cancer">Lung Cancer</string>
-    <string name="pancreatic">Pancreatic</string>
-    <string name="leukaemia">Leukaemia</string>
-    <string name="kidney">Kidney</string>
-    <string name="testicular">Testicular</string>
-    <string name="multiple_myeloma">Multiple Myeloma</string>
-    <string name="thyroid">Thyroid</string>
-    <string name="ok">OK</string>
+    <string name="doctor_s_name">اسم الطبيب</string>
+    <string name="day_and_time">اسم ووقت</string>
+    <string name="delete">مسح</string>
+    <string name="flash_is_not_available">الفلاش غير متاح</string>
+    <string name="healthcare_alert">تذكير صحي</string>
+    <string name="location">المكان</string>
+    <string name="phone_number">رقم الهاتف</string>
+    <string name="remind_before">ذكرني قبل</string>
+    <string name="remind_me_before_test">ذكرني قبل الاختبار</string>
+    <string name="add_notes">أضف ملاحظات</string>
+    <string name="add_symptoms_to_the_reminder">أضف الأعراض إلى التذكير</string>
+    <string name="show_more">اظهر المزيد</string>
+    <string name="show_less">اظهر اقل</string>
+    <string name="regular_health_check">فحص صحي منتظم</string>
+    <string name="routine_test_name">اسم الاختبار الروتيني</string>
+    <string name="add_picture">ضيف صورة</string>
+    <string name="what_time_do_you_follow_your_daily_routine">في أي وقت تتبع روتينك اليومي؟</string>
+    <string name="notification_before">اشعار قبل</string>
+    <string name="how_early_should_we_notify_you">في أي وقت مبكر يجب أن نخطرك؟</string>
+    <string name="before_time_min">قبل %d دقيقة</string>
+    <string name="before_time_hour">قبل %d ساعه</string>
+    <string name="reminder_before_min">%s دقيقة</string>
+    <string name="reminder_before_hour">%s ساعه</string>
+    <string name="please_enable_permission_to_draw_over_other_apps">يرجى تمكين الإذن </string>
+    <string name="ignore">تجاهل</string>
+    <string name="medication_reminder">تذكير طبي</string>
+    <string name="reminder_text_message">مرحبًا! مجرد تذكير ودي بتناول الدواء الخاص بك الآن كما هو موصوف اليوم. صحتك مهمة، لذلك دعونا نبقى على المسار الصحيح معًا. 😊</string>
+    <string name="routine_test_reminder">تذكير بالاختبار الروتيني</string>
+    <string name="medical_appointment_reminder">تذكير بميعاد طبي</string>
+    <string name="no_app_found_to_share_it">لم يتم العثور على تطبيق للمشاركه من خلاله</string>
+    <string name="share_via">مشاركه عبر</string>
+    <string name="non_hodgkin_s_lymphoma">سرطان الجهاز اللمفاوي</string>
+    <string name="prostate">البروستاتا</string>
+    <string name="lung_cancer">كانسر الررئة</string>
+    <string name="pancreatic">البنكرياس</string>
+    <string name="leukaemia">سرطان الدم</string>
+    <string name="kidney">الكلية</string>
+    <string name="testicular">الخصية</string>
+    <string name="multiple_myeloma">ورم نقيي متعدد</string>
+    <string name="thyroid">غدة درقية</string>
+    <string name="ok">حسنا</string>
 
     <string-array name="languages_array">
         <item>English</item>
