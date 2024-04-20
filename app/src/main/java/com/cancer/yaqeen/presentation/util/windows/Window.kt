@@ -62,7 +62,6 @@ abstract class Window(private val context: Context) {
                 }
             }
         } catch (e: Exception) {
-            Log.d("Error1", e.toString())
         }
     }
 
@@ -74,7 +73,6 @@ abstract class Window(private val context: Context) {
             mView?.invalidate()
             (mView?.parent as ViewGroup).removeAllViews()
         } catch (e: Exception) {
-            Log.d("Error2", e.toString())
         }
     }
     private fun playDefaultAlarmSound() {

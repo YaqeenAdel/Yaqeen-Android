@@ -23,7 +23,6 @@ private fun checkSelfPermission(context: Context, permission: String): Boolean =
 
 fun storagePermissionsAreGranted(context: Context) =
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        Log.d("TAG", "openStorage: storagePermissionsAreGranted")
         checkSelfPermission(
             context,
             Manifest.permission.READ_MEDIA_IMAGES,

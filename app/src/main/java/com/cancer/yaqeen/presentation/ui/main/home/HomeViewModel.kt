@@ -23,7 +23,10 @@ import com.cancer.yaqeen.domain.features.home.schedule.medication.GetTodayRemind
 import com.cancer.yaqeen.domain.features.onboarding.usecases.GetUserProfileUseCase
 import com.cancer.yaqeen.presentation.util.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
@@ -48,6 +51,8 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
 
     private var viewModelJob: Job? = null
+
+    private val defaultDispatcher = CoroutineScope(Dispatchers.Default + SupervisorJob())
 
     private val _viewStateSchedules = MutableStateFlow<List<Schedule>>(listOf())
     val viewStateScheduleS = _viewStateSchedules.asStateFlow()

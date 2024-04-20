@@ -235,10 +235,10 @@ fun isSameDay(dateFirst: Date, dateSecond: Date): Boolean {
             calFirst.get(Calendar.DAY_OF_YEAR) == calSecond.get(Calendar.DAY_OF_YEAR)
 }
 
-fun String.isAfterNow(): Boolean {
+fun String.isAfterNow(pattern: String = "yyyy-MM-dd'T'HH:mm:ss"): Boolean {
     val currentTimestamp = System.currentTimeMillis()
 
-    val inputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+    val inputDateFormat = SimpleDateFormat(pattern, Locale.getDefault())
     val inputDate = inputDateFormat.parse(this)
 
     val date = Calendar.getInstance()

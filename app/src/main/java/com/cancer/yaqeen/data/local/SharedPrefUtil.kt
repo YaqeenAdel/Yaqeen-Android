@@ -13,6 +13,7 @@ class SharedPrefEncryptionUtil @Inject constructor(
     companion object {
         const val PREF_TOKEN = "prefs-token"
         const val PREF_REFRESH_TOKEN = "prefs-refresh-token"
+        const val PREF_TOKEN_EXPIRED_DATE = "prefs-token-expired-date"
         const val PREF_TOKEN_TYPE = "prefs-token-type"
         const val PREF_USER = "prefs-user"
         const val PREF_SELECTED_LANGUAGE = "prefs-selected-language"
@@ -54,6 +55,15 @@ class SharedPrefEncryptionUtil @Inject constructor(
             .apply()
     fun getRefreshToken(): String =
         sharedPreferences.getString(PREF_REFRESH_TOKEN, "").toString()
+
+
+    fun setTokenExpiredDate(timeInMillis: Long) =
+        sharedPreferences
+            .edit()
+            .putLong(PREF_TOKEN_EXPIRED_DATE, timeInMillis)
+            .apply()
+    fun getTokenExpiredDate(): Long =
+        sharedPreferences.getLong(PREF_TOKEN_EXPIRED_DATE, 0L)
 
 
     fun setTokenType(tokenType: String) =

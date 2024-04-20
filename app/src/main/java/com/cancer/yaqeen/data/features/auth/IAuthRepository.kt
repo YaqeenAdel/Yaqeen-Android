@@ -9,6 +9,5 @@ import kotlinx.coroutines.flow.Flow
 interface IAuthRepository {
     suspend fun login(context: Context): Flow<DataState<User>>
     suspend fun logout(context: Context): Flow<DataState<Boolean>>
-    suspend fun refreshToken(): Flow<DataState<RefreshTokenResponse>>
-    suspend fun refresh(context: Context)
+    suspend fun refreshToken(context: Context)
 }

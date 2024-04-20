@@ -237,7 +237,6 @@ class WorkerManager(
     }
 
     private fun calculateInitialDelay(startDate: Long, hour24: Int, minute: Int): Long {
-        Log.d("TAG", "calculateInitialDelay: $startDate / $hour24 / $minute")
         return try {
             val (year, month, day) = startDate.convertMillisecondsToDateComponents()
 
@@ -258,8 +257,6 @@ class WorkerManager(
 
             milliSecondsBetween + 500L
         } catch (e: Exception) {
-
-            Log.d("TAG", "calculateInitialDelay: $e")
             0L
         }
 

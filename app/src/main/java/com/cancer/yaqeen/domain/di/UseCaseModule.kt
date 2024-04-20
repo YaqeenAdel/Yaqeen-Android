@@ -8,7 +8,6 @@ import com.cancer.yaqeen.data.features.home.schedule.ScheduleRepositoryImpl
 import com.cancer.yaqeen.domain.features.auth.login.usecases.LoginUseCase
 import com.cancer.yaqeen.domain.features.auth.login.usecases.LogoutUseCase
 import com.cancer.yaqeen.domain.features.auth.login.usecases.RefreshTokenUseCase
-import com.cancer.yaqeen.domain.features.auth.login.usecases.RefreshTokenUseCase2
 import com.cancer.yaqeen.domain.features.home.articles.usecases.BookmarkArticleUseCase
 import com.cancer.yaqeen.domain.features.home.articles.usecases.GetArticlesUseCase
 import com.cancer.yaqeen.domain.features.home.articles.usecases.GetBookmarkedArticlesUseCase
@@ -82,11 +81,6 @@ object UseCaseModule {
     @Provides
     fun provideRefreshTokenUseCase(repository: AuthRepositoryImpl) =
         RefreshTokenUseCase(repository)
-
-    @Singleton
-    @Provides
-    fun provideRefreshTokenUseCase2(repository: AuthRepositoryImpl) =
-        RefreshTokenUseCase2(repository)
 
     @Singleton
     @Provides

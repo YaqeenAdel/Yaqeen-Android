@@ -135,7 +135,6 @@ class MedicalReminderConfirmationFragment : BaseFragment() {
                 response?.let { (edited, medicalAppointment) ->
                     if (edited) {
                         val (workID, workBeforeID) = workerManager.setPeriodScheduleForMedicalAppointment(medicalAppointment)
-                        Log.d("TAG", "observeStatesmedicalAppointment: $workID")
                         medicalReminderViewModel.editLocalMedicalAppointment(medicalAppointment, workID, workBeforeID)
                         Toast.makeText(requireContext(),
                             getString(R.string.appointment_edited_successfully), Toast.LENGTH_SHORT).show()
@@ -151,7 +150,6 @@ class MedicalReminderConfirmationFragment : BaseFragment() {
         lifecycleScope {
             medicalReminderViewModel.viewStateWorkIds.observe(viewLifecycleOwner) { workIDs ->
                 workIDs?.run {
-                    Log.d("TAG", "observeStatesmedicalAppointment: $first")
                     workerManager.cancelWork(first)
                     second?.let {
                         workerManager.cancelWork(it)

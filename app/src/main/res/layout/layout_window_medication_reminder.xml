@@ -26,6 +26,21 @@
                 android:background="@color/light_black">
 
 
+                <TextView
+                    android:id="@+id/tv_medication_reminder"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_6sdp"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:fontFamily="sans-serif-black"
+                    android:gravity="center"
+                    android:text="@string/medication_reminder"
+                    android:textColor="@color/rose_penk"
+                    android:textSize="@dimen/_14ssp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <ImageView
                     android:id="@+id/iv_time_icon"
                     android:layout_width="@dimen/_14sdp"
@@ -41,7 +56,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_6sdp"
-                    android:layout_marginTop="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_8sdp"
                     android:layout_marginEnd="@dimen/_6sdp"
                     android:drawablePadding="@dimen/_6sdp"
                     android:fontFamily="sans-serif-medium"
@@ -51,14 +66,14 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toEndOf="@id/iv_time_icon"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_medication_reminder"
                     tools:text="10:00 pm" />
 
                 <com.makeramen.roundedimageview.RoundedImageView
                     android:id="@+id/iv_medication_background"
                     android:layout_width="@dimen/_64sdp"
                     android:layout_height="@dimen/_64sdp"
-                    android:layout_marginTop="@dimen/_6sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
                     android:background="@color/super_silver3"
                     app:layout_constraintStart_toStartOf="@id/iv_time_icon"
                     app:layout_constraintTop_toBottomOf="@id/tv_time"
@@ -160,7 +175,7 @@
                     android:text="@string/ok"
                     android:textColor="@color/xx_dark_gray"
                     android:textSize="@dimen/_12ssp"
-                    android:fontFamily="sans-serif"
+                    android:fontFamily="sans-serif-medium"
                     app:backgroundTint="@color/white"
                     app:cornerRadius="@dimen/_8sdp"/>
 

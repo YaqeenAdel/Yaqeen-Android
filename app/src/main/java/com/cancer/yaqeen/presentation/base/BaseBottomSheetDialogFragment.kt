@@ -77,7 +77,7 @@ open class BaseBottomSheetDialogFragment constructor(private val showBottomMenu:
 
     fun handleError(errorEntity: ErrorEntity?): String? {
         return requireContext().handleError(errorEntity){
-            onAccessDenied()
+//            onAccessDenied()
         }
     }
 

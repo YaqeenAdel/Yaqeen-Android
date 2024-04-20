@@ -76,7 +76,7 @@ open class BaseFragment constructor(private val showBottomMenu: Boolean) : Fragm
 
     fun handleError(errorEntity: ErrorEntity?): String? {
         return requireContext().handleError(errorEntity){
-            onAccessDenied()
+//            onAccessDenied()
         }
     }
 
