@@ -41,7 +41,7 @@ fun Context.handleError(errorEntity: ErrorEntity?, onAccessDenied: () -> Unit = 
 
         is ErrorEntity.ApiError.AccessDenied -> {
             onAccessDenied()
-            null
+            getString(R.string.error_occurred)
         }
 
         is ErrorEntity.ApiError.ServerErrorResponse -> {

@@ -3,8 +3,11 @@ package com.cancer.yaqeen.data.features.home.schedule.routine_test.room
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.cancer.yaqeen.data.utils.convertMillisecondsToTime
+import com.cancer.yaqeen.presentation.util.convertMilliSecondsToDate
+import com.cancer.yaqeen.presentation.util.getCurrentTimeMillis
 import kotlinx.android.parcel.Parcelize
-import java.util.UUID
+import java.util.concurrent.TimeUnit
 
 @Parcelize
 @Entity(tableName = "RoutineTest")
@@ -22,6 +25,19 @@ data class RoutineTestDB(
     val time: String,
     val periodTimeId: Int?,
     val reminderBeforeInMinutes: Int,
-    var workID: UUID? = null,
-    var workBeforeID: UUID? = null
-): Parcelable
+    var reminderBeforeIsAvailable: Boolean = false,
+    var workID: String? = null,
+    var workBeforeID: String? = null
+): Parcelable{
+
+    fun createNotificationMessage(): String{
+        val date = convertMilliSecondsToDate(startDate)
+        var timeMillis = getCurrentTimeMillis()
+        if (reminderBeforeIsAvailable){
+            timeMillis += TimeUnit.MINUTES.toMillis(reminderBeforeInMinutes.toLong())
+        }
+        val time = convertMillisecondsToTime(timeMillis)
+        return "Hello! Just a friendly reminder to test: $routineTestName at $date $time as prescribed today. Your health is important, so let's stay on track together. \uD83D\uDE0A"
+    }
+
+}

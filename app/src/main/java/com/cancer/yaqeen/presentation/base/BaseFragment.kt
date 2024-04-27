@@ -8,6 +8,7 @@ import android.graphics.Color
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -18,6 +19,7 @@ import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.data.utils.handleError
 import com.cancer.yaqeen.presentation.ui.MainActivity
+import com.cancer.yaqeen.presentation.ui.splash.SplashViewModel
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -32,6 +34,8 @@ open class BaseFragment constructor(private val showBottomMenu: Boolean) : Fragm
 
     @Inject
     lateinit var prefUtil: SharedPrefEncryptionUtil
+
+    val splashViewModel: SplashViewModel by viewModels()
 
     constructor() : this(showBottomMenu = false)
 
@@ -76,6 +80,7 @@ open class BaseFragment constructor(private val showBottomMenu: Boolean) : Fragm
 
     fun handleError(errorEntity: ErrorEntity?): String? {
         return requireContext().handleError(errorEntity){
+            splashViewModel.refreshToken(requireContext())
 //            onAccessDenied()
         }
     }

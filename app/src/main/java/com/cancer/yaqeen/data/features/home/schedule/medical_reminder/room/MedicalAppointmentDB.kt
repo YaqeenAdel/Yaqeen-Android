@@ -3,8 +3,8 @@ package com.cancer.yaqeen.data.features.home.schedule.medical_reminder.room
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.cancer.yaqeen.presentation.util.convertMilliSecondsToDate
 import kotlinx.android.parcel.Parcelize
-import java.util.UUID
 
 @Parcelize
 @Entity(tableName = "MedicalAppointment")
@@ -22,6 +22,14 @@ data class MedicalAppointmentDB(
     val isAM: Boolean,
     val time: String,
     val reminderBeforeInMinutes: Int,
-    var workID: UUID? = null,
-    var workBeforeID: UUID? = null
-): Parcelable
+    var reminderBeforeIsAvailable: Boolean = false,
+    var workID: String? = null,
+    var workBeforeID: String? = null
+): Parcelable{
+
+    fun createNotificationMessage(): String{
+        val date = convertMilliSecondsToDate(startDate)
+        return "Hello! Just a friendly reminder to you have an appointment at $date $time with $doctorName in $location, note for you phone number: $phoneNumber. Your health is important, so let's stay on track together. \uD83D\uDE0A"
+    }
+
+}

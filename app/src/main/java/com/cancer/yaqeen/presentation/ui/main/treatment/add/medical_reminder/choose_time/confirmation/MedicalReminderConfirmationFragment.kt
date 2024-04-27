@@ -1,7 +1,6 @@
 package com.cancer.yaqeen.presentation.ui.main.treatment.add.medical_reminder.choose_time.confirmation
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +13,9 @@ import com.cancer.yaqeen.data.features.home.schedule.routine_test.models.Reminde
 import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.databinding.FragmentMedicalReminderConfirmationBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
-import com.cancer.yaqeen.presentation.service.WorkerManager
+import com.cancer.yaqeen.presentation.service.AlarmReminder
+import com.cancer.yaqeen.presentation.service.ReminderManager
+import com.cancer.yaqeen.presentation.service.WorkerReminder
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.medical_reminder.MedicalReminderViewModel
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindImage
@@ -33,8 +34,8 @@ class MedicalReminderConfirmationFragment : BaseFragment() {
 
     private val medicalReminderViewModel: MedicalReminderViewModel by activityViewModels()
 
-    private val workerManager by lazy {
-        WorkerManager(requireContext())
+    private val workerReminder: ReminderManager by lazy {
+        AlarmReminder(requireContext())
     }
 
     override fun onCreateView(
@@ -117,7 +118,7 @@ class MedicalReminderConfirmationFragment : BaseFragment() {
             medicalReminderViewModel.viewStateAddMedicalReminder.observe(viewLifecycleOwner) { response ->
                 response?.let { (added, medicalAppointment) ->
                     if (added) {
-                        val (workID, workBeforeID) = workerManager.setPeriodScheduleForMedicalAppointment(medicalAppointment)
+                        val (workID, workBeforeID) = workerReminder.setPeriodReminder(medicalAppointment)
                         medicalReminderViewModel.saveLocalMedicalAppointment(medicalAppointment, workID, workBeforeID)
                         Toast.makeText(requireContext(),
                             getString(R.string.appointment_added_successfully), Toast.LENGTH_SHORT).show()
@@ -133,16 +134,18 @@ class MedicalReminderConfirmationFragment : BaseFragment() {
         lifecycleScope {
             medicalReminderViewModel.viewStateEditMedicalReminder.observe(viewLifecycleOwner) { response ->
                 response?.let { (edited, medicalAppointment) ->
+                    val (workID, workBeforeID) = workerReminder.setPeriodReminder(medicalAppointment)
                     if (edited) {
-                        val (workID, workBeforeID) = workerManager.setPeriodScheduleForMedicalAppointment(medicalAppointment)
                         medicalReminderViewModel.editLocalMedicalAppointment(medicalAppointment, workID, workBeforeID)
-                        Toast.makeText(requireContext(),
-                            getString(R.string.appointment_edited_successfully), Toast.LENGTH_SHORT).show()
-                        navController.tryPopBackStack(
-                            R.id.treatmentHistoryFragment,
-                            false
-                        )
+                    }else{
+                        medicalReminderViewModel.saveLocalMedicalAppointment(medicalAppointment, workID, workBeforeID)
                     }
+                    Toast.makeText(requireContext(),
+                        getString(R.string.appointment_edited_successfully), Toast.LENGTH_SHORT).show()
+                    navController.tryPopBackStack(
+                        R.id.treatmentHistoryFragment,
+                        false
+                    )
                 }
             }
         }
@@ -150,9 +153,9 @@ class MedicalReminderConfirmationFragment : BaseFragment() {
         lifecycleScope {
             medicalReminderViewModel.viewStateWorkIds.observe(viewLifecycleOwner) { workIDs ->
                 workIDs?.run {
-                    workerManager.cancelWork(first)
+                    workerReminder.cancelReminder(first)
                     second?.let {
-                        workerManager.cancelWork(it)
+                        workerReminder.cancelReminder(it)
                     }
                 }
             }

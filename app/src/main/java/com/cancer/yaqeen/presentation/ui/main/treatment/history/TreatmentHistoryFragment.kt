@@ -19,7 +19,9 @@ import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.data.utils.getTodayDate
 import com.cancer.yaqeen.databinding.FragmentTreatmentHistoryBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
-import com.cancer.yaqeen.presentation.service.WorkerManager
+import com.cancer.yaqeen.presentation.service.AlarmReminder
+import com.cancer.yaqeen.presentation.service.ReminderManager
+import com.cancer.yaqeen.presentation.service.WorkerReminder
 import com.cancer.yaqeen.presentation.ui.main.treatment.TimesAdapter
 import com.cancer.yaqeen.presentation.ui.main.treatment.history.adapters.MedicalRemindersAdapter
 import com.cancer.yaqeen.presentation.ui.main.treatment.history.adapters.MedicationsAdapter
@@ -56,8 +58,8 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
     private var scheduledType: ScheduleType = ScheduleType.MEDICATION
 
 
-    private val workerManager by lazy {
-        WorkerManager(requireContext())
+    private val workerReminder: ReminderManager by lazy {
+        AlarmReminder(requireContext())
     }
 
 
@@ -221,9 +223,9 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
         lifecycleScope {
             viewModel.viewStateWorkIds.observe(viewLifecycleOwner) { workIDs ->
                 workIDs?.run {
-                    workerManager.cancelWork(first)
+                    workerReminder.cancelReminder(first)
                     second?.let {
-                        workerManager.cancelWork(it)
+                        workerReminder.cancelReminder(it)
                     }
                 }
             }

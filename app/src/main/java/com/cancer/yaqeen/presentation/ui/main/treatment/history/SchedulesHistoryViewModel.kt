@@ -23,11 +23,11 @@ import com.cancer.yaqeen.domain.features.home.schedule.symptom.DeleteSymptomUseC
 import com.cancer.yaqeen.domain.features.home.schedule.symptom.GetSymptomsUseCase
 import com.cancer.yaqeen.presentation.util.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -68,8 +68,8 @@ class SchedulesHistoryViewModel @Inject constructor(
     private val _viewStateDeleteRoutineTest = SingleLiveEvent<Int?>()
     val viewStateDeleteRoutineTest: LiveData<Int?> = _viewStateDeleteRoutineTest
 
-    private val _viewStateWorkIds = SingleLiveEvent<Pair<UUID, UUID?>?>()
-    val viewStateWorkIds: LiveData<Pair<UUID, UUID?>?> = _viewStateWorkIds
+    private val _viewStateWorkIds = SingleLiveEvent<Pair<String, String?>?>()
+    val viewStateWorkIds: LiveData<Pair<String, String?>?> = _viewStateWorkIds
 
     private val _viewStateLoading = MutableStateFlow<Boolean>(false)
     val viewStateLoading = _viewStateLoading.asStateFlow()
@@ -81,7 +81,7 @@ class SchedulesHistoryViewModel @Inject constructor(
     fun getMedications() {
         if (!userIsLoggedIn())
             return
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             getMedicationRemindersUseCase(
                 scheduleType = ScheduleType.MEDICATION.scheduleType
             ).collect { response ->
@@ -103,7 +103,7 @@ class SchedulesHistoryViewModel @Inject constructor(
     fun getSymptoms() {
         if (!userIsLoggedIn())
             return
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             getSymptomsUseCase().collect { response ->
                 _viewStateLoading.emit(response.loading)
                 when (response.status) {
@@ -123,7 +123,7 @@ class SchedulesHistoryViewModel @Inject constructor(
     fun getMedicalReminders() {
         if (!userIsLoggedIn())
             return
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             getMedicalRemindersUseCase(scheduleType = ScheduleType.MEDICAL_REMINDER.scheduleType).collect { response ->
                 _viewStateLoading.emit(response.loading)
                 when (response.status) {
@@ -143,7 +143,7 @@ class SchedulesHistoryViewModel @Inject constructor(
     fun getRoutineTests() {
         if (!userIsLoggedIn())
             return
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             getRoutineTestsUseCase(scheduleType = ScheduleType.ROUTINE_TESTS.scheduleType).collect { response ->
                 _viewStateLoading.emit(response.loading)
                 when (response.status) {
@@ -160,7 +160,7 @@ class SchedulesHistoryViewModel @Inject constructor(
         }
     }
     fun deleteSymptom(symptomId: Int) {
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             deleteSymptomUseCase(
                 symptomId = symptomId
             ).collect { response ->
@@ -178,7 +178,7 @@ class SchedulesHistoryViewModel @Inject constructor(
         }
     }
     fun deleteMedicalReminder(scheduleId: Int) {
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             deleteScheduleUseCase(
                 scheduleId = scheduleId
             ).collect { response ->
@@ -199,7 +199,7 @@ class SchedulesHistoryViewModel @Inject constructor(
 
 
     private fun getLocalMedicalReminder(medicalAppointmentId: Int) {
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             getLocalMedicalAppointmentUseCase(
                 medicalAppointmentId = medicalAppointmentId
             ).collect { response ->
@@ -219,7 +219,7 @@ class SchedulesHistoryViewModel @Inject constructor(
     }
 
     private fun removeLocalMedicalReminder(medicalAppointmentId: Int) {
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             removeLocalMedicalAppointmentUseCase(
                 medicalAppointmentId = medicalAppointmentId
             ).collect {}
@@ -227,7 +227,7 @@ class SchedulesHistoryViewModel @Inject constructor(
     }
 
     fun deleteRoutineTest(scheduleId: Int) {
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             deleteScheduleUseCase(
                 scheduleId = scheduleId
             ).collect { response ->
@@ -248,7 +248,7 @@ class SchedulesHistoryViewModel @Inject constructor(
 
 
     private fun getLocalRoutineTest(routineTestId: Int) {
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             getLocalRoutineTestUseCase(
                 routineTestId = routineTestId
             ).collect { response ->
@@ -269,7 +269,7 @@ class SchedulesHistoryViewModel @Inject constructor(
 
 
     private fun removeLocalRoutineTest(routineTestId: Int) {
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             removeLocalRoutineTestUseCase(
                 routineTestId = routineTestId
             ).collect {}

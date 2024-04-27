@@ -24,12 +24,12 @@ import com.cancer.yaqeen.presentation.ui.main.treatment.getReminderTimeFromTime
 import com.cancer.yaqeen.presentation.util.SingleLiveEvent
 import com.cancer.yaqeen.presentation.util.convertDateToMilliSeconds
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import java.util.UUID
 import javax.inject.Inject
 
 
@@ -53,8 +53,8 @@ class MedicalReminderViewModel @Inject constructor(
     private val _viewStateEditMedicalReminder = SingleLiveEvent<Pair<Boolean, MedicalAppointmentDB>?>()
     val viewStateEditMedicalReminder: LiveData<Pair<Boolean, MedicalAppointmentDB>?> = _viewStateEditMedicalReminder
 
-    private val _viewStateWorkIds = SingleLiveEvent<Pair<UUID, UUID?>?>()
-    val viewStateWorkIds: LiveData<Pair<UUID, UUID?>?> = _viewStateWorkIds
+    private val _viewStateWorkIds = SingleLiveEvent<Pair<String, String?>?>()
+    val viewStateWorkIds: LiveData<Pair<String, String?>?> = _viewStateWorkIds
 
     private val _viewStateLoading = MutableStateFlow<Boolean>(false)
     val viewStateLoading = _viewStateLoading.asStateFlow()
@@ -132,7 +132,7 @@ class MedicalReminderViewModel @Inject constructor(
     }
 
     private fun addMedicalReminder() {
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             val medicalReminderTrackField = getMedicalReminderTrack()
             medicalReminderTrackField?.run {
                 val requestBuilder = AddMedicalReminderRequestBuilder(
@@ -198,7 +198,7 @@ class MedicalReminderViewModel @Inject constructor(
         }
 
     private fun editMedicalReminder() {
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             val medicalReminderTrackField = getMedicalReminderTrack()
             medicalReminderTrackField?.run {
                 val requestBuilder = AddMedicalReminderRequestBuilder(
@@ -244,17 +244,18 @@ class MedicalReminderViewModel @Inject constructor(
         medicalAppointmentId: Int,
         medicalAppointmentDB: MedicalAppointmentDB
     ) {
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             getLocalMedicalAppointmentUseCase(
                 medicalAppointmentId = medicalAppointmentId
             ).collect { response ->
                 when (response.status) {
                     Status.ERROR -> {
-                        _viewStateEditMedicalReminder.postValue(true to medicalAppointmentDB)
+                        _viewStateEditMedicalReminder.postValue(false to medicalAppointmentDB)
                     }
                     Status.SUCCESS -> {
-                        response.data?.workID?.let {
-                            _viewStateEditMedicalReminder.postValue(true to medicalAppointmentDB)
+                        val workID = response.data?.workID
+                        _viewStateEditMedicalReminder.postValue((workID != null) to medicalAppointmentDB)
+                        workID?.let {
                             _viewStateWorkIds.postValue(it to response.data.workBeforeID)
                         }
                     }
@@ -267,10 +268,10 @@ class MedicalReminderViewModel @Inject constructor(
 
     fun saveLocalMedicalAppointment(
         medicalAppointment: MedicalAppointmentDB,
-        workID: UUID,
-        workBeforeID: UUID?
+        workID: String,
+        workBeforeID: String?
     ) {
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             saveLocalMedicalAppointmentUseCase(
                 medicalAppointment.apply {
                     this.workID = workID
@@ -282,10 +283,10 @@ class MedicalReminderViewModel @Inject constructor(
 
     fun editLocalMedicalAppointment(
         medicalAppointment: MedicalAppointmentDB,
-        workID: UUID,
-        workBeforeID: UUID?
+        workID: String,
+        workBeforeID: String?
     ) {
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             editLocalMedicalAppointmentUseCase(
                 medicalAppointment.apply {
                     this.workID = workID

@@ -27,12 +27,12 @@ import com.cancer.yaqeen.presentation.util.timestampToDay
 import com.cancer.yaqeen.presentation.util.timestampToMonth
 import com.cancer.yaqeen.presentation.util.timestampToYear
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import java.util.UUID
 import javax.inject.Inject
 
 
@@ -54,8 +54,8 @@ class MedicationsViewModel @Inject constructor(
     private val _viewStateEditMedication = SingleLiveEvent<Pair<Boolean, MedicationDB>?>()
     val viewStateEditMedication: LiveData<Pair<Boolean, MedicationDB>?> = _viewStateEditMedication
 
-    private val _viewStateWorkId = SingleLiveEvent<UUID?>()
-    val viewStateWorkId: LiveData<UUID?> = _viewStateWorkId
+    private val _viewStateOldMedication = SingleLiveEvent<MedicationDB?>()
+    val viewStateOldMedication: LiveData<MedicationDB?> = _viewStateOldMedication
 
     private val _viewStateLoading = MutableStateFlow<Boolean>(false)
     val viewStateLoading = _viewStateLoading.asStateFlow()
@@ -116,7 +116,7 @@ class MedicationsViewModel @Inject constructor(
     }
 
     fun addMedication() {
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             val medicationTrackField = getMedicationTrack()
             medicationTrackField?.run {
                 val requestBuilder = AddMedicationRequestBuilder(
@@ -148,6 +148,7 @@ class MedicationsViewModel @Inject constructor(
                                         startDate,
                                         reminderTime,
                                         periodTime?.id,
+                                        specificDays?.map { it.id },
                                         it
                                     )
                                 resetMedicationTrack()
@@ -167,6 +168,7 @@ class MedicationsViewModel @Inject constructor(
         startDate: Long?,
         reminderTime: ReminderTime?,
         periodTimeId: Int?,
+        specificDaysIds: List<Int>?,
         medicationId: Int,
     ): MedicationDB =
         builder.run {
@@ -185,12 +187,13 @@ class MedicationsViewModel @Inject constructor(
                 minute = reminderTime?.minute?.toIntOrNull() ?: 0,
                 isAM = reminderTime?.isAM ?: false,
                 time = reminderTime?.text.toString(),
-                periodTimeId = periodTimeId
+                periodTimeId = periodTimeId,
+                specificDaysIds = specificDaysIds ?: listOf()
             )
         }
 
-    fun saveLocalMedication(medication: MedicationDB, uuid: UUID) {
-        viewModelJob = viewModelScope.launch {
+    fun saveLocalMedication(medication: MedicationDB, uuid: String) {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             saveLocalMedicationUseCase(
                 medication.apply {
                     workID = uuid
@@ -199,8 +202,18 @@ class MedicationsViewModel @Inject constructor(
         }
     }
 
+    fun saveLocalMedication(medication: MedicationDB, uuids: List<String>) {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
+            saveLocalMedicationUseCase(
+                medication.apply {
+                    workSpecificDaysIDs = uuids
+                }
+            ).collect()
+        }
+    }
+
     fun editMedication(){
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             val medicationTrackField = getMedicationTrack()
             medicationTrackField?.run {
                 val requestBuilder = AddMedicationRequestBuilder(
@@ -233,6 +246,7 @@ class MedicationsViewModel @Inject constructor(
                                         startDate,
                                         reminderTime,
                                         periodTime?.id,
+                                        specificDays?.map { it.id },
                                         medicationId ?: 0
                                     )
                                 getLocalMedication(medicationId ?: 0, medicationDB)
@@ -261,6 +275,8 @@ class MedicationsViewModel @Inject constructor(
         val startingYear = startingDate?.timestampToYear() ?: "0"
         val (dayOfMonth, dayOfWeek) = when (time?.id) {
             PeriodTimeEnum.DAY_AFTER_DAY.id -> "$startingDay/2" to "*"
+            PeriodTimeEnum.EVERY_WEEK.id -> "$startingDay/7" to "*"
+            PeriodTimeEnum.EVERY_MONTH.id -> startingDay to "*"
             PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id -> "*" to (specificDays?.map { it.id }?.joinToString(separator = ",") { it.toString() } ?: "")
             else -> "$startingDay/1" to "*"
         }
@@ -274,19 +290,20 @@ class MedicationsViewModel @Inject constructor(
         medicationId: Int,
         medicationDB: MedicationDB
     ) {
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             getLocalMedicationUseCase(
                 medicationId = medicationId
             ).collect { response ->
                 when (response.status) {
                     Status.ERROR -> {
-                        _viewStateEditMedication.postValue(true to medicationDB)
+                        _viewStateEditMedication.postValue(false to medicationDB)
                     }
                     Status.SUCCESS -> {
-                        response.data?.workID?.let {
-                            _viewStateEditMedication.postValue(true to medicationDB)
-                            _viewStateWorkId.postValue(it)
+                        val workID = response.data?.workID
+                        workID?.let {
+                            _viewStateOldMedication.postValue(response.data)
                         }
+                        _viewStateEditMedication.postValue((workID != null) to medicationDB)
                     }
 
                     else -> {}
@@ -295,8 +312,8 @@ class MedicationsViewModel @Inject constructor(
         }
     }
 
-    fun editLocalMedication(medication: MedicationDB, uuid: UUID) {
-        viewModelJob = viewModelScope.launch {
+    fun editLocalMedication(medication: MedicationDB, uuid: String) {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             editLocalMedicationUseCase(
                 medication.apply {
                     workID = uuid

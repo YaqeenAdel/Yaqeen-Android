@@ -26,6 +26,7 @@ import com.cancer.yaqeen.domain.features.onboarding.usecases.UpdateInterestsUser
 import com.cancer.yaqeen.domain.features.onboarding.usecases.UpdateUserProfileUseCase
 import com.cancer.yaqeen.presentation.util.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -92,7 +93,7 @@ class OnboardingViewModel @Inject constructor(
     }
 
     fun getResources() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             getResourcesUseCase().onEach { response ->
                 _viewStateLoading.emit(response.loading)
                 when (response.status) {
@@ -110,7 +111,7 @@ class OnboardingViewModel @Inject constructor(
     }
 
     fun getUniversities(countryCode: String, stateCode: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             getUniversitiesUseCase(countryCode, stateCode).onEach { response ->
                 _viewStateLoading.emit(response.loading)
                 when (response.status) {
@@ -128,7 +129,7 @@ class OnboardingViewModel @Inject constructor(
     }
 
     fun login(context: Context) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             loginUseCase(context).onEach { response ->
                 when (response.status) {
                     Status.ERROR -> emitError(response.errorEntity)
@@ -166,7 +167,7 @@ class OnboardingViewModel @Inject constructor(
     }
 
     private fun getProfile(user: User) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             getUserProfileUseCase().onEach { response ->
 //                _viewStateLoading.emit(response.loading)
                 when (response.status) {
@@ -218,7 +219,7 @@ class OnboardingViewModel @Inject constructor(
         prefEncryptionUtil.isLogged = isLoggedIn
         val user = getUser()
         getUserProfile()?.run {
-            viewModelScope.launch {
+            viewModelScope.launch(Dispatchers.IO) {
                 updateUserProfileUseCase(
                     UpdateProfileRequestBuilder(
                         firstName = user?.firstName ?: "",

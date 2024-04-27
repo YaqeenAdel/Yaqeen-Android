@@ -7,6 +7,7 @@ import com.cancer.yaqeen.data.features.home.schedule.routine_test.room.RoutineTe
 import com.cancer.yaqeen.data.utils.convertMillisecondsToTime
 import com.cancer.yaqeen.databinding.LayoutWindowRoutineTestReminderBinding
 import com.cancer.yaqeen.presentation.util.getCurrentTimeMillis
+import java.util.concurrent.TimeUnit
 
 
 class RoutineTestWindow(private val context: Context): Window(context) {
@@ -22,10 +23,12 @@ class RoutineTestWindow(private val context: Context): Window(context) {
     fun setRoutineTest(routineTest: RoutineTestDB?) {
         layoutReminderBinding?.run {
             routineTest?.let {
-//                val timing = if(it.isAM) context.getString(R.string.am) else context.getString(R.string.pm)
-//                tvTime.text = "${it.time} $timing"
-                val currentTimeMillis = getCurrentTimeMillis()
-                tvTime.text = convertMillisecondsToTime(currentTimeMillis)
+                var timeMillis = getCurrentTimeMillis()
+                if (it.reminderBeforeIsAvailable){
+                    timeMillis += TimeUnit.MINUTES.toMillis(it.reminderBeforeInMinutes.toLong())
+                }
+                val time = convertMillisecondsToTime(timeMillis)
+                tvTime.text = time
                 tvRoutineTestName.text = it.routineTestName
                 tvNotes.text = it.notes
             }

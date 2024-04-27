@@ -33,6 +33,7 @@ import com.cancer.yaqeen.presentation.util.timestampToDay
 import com.cancer.yaqeen.presentation.util.timestampToMonth
 import com.cancer.yaqeen.presentation.util.timestampToYear
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -62,8 +63,8 @@ class RoutineTestViewModel @Inject constructor(
     private val _viewStateEditRoutineTest = SingleLiveEvent<Pair<Boolean, RoutineTestDB>?>()
     val viewStateEditRoutineTest: LiveData<Pair<Boolean, RoutineTestDB>?> = _viewStateEditRoutineTest
 
-    private val _viewStateWorkIds = SingleLiveEvent<Pair<UUID, UUID?>?>()
-    val viewStateWorkIds: LiveData<Pair<UUID, UUID?>?> = _viewStateWorkIds
+    private val _viewStateWorkIds = SingleLiveEvent<Pair<String, String?>?>()
+    val viewStateWorkIds: LiveData<Pair<String, String?>?> = _viewStateWorkIds
 
     private val _viewStateLoading = MutableStateFlow<Boolean>(false)
     val viewStateLoading = _viewStateLoading.asStateFlow()
@@ -141,7 +142,7 @@ class RoutineTestViewModel @Inject constructor(
     }
 
     private fun addRoutineTest() {
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             val routineTestTrackField = getRoutineTestTrack()
             val isReadyToUploading = (routineTestTrackField?.photo  != null) && (routineTestTrackField.photo?.uri != null)
             if (isReadyToUploading)
@@ -152,7 +153,7 @@ class RoutineTestViewModel @Inject constructor(
     }
 
     private fun editRoutineTest() {
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             val routineTestTrackField = getRoutineTestTrack()
             val isReadyToUploading = (routineTestTrackField?.photo  != null) && (routineTestTrackField.photo?.uri != null)
             if (isReadyToUploading)
@@ -163,7 +164,7 @@ class RoutineTestViewModel @Inject constructor(
     }
 
     private fun addRoutineTestWithPhoto() {
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             val routineTestTrackField = getRoutineTestTrack()
             routineTestTrackField?.run {
                 val requestBuilder = AddRoutineTestRequestBuilder(
@@ -236,7 +237,7 @@ class RoutineTestViewModel @Inject constructor(
         }
 
     private fun editRoutineTestWithPhoto() {
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             val routineTestTrackField = getRoutineTestTrack()
             routineTestTrackField?.run {
                 val requestBuilder = AddRoutineTestRequestBuilder(
@@ -285,7 +286,7 @@ class RoutineTestViewModel @Inject constructor(
     }
 
     private fun addRoutineTestWithoutPhoto() {
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             val routineTestTrackField = getRoutineTestTrack()
             routineTestTrackField?.run {
                 val requestBuilder = AddRoutineTestRequestBuilder(
@@ -330,7 +331,7 @@ class RoutineTestViewModel @Inject constructor(
     }
 
     private fun editRoutineTestWithoutPhoto() {
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             val routineTestTrackField = getRoutineTestTrack()
             routineTestTrackField?.run {
                 val requestBuilder = AddRoutineTestRequestBuilder(
@@ -378,17 +379,18 @@ class RoutineTestViewModel @Inject constructor(
 
 
     private fun getLocalRoutineTest(routineTestId: Int, routineTestDB: RoutineTestDB) {
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             getLocalRoutineTestUseCase(
                 routineTestId = routineTestId
             ).collect { response ->
                 when (response.status) {
                     Status.ERROR -> {
-                        _viewStateEditRoutineTest.postValue(true to routineTestDB)
+                        _viewStateEditRoutineTest.postValue(false to routineTestDB)
                     }
                     Status.SUCCESS -> {
-                        response.data?.workID?.let {
-                            _viewStateEditRoutineTest.postValue(true to routineTestDB)
+                        val workID = response.data?.workID
+                        _viewStateEditRoutineTest.postValue((workID != null) to routineTestDB)
+                        workID?.let {
                             _viewStateWorkIds.postValue(it to response.data.workBeforeID)
                         }
                     }
@@ -448,8 +450,8 @@ class RoutineTestViewModel @Inject constructor(
         return getRoutineTestTrack()?.reminderBefore
     }
 
-    fun saveLocalRoutineTest(routineTest: RoutineTestDB, periodicWorkID: UUID, workBeforeID: UUID?) {
-        viewModelJob = viewModelScope.launch {
+    fun saveLocalRoutineTest(routineTest: RoutineTestDB, periodicWorkID: String, workBeforeID: String?) {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             saveLocalRoutineTestUseCase(
                 routineTest.apply {
                     workID = periodicWorkID
@@ -459,8 +461,8 @@ class RoutineTestViewModel @Inject constructor(
         }
     }
 
-    fun editLocalRoutineTest(routineTest: RoutineTestDB, periodicWorkID: UUID, workBeforeID: UUID?) {
-        viewModelJob = viewModelScope.launch {
+    fun editLocalRoutineTest(routineTest: RoutineTestDB, periodicWorkID: String, workBeforeID: String?) {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             editLocalRoutineTestUseCase(
                 routineTest.apply {
                     workID = periodicWorkID

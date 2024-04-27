@@ -22,6 +22,7 @@ import com.cancer.yaqeen.presentation.util.SingleLiveEvent
 import com.cancer.yaqeen.presentation.util.generateFileName
 import com.cancer.yaqeen.presentation.util.getCurrentTimeMillis
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -66,7 +67,7 @@ class SymptomsViewModel @Inject constructor(
 
 
     fun getSymptomsTypes(){
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             getSymptomsTypesUseCase().collect { response ->
                 _viewStateLoading.emit(response.loading)
                 when (response.status) {
@@ -91,14 +92,14 @@ class SymptomsViewModel @Inject constructor(
     }
 
     fun resetSymptomsTypes(){
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             _viewStateSymptomsTypes.emit(listOf())
         }
     }
 
 
     fun addSymptom() {
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             val symptomTrackField = getSymptomTrack()
             val isReadyToUploading = symptomTrackField?.photosList?.any { it.uri != null } ?: false
             if (isReadyToUploading)
@@ -108,7 +109,7 @@ class SymptomsViewModel @Inject constructor(
         }
     }
     private fun addSymptomWithPhoto() {
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             val symptomTrackField = getSymptomTrack()
             symptomTrackField?.run {
                 addSymptomUseCase(
@@ -144,7 +145,7 @@ class SymptomsViewModel @Inject constructor(
     }
 
     private fun addSymptomWithoutPhoto() {
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             val symptomTrackField = getSymptomTrack()
             symptomTrackField?.run {
                 addSymptomWithoutPhotoUseCase(
@@ -175,7 +176,7 @@ class SymptomsViewModel @Inject constructor(
     }
 
     fun editSymptom() {
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             val symptomTrackField = getSymptomTrack()
             val isReadyToUploading = symptomTrackField?.photosList?.any { it.uri != null } ?: false
             if (isReadyToUploading)
@@ -186,7 +187,7 @@ class SymptomsViewModel @Inject constructor(
     }
 
     private fun editSymptomWithoutUpload() {
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             val symptomTrackField = getSymptomTrack()
             symptomTrackField?.run {
                 editSymptomWithoutUploadUseCase(
@@ -221,7 +222,7 @@ class SymptomsViewModel @Inject constructor(
     }
 
     private fun editSymptomWithUpload() {
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             val symptomTrackField = getSymptomTrack()
             symptomTrackField?.run {
                 editSymptomUseCase(

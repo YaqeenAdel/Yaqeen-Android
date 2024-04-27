@@ -30,8 +30,6 @@ class ProfileRepositoryImpl @Inject constructor(
     override suspend fun GetCurrentUser(context: Context): Flow<DataState<User>> =
         withContext(Dispatchers.IO){
             try {
-
-
                 flow {
 
                   var user =  sharedPrefEncryptionUtil.getModelData(PREF_USER, User::class.java)

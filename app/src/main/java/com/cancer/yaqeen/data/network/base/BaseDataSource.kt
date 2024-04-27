@@ -58,6 +58,7 @@ abstract class BaseDataSource(
             DataState.Success(response)
 
         } catch (e: Exception) {
+            Log.d("TAG", "getResultDao Exception: $e")
             error(errorHandler.getError(e))
         }
     }

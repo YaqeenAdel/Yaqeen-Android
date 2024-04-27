@@ -4,14 +4,12 @@ import android.Manifest
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.PermissionChecker
-import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.databinding.FragmentSplashBinding
@@ -28,8 +26,6 @@ class SplashFragment : BaseFragment() {
     private var _binding: FragmentSplashBinding by autoCleared()
 
     private lateinit var navController: NavController
-
-    private val viewModel: SplashViewModel by viewModels()
 
     private val requestPermissionLauncher: ActivityResultLauncher<String?> = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -58,7 +54,7 @@ class SplashFragment : BaseFragment() {
 
     private fun observeUiState() {
         lifecycleScope {
-            viewModel.viewStateUserInfo.collectLatest { isLogged ->
+            splashViewModel.viewStateUserInfo.collectLatest { isLogged ->
                 if (isLogged == null){
                     Handler().postDelayed({}, 3000)
                 }else if(isLogged){
@@ -91,7 +87,7 @@ class SplashFragment : BaseFragment() {
     }
 
     private fun checkUserInfo(){
-        viewModel.checkUserInfo()
+        splashViewModel.checkUserInfo()
     }
 
 }

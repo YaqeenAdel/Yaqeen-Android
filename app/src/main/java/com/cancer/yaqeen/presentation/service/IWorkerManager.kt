@@ -3,15 +3,15 @@ package com.cancer.yaqeen.presentation.service
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.room.MedicalAppointmentDB
 import com.cancer.yaqeen.data.features.home.schedule.medication.room.MedicationDB
 import com.cancer.yaqeen.data.features.home.schedule.routine_test.room.RoutineTestDB
-import java.util.UUID
 
 interface IWorkerManager {
-    fun setScheduleMedication(medication: MedicationDB): UUID
-    fun setPeriodScheduleForMedication(medication: MedicationDB): UUID
-    fun setPeriodScheduleForRoutineTest(routineTest: RoutineTestDB): Pair<UUID, UUID?>
-    fun scheduleReminderForRoutineTest(routineTest: RoutineTestDB): UUID
-    fun setPeriodScheduleForMedicalAppointment(medicalAppointment: MedicalAppointmentDB): Pair<UUID, UUID?>
-    fun scheduleReminderForMedicalAppointment(medicalAppointment: MedicalAppointmentDB): UUID
-    fun cancelWork(workRequestId: UUID)
+    fun setScheduleMedication(medication: MedicationDB): String
+    fun setPeriodScheduleForMedication(medication: MedicationDB): String
+    fun setPeriodScheduleDaysForMedication(medication: MedicationDB): List<String>
+    fun setPeriodScheduleForRoutineTest(routineTest: RoutineTestDB): Pair<String, String?>
+    fun scheduleReminderForRoutineTest(routineTest: RoutineTestDB): String
+    fun setPeriodScheduleForMedicalAppointment(medicalAppointment: MedicalAppointmentDB): Pair<String, String?>
+    fun scheduleReminderForMedicalAppointment(medicalAppointment: MedicalAppointmentDB): String
+    fun cancelWork(workRequestId: String)
     fun cancelAllWorks()
 }

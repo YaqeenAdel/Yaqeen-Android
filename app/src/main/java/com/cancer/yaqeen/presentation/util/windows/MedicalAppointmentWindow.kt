@@ -23,10 +23,14 @@ class MedicalAppointmentWindow(private val context: Context): Window(context) {
     fun setMedicalAppointment(medicalAppointment: MedicalAppointmentDB?) {
         layoutReminderBinding?.run {
             medicalAppointment?.let {
-//                val timing = if(it.isAM) context.getString(R.string.am) else context.getString(R.string.pm)
-//                tvTime.text = "${it.time} $timing"
-                val currentTimeMillis = getCurrentTimeMillis()
-                tvTime.text = convertMillisecondsToTime(currentTimeMillis)
+                val time = if (it.reminderBeforeIsAvailable){
+                    val timing = if(it.isAM) context.getString(R.string.am) else context.getString(R.string.pm)
+                    "${it.time} $timing"
+                }else {
+                    val currentTimeMillis = getCurrentTimeMillis()
+                    convertMillisecondsToTime(currentTimeMillis)
+                }
+                tvTime.text = time
                 tvDoctorName.text = it.doctorName
                 tvDate.text = convertMilliSecondsToDate(it.startDate)
                 tvNotes.text = it.notes

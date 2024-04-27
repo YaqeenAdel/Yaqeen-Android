@@ -11,6 +11,7 @@ import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewTreeObserver
 import com.cancer.yaqeen.data.features.onboarding.models.Language
@@ -80,6 +81,22 @@ fun convertDateToMilliSeconds(date: String, pattern: String = "dd/MM/yyyy"): Lon
     }catch (_: Exception){
         0L
     }
+}
+fun getDateWithSpecificDay(timeInMillis: Long, dayId: Int): Calendar {
+    val calendar = Calendar.getInstance(TimeZone.getDefault())
+    calendar.timeInMillis = timeInMillis
+    val nextDate = calendar.clone() as Calendar
+    while (nextDate.get(Calendar.DAY_OF_WEEK) != dayId) {
+        nextDate.add(Calendar.DAY_OF_MONTH, 1)
+    }
+    return nextDate
+}
+
+fun getDateTime(year: Int, month: Int, day: Int, hour24: Int, minute: Int, second: Int = 0): Calendar {
+    val calendar = Calendar.getInstance(TimeZone.getDefault())
+    calendar.set(year, month - 1, day, hour24, minute, second)
+
+    return calendar
 }
 
 fun getImageUri(context: Context, image: Bitmap): Uri? {

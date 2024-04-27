@@ -12,6 +12,7 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.media.RingtoneManager
 import android.os.Build
+import android.os.Bundle
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -63,6 +64,46 @@ class NotificationUtils @Inject constructor(val context: Context) {
             .setStyle(
                 NotificationCompat.BigTextStyle()
                     .bigText(text)
+                    .setBigContentTitle(title)
+            )
+
+        val actionIntent = Intent(context, NotificationReceiver::class.java).apply {
+            action = IGNORE_NOTIFICATION_ACTION
+            putExtra(NOTIFICATION_ID, notificationId)
+        }
+
+        val actionPendingIntent = PendingIntent.getBroadcast(
+            context,
+            ACTION_IGNORE_BUTTON_ID,
+            actionIntent,
+            PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        notificationBuilder.addAction(
+            title = context.getString(R.string.ignore),
+            pendingIntent = actionPendingIntent
+        )
+
+        notificationBuilder.build().show(notificationId)
+    }
+
+    fun notify(title: String, details: String, notificationId: Int) {
+
+        val notificationBuilder = MyNotificationManager.Builder(context)
+            .setDefaultsId(Notification.DEFAULT_ALL)
+            .enableColorized(true)
+            .setColorId(R.color.purple_700)
+            .setTitle(title)
+            .setText(details)
+            .setSmallIconId(R.mipmap.ic_launcher)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setDefaultSound()
+            .enableAutoCanceling(true)
+            .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+            .setGroup(title)
+            .setStyle(
+                NotificationCompat.BigTextStyle()
+                    .bigText(details)
                     .setBigContentTitle(title)
             )
 

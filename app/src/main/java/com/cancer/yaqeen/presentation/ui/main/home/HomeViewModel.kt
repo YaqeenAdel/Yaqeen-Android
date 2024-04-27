@@ -80,7 +80,7 @@ class HomeViewModel @Inject constructor(
         if(!userIsLoggedIn())
             return
 
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             getTodayRemindersUseCase().collect { response ->
                 _viewStateLoading.emit(response.loading)
                 when (response.status) {
@@ -98,7 +98,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun getArticles(searchQuery: String = "") {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             getArticlesUseCase(searchQuery).onEach { response ->
                 _viewStateLoading.emit(response.loading)
                 when (response.status) {
@@ -132,7 +132,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun getBookmarkedArticles(articles: List<Article>) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             getBookmarkedArticlesUseCase().onEach { response ->
                 when (response.status) {
                     Status.ERROR -> _viewStateArticles.emit(articles)
@@ -151,7 +151,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun getSavedArticles() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             getBookmarkedArticlesUseCase().onEach { response ->
                 _viewStateLoading.emit(response.loading)
                 when (response.status) {
@@ -198,7 +198,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun getUserInfo(){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val isLoggedIn = prefEncryptionUtil.isLogged
             val user = prefEncryptionUtil.getModelData(
                 SharedPrefEncryptionUtil.PREF_USER,
@@ -226,7 +226,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun bookmarkArticle(article: Article) {
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             bookmarkArticleUseCase(
                 BookmarkArticleRequest(article.contentID)
             ).collect { response ->
@@ -246,7 +246,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun saveArticle(article: Article){
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             saveArticleUseCase(
                 LocalArticle(articleID = article.contentID, bookmarkID = article.bookmarkID)
             ).collect()
@@ -254,7 +254,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun unBookmarkArticle(article: Article) {
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             unBookmarkArticleUseCase(
                 article.bookmarkID ?: 0
             ).collect { response ->
@@ -274,7 +274,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun removeBookmarkedArticle(articleID: Int){
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             removeBookmarkedArticleUseCase(
                 articleID = articleID
             ).collect()

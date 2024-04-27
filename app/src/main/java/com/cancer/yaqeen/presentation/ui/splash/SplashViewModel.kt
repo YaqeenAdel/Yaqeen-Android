@@ -34,7 +34,7 @@ class SplashViewModel
     fun refreshToken(requireContext: Context) {
         val isLoggedIn = prefUtil.isLogged
         if (isLoggedIn)
-            viewModelJob = viewModelScope.launch {
+            viewModelJob = viewModelScope.launch(Dispatchers.IO) {
                 refreshTokenUseCase(requireContext)
             }
     }

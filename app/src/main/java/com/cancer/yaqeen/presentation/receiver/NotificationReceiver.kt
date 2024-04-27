@@ -4,11 +4,14 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.room.MedicalAppointmentDB
 import com.cancer.yaqeen.data.features.home.schedule.medication.room.MedicationDB
 import com.cancer.yaqeen.data.features.home.schedule.routine_test.room.RoutineTestDB
+import com.cancer.yaqeen.data.utils.fromJson
 import com.cancer.yaqeen.presentation.util.Constants.BODY_KEY
-import com.cancer.yaqeen.presentation.util.Constants.BUNDLE_DATA
+import com.cancer.yaqeen.presentation.util.Constants.OBJECT_JSON
 import com.cancer.yaqeen.presentation.util.Constants.IGNORE_NOTIFICATION_ACTION
 import com.cancer.yaqeen.presentation.util.Constants.MEDICAL_APPOINTMENT
 import com.cancer.yaqeen.presentation.util.Constants.MEDICATION
@@ -29,38 +32,48 @@ class NotificationReceiver : BroadcastReceiver() {
 
     private lateinit var notificationUtils: NotificationUtils
     override fun onReceive(context: Context, intent: Intent) {
+        Log.d("NotificationReceiver", "onReceive: ${intent.action}")
+        notificationUtils = NotificationUtils(context)
         // Handle the custom action here
         when (intent.action) {
             IGNORE_NOTIFICATION_ACTION -> {
                 val notificationId = intent.getIntExtra(NOTIFICATION_ID, 1)
-                notificationUtils = NotificationUtils(context)
                 notificationUtils.cancelNotification(notificationId)
             }
             OPEN_MEDICATION_WINDOW_ACTION -> {
-                val title = intent.getStringExtra(TITLE_KEY).toString()
-                val text = intent.getStringExtra(BODY_KEY).toString()
-                val bundle: Bundle? = intent.getBundleExtra(BUNDLE_DATA)
-                val medication: MedicationDB? = bundle?.getParcelable(MEDICATION)
+                val title = context.getString(R.string.medication_reminder)
+                val medication: MedicationDB? = intent.data.toString().fromJson(MedicationDB::class.java)
+
+                val detailsMedication: String = medication?.createNotificationMessage().toString()
+                val medicationId = medication?.medicationId ?: 1
+
+                notificationUtils.notify(title, detailsMedication, medicationId)
 
                 val window = MedicationWindow(context)
                 window.setMedication(medication)
                 window.open()
             }
             OPEN_ROUTINE_TEST_WINDOW_ACTION -> {
-                val title = intent.getStringExtra(TITLE_KEY).toString()
-                val text = intent.getStringExtra(BODY_KEY).toString()
-                val bundle: Bundle? = intent.getBundleExtra(BUNDLE_DATA)
-                val routineTest: RoutineTestDB? = bundle?.getParcelable(ROUTINE_TEST)
+                val title = context.getString(R.string.routine_test_reminder)
+                val routineTest: RoutineTestDB? = intent.data.toString().fromJson(RoutineTestDB::class.java)
+
+                val detailsMedication: String = routineTest?.createNotificationMessage().toString()
+                val medicationId = routineTest?.routineTestId ?: 1
+
+                notificationUtils.notify(title, detailsMedication, medicationId)
 
                 val window = RoutineTestWindow(context)
                 window.setRoutineTest(routineTest)
                 window.open()
             }
             OPEN_MEDICAL_APPOINTMENT_WINDOW_ACTION -> {
-                val title = intent.getStringExtra(TITLE_KEY).toString()
-                val text = intent.getStringExtra(BODY_KEY).toString()
-                val bundle: Bundle? = intent.getBundleExtra(BUNDLE_DATA)
-                val medicalAppointment: MedicalAppointmentDB? = bundle?.getParcelable(MEDICAL_APPOINTMENT)
+                val title = context.getString(R.string.medical_appointment_reminder)
+                val medicalAppointment: MedicalAppointmentDB? = intent.data.toString().fromJson(MedicalAppointmentDB::class.java)
+
+                val detailsMedication: String = medicalAppointment?.createNotificationMessage().toString()
+                val medicationId = medicalAppointment?.medicalAppointmentId ?: 1
+
+                notificationUtils.notify(title, detailsMedication, medicationId)
 
                 val window = MedicalAppointmentWindow(context)
                 window.setMedicalAppointment(medicalAppointment)
@@ -68,4 +81,6 @@ class NotificationReceiver : BroadcastReceiver() {
             }
         }
     }
+
+
 }

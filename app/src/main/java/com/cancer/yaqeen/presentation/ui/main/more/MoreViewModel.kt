@@ -16,6 +16,7 @@ import com.cancer.yaqeen.domain.features.home.schedule.medication.RemoveLocalMed
 import com.cancer.yaqeen.domain.features.home.schedule.routine_test.RemoveLocalRoutineTestsUseCase
 import com.cancer.yaqeen.presentation.util.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -46,7 +47,7 @@ class MoreViewModel @Inject constructor(
     val viewStateLogoutSuccess: LiveData<Boolean?> = _viewStateLogoutSuccess
 
     fun getUserInfo(){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val isLoggedIn = prefEncryptionUtil.isLogged
             val user = prefEncryptionUtil.getModelData(
                 SharedPrefEncryptionUtil.PREF_USER,
@@ -72,13 +73,13 @@ class MoreViewModel @Inject constructor(
             Language.ARABIC.lang
         else
             Language.ENGLISH.lang
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             prefEncryptionUtil.selectedLanguage = lang
         }
     }
 
     fun logout(context: Context) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             logoutUseCase(context).onEach { response ->
                 when (response.status) {
 //                    Status.ERROR -> emitError(response.errorEntity)
@@ -103,25 +104,25 @@ class MoreViewModel @Inject constructor(
     }
 
     private fun removeLocalMedications() {
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             removeLocalMedicationsUseCase().collect()
         }
     }
 
     private fun removeLocalRoutineTests() {
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             removeLocalRoutineTestsUseCase().collect()
         }
     }
 
     private fun removeLocalMedicalAppointments() {
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             removeLocalMedicalAppointmentsUseCase().collect()
         }
     }
 
     private fun removeBookmarkedArticles(){
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             removeBookmarkedArticlesUseCase().collect()
         }
     }

@@ -17,7 +17,9 @@ import com.cancer.yaqeen.data.features.home.schedule.routine_test.models.Reminde
 import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.databinding.FragmentRoutineTestConfirmationBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
-import com.cancer.yaqeen.presentation.service.WorkerManager
+import com.cancer.yaqeen.presentation.service.AlarmReminder
+import com.cancer.yaqeen.presentation.service.ReminderManager
+import com.cancer.yaqeen.presentation.service.WorkerReminder
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.routine_test.RoutineTestViewModel
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindImage
@@ -50,8 +52,8 @@ class RoutineTestConfirmationFragment : BaseFragment() {
             }
         }
 
-    private val workerManager by lazy {
-        WorkerManager(requireContext())
+    private val workerReminder: ReminderManager by lazy {
+        AlarmReminder(requireContext())
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -149,7 +151,7 @@ class RoutineTestConfirmationFragment : BaseFragment() {
             routineTestViewModel.viewStateAddRoutineTest.observe(viewLifecycleOwner) { response ->
                 response?.let { (added, routineTest) ->
                     if (added) {
-                        val (periodicWorkID, workBeforeID) = workerManager.setPeriodScheduleForRoutineTest(routineTest)
+                        val (periodicWorkID, workBeforeID) = workerReminder.setPeriodReminder(routineTest)
                         routineTestViewModel.saveLocalRoutineTest(routineTest, periodicWorkID, workBeforeID)
                         Toast.makeText(requireContext(),
                             getString(R.string.routine_test_added_successfully), Toast.LENGTH_SHORT).show()
@@ -165,22 +167,24 @@ class RoutineTestConfirmationFragment : BaseFragment() {
         lifecycleScope {
             routineTestViewModel.viewStateEditRoutineTest.observe(viewLifecycleOwner) { response ->
                 response?.let { (edited, routineTest) ->
+                    val (periodicWorkID, workBeforeID) = workerReminder.setPeriodReminder(
+                        routineTest
+                    )
                     if (edited) {
-                        val (periodicWorkID, workBeforeID) = workerManager.setPeriodScheduleForRoutineTest(
-                            routineTest
-                        )
                         routineTestViewModel.editLocalRoutineTest(
                             routineTest,
                             periodicWorkID,
                             workBeforeID
                         )
-                        Toast.makeText(requireContext(),
-                            getString(R.string.routine_test_edited_successfully), Toast.LENGTH_SHORT).show()
-                        navController.tryPopBackStack(
-                            R.id.treatmentHistoryFragment,
-                            false
-                        )
+                    }else{
+                        routineTestViewModel.saveLocalRoutineTest(routineTest, periodicWorkID, workBeforeID)
                     }
+                    Toast.makeText(requireContext(),
+                        getString(R.string.routine_test_edited_successfully), Toast.LENGTH_SHORT).show()
+                    navController.tryPopBackStack(
+                        R.id.treatmentHistoryFragment,
+                        false
+                    )
                 }
             }
         }
@@ -188,9 +192,9 @@ class RoutineTestConfirmationFragment : BaseFragment() {
         lifecycleScope {
             routineTestViewModel.viewStateWorkIds.observe(viewLifecycleOwner) { workIDs ->
                 workIDs?.run {
-                    workerManager.cancelWork(first)
+                    workerReminder.cancelReminder(first)
                     second?.let {
-                        workerManager.cancelWork(it)
+                        workerReminder.cancelReminder(it)
                     }
                 }
             }
