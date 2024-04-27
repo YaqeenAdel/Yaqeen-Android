@@ -10,6 +10,9 @@ class IntConverters {
 
     @TypeConverter
     fun toList(data: String): List<Int> {
-        return data.split(",").map { it.toInt() }
+        return if (data.isEmpty())
+            listOf()
+        else
+            data.split(",").map { it.toInt() }
     }
 }

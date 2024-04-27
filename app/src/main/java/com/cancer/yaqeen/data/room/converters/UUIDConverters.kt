@@ -10,6 +10,9 @@ class UUIDConverters {
 
     @TypeConverter
     fun toList(data: String): List<String> {
-        return data.split(",").map { it }
+        return if (data.isEmpty())
+            listOf()
+        else
+            data.split(",").map { it }
     }
 }
