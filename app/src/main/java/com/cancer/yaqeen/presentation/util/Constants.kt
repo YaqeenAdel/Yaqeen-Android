@@ -23,6 +23,7 @@ object Constants {
     const val PHOTO_ID_KEY = "PHOTO_ID"
     const val TITLE_KEY = "TITLE"
     const val BODY_KEY = "BODY"
+    const val ACTION_KEY = "ACTION"
     const val DETAILS_KEY = "DETAILS"
     const val NOTIFICATION_ID = "NOTIFICATION_ID"
     const val BUNDLE_DATA = "BUNDLE_DATA"

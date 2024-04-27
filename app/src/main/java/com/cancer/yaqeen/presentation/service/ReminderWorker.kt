@@ -8,6 +8,7 @@ import androidx.hilt.work.HiltWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.cancer.yaqeen.presentation.receiver.NotificationReceiver
+import com.cancer.yaqeen.presentation.util.Constants.ACTION_KEY
 import com.cancer.yaqeen.presentation.util.Constants.BODY_KEY
 import com.cancer.yaqeen.presentation.util.Constants.MEDICAL_APPOINTMENT
 import com.cancer.yaqeen.presentation.util.Constants.MEDICATION
@@ -29,17 +30,10 @@ class ReminderWorker @AssistedInject constructor(
 
     override fun doWork(): Result {
 
-        val medication = inputData.getString(MEDICATION).toString()
-        val routineTest = inputData.getString(ROUTINE_TEST).toString()
-        val medicalAppointment = inputData.getString(MEDICAL_APPOINTMENT).toString()
+        val objectJsonValue = inputData.getString(OBJECT_JSON)
+        val actionName = inputData.getString(ACTION_KEY)
 
-
-        val (actionName, objectJsonValue) = if (medication.isNotEmpty()) OPEN_MEDICATION_WINDOW_ACTION to medication
-        else if (routineTest.isNotEmpty()) OPEN_ROUTINE_TEST_WINDOW_ACTION to routineTest
-        else if (medicalAppointment.isNotEmpty()) OPEN_MEDICAL_APPOINTMENT_WINDOW_ACTION to medicalAppointment
-        else null to null
-
-        actionName?.let {
+        objectJsonValue?.let {
             val intent = Intent(context, NotificationReceiver::class.java).apply {
                 action = actionName
                 data = Uri.parse(objectJsonValue)

@@ -9,6 +9,8 @@ import androidx.work.workDataOf
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.PeriodTimeEnum
 import com.cancer.yaqeen.data.utils.toJson
 import com.cancer.yaqeen.presentation.util.Constants
+import com.cancer.yaqeen.presentation.util.Constants.ACTION_KEY
+import com.cancer.yaqeen.presentation.util.Constants.OBJECT_JSON
 import java.util.concurrent.TimeUnit
 
 class WorkerRequest private constructor(){
@@ -18,6 +20,7 @@ class WorkerRequest private constructor(){
         private var periodTimeId: Int? = null
         private var title: String = ""
         private var body: String = ""
+        private var actionName: String = ""
         private var objectJsonKey: String = ""
         private var objectJsonValue: String = ""
 
@@ -41,6 +44,11 @@ class WorkerRequest private constructor(){
             return this
         }
 
+        fun setActionName(actionName: String): Builder {
+            this.actionName = actionName
+            return this
+        }
+
         fun setObjectKey(objectJsonKey: String): Builder{
             this.objectJsonKey = objectJsonKey
             return this
@@ -56,9 +64,8 @@ class WorkerRequest private constructor(){
                 .setInitialDelay(startDateTime, TimeUnit.MILLISECONDS)
                 .setInputData(
                     workDataOf(
-                        Constants.TITLE_KEY to title,
-                        Constants.BODY_KEY to body,
-                        objectJsonKey to objectJsonValue
+                        ACTION_KEY to actionName,
+                        OBJECT_JSON to objectJsonValue
                     )
                 ).build()
         }
@@ -68,9 +75,8 @@ class WorkerRequest private constructor(){
                 .setInitialDelay(startDateTime, TimeUnit.MILLISECONDS)
                 .setInputData(
                     workDataOf(
-                        Constants.TITLE_KEY to title,
-                        Constants.BODY_KEY to body,
-                        objectJsonKey to objectJsonValue
+                        ACTION_KEY to actionName,
+                        OBJECT_JSON to objectJsonValue
                     )
                 ).build()
         }

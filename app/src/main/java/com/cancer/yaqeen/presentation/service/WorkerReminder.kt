@@ -8,8 +8,10 @@ import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.room.Medic
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.DayEnum
 import com.cancer.yaqeen.data.features.home.schedule.medication.room.MedicationDB
 import com.cancer.yaqeen.data.features.home.schedule.routine_test.room.RoutineTestDB
+import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.Constants.MEDICAL_APPOINTMENT
 import com.cancer.yaqeen.presentation.util.Constants.MEDICATION
+import com.cancer.yaqeen.presentation.util.Constants.OPEN_MEDICATION_WINDOW_ACTION
 import com.cancer.yaqeen.presentation.util.Constants.ROUTINE_TEST
 import java.util.UUID
 
@@ -26,9 +28,10 @@ class WorkerReminder(private val context: Context): ReminderManager() {
             WorkerRequest.Builder()
                 .setStartDateTime(timeDelayInSeconds)
                 .setPeriodTime(periodTimeId)
-                .setTitle(context.getString(R.string.medication_reminder))
-                .setBody(context.getString(R.string.reminder_text_message))
-                .setObjectKey(MEDICATION)
+//                .setTitle(context.getString(R.string.medication_reminder))
+//                .setBody(context.getString(R.string.reminder_text_message))
+                .setActionName(OPEN_MEDICATION_WINDOW_ACTION)
+//                .setObjectKey(MEDICATION)
                 .setObject(medication)
                 .build()
         }
@@ -41,7 +44,7 @@ class WorkerReminder(private val context: Context): ReminderManager() {
     override fun setPeriodReminderDays(medication: MedicationDB): List<String> {
         val workIds = arrayListOf<String>()
         medication.specificDaysIds?.forEach {  id ->
-            val String = setPeriodScheduleSpecificDayForMedication(medication, DayEnum.getDay(id).dayId)
+            val String = setPeriodReminderSpecificDay(medication, DayEnum.getDay(id).dayId)
 
             workIds.add(String)
         }
@@ -50,7 +53,7 @@ class WorkerReminder(private val context: Context): ReminderManager() {
     }
 
 
-    private fun setPeriodScheduleSpecificDayForMedication(medication: MedicationDB, dayId: Int): String {
+    private fun setPeriodReminderSpecificDay(medication: MedicationDB, dayId: Int): String {
 
         val periodicWorkRequest = with(medication){
             val timeDelayInSeconds =
@@ -58,9 +61,10 @@ class WorkerReminder(private val context: Context): ReminderManager() {
             WorkerRequest.Builder()
                 .setStartDateTime(timeDelayInSeconds)
                 .setPeriodTime(periodTimeId)
-                .setTitle(context.getString(R.string.medication_reminder))
-                .setBody(context.getString(R.string.reminder_text_message))
-                .setObjectKey(MEDICATION)
+//                .setTitle(context.getString(R.string.medication_reminder))
+//                .setBody(context.getString(R.string.reminder_text_message))
+//                .setObjectKey(MEDICATION)
+                .setActionName(OPEN_MEDICATION_WINDOW_ACTION)
                 .setObject(medication)
                 .build()
         }
@@ -79,9 +83,10 @@ class WorkerReminder(private val context: Context): ReminderManager() {
             WorkerRequest.Builder()
                 .setStartDateTime(timeDelayInSeconds)
                 .setPeriodTime(periodTimeId)
-                .setTitle(context.getString(R.string.routine_test_reminder))
-                .setBody(context.getString(R.string.reminder_text_message))
-                .setObjectKey(ROUTINE_TEST)
+//                .setTitle(context.getString(R.string.routine_test_reminder))
+//                .setBody(context.getString(R.string.reminder_text_message))
+//                .setObjectKey(ROUTINE_TEST)
+                .setActionName(Constants.OPEN_ROUTINE_TEST_WINDOW_ACTION)
                 .setObject(routineTest)
                 .build()
         }
@@ -107,9 +112,10 @@ class WorkerReminder(private val context: Context): ReminderManager() {
             WorkerRequest.Builder()
                 .setStartDateTime(timeDelayInSeconds)
                 .setPeriodTime(periodTimeId)
-                .setTitle(context.getString(R.string.routine_test_reminder))
-                .setBody(context.getString(R.string.reminder_text_message))
-                .setObjectKey(ROUTINE_TEST)
+//                .setTitle(context.getString(R.string.routine_test_reminder))
+//                .setBody(context.getString(R.string.reminder_text_message))
+//                .setObjectKey(ROUTINE_TEST)
+                .setActionName(Constants.OPEN_ROUTINE_TEST_WINDOW_ACTION)
                 .setObject(routineTest)
                 .build()
         }
@@ -133,9 +139,10 @@ class WorkerReminder(private val context: Context): ReminderManager() {
                 )
             WorkerRequest.Builder()
                 .setStartDateTime(timeDelayInSeconds)
-                .setTitle(context.getString(R.string.medical_appointment_reminder))
-                .setBody(context.getString(R.string.reminder_text_message))
-                .setObjectKey(MEDICAL_APPOINTMENT)
+//                .setTitle(context.getString(R.string.medical_appointment_reminder))
+//                .setBody(context.getString(R.string.reminder_text_message))
+//                .setObjectKey(MEDICAL_APPOINTMENT)
+                .setActionName(Constants.OPEN_MEDICAL_APPOINTMENT_WINDOW_ACTION)
                 .setObject(medicalAppointment)
                 .buildOneTimeWork()
         }
@@ -159,9 +166,10 @@ class WorkerReminder(private val context: Context): ReminderManager() {
                 )
             WorkerRequest.Builder()
                 .setStartDateTime(timeDelayInSeconds)
-                .setTitle(context.getString(R.string.medical_appointment_reminder))
-                .setBody(context.getString(R.string.reminder_text_message))
-                .setObjectKey(MEDICAL_APPOINTMENT)
+//                .setTitle(context.getString(R.string.medical_appointment_reminder))
+//                .setBody(context.getString(R.string.reminder_text_message))
+//                .setObjectKey(MEDICAL_APPOINTMENT)
+                .setActionName(Constants.OPEN_MEDICAL_APPOINTMENT_WINDOW_ACTION)
                 .setObject(medicalAppointment)
                 .buildOneTimeWork()
         }
