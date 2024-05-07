@@ -6,8 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
-import android.os.Parcel
-import android.util.Log
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.PeriodTimeEnum
 import com.cancer.yaqeen.data.utils.toJson
 import com.cancer.yaqeen.presentation.receiver.NotificationReceiver
@@ -62,6 +60,11 @@ class ReminderRequest private constructor() {
             return this
         }
 
+        fun setJson(json: String?): Builder {
+            this.objectJsonValue = json.toString()
+            return this
+        }
+
         fun <T> setObject(obj: T): Builder {
             this.objectJsonValue = obj.toJson()
             return this
@@ -75,8 +78,8 @@ class ReminderRequest private constructor() {
         private fun createPendingIntent(): PendingIntent {
             val intent = Intent(context, NotificationReceiver::class.java).apply {
                 action = actionName
-//                flags = Intent.FLAG_RECEIVER_FOREGROUND
                 data = Uri.parse(objectJsonValue)
+//                flags = Intent.FLAG_RECEIVER_FOREGROUND
             }
 
             val flags =
@@ -87,10 +90,7 @@ class ReminderRequest private constructor() {
         fun build(): String {
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             val pendingIntent = createPendingIntent()
-//            val bytes = serializePendingIntent(pendingIntent)
-//            val parcel = unmarshall(bytes!!)
-//            val pi = PendingIntent.readPendingIntentOrNullFromParcel(parcel)
-//            Log.d("TAG", "buildUUID: ${pi == pendingIntent}")
+
             alarmManager.setRepeating(
                 alarmType,
                 startDateTime,
@@ -98,35 +98,21 @@ class ReminderRequest private constructor() {
                 pendingIntent
             )
 
-//            pi?.cancel()
-//            Log.d("TAG", "cancelReminder1: $pendingIntent")
             return requestCode.toString()
         }
-        fun serializePendingIntent(pendingIntent: PendingIntent?): ByteArray? {
-            var parcel: Parcel? = null
-            return try {
-                parcel = Parcel.obtain()
-                PendingIntent.writePendingIntentOrNullToParcel(pendingIntent, parcel)
-                val bytes = parcel.createByteArray()
-                bytes
-            } finally {
-                parcel?.recycle()
-            }
-        }
 
-        fun unmarshall(bytes: ByteArray): Parcel {
-            val parcel = Parcel.obtain()
-            parcel.unmarshall(bytes, 0, bytes.size)
-            parcel.setDataPosition(0) // this is extremely important!
-            return parcel
-        }
+
         fun buildOneTime(): String {
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             val pendingIntent = createPendingIntent()
 
-            alarmManager.set(
-                alarmType,
+            val alarmClockInfo = AlarmManager.AlarmClockInfo(
                 startDateTime,
+                pendingIntent
+            )
+
+            alarmManager.setAlarmClock(
+                alarmClockInfo,
                 pendingIntent
             )
 

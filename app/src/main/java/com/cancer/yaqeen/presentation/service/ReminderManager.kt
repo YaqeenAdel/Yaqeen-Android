@@ -19,10 +19,11 @@ abstract class ReminderManager {
     abstract fun setPeriodReminderDays(medication: MedicationDB): List<String>
     abstract fun setPeriodReminder(routineTest: RoutineTestDB): Pair<String, String?>
     abstract fun scheduleReminder(routineTest: RoutineTestDB): String
+    abstract fun setPeriodReminderDays(routineTest: RoutineTestDB): Pair<List<String>, String?>
     abstract fun setPeriodReminder(medicalAppointment: MedicalAppointmentDB): Pair<String, String?>
     abstract fun scheduleReminder(medicalAppointment: MedicalAppointmentDB): String
     open fun cancelReminder(workRequestId: String) {}
-    open fun cancelReminder(reminderId: String, actionName: String, objectJsonKey: String, objectJsonValue: String){}
+    open fun cancelReminder(reminderId: String, actionName: String, objectJsonValue: String){}
     abstract fun cancelAllReminders()
 
 

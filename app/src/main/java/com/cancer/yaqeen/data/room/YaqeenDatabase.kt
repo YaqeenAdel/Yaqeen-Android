@@ -10,7 +10,7 @@ import com.cancer.yaqeen.data.features.home.schedule.routine_test.room.RoutineTe
 import com.cancer.yaqeen.data.room.converters.IntConverters
 import com.cancer.yaqeen.data.room.converters.UUIDConverters
 
-@Database(entities = [Article::class, MedicationDB::class, RoutineTestDB::class, MedicalAppointmentDB::class], version = 21, exportSchema = false)
+@Database(entities = [Article::class, MedicationDB::class, RoutineTestDB::class, MedicalAppointmentDB::class], version = 24, exportSchema = false)
 @TypeConverters(IntConverters::class, UUIDConverters::class)
 abstract class YaqeenDatabase: RoomDatabase() {
 

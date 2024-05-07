@@ -125,6 +125,42 @@ class WorkerReminder(private val context: Context): ReminderManager() {
         return periodicWorkRequest.id.toString()
     }
 
+    override fun setPeriodReminderDays(routineTest: RoutineTestDB): Pair<List<String>, String?>{
+        val workBeforeID = if (routineTest.reminderBeforeInMinutes > 0) {
+            scheduleReminder(routineTest.apply { reminderBeforeIsAvailable = true })
+        }else { null }
+
+        val workIds = arrayListOf<String>()
+        routineTest.specificDaysIds?.forEach {  id ->
+            val String = setPeriodReminderSpecificDay(routineTest, DayEnum.getDay(id).dayId)
+
+            workIds.add(String)
+        }
+
+        return workIds to workBeforeID
+    }
+
+
+    private fun setPeriodReminderSpecificDay(routineTest: RoutineTestDB, dayId: Int): String {
+
+        val periodicWorkRequest = with(routineTest){
+            val timeDelayInSeconds =
+                calculateInitialDelayForSpecificDay(startDate, hour24, minute, dayId)
+            WorkerRequest.Builder()
+                .setStartDateTime(timeDelayInSeconds)
+                .setPeriodTime(periodTimeId)
+//                .setTitle(context.getString(R.string.medication_reminder))
+//                .setBody(context.getString(R.string.reminder_text_message))
+//                .setObjectKey(MEDICATION)
+                .setActionName(OPEN_MEDICATION_WINDOW_ACTION)
+                .setObject(routineTest)
+                .build()
+        }
+        enqueueWork(periodicWorkRequest)
+
+        return periodicWorkRequest.id.toString()
+    }
+
     override fun setPeriodReminder(medicalAppointment: MedicalAppointmentDB): Pair<String, String?> {
         val workBeforeID = if (medicalAppointment.reminderBeforeInMinutes > 0) {
             scheduleReminder(medicalAppointment.apply { reminderBeforeIsAvailable = true })

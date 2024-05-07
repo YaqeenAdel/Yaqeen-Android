@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
-import android.util.Log
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.room.MedicalAppointmentDB
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.DayEnum
 import com.cancer.yaqeen.data.features.home.schedule.medication.room.MedicationDB
@@ -31,7 +30,7 @@ class AlarmReminder(private val context: Context): ReminderManager() {
                 .setActionName(OPEN_MEDICATION_WINDOW_ACTION)
                 .setRequestCode(System.currentTimeMillis().toInt())
                 .setObjectKey(Constants.MEDICATION)
-                .setObject(medication)
+                .setJson(json)
                 .build()
         }
 
@@ -60,7 +59,7 @@ class AlarmReminder(private val context: Context): ReminderManager() {
                 .setActionName(OPEN_MEDICATION_WINDOW_ACTION)
                 .setRequestCode(System.currentTimeMillis().toInt())
                 .setObjectKey(Constants.MEDICATION)
-                .setObject(medication)
+                .setJson(json)
                 .build()
         }
 
@@ -78,7 +77,7 @@ class AlarmReminder(private val context: Context): ReminderManager() {
                 .setActionName(OPEN_ROUTINE_TEST_WINDOW_ACTION)
                 .setRequestCode(System.currentTimeMillis().toInt())
                 .setObjectKey(Constants.ROUTINE_TEST)
-                .setObject(routineTest)
+                .setJson(json)
                 .build()
         }
 
@@ -110,7 +109,40 @@ class AlarmReminder(private val context: Context): ReminderManager() {
                 .setActionName(OPEN_ROUTINE_TEST_WINDOW_ACTION)
                 .setRequestCode(System.currentTimeMillis().toInt())
                 .setObjectKey(Constants.ROUTINE_TEST)
-                .setObject(routineTest)
+                .setJson(json)
+                .build()
+        }
+
+        return uuid
+    }
+
+    override fun setPeriodReminderDays(routineTest: RoutineTestDB): Pair<List<String>, String?> {
+        val reminderBeforeID = if (routineTest.reminderBeforeInMinutes > 0) {
+            scheduleReminder(routineTest.apply { reminderBeforeIsAvailable = true })
+        }else { null }
+
+        val workIds = arrayListOf<String>()
+        routineTest.specificDaysIds?.forEach {  id ->
+            val uuid = setPeriodReminderSpecificDay(routineTest, DayEnum.getDay(id).dayId)
+
+            workIds.add(uuid)
+        }
+
+        return workIds to reminderBeforeID
+    }
+
+    private fun setPeriodReminderSpecificDay(routineTest: RoutineTestDB, dayId: Int): String {
+        val uuid = with(routineTest) {
+            val timeDelayInSeconds = calculateStartDateTimeForSpecificDay(startDate, hour24, minute, dayId)
+            ReminderRequest.Builder(context)
+                .setStartDateTime(timeDelayInSeconds)
+                .setPeriodTime(periodTimeId)
+//                .setTitle(context.getString(R.string.medication_reminder))
+//                .setBody(context.getString(R.string.reminder_text_message))
+                .setActionName(OPEN_MEDICATION_WINDOW_ACTION)
+                .setRequestCode(System.currentTimeMillis().toInt())
+                .setObjectKey(Constants.MEDICATION)
+                .setJson(json)
                 .build()
         }
 
@@ -132,7 +164,7 @@ class AlarmReminder(private val context: Context): ReminderManager() {
                 .setActionName(OPEN_MEDICAL_APPOINTMENT_WINDOW_ACTION)
                 .setRequestCode(System.currentTimeMillis().toInt())
                 .setObjectKey(Constants.MEDICAL_APPOINTMENT)
-                .setObject(medicalAppointment)
+                .setJson(json)
                 .buildOneTime()
         }
 
@@ -162,14 +194,14 @@ class AlarmReminder(private val context: Context): ReminderManager() {
                 .setActionName(OPEN_MEDICAL_APPOINTMENT_WINDOW_ACTION)
                 .setRequestCode(System.currentTimeMillis().toInt())
                 .setObjectKey(Constants.MEDICAL_APPOINTMENT)
-                .setObject(medicalAppointment)
+                .setJson(json)
                 .buildOneTime()
         }
 
         return uuid
     }
 
-    override fun cancelReminder(reminderId: String, actionName: String, objectJsonKey: String, objectJsonValue: String) {
+    override fun cancelReminder(reminderId: String, actionName: String, objectJsonValue: String) {
 
         val flags =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
@@ -178,12 +210,11 @@ class AlarmReminder(private val context: Context): ReminderManager() {
         val data = Uri.parse(objectJsonValue)
         val intent = Intent(context, NotificationReceiver::class.java).apply {
             action = actionName
-            setFlags(Intent.FLAG_RECEIVER_FOREGROUND)
+//            this.flags = Intent.FLAG_RECEIVER_FOREGROUND
             this.data = data
         }
         val pendingIntent = PendingIntent.getBroadcast(context, requestCode, intent, flags)
 
-        Log.d("TAG", "cancelReminder2: $pendingIntent")
 
         alarmManager.cancel(pendingIntent)
         pendingIntent.cancel()

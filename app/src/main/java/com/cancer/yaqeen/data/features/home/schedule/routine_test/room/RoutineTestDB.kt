@@ -26,8 +26,11 @@ data class RoutineTestDB(
     val periodTimeId: Int?,
     val reminderBeforeInMinutes: Int,
     var reminderBeforeIsAvailable: Boolean = false,
+    val specificDaysIds: List<Int> = listOf(),
     var workID: String? = null,
-    var workBeforeID: String? = null
+    var workBeforeID: String? = null,
+    var workSpecificDaysIDs: List<String> = listOf(),
+    var json: String? = null
 ): Parcelable{
 
     fun createNotificationMessage(): String{

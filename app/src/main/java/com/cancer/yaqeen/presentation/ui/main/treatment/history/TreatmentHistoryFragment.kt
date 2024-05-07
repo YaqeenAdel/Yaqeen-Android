@@ -21,7 +21,6 @@ import com.cancer.yaqeen.databinding.FragmentTreatmentHistoryBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.service.AlarmReminder
 import com.cancer.yaqeen.presentation.service.ReminderManager
-import com.cancer.yaqeen.presentation.service.WorkerReminder
 import com.cancer.yaqeen.presentation.ui.main.treatment.TimesAdapter
 import com.cancer.yaqeen.presentation.ui.main.treatment.history.adapters.MedicalRemindersAdapter
 import com.cancer.yaqeen.presentation.ui.main.treatment.history.adapters.MedicationsAdapter
@@ -32,6 +31,7 @@ import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.changeVisibility
 import com.cancer.yaqeen.presentation.util.dpToPx
 import com.cancer.yaqeen.presentation.util.recyclerview.VerticalMarginItemDecoration
+import com.cancer.yaqeen.presentation.util.schedulingPermissionsAreGranted
 import com.cancer.yaqeen.presentation.util.timestampToHour
 import com.cancer.yaqeen.presentation.util.timestampToTiming
 import com.cancer.yaqeen.presentation.util.tryNavigate
@@ -221,10 +221,27 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
         }
 
         lifecycleScope {
-            viewModel.viewStateWorkIds.observe(viewLifecycleOwner) { workIDs ->
-                workIDs?.run {
-                    workerReminder.cancelReminder(first)
-                    second?.let {
+            viewModel.viewStateOldRoutineTest.observe(viewLifecycleOwner) { routineTest ->
+                routineTest?.run {
+                    val actionName = Constants.OPEN_ROUTINE_TEST_WINDOW_ACTION
+                    val objectJsonValue = routineTest.json.toString()
+                    workerReminder.cancelReminder(workID.toString(), actionName, objectJsonValue)
+                    workerReminder.cancelReminder(workID.toString())
+                    workBeforeID?.let {
+                        workerReminder.cancelReminder(it)
+                    }
+                }
+            }
+        }
+
+        lifecycleScope {
+            viewModel.viewStateOldMedicalReminder.observe(viewLifecycleOwner) { appointment ->
+                appointment?.run {
+                    val actionName = Constants.OPEN_MEDICAL_APPOINTMENT_WINDOW_ACTION
+                    val objectJsonValue = appointment.json.toString()
+                    workerReminder.cancelReminder(workID.toString(), actionName, objectJsonValue)
+                    workerReminder.cancelReminder(workID.toString())
+                    workBeforeID?.let {
                         workerReminder.cancelReminder(it)
                     }
                 }
@@ -414,12 +431,15 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
     override fun onClick(v: View?) {
         when(v?.id){
             R.id.btn_add -> {
-                if (viewModel.userIsLoggedIn())
-                    navController.tryNavigate(
-                        TreatmentHistoryFragmentDirections.actionTreatmentHistoryFragmentToTreatmentFragment()
-                    )
-                else
-                    navController.tryNavigate(R.id.authFragment)
+                if (viewModel.userIsLoggedIn()) {
+                    if (schedulingPermissionsAreGranted(requireActivity(), requireContext()))
+                        navController.tryNavigate(
+                            TreatmentHistoryFragmentDirections.actionTreatmentHistoryFragmentToTreatmentFragment()
+                        )
+                }
+                else {
+                        navController.tryNavigate(R.id.authFragment)
+                }
             }
             R.id.btn_medications -> {
                 enableMedications()

@@ -27,6 +27,7 @@ data class MedicationDB(
     val specificDaysIds: List<Int> = listOf(),
     var workID: String? = null,
     var workSpecificDaysIDs: List<String> = listOf(),
+    var json: String? = null
 ): Parcelable {
     fun createNotificationMessage(): String{
         return "Hello! Just a friendly reminder to take $strengthAmount: $unitType from $medicationType: '$medicationName' now as prescribed today. Your health is important, so let's stay on track together. \uD83D\uDE0A"

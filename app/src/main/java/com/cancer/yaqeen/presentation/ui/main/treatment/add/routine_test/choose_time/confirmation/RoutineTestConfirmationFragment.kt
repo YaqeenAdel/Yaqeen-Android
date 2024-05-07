@@ -13,19 +13,24 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.PeriodTimeEnum
 import com.cancer.yaqeen.data.features.home.schedule.routine_test.models.ReminderBefore
+import com.cancer.yaqeen.data.features.home.schedule.routine_test.room.RoutineTestDB
 import com.cancer.yaqeen.data.network.error.ErrorEntity
+import com.cancer.yaqeen.data.utils.toJson
 import com.cancer.yaqeen.databinding.FragmentRoutineTestConfirmationBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.service.AlarmReminder
 import com.cancer.yaqeen.presentation.service.ReminderManager
-import com.cancer.yaqeen.presentation.service.WorkerReminder
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.routine_test.RoutineTestViewModel
+import com.cancer.yaqeen.presentation.util.Constants
+import com.cancer.yaqeen.presentation.util.Constants.OPEN_ROUTINE_TEST_WINDOW_ACTION
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindImage
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindImageURI
 import com.cancer.yaqeen.presentation.util.convertMilliSecondsToDate
 import com.cancer.yaqeen.presentation.util.enableStoragePermissions
+import com.cancer.yaqeen.presentation.util.schedulingPermissionsAreGranted
 import com.cancer.yaqeen.presentation.util.storagePermissionsAreGranted
 import com.cancer.yaqeen.presentation.util.tryPopBackStack
 import dagger.hilt.android.AndroidEntryPoint
@@ -132,7 +137,8 @@ class RoutineTestConfirmationFragment : BaseFragment() {
             return
         }
 
-        routineTestViewModel.modifyRoutineTest()
+        if (schedulingPermissionsAreGranted(requireActivity(), requireContext()))
+            routineTestViewModel.modifyRoutineTest()
     }
 
     private fun observeStates() {
@@ -151,8 +157,18 @@ class RoutineTestConfirmationFragment : BaseFragment() {
             routineTestViewModel.viewStateAddRoutineTest.observe(viewLifecycleOwner) { response ->
                 response?.let { (added, routineTest) ->
                     if (added) {
-                        val (periodicWorkID, workBeforeID) = workerReminder.setPeriodReminder(routineTest)
-                        routineTestViewModel.saveLocalRoutineTest(routineTest, periodicWorkID, workBeforeID)
+                        if (routineTest.periodTimeId == PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id){
+                            val (uuids, workBeforeID) = workerReminder.setPeriodReminderDays(routineTest.apply { json = toJson() })
+                            routineTestViewModel.saveLocalRoutineTest(routineTest, uuids, workBeforeID)
+                        }else {
+                            val (periodicWorkID, workBeforeID) = workerReminder.setPeriodReminder(
+                                routineTest.apply { json = toJson() })
+                            routineTestViewModel.saveLocalRoutineTest(
+                                routineTest,
+                                periodicWorkID,
+                                workBeforeID
+                            )
+                        }
                         Toast.makeText(requireContext(),
                             getString(R.string.routine_test_added_successfully), Toast.LENGTH_SHORT).show()
                         navController.tryPopBackStack(
@@ -167,18 +183,37 @@ class RoutineTestConfirmationFragment : BaseFragment() {
         lifecycleScope {
             routineTestViewModel.viewStateEditRoutineTest.observe(viewLifecycleOwner) { response ->
                 response?.let { (edited, routineTest) ->
-                    val (periodicWorkID, workBeforeID) = workerReminder.setPeriodReminder(
-                        routineTest
-                    )
-                    if (edited) {
-                        routineTestViewModel.editLocalRoutineTest(
+
+                    var uuids = listOf<String>()
+                    var periodicWorkID = ""
+                    var workBeforeID: String? = null
+                    if (routineTest.periodTimeId == PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id){
+                        val reminderInfo = workerReminder.setPeriodReminderDays(routineTest.apply { json = toJson() })
+
+                        uuids = reminderInfo.first
+                        workBeforeID = reminderInfo.second
+
+                        modifyLocalRoutineTest(
+                            edited,
+                            routineTest,
+                            uuids,
+                            workBeforeID
+                        )
+                    }else {
+                        val reminderInfo = workerReminder.setPeriodReminder(routineTest.apply { json = toJson() })
+
+                        periodicWorkID = reminderInfo.first
+                        workBeforeID = reminderInfo.second
+
+                        modifyLocalRoutineTest(
+                            edited,
                             routineTest,
                             periodicWorkID,
                             workBeforeID
                         )
-                    }else{
-                        routineTestViewModel.saveLocalRoutineTest(routineTest, periodicWorkID, workBeforeID)
                     }
+
+
                     Toast.makeText(requireContext(),
                         getString(R.string.routine_test_edited_successfully), Toast.LENGTH_SHORT).show()
                     navController.tryPopBackStack(
@@ -190,16 +225,54 @@ class RoutineTestConfirmationFragment : BaseFragment() {
         }
 
         lifecycleScope {
-            routineTestViewModel.viewStateWorkIds.observe(viewLifecycleOwner) { workIDs ->
-                workIDs?.run {
-                    workerReminder.cancelReminder(first)
-                    second?.let {
+            routineTestViewModel.viewStateOldRoutineTest.observe(viewLifecycleOwner) { routineTest ->
+                routineTest?.run {
+                    val actionName = OPEN_ROUTINE_TEST_WINDOW_ACTION
+                    val objectJsonValue = routineTest.json.toString()
+                    workerReminder.cancelReminder(workID.toString(), actionName, objectJsonValue)
+                    workerReminder.cancelReminder(workID.toString())
+                    workBeforeID?.let {
                         workerReminder.cancelReminder(it)
                     }
                 }
             }
         }
     }
+
+    private fun modifyLocalRoutineTest(
+        edited: Boolean,
+        routineTest: RoutineTestDB,
+        periodicWorkID: String,
+        workBeforeID: String?
+    ) {
+        if (edited) {
+            routineTestViewModel.editLocalRoutineTest(
+                routineTest,
+                periodicWorkID,
+                workBeforeID
+            )
+        }else{
+            routineTestViewModel.saveLocalRoutineTest(routineTest, periodicWorkID, workBeforeID)
+        }
+    }
+
+    private fun modifyLocalRoutineTest(
+        edited: Boolean,
+        routineTest: RoutineTestDB,
+        uuids: List<String>,
+        workBeforeID: String?
+    ) {
+        if (edited) {
+            routineTestViewModel.editLocalRoutineTest(
+                routineTest,
+                uuids,
+                workBeforeID
+            )
+        }else{
+            routineTestViewModel.saveLocalRoutineTest(routineTest, uuids, workBeforeID)
+        }
+    }
+
     private fun handleResponseError(errorEntity: ErrorEntity?) {
         val errorMessage = handleError(errorEntity)
         displayErrorMessage(errorMessage)

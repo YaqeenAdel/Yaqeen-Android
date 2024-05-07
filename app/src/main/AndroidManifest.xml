@@ -18,10 +18,16 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-<!--    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />-->
-<!--    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />-->
-<!--    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>-->
-<!--    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />-->
+
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
     <application
         android:name=".presentation.base.YaqeenApp"
@@ -36,6 +42,20 @@
         android:requestLegacyExternalStorage="true"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+
+            <!-- If you are using androidx.startup to initialize other components -->
+            <meta-data
+                android:name="androidx.work.WorkManagerInitializer"
+                android:value="androidx.startup"
+                tools:node="remove" />
+        </provider>
+
         <activity
             android:name=".presentation.ui.MainActivity"
             android:exported="true">
@@ -84,11 +104,6 @@
                 <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-<!--        <provider-->
-<!--            android:name="androidx.startup.InitializationProvider"-->
-<!--            android:authorities="${applicationId}.androidx-startup"-->
-<!--            tools:node="remove">-->
-<!--        </provider>-->
 
     </application>
 

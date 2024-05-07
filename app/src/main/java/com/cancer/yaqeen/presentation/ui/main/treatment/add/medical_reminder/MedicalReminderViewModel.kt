@@ -1,6 +1,5 @@
 package com.cancer.yaqeen.presentation.ui.main.treatment.add.medical_reminder
 
-import android.util.Log
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
@@ -53,8 +52,8 @@ class MedicalReminderViewModel @Inject constructor(
     private val _viewStateEditMedicalReminder = SingleLiveEvent<Pair<Boolean, MedicalAppointmentDB>?>()
     val viewStateEditMedicalReminder: LiveData<Pair<Boolean, MedicalAppointmentDB>?> = _viewStateEditMedicalReminder
 
-    private val _viewStateWorkIds = SingleLiveEvent<Pair<String, String?>?>()
-    val viewStateWorkIds: LiveData<Pair<String, String?>?> = _viewStateWorkIds
+    private val _viewStateOldMedicalReminder = SingleLiveEvent<MedicalAppointmentDB?>()
+    val viewStateOldMedicalReminder: LiveData<MedicalAppointmentDB?> = _viewStateOldMedicalReminder
 
     private val _viewStateLoading = MutableStateFlow<Boolean>(false)
     val viewStateLoading = _viewStateLoading.asStateFlow()
@@ -254,10 +253,10 @@ class MedicalReminderViewModel @Inject constructor(
                     }
                     Status.SUCCESS -> {
                         val workID = response.data?.workID
-                        _viewStateEditMedicalReminder.postValue((workID != null) to medicalAppointmentDB)
                         workID?.let {
-                            _viewStateWorkIds.postValue(it to response.data.workBeforeID)
+                            _viewStateOldMedicalReminder.postValue(response.data)
                         }
+                        _viewStateEditMedicalReminder.postValue((workID != null) to medicalAppointmentDB)
                     }
 
                     else -> {}

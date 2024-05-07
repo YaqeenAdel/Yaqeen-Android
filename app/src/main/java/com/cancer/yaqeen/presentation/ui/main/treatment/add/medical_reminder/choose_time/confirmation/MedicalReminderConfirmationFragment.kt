@@ -11,15 +11,18 @@ import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.schedule.routine_test.models.ReminderBefore
 import com.cancer.yaqeen.data.network.error.ErrorEntity
+import com.cancer.yaqeen.data.utils.toJson
 import com.cancer.yaqeen.databinding.FragmentMedicalReminderConfirmationBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.service.AlarmReminder
 import com.cancer.yaqeen.presentation.service.ReminderManager
-import com.cancer.yaqeen.presentation.service.WorkerReminder
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.medical_reminder.MedicalReminderViewModel
+import com.cancer.yaqeen.presentation.util.Constants
+import com.cancer.yaqeen.presentation.util.Constants.OPEN_MEDICAL_APPOINTMENT_WINDOW_ACTION
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindImage
 import com.cancer.yaqeen.presentation.util.changeVisibility
+import com.cancer.yaqeen.presentation.util.schedulingPermissionsAreGranted
 import com.cancer.yaqeen.presentation.util.tryPopBackStack
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -63,7 +66,8 @@ class MedicalReminderConfirmationFragment : BaseFragment() {
         }
 
         binding.btnConfirm.setOnClickListener {
-            medicalReminderViewModel.modifyMedicalReminder()
+            if (schedulingPermissionsAreGranted(requireActivity(), requireContext()))
+                medicalReminderViewModel.modifyMedicalReminder()
         }
     }
 
@@ -118,7 +122,7 @@ class MedicalReminderConfirmationFragment : BaseFragment() {
             medicalReminderViewModel.viewStateAddMedicalReminder.observe(viewLifecycleOwner) { response ->
                 response?.let { (added, medicalAppointment) ->
                     if (added) {
-                        val (workID, workBeforeID) = workerReminder.setPeriodReminder(medicalAppointment)
+                        val (workID, workBeforeID) = workerReminder.setPeriodReminder(medicalAppointment.apply { json = toJson() })
                         medicalReminderViewModel.saveLocalMedicalAppointment(medicalAppointment, workID, workBeforeID)
                         Toast.makeText(requireContext(),
                             getString(R.string.appointment_added_successfully), Toast.LENGTH_SHORT).show()
@@ -134,7 +138,7 @@ class MedicalReminderConfirmationFragment : BaseFragment() {
         lifecycleScope {
             medicalReminderViewModel.viewStateEditMedicalReminder.observe(viewLifecycleOwner) { response ->
                 response?.let { (edited, medicalAppointment) ->
-                    val (workID, workBeforeID) = workerReminder.setPeriodReminder(medicalAppointment)
+                    val (workID, workBeforeID) = workerReminder.setPeriodReminder(medicalAppointment.apply { json = toJson() })
                     if (edited) {
                         medicalReminderViewModel.editLocalMedicalAppointment(medicalAppointment, workID, workBeforeID)
                     }else{
@@ -151,10 +155,13 @@ class MedicalReminderConfirmationFragment : BaseFragment() {
         }
 
         lifecycleScope {
-            medicalReminderViewModel.viewStateWorkIds.observe(viewLifecycleOwner) { workIDs ->
-                workIDs?.run {
-                    workerReminder.cancelReminder(first)
-                    second?.let {
+            medicalReminderViewModel.viewStateOldMedicalReminder.observe(viewLifecycleOwner) { appointment ->
+                appointment?.run {
+                    val actionName = OPEN_MEDICAL_APPOINTMENT_WINDOW_ACTION
+                    val objectJsonValue = appointment.json.toString()
+                    workerReminder.cancelReminder(workID.toString(), actionName, objectJsonValue)
+                    workerReminder.cancelReminder(workID.toString())
+                    workBeforeID?.let {
                         workerReminder.cancelReminder(it)
                     }
                 }

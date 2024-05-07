@@ -39,7 +39,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import java.util.UUID
 import javax.inject.Inject
 
 
@@ -63,8 +62,8 @@ class RoutineTestViewModel @Inject constructor(
     private val _viewStateEditRoutineTest = SingleLiveEvent<Pair<Boolean, RoutineTestDB>?>()
     val viewStateEditRoutineTest: LiveData<Pair<Boolean, RoutineTestDB>?> = _viewStateEditRoutineTest
 
-    private val _viewStateWorkIds = SingleLiveEvent<Pair<String, String?>?>()
-    val viewStateWorkIds: LiveData<Pair<String, String?>?> = _viewStateWorkIds
+    private val _viewStateOldRoutineTest = SingleLiveEvent<RoutineTestDB?>()
+    val viewStateOldRoutineTest: LiveData<RoutineTestDB?> = _viewStateOldRoutineTest
 
     private val _viewStateLoading = MutableStateFlow<Boolean>(false)
     val viewStateLoading = _viewStateLoading.asStateFlow()
@@ -196,6 +195,7 @@ class RoutineTestViewModel @Inject constructor(
                                             reminderTime,
                                             periodTime?.id,
                                             reminderBefore.timeInMinutes,
+                                            specificDays?.map { it.id },
                                             it.routineTestId ?: 0
                                         )
                                     resetRoutineTestTrack()
@@ -217,6 +217,7 @@ class RoutineTestViewModel @Inject constructor(
         reminderTime: ReminderTime?,
         periodTimeId: Int?,
         reminderBeforeInMinutes: Int,
+        specificDaysIds: List<Int>?,
         routineTestId: Int,
     ): RoutineTestDB =
         builder.run {
@@ -232,7 +233,8 @@ class RoutineTestViewModel @Inject constructor(
                 isAM = reminderTime?.isAM ?: false,
                 time = reminderTime?.text.toString(),
                 periodTimeId = periodTimeId,
-                reminderBeforeInMinutes = reminderBeforeInMinutes
+                reminderBeforeInMinutes = reminderBeforeInMinutes,
+                specificDaysIds = specificDaysIds ?: listOf()
             )
         }
 
@@ -270,6 +272,7 @@ class RoutineTestViewModel @Inject constructor(
                                             reminderTime,
                                             periodTime?.id,
                                             reminderBefore.timeInMinutes,
+                                            specificDays?.map { it.id },
                                             it.routineTestId ?: 0
                                         )
                                     getLocalRoutineTest(it.routineTestId ?: 0, routineTestDB)
@@ -316,6 +319,7 @@ class RoutineTestViewModel @Inject constructor(
                                         reminderTime,
                                         periodTime?.id,
                                         reminderBefore.timeInMinutes,
+                                        specificDays?.map { it.id },
                                         it
                                     )
                                 resetRoutineTestTrack()
@@ -363,6 +367,7 @@ class RoutineTestViewModel @Inject constructor(
                                         reminderTime,
                                         periodTime?.id,
                                         reminderBefore.timeInMinutes,
+                                        specificDays?.map { it.id },
                                         routineTestId ?: 0
                                     )
                                 getLocalRoutineTest(routineTestId ?: 0, routineTestDB)
@@ -389,10 +394,10 @@ class RoutineTestViewModel @Inject constructor(
                     }
                     Status.SUCCESS -> {
                         val workID = response.data?.workID
-                        _viewStateEditRoutineTest.postValue((workID != null) to routineTestDB)
                         workID?.let {
-                            _viewStateWorkIds.postValue(it to response.data.workBeforeID)
+                            _viewStateOldRoutineTest.postValue(response.data)
                         }
+                        _viewStateEditRoutineTest.postValue((workID != null) to routineTestDB)
                     }
                     else -> {}
                 }
@@ -466,6 +471,28 @@ class RoutineTestViewModel @Inject constructor(
             editLocalRoutineTestUseCase(
                 routineTest.apply {
                     workID = periodicWorkID
+                    this.workBeforeID = workBeforeID
+                }
+            ).collect()
+        }
+    }
+
+    fun saveLocalRoutineTest(routineTest: RoutineTestDB, uuids: List<String>, workBeforeID: String?) {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
+            saveLocalRoutineTestUseCase(
+                routineTest.apply {
+                    workSpecificDaysIDs = uuids
+                    this.workBeforeID = workBeforeID
+                }
+            ).collect()
+        }
+    }
+
+    fun editLocalRoutineTest(routineTest: RoutineTestDB, uuids: List<String>, workBeforeID: String?) {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
+            editLocalRoutineTestUseCase(
+                routineTest.apply {
+                    workSpecificDaysIDs = uuids
                     this.workBeforeID = workBeforeID
                 }
             ).collect()

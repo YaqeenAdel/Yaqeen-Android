@@ -4,9 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.models.MedicalReminder
+import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.room.MedicalAppointmentDB
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Medication
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.ScheduleType
 import com.cancer.yaqeen.data.features.home.schedule.routine_test.models.RoutineTest
+import com.cancer.yaqeen.data.features.home.schedule.routine_test.room.RoutineTestDB
 import com.cancer.yaqeen.data.features.home.schedule.symptom.models.Symptom
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.data.network.base.Status
@@ -68,8 +70,11 @@ class SchedulesHistoryViewModel @Inject constructor(
     private val _viewStateDeleteRoutineTest = SingleLiveEvent<Int?>()
     val viewStateDeleteRoutineTest: LiveData<Int?> = _viewStateDeleteRoutineTest
 
-    private val _viewStateWorkIds = SingleLiveEvent<Pair<String, String?>?>()
-    val viewStateWorkIds: LiveData<Pair<String, String?>?> = _viewStateWorkIds
+    private val _viewStateOldRoutineTest = SingleLiveEvent<RoutineTestDB?>()
+    val viewStateOldRoutineTest: LiveData<RoutineTestDB?> = _viewStateOldRoutineTest
+
+    private val _viewStateOldMedicalReminder = SingleLiveEvent<MedicalAppointmentDB?>()
+    val viewStateOldMedicalReminder: LiveData<MedicalAppointmentDB?> = _viewStateOldMedicalReminder
 
     private val _viewStateLoading = MutableStateFlow<Boolean>(false)
     val viewStateLoading = _viewStateLoading.asStateFlow()
@@ -207,7 +212,7 @@ class SchedulesHistoryViewModel @Inject constructor(
                     Status.ERROR -> {}
                     Status.SUCCESS -> {
                         response.data?.workID?.let {
-                            _viewStateWorkIds.postValue(it to response.data.workBeforeID)
+                            _viewStateOldMedicalReminder.postValue(response.data)
                         }
 
                         removeLocalMedicalReminder(medicalAppointmentId)
@@ -256,7 +261,7 @@ class SchedulesHistoryViewModel @Inject constructor(
                     Status.ERROR -> {}
                     Status.SUCCESS -> {
                         response.data?.workID?.let {
-                            _viewStateWorkIds.postValue(it to response.data.workBeforeID)
+                            _viewStateOldRoutineTest.postValue(response.data)
                         }
 
                         removeLocalRoutineTest(routineTestId)

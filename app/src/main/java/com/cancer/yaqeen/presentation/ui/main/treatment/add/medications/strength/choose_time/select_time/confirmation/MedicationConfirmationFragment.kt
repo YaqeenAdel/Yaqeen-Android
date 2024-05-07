@@ -1,17 +1,16 @@
 package com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.strength.choose_time.select_time.confirmation
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.PeriodTimeEnum
+import com.cancer.yaqeen.data.features.home.schedule.medication.room.MedicationDB
 import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.data.utils.toJson
 import com.cancer.yaqeen.databinding.FragmentMedicationConfirmationBinding
@@ -19,14 +18,13 @@ import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.service.AlarmReminder
 import com.cancer.yaqeen.presentation.service.ReminderManager
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.MedicationsViewModel
-import com.cancer.yaqeen.presentation.util.Constants
-import com.cancer.yaqeen.presentation.util.Constants.MEDICATION
 import com.cancer.yaqeen.presentation.util.Constants.OPEN_MEDICATION_WINDOW_ACTION
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindResourceImage
 import com.cancer.yaqeen.presentation.util.convertMilliSecondsToDate
 import com.cancer.yaqeen.presentation.util.drawOverlaysPermissionAreGranted
 import com.cancer.yaqeen.presentation.util.enableDrawOverlaysPermission
+import com.cancer.yaqeen.presentation.util.schedulingPermissionsAreGranted
 import com.cancer.yaqeen.presentation.util.tryPopBackStack
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -91,14 +89,12 @@ class MedicationConfirmationFragment : BaseFragment() {
         }
 
         binding.btnConfirm.setOnClickListener {
-            if (drawOverlaysPermissionAreGranted(requireContext())) {
+            if (schedulingPermissionsAreGranted(requireActivity(), requireContext())) {
                 val medicationTrack = medicationsViewModel.getMedicationTrack()
                 if (medicationTrack?.editable == true)
                     medicationsViewModel.editMedication()
                 else
                     medicationsViewModel.addMedication()
-            }else {
-                enableDrawOverlaysPermission(requireContext())
             }
         }
     }
@@ -120,10 +116,10 @@ class MedicationConfirmationFragment : BaseFragment() {
                 response?.let { (added, medication) ->
                     if(added){
                         if (medication.periodTimeId == PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id){
-                            val uuids = workerReminder.setPeriodReminderDays(medication)
+                            val uuids = workerReminder.setPeriodReminderDays(medication.apply { json = toJson() })
                             medicationsViewModel.saveLocalMedication(medication, uuids)
                         }else {
-                            val uuid = workerReminder.setPeriodReminder(medication)
+                            val uuid = workerReminder.setPeriodReminder(medication.apply { json = toJson() })
                             medicationsViewModel.saveLocalMedication(medication, uuid)
                         }
                         Toast.makeText(requireContext(),
@@ -140,12 +136,17 @@ class MedicationConfirmationFragment : BaseFragment() {
         lifecycleScope {
             medicationsViewModel.viewStateEditMedication.observe(viewLifecycleOwner) { response ->
                 response?.let { (edited, medication) ->
-                    val uuid = workerReminder.setPeriodReminder(medication)
 
-                    if (edited) {
-                        medicationsViewModel.editLocalMedication(medication, uuid)
-                    }else{
-                        medicationsViewModel.saveLocalMedication(medication, uuid)
+                    var uuids = listOf<String>()
+                    var uuid = ""
+                    if (medication.periodTimeId == PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id){
+                        uuids = workerReminder.setPeriodReminderDays(medication.apply { json = toJson() })
+
+                        modifyLocalMedication(edited, medication, uuids)
+                    }else {
+                        uuid = workerReminder.setPeriodReminder(medication.apply { json = toJson() })
+
+                        modifyLocalMedication(edited, medication, uuid)
                     }
 
                     Toast.makeText(requireContext(),
@@ -162,14 +163,38 @@ class MedicationConfirmationFragment : BaseFragment() {
             medicationsViewModel.viewStateOldMedication.observe(viewLifecycleOwner) { medication ->
                 medication?.run {
                     val actionName = OPEN_MEDICATION_WINDOW_ACTION
-                    val objectJsonKey = MEDICATION
-                    val objectJsonValue = medication.toJson()
-                    Log.d("TAG", "cancelReminder3: $workID")
-                    workerReminder.cancelReminder(workID.toString(), actionName, objectJsonKey, objectJsonValue)
+                    val objectJsonValue = medication.json.toString()
+                    workerReminder.cancelReminder(workID.toString(), actionName, objectJsonValue)
+                    workerReminder.cancelReminder(workID.toString())
                 }
             }
         }
     }
+
+    private fun modifyLocalMedication(
+        edited: Boolean,
+        medication: MedicationDB,
+        uuid: String
+    ) {
+        if (edited) {
+            medicationsViewModel.editLocalMedication(medication, uuid)
+        } else {
+            medicationsViewModel.saveLocalMedication(medication, uuid)
+        }
+    }
+
+    private fun modifyLocalMedication(
+        edited: Boolean,
+        medication: MedicationDB,
+        uuids: List<String>
+    ) {
+        if (edited) {
+            medicationsViewModel.editLocalMedication(medication, uuids)
+        } else {
+            medicationsViewModel.saveLocalMedication(medication, uuids)
+        }
+    }
+
     private fun handleResponseError(errorEntity: ErrorEntity?) {
         val errorMessage = handleError(errorEntity)
         displayErrorMessage(errorMessage)

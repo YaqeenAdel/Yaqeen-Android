@@ -322,6 +322,16 @@ class MedicationsViewModel @Inject constructor(
         }
     }
 
+    fun editLocalMedication(medication: MedicationDB, uuids: List<String>) {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
+            editLocalMedicationUseCase(
+                medication.apply {
+                    workSpecificDaysIDs = uuids
+                }
+            ).collect()
+        }
+    }
+
     fun setMedicationTrack(medicationTrack: MedicationTrack) {
         medicationTrackField.set(medicationTrack)
     }

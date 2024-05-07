@@ -24,7 +24,8 @@ data class MedicalAppointmentDB(
     val reminderBeforeInMinutes: Int,
     var reminderBeforeIsAvailable: Boolean = false,
     var workID: String? = null,
-    var workBeforeID: String? = null
+    var workBeforeID: String? = null,
+    var json: String? = null
 ): Parcelable{
 
     fun createNotificationMessage(): String{
