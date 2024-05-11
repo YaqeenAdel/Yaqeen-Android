@@ -7,9 +7,13 @@ import android.os.Bundle
 import android.util.Log
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.room.MedicalAppointmentDB
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.PeriodTimeEnum
 import com.cancer.yaqeen.data.features.home.schedule.medication.room.MedicationDB
 import com.cancer.yaqeen.data.features.home.schedule.routine_test.room.RoutineTestDB
 import com.cancer.yaqeen.data.utils.fromJson
+import com.cancer.yaqeen.presentation.service.ReminderManager
+import com.cancer.yaqeen.presentation.service.WorkerReminder
+import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.Constants.BODY_KEY
 import com.cancer.yaqeen.presentation.util.Constants.OBJECT_JSON
 import com.cancer.yaqeen.presentation.util.Constants.IGNORE_NOTIFICATION_ACTION
@@ -21,16 +25,21 @@ import com.cancer.yaqeen.presentation.util.Constants.OPEN_ROUTINE_TEST_WINDOW_AC
 import com.cancer.yaqeen.presentation.util.Constants.OPEN_MEDICAL_APPOINTMENT_WINDOW_ACTION
 import com.cancer.yaqeen.presentation.util.Constants.ROUTINE_TEST
 import com.cancer.yaqeen.presentation.util.Constants.TITLE_KEY
+import com.cancer.yaqeen.presentation.util.Constants.UPDATE_LOCAL_MEDICATION_ACTION
+import com.cancer.yaqeen.presentation.util.Constants.UPDATE_LOCAL_ROUTINE_TEST_ACTION
 import com.cancer.yaqeen.presentation.util.NotificationUtils
 import com.cancer.yaqeen.presentation.util.windows.MedicalAppointmentWindow
 import com.cancer.yaqeen.presentation.util.windows.MedicationWindow
 import com.cancer.yaqeen.presentation.util.windows.RoutineTestWindow
 import com.cancer.yaqeen.presentation.util.windows.Window
+import java.util.concurrent.TimeUnit
 
 
 class NotificationReceiver : BroadcastReceiver() {
 
     private lateinit var notificationUtils: NotificationUtils
+    private lateinit var reminder: ReminderManager
+
     override fun onReceive(context: Context, intent: Intent) {
         Log.d("NotificationReceiver", "onReceive: ${intent.action}")
         notificationUtils = NotificationUtils(context)
@@ -41,11 +50,19 @@ class NotificationReceiver : BroadcastReceiver() {
                 notificationUtils.cancelNotification(notificationId)
             }
             OPEN_MEDICATION_WINDOW_ACTION -> {
+                reminder = WorkerReminder(context)
                 val title = context.getString(R.string.medication_reminder)
                 val medication: MedicationDB? = intent.data.toString().fromJson(MedicationDB::class.java)
 
                 val detailsMedication: String = medication?.createNotificationMessage().toString()
                 val medicationId = medication?.medicationId ?: 1
+
+
+                reminder.setReminder(
+                    TimeUnit.MINUTES.toMillis(1),
+                    medication,
+                    UPDATE_LOCAL_MEDICATION_ACTION
+                )
 
                 notificationUtils.notify(title, detailsMedication, medicationId)
 
@@ -54,11 +71,18 @@ class NotificationReceiver : BroadcastReceiver() {
                 window.open()
             }
             OPEN_ROUTINE_TEST_WINDOW_ACTION -> {
+                reminder = WorkerReminder(context)
                 val title = context.getString(R.string.routine_test_reminder)
                 val routineTest: RoutineTestDB? = intent.data.toString().fromJson(RoutineTestDB::class.java)
 
                 val detailsMedication: String = routineTest?.createNotificationMessage().toString()
                 val medicationId = routineTest?.routineTestId ?: 1
+
+                reminder.setReminder(
+                    TimeUnit.MINUTES.toMillis(1),
+                    routineTest,
+                    UPDATE_LOCAL_ROUTINE_TEST_ACTION
+                )
 
                 notificationUtils.notify(title, detailsMedication, medicationId)
 

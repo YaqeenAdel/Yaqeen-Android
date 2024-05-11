@@ -18,11 +18,12 @@ data class RoutineTestDB(
     val notes: String,
     val scheduleType: String,
     val cronExpression: String? = null,
-    val startDate: Long,
-    val hour24: Int,
-    val minute: Int,
-    val isAM: Boolean,
-    val time: String,
+    var startDateTime: Long,
+//    val startDate: Long,
+//    val hour24: Int,
+//    val minute: Int,
+//    val isAM: Boolean,
+//    var time: String,
     val periodTimeId: Int?,
     val reminderBeforeInMinutes: Int,
     var reminderBeforeIsAvailable: Boolean = false,
@@ -30,11 +31,12 @@ data class RoutineTestDB(
     var workID: String? = null,
     var workBeforeID: String? = null,
     var workSpecificDaysIDs: List<String> = listOf(),
-    var json: String? = null
+    var json: String? = null,
+    var isReminded: Boolean = false
 ): Parcelable{
 
     fun createNotificationMessage(): String{
-        val date = convertMilliSecondsToDate(startDate)
+        val date = convertMilliSecondsToDate(startDateTime)
         var timeMillis = getCurrentTimeMillis()
         if (reminderBeforeIsAvailable){
             timeMillis += TimeUnit.MINUTES.toMillis(reminderBeforeInMinutes.toLong())

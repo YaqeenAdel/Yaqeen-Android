@@ -476,6 +476,11 @@ class ScheduleRepositoryImpl @Inject constructor(
             scheduleLocalDataSource.getMedication(medicationId)
         }
 
+    override suspend fun getMedications(): Flow<DataState<List<MedicationDB>?>> =
+        flowStatus {
+            scheduleLocalDataSource.getMedications()
+        }
+
     override suspend fun saveMedication(medication: MedicationDB): Flow<DataState<Long>> =
         flowStatus {
             scheduleLocalDataSource.saveMedication(medication)
@@ -499,6 +504,11 @@ class ScheduleRepositoryImpl @Inject constructor(
     override suspend fun getRoutineTest(routineTestId: Int): Flow<DataState<RoutineTestDB?>> =
         flowStatus {
             scheduleLocalDataSource.getRoutineTest(routineTestId)
+        }
+
+    override suspend fun getRoutineTests(): Flow<DataState<List<RoutineTestDB>?>> =
+        flowStatus {
+            scheduleLocalDataSource.getRoutineTests()
         }
 
     override suspend fun saveRoutineTest(routineTest: RoutineTestDB): Flow<DataState<Long>> =

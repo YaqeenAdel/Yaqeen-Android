@@ -19,6 +19,9 @@ class ScheduleLocalDataSourceImpl @Inject constructor(
     override suspend fun getMedication(medicationId: Int): DataState<MedicationDB?> =
         getResultDao { yaqeenDao.selectMedication(medicationId) }
 
+    override suspend fun getMedications(): DataState<List<MedicationDB>?> =
+        getResultDao { yaqeenDao.selectMedications() }
+
     override suspend fun saveMedication(medication: MedicationDB): DataState<Long> =
         getResultDao { yaqeenDao.insertMedication(medication) }
 
@@ -33,6 +36,9 @@ class ScheduleLocalDataSourceImpl @Inject constructor(
 
     override suspend fun getRoutineTest(routineTestId: Int): DataState<RoutineTestDB?> =
         getResultDao { yaqeenDao.selectRoutineTest(routineTestId) }
+
+    override suspend fun getRoutineTests(): DataState<List<RoutineTestDB>?> =
+        getResultDao { yaqeenDao.selectRoutineTests() }
 
     override suspend fun saveRoutineTest(routineTest: RoutineTestDB): DataState<Long> =
         getResultDao { yaqeenDao.insertRoutineTest(routineTest) }

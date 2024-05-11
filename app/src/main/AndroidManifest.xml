@@ -45,7 +45,7 @@
 
         <provider
             android:name="androidx.startup.InitializationProvider"
-            android:authorities="${applicationId}.androidx-startup"
+            android:authorities="com.cancer.yaqeen.androidx-startup"
             android:exported="false"
             tools:node="merge">
 

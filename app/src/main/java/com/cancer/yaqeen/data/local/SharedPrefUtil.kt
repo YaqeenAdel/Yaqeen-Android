@@ -19,6 +19,9 @@ class SharedPrefEncryptionUtil @Inject constructor(
         const val PREF_SELECTED_LANGUAGE = "prefs-selected-language"
         const val PREF_HAS_SEEN_BOARDS = "prefs-has-seen-boards"
         const val PREF_IS_LOGGED_IN = "prefs-is-logged-in"
+        const val PREF_HAS_WORKER = "prefs-has-worker"
+        const val PREF_WORK_ID = "prefs-work-id"
+        const val PREF_WORK_RUNNING_TIME_IN_MILLIS = "prefs-work-running-time-in-millis"
     }
 
 
@@ -101,6 +104,30 @@ class SharedPrefEncryptionUtil @Inject constructor(
 
     fun selectedLanguageIsEnglish(): Boolean = selectedLanguage == Language.ENGLISH.lang
 
+    var hasWorker: Boolean
+        get() = sharedPreferences.getBoolean(PREF_HAS_WORKER, false)
+        set(hasWorker) {
+            sharedPreferences
+                .edit()
+                .putBoolean(PREF_HAS_WORKER, hasWorker)
+                .apply()
+        }
+    var workId: String
+        get() = sharedPreferences.getString(PREF_WORK_ID, "").toString()
+        set(workId) {
+            sharedPreferences
+                .edit()
+                .putString(PREF_WORK_ID, workId)
+                .apply()
+        }
+    var workRunningInMillis: Long
+        get() = sharedPreferences.getLong(PREF_WORK_RUNNING_TIME_IN_MILLIS, 0L)
+        set(workRunningInMillis) {
+            sharedPreferences
+                .edit()
+                .putLong(PREF_WORK_RUNNING_TIME_IN_MILLIS, workRunningInMillis)
+                .apply()
+        }
 
     fun clearUserPreferenceStorage() {
         sharedPreferences
@@ -108,6 +135,9 @@ class SharedPrefEncryptionUtil @Inject constructor(
             .remove(PREF_TOKEN)
             .remove(PREF_USER)
             .remove(PREF_IS_LOGGED_IN)
+            .remove(PREF_HAS_WORKER)
+            .remove(PREF_WORK_ID)
+            .remove(PREF_WORK_RUNNING_TIME_IN_MILLIS)
             .apply()
     }
 

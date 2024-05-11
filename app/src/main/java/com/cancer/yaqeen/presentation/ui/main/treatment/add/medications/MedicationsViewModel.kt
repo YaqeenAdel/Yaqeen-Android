@@ -23,6 +23,7 @@ import com.cancer.yaqeen.domain.features.home.schedule.medication.EditMedication
 import com.cancer.yaqeen.domain.features.home.schedule.medication.GetLocalMedicationUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.SaveLocalMedicationUseCase
 import com.cancer.yaqeen.presentation.util.SingleLiveEvent
+import com.cancer.yaqeen.presentation.util.calculateStartDateTime
 import com.cancer.yaqeen.presentation.util.timestampToDay
 import com.cancer.yaqeen.presentation.util.timestampToMonth
 import com.cancer.yaqeen.presentation.util.timestampToYear
@@ -182,11 +183,12 @@ class MedicationsViewModel @Inject constructor(
                 notes = notes,
                 scheduleType = ScheduleType.MEDICATION.scheduleType,
                 cronExpression = cronExpression,
-                startDate = startDate ?: 0L,
-                hour24 = reminderTime?.hour24?.toIntOrNull() ?: 0,
-                minute = reminderTime?.minute?.toIntOrNull() ?: 0,
-                isAM = reminderTime?.isAM ?: false,
-                time = reminderTime?.text.toString(),
+                startDateTime = calculateStartDateTime(startDate ?: 0L, reminderTime?.hour24?.toIntOrNull() ?: 0, reminderTime?.minute?.toIntOrNull() ?: 0),
+//                startDate = startDate ?: 0L,
+//                hour24 = reminderTime?.hour24?.toIntOrNull() ?: 0,
+//                minute = reminderTime?.minute?.toIntOrNull() ?: 0,
+//                isAM = reminderTime?.isAM ?: false,
+//                time = reminderTime?.text.toString(),
                 periodTimeId = periodTimeId,
                 specificDaysIds = specificDaysIds ?: listOf()
             )
@@ -296,14 +298,14 @@ class MedicationsViewModel @Inject constructor(
             ).collect { response ->
                 when (response.status) {
                     Status.ERROR -> {
-                        _viewStateEditMedication.postValue(false to medicationDB)
+                        _viewStateEditMedication.postValue(false to medicationDB.apply { isReminded = false })
                     }
                     Status.SUCCESS -> {
                         val workID = response.data?.workID
                         workID?.let {
                             _viewStateOldMedication.postValue(response.data)
                         }
-                        _viewStateEditMedication.postValue((workID != null) to medicationDB)
+                        _viewStateEditMedication.postValue((workID != null) to medicationDB.apply { isReminded = false })
                     }
 
                     else -> {}
@@ -339,6 +341,20 @@ class MedicationsViewModel @Inject constructor(
 
     fun userIsLoggedIn() =
         prefEncryptionUtil.isLogged
+
+    fun hasWorker() =
+        prefEncryptionUtil.hasWorker
+
+    fun saveWorkerReminderPeriodicallyInfo(
+        periodReminderId: String,
+        workRunningInMilliSeconds: Long
+    ) {
+        with(prefEncryptionUtil){
+            hasWorker = true
+            workId = periodReminderId
+            workRunningInMillis = workRunningInMilliSeconds
+        }
+    }
 
     private suspend fun emitError(errorEntity: ErrorEntity?) {
         _viewStateError.emit(errorEntity)

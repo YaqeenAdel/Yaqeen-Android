@@ -27,6 +27,7 @@ import com.cancer.yaqeen.domain.features.home.schedule.routine_test.EditRoutineT
 import com.cancer.yaqeen.domain.features.home.schedule.routine_test.GetLocalRoutineTestUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.routine_test.SaveLocalRoutineTestUseCase
 import com.cancer.yaqeen.presentation.util.SingleLiveEvent
+import com.cancer.yaqeen.presentation.util.calculateStartDateTime
 import com.cancer.yaqeen.presentation.util.generateFileName
 import com.cancer.yaqeen.presentation.util.getCurrentTimeMillis
 import com.cancer.yaqeen.presentation.util.timestampToDay
@@ -227,11 +228,7 @@ class RoutineTestViewModel @Inject constructor(
                 notes = notes,
                 scheduleType = ScheduleType.ROUTINE_TESTS.scheduleType,
                 cronExpression = cronExpression,
-                startDate = startDate ?: 0L,
-                hour24 = reminderTime?.hour24?.toIntOrNull() ?: 0,
-                minute = reminderTime?.minute?.toIntOrNull() ?: 0,
-                isAM = reminderTime?.isAM ?: false,
-                time = reminderTime?.text.toString(),
+                startDateTime = calculateStartDateTime(startDate ?: 0L, reminderTime?.hour24?.toIntOrNull() ?: 0, reminderTime?.minute?.toIntOrNull() ?: 0),
                 periodTimeId = periodTimeId,
                 reminderBeforeInMinutes = reminderBeforeInMinutes,
                 specificDaysIds = specificDaysIds ?: listOf()
@@ -501,6 +498,21 @@ class RoutineTestViewModel @Inject constructor(
 
     fun userIsLoggedIn() =
         prefEncryptionUtil.isLogged
+
+
+    fun hasWorker() =
+        prefEncryptionUtil.hasWorker
+
+    fun saveWorkerReminderPeriodicallyInfo(
+        periodReminderId: String,
+        workRunningInMilliSeconds: Long
+    ) {
+        with(prefEncryptionUtil){
+            hasWorker = true
+            workId = periodReminderId
+            workRunningInMillis = workRunningInMilliSeconds
+        }
+    }
 
     private suspend fun emitError(errorEntity: ErrorEntity?) {
         _viewStateError.emit(errorEntity)

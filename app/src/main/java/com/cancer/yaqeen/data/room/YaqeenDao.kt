@@ -31,17 +31,26 @@ interface YaqeenDao {
     @Query("SELECT * FROM Medication WHERE medicationId = :medicationId")
     suspend fun selectMedication(medicationId: Int): MedicationDB?
 
+//    @Query("SELECT * FROM Medication")
+//    suspend fun selectMedications(): List<MedicationDB>?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMedication(medication: MedicationDB): Long
 
     @Update
     suspend fun updateMedication(medication: MedicationDB): Int
 
+    @Query("UPDATE Medication SET workID = :workID, workSpecificDaysIDs = :workSpecificDaysIDs, isReminded = :isReminded, startDateTime = :startDateTime WHERE medicationId = :medicationId")
+    suspend fun updateMedication(workID: String? = null, workSpecificDaysIDs: List<String> = listOf(), isReminded: Boolean, startDateTime: Long, medicationId: Int): Int
+
     @Query("DELETE FROM Medication WHERE medicationId = :medicationId")
     suspend fun deleteMedication(medicationId: Int): Int
 
     @Query("DELETE FROM Medication")
     suspend fun deleteMedications(): Int
+
+    @Query("SELECT * FROM Medication WHERE isReminded = :isReminded ")
+    suspend fun selectMedications(isReminded: Boolean = true): List<MedicationDB>?
 
     @Query("SELECT * FROM RoutineTest WHERE routineTestId = :routineTestId")
     suspend fun selectRoutineTest(routineTestId: Int): RoutineTestDB?
@@ -57,6 +66,9 @@ interface YaqeenDao {
 
     @Query("DELETE FROM RoutineTest")
     suspend fun deleteRoutineTests(): Int
+
+    @Query("SELECT * FROM RoutineTest WHERE isReminded = :isReminded ")
+    suspend fun selectRoutineTests(isReminded: Boolean = true): List<RoutineTestDB>?
 
     @Query("SELECT * FROM MedicalAppointment WHERE medicalAppointmentId = :medicalAppointmentId")
     suspend fun selectMedicalAppointment(medicalAppointmentId: Int): MedicalAppointmentDB?

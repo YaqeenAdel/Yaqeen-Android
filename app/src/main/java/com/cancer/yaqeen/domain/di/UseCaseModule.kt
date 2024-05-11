@@ -29,6 +29,7 @@ import com.cancer.yaqeen.domain.features.home.schedule.medication.AddMedicationU
 import com.cancer.yaqeen.domain.features.home.schedule.medication.EditLocalMedicationUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.EditMedicationUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.GetLocalMedicationUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.medication.GetLocalMedicationsUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.GetTodayRemindersUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.GetMedicationRemindersUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.RemoveLocalMedicationUseCase
@@ -40,6 +41,7 @@ import com.cancer.yaqeen.domain.features.home.schedule.routine_test.EditLocalRou
 import com.cancer.yaqeen.domain.features.home.schedule.routine_test.EditRoutineTestUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.routine_test.EditRoutineTestWithoutPhotoUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.routine_test.GetLocalRoutineTestUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.routine_test.GetLocalRoutineTestsUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.routine_test.GetRoutineTestsUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.routine_test.RemoveLocalRoutineTestUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.routine_test.RemoveLocalRoutineTestsUseCase
@@ -282,8 +284,16 @@ object UseCaseModule {
         GetLocalMedicationUseCase(repository)
     @Singleton
     @Provides
+    fun provideGetLocalMedicationsUseCase(repository: ScheduleRepositoryImpl) =
+        GetLocalMedicationsUseCase(repository)
+    @Singleton
+    @Provides
     fun provideGetLocalRoutineTestUseCase(repository: ScheduleRepositoryImpl) =
         GetLocalRoutineTestUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideGetLocalRoutineTestsUseCase(repository: ScheduleRepositoryImpl) =
+        GetLocalRoutineTestsUseCase(repository)
     @Singleton
     @Provides
     fun provideGetLocalMedicalAppointmentUseCase(repository: ScheduleRepositoryImpl) =

@@ -15,13 +15,19 @@ import java.util.Calendar
 import java.util.TimeZone
 
 abstract class ReminderManager {
-    abstract fun setPeriodReminder(medication: MedicationDB): String
-    abstract fun setPeriodReminderDays(medication: MedicationDB): List<String>
-    abstract fun setPeriodReminder(routineTest: RoutineTestDB): Pair<String, String?>
+    abstract fun setReminder(medication: MedicationDB, oneTime: Boolean = true): String
+    abstract fun setReminderDays(medication: MedicationDB, oneTime: Boolean = true): List<String>
+    abstract fun setReminder(routineTest: RoutineTestDB, oneTime: Boolean = true): Pair<String, String?>
     abstract fun scheduleReminder(routineTest: RoutineTestDB): String
-    abstract fun setPeriodReminderDays(routineTest: RoutineTestDB): Pair<List<String>, String?>
-    abstract fun setPeriodReminder(medicalAppointment: MedicalAppointmentDB): Pair<String, String?>
+    abstract fun setReminderDays(routineTest: RoutineTestDB, oneTime: Boolean = true): Pair<List<String>, String?>
+    abstract fun setReminder(medicalAppointment: MedicalAppointmentDB, oneTime: Boolean = true): Pair<String, String?>
     abstract fun scheduleReminder(medicalAppointment: MedicalAppointmentDB): String
+    open fun setPeriodReminder(timeDelayInMilliSeconds: Long, periodTimeId: Int, actionName: String): String {
+        return ""
+    }
+    open fun<T> setReminder(timeDelayInMilliSeconds: Long, obj: T, actionName: String): String {
+        return ""
+    }
     open fun cancelReminder(workRequestId: String) {}
     open fun cancelReminder(reminderId: String, actionName: String, objectJsonValue: String){}
     abstract fun cancelAllReminders()
@@ -78,7 +84,7 @@ abstract class ReminderManager {
                 difference
             }
 
-            milliSecondsBetween + 500L
+            milliSecondsBetween
         } catch (e: Exception) {
             0L
         }
@@ -121,7 +127,7 @@ abstract class ReminderManager {
                 difference
             }
 
-            milliSecondsBetween + 500L
+            milliSecondsBetween
         } catch (e: Exception) {
             0L
         }

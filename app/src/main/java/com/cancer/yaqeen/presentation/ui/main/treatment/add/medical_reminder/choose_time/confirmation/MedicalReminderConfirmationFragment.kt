@@ -122,7 +122,7 @@ class MedicalReminderConfirmationFragment : BaseFragment() {
             medicalReminderViewModel.viewStateAddMedicalReminder.observe(viewLifecycleOwner) { response ->
                 response?.let { (added, medicalAppointment) ->
                     if (added) {
-                        val (workID, workBeforeID) = workerReminder.setPeriodReminder(medicalAppointment.apply { json = toJson() })
+                        val (workID, workBeforeID) = workerReminder.setReminder(medicalAppointment.apply { json = toJson() })
                         medicalReminderViewModel.saveLocalMedicalAppointment(medicalAppointment, workID, workBeforeID)
                         Toast.makeText(requireContext(),
                             getString(R.string.appointment_added_successfully), Toast.LENGTH_SHORT).show()
@@ -138,7 +138,7 @@ class MedicalReminderConfirmationFragment : BaseFragment() {
         lifecycleScope {
             medicalReminderViewModel.viewStateEditMedicalReminder.observe(viewLifecycleOwner) { response ->
                 response?.let { (edited, medicalAppointment) ->
-                    val (workID, workBeforeID) = workerReminder.setPeriodReminder(medicalAppointment.apply { json = toJson() })
+                    val (workID, workBeforeID) = workerReminder.setReminder(medicalAppointment.apply { json = toJson() })
                     if (edited) {
                         medicalReminderViewModel.editLocalMedicalAppointment(medicalAppointment, workID, workBeforeID)
                     }else{

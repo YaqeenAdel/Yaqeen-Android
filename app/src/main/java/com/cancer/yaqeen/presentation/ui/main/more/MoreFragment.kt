@@ -34,6 +34,10 @@ class MoreFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
         AlarmReminder(requireContext())
     }
 
+    private val workerReminderPeriodically: ReminderManager by lazy {
+        WorkerReminder(requireContext())
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -68,12 +72,15 @@ class MoreFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
 
     }
     private fun observeStates() {
-
         lifecycleScope {
             moreViewModel.viewStateLogoutSuccess.observe(viewLifecycleOwner) { response ->
-                if(response == true){
-                    workerReminder.cancelAllReminders()
-                    navController.tryNavigate(MoreFragmentDirections.actionMoreFragmentToOnBoardingFragment())
+                response?.let { (logoutSuccess, appHasWorker) ->
+                    if(logoutSuccess){
+                        workerReminder.cancelAllReminders()
+                        if (appHasWorker)
+                            workerReminderPeriodically.cancelAllReminders()
+                        navController.tryNavigate(MoreFragmentDirections.actionMoreFragmentToOnBoardingFragment())
+                    }
                 }
             }
         }

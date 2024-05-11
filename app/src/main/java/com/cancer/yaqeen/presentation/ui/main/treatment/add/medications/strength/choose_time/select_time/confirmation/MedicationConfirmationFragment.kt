@@ -17,17 +17,18 @@ import com.cancer.yaqeen.databinding.FragmentMedicationConfirmationBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.service.AlarmReminder
 import com.cancer.yaqeen.presentation.service.ReminderManager
+import com.cancer.yaqeen.presentation.service.WorkerReminder
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.MedicationsViewModel
 import com.cancer.yaqeen.presentation.util.Constants.OPEN_MEDICATION_WINDOW_ACTION
+import com.cancer.yaqeen.presentation.util.Constants.UPDATE_LOCAL_SCHEDULES_ACTION
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindResourceImage
 import com.cancer.yaqeen.presentation.util.convertMilliSecondsToDate
-import com.cancer.yaqeen.presentation.util.drawOverlaysPermissionAreGranted
-import com.cancer.yaqeen.presentation.util.enableDrawOverlaysPermission
 import com.cancer.yaqeen.presentation.util.schedulingPermissionsAreGranted
 import com.cancer.yaqeen.presentation.util.tryPopBackStack
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import java.util.concurrent.TimeUnit
 
 
 @AndroidEntryPoint
@@ -41,6 +42,10 @@ class MedicationConfirmationFragment : BaseFragment() {
 
     private val workerReminder: ReminderManager by lazy {
         AlarmReminder(requireContext())
+    }
+
+    private val workerReminderPeriodically: ReminderManager by lazy {
+        WorkerReminder(requireContext())
     }
 
     override fun onCreateView(
@@ -99,6 +104,22 @@ class MedicationConfirmationFragment : BaseFragment() {
         }
     }
 
+    private fun addWorkerReminderPeriodically() {
+        if (!medicationsViewModel.hasWorker()) {
+            val timeDelayInMilliSeconds = TimeUnit.MINUTES.toMillis(5L)
+            val currentTimeInMilliSeconds = System.currentTimeMillis()
+            val workRunningInMilliSeconds = currentTimeInMilliSeconds + timeDelayInMilliSeconds
+
+            val periodReminderId = workerReminderPeriodically.setPeriodReminder(
+                timeDelayInMilliSeconds,
+                PeriodTimeEnum.EVERY_3_HOURS.id,
+                UPDATE_LOCAL_SCHEDULES_ACTION
+            )
+
+            medicationsViewModel.saveWorkerReminderPeriodicallyInfo(periodReminderId, workRunningInMilliSeconds)
+        }
+    }
+
     private fun observeStates() {
         lifecycleScope {
             medicationsViewModel.viewStateLoading.collectLatest {
@@ -115,11 +136,13 @@ class MedicationConfirmationFragment : BaseFragment() {
             medicationsViewModel.viewStateAddMedication.observe(viewLifecycleOwner) { response ->
                 response?.let { (added, medication) ->
                     if(added){
+                        addWorkerReminderPeriodically()
                         if (medication.periodTimeId == PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id){
-                            val uuids = workerReminder.setPeriodReminderDays(medication.apply { json = toJson() })
-                            medicationsViewModel.saveLocalMedication(medication, uuids)
+                            //TODO: TEST ONLY
+//                            val uuids = workerReminder.setReminderDays(medication.apply { json = toJson() })
+//                            medicationsViewModel.saveLocalMedication(medication, uuids)
                         }else {
-                            val uuid = workerReminder.setPeriodReminder(medication.apply { json = toJson() })
+                            val uuid = workerReminder.setReminder(medication.apply { json = toJson() })
                             medicationsViewModel.saveLocalMedication(medication, uuid)
                         }
                         Toast.makeText(requireContext(),
@@ -136,15 +159,17 @@ class MedicationConfirmationFragment : BaseFragment() {
         lifecycleScope {
             medicationsViewModel.viewStateEditMedication.observe(viewLifecycleOwner) { response ->
                 response?.let { (edited, medication) ->
+                    addWorkerReminderPeriodically()
 
                     var uuids = listOf<String>()
                     var uuid = ""
                     if (medication.periodTimeId == PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id){
-                        uuids = workerReminder.setPeriodReminderDays(medication.apply { json = toJson() })
-
-                        modifyLocalMedication(edited, medication, uuids)
+                        //TODO: TEST ONLY
+//                        uuids = workerReminder.setReminderDays(medication.apply { json = toJson() })
+//
+//                        modifyLocalMedication(edited, medication, uuids)
                     }else {
-                        uuid = workerReminder.setPeriodReminder(medication.apply { json = toJson() })
+                        uuid = workerReminder.setReminder(medication.apply { json = toJson() })
 
                         modifyLocalMedication(edited, medication, uuid)
                     }
