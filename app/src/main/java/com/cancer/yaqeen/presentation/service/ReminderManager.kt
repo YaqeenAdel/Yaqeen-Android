@@ -39,18 +39,20 @@ abstract class ReminderManager {
     }
 
 
-    protected fun calculateStartDateTimeForSpecificDay(startDate: Long, hour24: Int, minute: Int, dayId: Int): Long {
+    protected fun calculateStartDateTimeForSpecificDay(startDateTime: Long, dayId: Int): Long {
         return try {
 
-            var date = getDateWithSpecificDay(startDate, dayId)
+            var date = getDateWithSpecificDay(startDateTime, dayId)
+            val hour24 = date.get(Calendar.HOUR_OF_DAY)
+            val minute = date.get(Calendar.MINUTE)
 
             val calendar = Calendar.getInstance(TimeZone.getDefault())
-            val hourOfDay24 = calendar.get(Calendar.HOUR_OF_DAY)
-            val minutes = calendar.get(Calendar.MINUTE)
-            calendar.timeInMillis = startDate
+            val currentHourOfDay24 = calendar.get(Calendar.HOUR_OF_DAY)
+            val currentMinutes = calendar.get(Calendar.MINUTE)
+            calendar.timeInMillis = startDateTime
 
             if (isSameDay(date.time, calendar.time)) {
-                if (hourOfDay24 >= hour24 && minutes >= minute) {
+                if (currentHourOfDay24 >= hour24 && currentMinutes >= minute) {
                     calendar.add(Calendar.DAY_OF_MONTH, 1)
                     date = getDateWithSpecificDay(calendar.timeInMillis, dayId)
                 }
@@ -91,18 +93,20 @@ abstract class ReminderManager {
 
     }
 
-    protected fun calculateInitialDelayForSpecificDay(startDate: Long, hour24: Int, minute: Int, dayId: Int): Long {
+    protected fun calculateInitialDelayForSpecificDay(startDate: Long, dayId: Int): Long {
         return try {
 
             var date = getDateWithSpecificDay(startDate, dayId)
+            val hour24 = date.get(Calendar.HOUR_OF_DAY)
+            val minute = date.get(Calendar.MINUTE)
 
             val calendar = Calendar.getInstance(TimeZone.getDefault())
-            val hourOfDay24 = calendar.get(Calendar.HOUR_OF_DAY)
-            val minutes = calendar.get(Calendar.MINUTE)
+            val currentHourOfDay24 = calendar.get(Calendar.HOUR_OF_DAY)
+            val currentMinutes = calendar.get(Calendar.MINUTE)
             calendar.timeInMillis = startDate
 
             if (isSameDay(date.time, calendar.time)){
-                if(hourOfDay24 >= hour24 && minutes >= minute){
+                if(currentHourOfDay24 >= hour24 && currentMinutes >= minute){
                     calendar.add(Calendar.DAY_OF_MONTH, 1)
                     date = getDateWithSpecificDay(calendar.timeInMillis, dayId)
                 }

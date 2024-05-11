@@ -138,9 +138,8 @@ class MedicationConfirmationFragment : BaseFragment() {
                     if(added){
                         addWorkerReminderPeriodically()
                         if (medication.periodTimeId == PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id){
-                            //TODO: TEST ONLY
-//                            val uuids = workerReminder.setReminderDays(medication.apply { json = toJson() })
-//                            medicationsViewModel.saveLocalMedication(medication, uuids)
+                            val uuids = workerReminder.setReminderDays(medication.apply { json = toJson() })
+                            medicationsViewModel.saveLocalMedication(medication, uuids)
                         }else {
                             val uuid = workerReminder.setReminder(medication.apply { json = toJson() })
                             medicationsViewModel.saveLocalMedication(medication, uuid)
@@ -164,10 +163,9 @@ class MedicationConfirmationFragment : BaseFragment() {
                     var uuids = listOf<String>()
                     var uuid = ""
                     if (medication.periodTimeId == PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id){
-                        //TODO: TEST ONLY
-//                        uuids = workerReminder.setReminderDays(medication.apply { json = toJson() })
-//
-//                        modifyLocalMedication(edited, medication, uuids)
+                        uuids = workerReminder.setReminderDays(medication.apply { json = toJson() })
+
+                        modifyLocalMedication(edited, medication, uuids)
                     }else {
                         uuid = workerReminder.setReminder(medication.apply { json = toJson() })
 

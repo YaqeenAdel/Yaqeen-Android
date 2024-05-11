@@ -185,9 +185,8 @@ class RoutineTestConfirmationFragment : BaseFragment() {
                     if (added) {
                         addWorkerReminderPeriodically()
                         if (routineTest.periodTimeId == PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id){
-                            //TODO: TEST ONLY
-//                            val (uuids, workBeforeID) = workerReminder.setReminderDays(routineTest.apply { json = toJson() })
-//                            routineTestViewModel.saveLocalRoutineTest(routineTest, uuids, workBeforeID)
+                            val (uuids, workBeforeID) = workerReminder.setReminderDays(routineTest.apply { json = toJson() })
+                            routineTestViewModel.saveLocalRoutineTest(routineTest, uuids, workBeforeID)
                         }else {
                             val (periodicWorkID, workBeforeID) = workerReminder.setReminder(
                                 routineTest.apply { json = toJson() })
@@ -218,18 +217,17 @@ class RoutineTestConfirmationFragment : BaseFragment() {
                     var periodicWorkID = ""
                     var workBeforeID: String? = null
                     if (routineTest.periodTimeId == PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id){
-                        //TODO: TEST ONLY
-//                        val reminderInfo = workerReminder.setReminderDays(routineTest.apply { json = toJson() })
-//
-//                        uuids = reminderInfo.first
-//                        workBeforeID = reminderInfo.second
-//
-//                        modifyLocalRoutineTest(
-//                            edited,
-//                            routineTest,
-//                            uuids,
-//                            workBeforeID
-//                        )
+                        val reminderInfo = workerReminder.setReminderDays(routineTest.apply { json = toJson() })
+
+                        uuids = reminderInfo.first
+                        workBeforeID = reminderInfo.second
+
+                        modifyLocalRoutineTest(
+                            edited,
+                            routineTest,
+                            uuids,
+                            workBeforeID
+                        )
                     }else {
                         val reminderInfo = workerReminder.setReminder(routineTest.apply { json = toJson() })
 

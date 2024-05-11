@@ -52,10 +52,8 @@ class WorkerReminder(private val context: Context): ReminderManager() {
     private fun setPeriodReminderSpecificDay(medication: MedicationDB, dayId: Int): String {
 
         val periodicWorkRequest = with(medication){
-            //TODO: depend on the dateTime and dayId only to calculate timeDelayInMilliSeconds
-//            val timeDelayInMilliSeconds =
-//                calculateInitialDelayForSpecificDay(startDate, hour24, minute, dayId)
-            val timeDelayInMilliSeconds = 0L
+            val timeDelayInMilliSeconds =
+                calculateInitialDelayForSpecificDay(startDateTime, dayId)
             WorkerRequest.Builder()
                 .setStartDateTime(timeDelayInMilliSeconds)
                 .setPeriodTime(periodTimeId)
@@ -123,9 +121,8 @@ class WorkerReminder(private val context: Context): ReminderManager() {
     private fun setPeriodReminderSpecificDay(routineTest: RoutineTestDB, dayId: Int): String {
 
         val periodicWorkRequest = with(routineTest){
-//            val timeDelayInMilliSeconds =
-//                calculateInitialDelayForSpecificDay(startDate, hour24, minute, dayId)
-            val timeDelayInMilliSeconds = 0L
+            val timeDelayInMilliSeconds =
+                calculateInitialDelayForSpecificDay(startDateTime, dayId)
             WorkerRequest.Builder()
                 .setStartDateTime(timeDelayInMilliSeconds)
                 .setPeriodTime(periodTimeId)

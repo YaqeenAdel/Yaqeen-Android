@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import android.util.Log
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.room.MedicalAppointmentDB
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.DayEnum
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.PeriodTimeEnum
@@ -49,9 +50,7 @@ class AlarmReminder(private val context: Context): ReminderManager() {
 
     private fun setReminderSpecificDay(medication: MedicationDB, dayId: Int, oneTime: Boolean): String {
         val uuid = with(medication) {
-//            val timeDelayInMilliSeconds = calculateStartDateTimeForSpecificDay(startDate, hour24, minute, dayId)
-            //TODO: depend on the dateTime and dayId only to calculate timeDelayInMilliSeconds
-            val timeDelayInMilliSeconds = 0L
+            val timeDelayInMilliSeconds = calculateStartDateTimeForSpecificDay(startDateTime, dayId)
             ReminderRequest.Builder(context)
                 .setStartDateTime(timeDelayInMilliSeconds)
                 .setPeriodTime(periodTimeId)
@@ -120,9 +119,7 @@ class AlarmReminder(private val context: Context): ReminderManager() {
 
     private fun setReminderSpecificDay(routineTest: RoutineTestDB, dayId: Int, oneTime: Boolean): String {
         val uuid = with(routineTest) {
-//            val timeDelayInMilliSeconds = calculateStartDateTimeForSpecificDay(startDate, hour24, minute, dayId)
-            //TODO: depend on the dateTime and dayId only to calculate timeDelayInMilliSeconds
-            val timeDelayInMilliSeconds = 0L
+            val timeDelayInMilliSeconds = calculateStartDateTimeForSpecificDay(startDateTime, dayId)
             ReminderRequest.Builder(context)
                 .setStartDateTime(timeDelayInMilliSeconds)
                 .setPeriodTime(periodTimeId)
