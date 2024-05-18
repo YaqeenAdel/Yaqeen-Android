@@ -61,8 +61,8 @@ class RoutineTestsAdapter(
             items = (list)?.toMutableList() ?: arrayListOf()
     }
 
-    fun deleteRoutineTest(RoutineTestId: Int) {
-        val position = items.indexOfFirst { it.id == RoutineTestId }
+    fun deleteRoutineTest(routineTestId: Int) {
+        val position = items.indexOfFirst { it.id == routineTestId }
 
         if (position == -1)
             return

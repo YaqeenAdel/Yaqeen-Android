@@ -17,7 +17,10 @@ data class TodayScheduleResponse (
     val entity: EntityResponse?,
 
     @SerializedName("EntityType")
-    val entityType: String?
+    val entityType: String?,
+
+    @SerializedName("CronExpression")
+    val cronExpression: String?,
 )
 
 data class ScheduledEventsResponse(

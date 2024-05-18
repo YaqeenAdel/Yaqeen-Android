@@ -9,18 +9,10 @@ import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.responses.
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.responses.AddSymptomToMedicalReminderResponse
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.responses.EditMedicalReminderResponse
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.responses.GetMedicalRemindersResponse
-import com.cancer.yaqeen.data.features.home.schedule.medication.models.Medication
-import com.cancer.yaqeen.data.features.home.schedule.medication.models.MedicationTrack
 import com.cancer.yaqeen.data.features.home.schedule.routine_test.models.ReminderBefore
 import com.cancer.yaqeen.data.features.home.schedule.symptom.mappers.MappingSymptomRemoteAsModel
-import com.cancer.yaqeen.data.utils.formatDate
-import com.cancer.yaqeen.data.utils.formatTime
-import com.cancer.yaqeen.presentation.ui.main.treatment.getMedicationType
-import com.cancer.yaqeen.presentation.ui.main.treatment.getPeriodTimeFromCronExpression
-import com.cancer.yaqeen.presentation.ui.main.treatment.getReminderTimeFromCronExpression
-import com.cancer.yaqeen.presentation.ui.main.treatment.getSpecificDaysFromCronExpression
-import com.cancer.yaqeen.presentation.ui.main.treatment.getStartingDateFromCronExpression
-import com.cancer.yaqeen.presentation.ui.main.treatment.getUnitType
+import com.cancer.yaqeen.data.utils.convertToMillis
+import com.cancer.yaqeen.presentation.ui.main.treatment.getReminderTimeFromDateTime
 
 
 class MappingAddMedicalReminderRemoteAsUIModel :
@@ -72,8 +64,8 @@ class MappingMedicalRemindersRemoteAsModel: Mapper<GetMedicalRemindersResponse, 
                 doctorName = entity?.physician ?: "",
                 location = entity?.location ?: "",
                 phoneNumber = entity?.phoneNumber ?: "",
-                startDate = startDate?.formatDate() ?: "",
-                reminderTime = startDate?.formatTime() ?: "",
+                startDate = startDate?.convertToMillis() ?: 0L,
+                reminderTime = getReminderTimeFromDateTime(startDate.toString()),
                 reminderBefore = ReminderBefore.createReminderBefore(
                     entity?.notifyBeforeMinutes ?: 0
                 ),

@@ -148,7 +148,7 @@ class SymptomConfirmationFragment : BaseFragment() {
     private fun confirmSymptom() {
         val symptomTrack = symptomsViewModel.getSymptomTrack()
         if (!storagePermissionsAreGranted(requireContext())&& symptomTrack?.photosList?.any { it.uri != null } == true) {
-            enableStoragePermissions(requestMultiplePermissionsLauncher)
+            enableStoragePermissions(requestMultiplePermissionsLauncher, requireContext())
             return
         }
 
@@ -162,6 +162,7 @@ class SymptomConfirmationFragment : BaseFragment() {
     private fun observeStates() {
         lifecycleScope {
             symptomsViewModel.viewStateLoading.collectLatest {
+                //TODO: Enable an Disable the UI depend on the it
                 onLoading(it)
             }
         }

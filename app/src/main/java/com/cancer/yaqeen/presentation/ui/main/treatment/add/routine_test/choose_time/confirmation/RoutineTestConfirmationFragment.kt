@@ -142,7 +142,7 @@ class RoutineTestConfirmationFragment : BaseFragment() {
     private fun confirmRoutineTest() {
         val routineTestTrack = routineTestViewModel.getRoutineTestTrack()
         if (!storagePermissionsAreGranted(requireContext()) && routineTestTrack?.photo?.uri != null) {
-            enableStoragePermissions(requestMultiplePermissionsLauncher)
+            enableStoragePermissions(requestMultiplePermissionsLauncher, requireContext())
             return
         }
 
@@ -170,6 +170,7 @@ class RoutineTestConfirmationFragment : BaseFragment() {
     private fun observeStates() {
         lifecycleScope {
             routineTestViewModel.viewStateLoading.collectLatest {
+                //TODO: Enable an Disable the UI depend on the it
                 onLoading(it)
             }
         }

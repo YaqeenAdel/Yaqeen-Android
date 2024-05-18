@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -62,7 +63,6 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
         AlarmReminder(requireContext())
     }
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -74,6 +74,14 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        setFragmentResultListener(Constants.REQUEST_MEDICATION_ID_KEY) { requestKey, bundle ->
+            if(requestKey == Constants.REQUEST_MEDICATION_ID_KEY) {
+                val medicationId = bundle.getInt(Constants.MEDICATION_ID_KEY)
+
+                medicationsAdapter.deleteMedication(medicationId)
+            }
+        }
 
         navController = findNavController()
 
@@ -171,7 +179,7 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
 
         lifecycleScope {
             viewModel.viewStateMedications.collect { medications ->
-                medicationsAdapter.submitList(medications)
+                medicationsAdapter.setList(medications)
             }
         }
 
@@ -438,7 +446,7 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
                         )
                 }
                 else {
-                        navController.tryNavigate(R.id.authFragment)
+                    navController.tryNavigate(R.id.authFragment)
                 }
             }
             R.id.btn_medications -> {

@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:layout_marginBottom="@dimen/_10sdp"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/iv_symptom"
@@ -87,7 +87,7 @@
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:layout_marginBottom="@dimen/_10sdp"
-            android:visibility="gone">
+            android:visibility="visible">
 
 
             <androidx.recyclerview.widget.RecyclerView
@@ -106,17 +106,6 @@
                 android:layout_marginStart="@dimen/_14sdp"
                 tools:itemCount="4"
                 tools:listitem="@layout/item_photo_small" />
-<!--            <ImageView-->
-<!--                android:id="@+id/iv_symptom_2"-->
-<!--                android:layout_width="@dimen/_44sdp"-->
-<!--                android:layout_height="@dimen/_44sdp"-->
-<!--                tools:src="@mipmap/ic_launcher"-->
-<!--                android:scaleType="fitXY"-->
-<!--                android:layout_marginTop="@dimen/_15sdp"-->
-<!--                app:layout_constraintTop_toTopOf="parent"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                android:layout_marginVertical="@dimen/_10sdp"-->
-<!--                android:layout_marginStart="@dimen/_14sdp"/>-->
 
 
             <com.google.android.material.button.MaterialButton

@@ -417,12 +417,18 @@ class RoutineTestViewModel @Inject constructor(
         val (dayOfMonth, dayOfWeek) = when (time?.id) {
             PeriodTimeEnum.DAY_AFTER_DAY.id -> "$startingDay/2" to "*"
             PeriodTimeEnum.EVERY_WEEK.id -> "$startingDay/7" to "*"
-            PeriodTimeEnum.EVERY_MONTH.id -> startingDay to "*"
+            // Every month and ignore different days of the month (28, 30, 31)
+//            PeriodTimeEnum.EVERY_MONTH.id -> startingDay to "*"
+            PeriodTimeEnum.EVERY_MONTH.id -> "$startingDay/30" to "*"
             PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id -> "*" to (specificDays?.map { it.id }?.joinToString(separator = ",") { it.toString() } ?: "")
             else -> "$startingDay/1" to "*"
         }
-        val month = if(time?.id == PeriodTimeEnum.EVERY_MONTH.id) "*"
-            else "$startingMonth/1"
+
+        // Every month and ignore different days of the month (28, 30, 31)
+//        val month = if(time?.id == PeriodTimeEnum.EVERY_MONTH.id) "*"
+//            else "$startingMonth/1"
+
+        val month = "$startingMonth/1"
         val year = "$startingYear/1"
 
         return "$minutes $hours $dayOfMonth $month $dayOfWeek"

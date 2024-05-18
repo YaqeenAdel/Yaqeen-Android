@@ -154,6 +154,18 @@ fun String.formatDate(): String {
     }
 }
 
+fun String.convertToMillis(): Long {
+    return try {
+        val inputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+        val outputDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+
+        val inputDate = inputDateFormat.parse(this)
+        inputDate.time
+    } catch (_: Exception) {
+        0L
+    }
+}
+
 fun String.formatDateAPI(): String {
     return try {
         val inputDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)

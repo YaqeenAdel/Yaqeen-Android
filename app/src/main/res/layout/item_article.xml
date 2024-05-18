@@ -5,10 +5,6 @@
 
     <data>
 
-        <variable
-            name="article_image_url"
-            type="String" />
-
     </data>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,7 +17,6 @@
                 android:layout_width="@dimen/_90sdp"
                 android:layout_height="@dimen/_90sdp"
                 android:scaleType="centerCrop"
-                app:imageUrl="@{article_image_url}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/card_category"
                 app:layout_constraintBottom_toTopOf="@id/view"

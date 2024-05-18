@@ -11,32 +11,34 @@ import com.cancer.yaqeen.R
 
 @BindingAdapter("imageUrl")
 fun bindImage(imageView: ImageView, imgUrl: String?) {
-    imgUrl?.let {
-        if (it.isNotEmpty()) {
-            try {
-                imageView.clipToOutline = true
-                Glide.with(imageView.context)
-                    .load(it)
-                    .apply(
-                        RequestOptions()
-                            .placeholder(R.drawable.background_view_gray)
-                    )
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(imageView)
-            } catch (e: Exception) {
-            }
+    if (imgUrl.isNullOrEmpty()) {
+//        imageView.setImageResource(R.color.silver_medal)
+        imageView.setImageResource(R.drawable.logo_launcher)
+    } else {
+        try {
+            imageView.clipToOutline = true
+            Glide.with(imageView.context)
+                .load(imgUrl)
+                .apply(
+                    RequestOptions()
+                        .placeholder(R.drawable.background_view_gray)
+                )
+                .error(R.drawable.logo_launcher)
+                .placeholder(R.drawable.logo_launcher)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(imageView)
+        } catch (e: Exception) {
         }
-        else imageView.setImageResource(R.color.silver_medal)
     }
 }
 
 @BindingAdapter("imageURI")
-fun bindImageURI(imageView: ImageView, uri: Uri?){
+fun bindImageURI(imageView: ImageView, uri: Uri?) {
     imageView.setImageURI(uri)
 }
 
 @BindingAdapter("resourceId")
-fun bindResourceImage(imageView: ImageView, resourceId: Int){
+fun bindResourceImage(imageView: ImageView, resourceId: Int) {
     Glide.with(imageView.context)
         .load(resourceId)
         .into(imageView)

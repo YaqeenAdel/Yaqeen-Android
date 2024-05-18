@@ -73,16 +73,16 @@ class CameraViewFragment : BaseFragment() {
         }
 
 
-    private val requestCameraMultiplePermissionsLauncher: ActivityResultLauncher<Array<String>?> =
-        registerForActivityResult(
-            ActivityResultContracts.RequestMultiplePermissions()
-        ) { permissions ->
-            if (permissions[Manifest.permission.READ_EXTERNAL_STORAGE] == true || permissions[Manifest.permission.READ_MEDIA_IMAGES] == true)
-                if (!cameraPermissionsAreGranted(requireContext()))
-                    enableCameraPermissions(requestCameraPermissionLauncher)
-                else
-                    openCamera()
-        }
+//    private val requestCameraMultiplePermissionsLauncher: ActivityResultLauncher<Array<String>?> =
+//        registerForActivityResult(
+//            ActivityResultContracts.RequestMultiplePermissions()
+//        ) { permissions ->
+//            if (permissions[Manifest.permission.READ_EXTERNAL_STORAGE] == true || permissions[Manifest.permission.READ_MEDIA_IMAGES] == true)
+//                if (!cameraPermissionsAreGranted(requireContext()))
+//                    enableCameraPermissions(requestCameraPermissionLauncher)
+//                else
+//                    openCamera()
+//        }
 
 
     private lateinit var imageCapture: ImageCapture
@@ -141,7 +141,7 @@ class CameraViewFragment : BaseFragment() {
 
     private fun openCamera() {
         if (!cameraPermissionsAreGranted(requireContext())) {
-            enableStoragePermissions(requestCameraMultiplePermissionsLauncher)
+            enableCameraPermissions(requestCameraPermissionLauncher)
             return
         }
 

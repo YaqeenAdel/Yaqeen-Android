@@ -70,19 +70,19 @@ class SplashFragment : BaseFragment() {
         }
     }
     private fun checkNotificationPermission(){
-        if (PermissionChecker.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.POST_NOTIFICATIONS
-            ) == PermissionChecker.PERMISSION_GRANTED){
-            checkUserInfo()
-        } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (PermissionChecker.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) == PermissionChecker.PERMISSION_GRANTED){
+                checkUserInfo()
+            } else {
                 enableNotificationPermissions(
                     requestPermissionLauncher
                 )
-            }else {
-                checkUserInfo()
             }
+        }else {
+            checkUserInfo()
         }
     }
 

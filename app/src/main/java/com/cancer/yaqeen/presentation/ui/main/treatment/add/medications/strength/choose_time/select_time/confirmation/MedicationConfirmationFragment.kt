@@ -123,6 +123,7 @@ class MedicationConfirmationFragment : BaseFragment() {
     private fun observeStates() {
         lifecycleScope {
             medicationsViewModel.viewStateLoading.collectLatest {
+                //TODO: Enable an Disable the UI depend on the it
                 onLoading(it)
             }
         }

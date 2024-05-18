@@ -22,6 +22,7 @@ import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.SaveLoca
 import com.cancer.yaqeen.presentation.ui.main.treatment.getReminderTimeFromTime
 import com.cancer.yaqeen.presentation.util.SingleLiveEvent
 import com.cancer.yaqeen.presentation.util.convertDateToMilliSeconds
+import com.cancer.yaqeen.presentation.util.convertMilliSecondsToDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -73,12 +74,12 @@ class MedicalReminderViewModel @Inject constructor(
             it.phoneNumber = phoneNumber
         }
 
-    fun selectStartDate(startDate: String) =
+    fun selectStartDate(startDate: Long) =
         medicalReminderTrackField.get()?.also {
             it.startDate = startDate
         }
 
-    fun selectReminderTime(time: String?) =
+    fun selectReminderTime(time: ReminderTime?) =
         medicalReminderTrackField.get()?.also {
             it.reminderTime = time
         }
@@ -138,8 +139,8 @@ class MedicalReminderViewModel @Inject constructor(
                     doctorName = doctorName ?: "",
                     location = location ?: "",
                     phoneNumber = phoneNumber ?: "",
-                    startDate = startDate,
-                    time = reminderTime,
+                    startDate = convertMilliSecondsToDate(startDate ?: 0L),
+                    time = reminderTime?.run { "${getAccurateHour24()}:$minute" },
                     notifyBeforeMinutes = reminderBefore.timeInMinutes,
                     notes = notes ?: "",
                 )
@@ -155,8 +156,8 @@ class MedicalReminderViewModel @Inject constructor(
                                 val medicalAppointmentDB =
                                     createMedicalAppointmentDB(
                                         requestBuilder,
-                                        convertDateToMilliSeconds(startDate ?: ""),
-                                        getReminderTimeFromTime(reminderTime ?: ""),
+                                        startDate,
+                                        reminderTime,
                                         reminderBefore.timeInMinutes,
                                         it.scheduleID
                                     )
@@ -204,8 +205,8 @@ class MedicalReminderViewModel @Inject constructor(
                     doctorName = doctorName ?: "",
                     location = location ?: "",
                     phoneNumber = phoneNumber ?: "",
-                    startDate = startDate,
-                    time = reminderTime,
+                    startDate = convertMilliSecondsToDate(startDate ?: 0L),
+                    time = reminderTime?.run { "${getAccurateHour24()}:$minute" },
                     notifyBeforeMinutes = reminderBefore.timeInMinutes,
                     notes = notes ?: "",
                 )
@@ -222,8 +223,8 @@ class MedicalReminderViewModel @Inject constructor(
                                 val medicalAppointmentDB =
                                     createMedicalAppointmentDB(
                                         requestBuilder,
-                                        convertDateToMilliSeconds(startDate ?: ""),
-                                        getReminderTimeFromTime(reminderTime ?: ""),
+                                        startDate,
+                                        reminderTime,
                                         reminderBefore.timeInMinutes,
                                         medicalReminderId ?: 0
                                     )

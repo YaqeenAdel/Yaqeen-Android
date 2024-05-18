@@ -13,6 +13,7 @@ import com.cancer.yaqeen.databinding.ItemMedicalAppointmentBinding
 import com.cancer.yaqeen.databinding.ItemMedicalAppointmentWithSymptomsBinding
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindImage
 import com.cancer.yaqeen.presentation.util.changeVisibility
+import com.cancer.yaqeen.presentation.util.convertMilliSecondsToDate
 
 class MedicalRemindersAdapter(
     private var items: MutableList<MedicalReminder> = arrayListOf(),
@@ -105,18 +106,23 @@ class MedicalRemindersAdapter(
 
         private val _context = itemBinding.root.context
         private var reminderBeforeTime = ""
+        private var date = ""
 
         fun bind(item: MedicalReminder) {
             with(item){
                 reminderBeforeTime = getReminderBeforeTime(_context, reminderBefore)
+                date = convertMilliSecondsToDate(startDate)
 
                 itemBinding.tvDoctorName.text = doctorName
                 itemBinding.tvDoctorName2.text = doctorName
-                itemBinding.tvDate.text = startDate
+                itemBinding.tvDate.text = date
                 itemBinding.tvNotesVal.text = notes
                 itemBinding.tvLocationVal.text = location
-                itemBinding.tvDaysVal.text = startDate
-                itemBinding.tvTimeVal.text = reminderTime
+                itemBinding.tvDaysVal.text = date
+                itemBinding.tvTimeVal.text = reminderTime?.run {
+                    val timing = if (isAM) _context.getString(R.string.am) else _context.getString(R.string.pm)
+                    "$text $timing"
+                }
                 itemBinding.tvReminderVal.text = reminderBeforeTime
 
 
@@ -171,8 +177,11 @@ class MedicalRemindersAdapter(
                 bindImage(itemBinding.ivSymptom2, symptomImgUrl)
                 itemBinding.tvNotesVal.text = notes
                 itemBinding.tvLocationVal.text = location
-                itemBinding.tvDaysVal.text = startDate
-                itemBinding.tvTimeVal.text = reminderTime
+                itemBinding.tvDaysVal.text = convertMilliSecondsToDate(startDate)
+                itemBinding.tvTimeVal.text = reminderTime?.run {
+                    val timing = if (isAM) _context.getString(R.string.am) else _context.getString(R.string.pm)
+                    "$text $timing"
+                }
                 itemBinding.tvReminderVal.text = reminderBeforeTime
 
 

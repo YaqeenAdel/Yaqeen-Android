@@ -40,16 +40,16 @@ class MethodAttachedFileFragment : BottomSheetDialogFragment() {
         }
 
 
-    private val requestCameraMultiplePermissionsLauncher: ActivityResultLauncher<Array<String>?> =
-        registerForActivityResult(
-            ActivityResultContracts.RequestMultiplePermissions()
-        ) { permissions ->
-            if (permissions[Manifest.permission.READ_EXTERNAL_STORAGE] == true || permissions[Manifest.permission.READ_MEDIA_IMAGES] == true)
-                if (!cameraPermissionsAreGranted(requireContext()))
-                    enableCameraPermissions(requestCameraPermissionLauncher)
-                else
-                    openCamera()
-        }
+//    private val requestCameraMultiplePermissionsLauncher: ActivityResultLauncher<Array<String>?> =
+//        registerForActivityResult(
+//            ActivityResultContracts.RequestMultiplePermissions()
+//        ) { permissions ->
+//            if (permissions[Manifest.permission.READ_EXTERNAL_STORAGE] == true || permissions[Manifest.permission.READ_MEDIA_IMAGES] == true)
+//                if (!cameraPermissionsAreGranted(requireContext()))
+//                    enableCameraPermissions(requestCameraPermissionLauncher)
+//                else
+//                    openCamera()
+//        }
 
     private val requestMultiplePermissionsLauncher: ActivityResultLauncher<Array<String>?> =
         registerForActivityResult(
@@ -100,7 +100,7 @@ class MethodAttachedFileFragment : BottomSheetDialogFragment() {
 
     private fun openCamera() {
         if (!cameraPermissionsAreGranted(requireContext())) {
-            enableStoragePermissions(requestCameraMultiplePermissionsLauncher)
+            enableCameraPermissions(requestCameraPermissionLauncher)
             return
         }
         navController.tryNavigate(

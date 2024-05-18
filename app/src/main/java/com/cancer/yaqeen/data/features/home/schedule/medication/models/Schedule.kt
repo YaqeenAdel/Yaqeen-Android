@@ -15,7 +15,7 @@ data class Schedule(
     val scheduledTimes: List<String>,
     val scheduledTodayTime: String,
     val cronExpression: String,
-//    val reminderTime: ReminderTime? = null,
+    val reminderTime: ReminderTime? = null,
 ): Parcelable
 
 @Parcelize

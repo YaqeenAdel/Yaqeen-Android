@@ -155,6 +155,7 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_take"
                 style="@style/Widget.Material3.Button.TextButton"
+                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:iconSize="@dimen/_18sdp"
@@ -174,6 +175,7 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_skip"
                 style="@style/Widget.Material3.Button.TextButton"
+                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -193,12 +195,35 @@
                 app:layout_constraintBottom_toBottomOf="@id/btn_take"/>
 
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_delete"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:iconSize="@dimen/_18sdp"
+                app:iconTint="@color/orange"
+                app:icon="@drawable/ic_close_circle"
+                app:iconGravity="textStart"
+                app:iconPadding="@dimen/_4sdp"
+                android:text="@string/delete"
+                android:textColor="@color/xx_dark_gray"
+                android:textSize="@dimen/_12ssp"
+                android:fontFamily="sans-serif"
+                app:backgroundTint="@color/white"
+                app:cornerRadius="@dimen/_8sdp"
+                app:layout_constraintTop_toTopOf="@id/btn_take"
+                app:layout_constraintStart_toEndOf="@id/btn_take"
+                app:layout_constraintBottom_toBottomOf="@id/btn_take"/>
+
+
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_edit"
                 style="@style/Widget.Material3.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:layout_marginEnd="@dimen/_12sdp"
                 app:iconSize="@dimen/_18sdp"
                 app:iconTint="@color/primary_color"

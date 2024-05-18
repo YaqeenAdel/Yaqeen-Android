@@ -86,24 +86,27 @@ class MappingEditMedicationRemoteAsUIModel :
 private fun mapRemindersFromNowRemoteByEvents(response: TodaySchedulesResponse): List<Schedule> {
     val schedules: MutableList<Schedule> = arrayListOf()
     response.schedules?.map { schedule ->
-        schedule.scheduledEvents?.events?.distinctBy { it.scheduledTime.toString() }?.map { event ->
-            if (event.scheduledTime?.isCurrentTodayAndAfterTimeNow() == true)
-                schedules.add(
-                    when (schedule.entityType) {
-                        ScheduleType.MEDICATION.scheduleType ->
-                            MappingReminderTodayRemoteAsScheduleMedicationModel(event.scheduledTime).map(
-                                schedule
-                            )
+        if (schedule.entityType == ScheduleType.MEDICAL_REMINDER.scheduleType){
+            schedules.add(
+                MappingReminderTodayRemoteAsScheduleAppointmentModel().map(schedule)
+            )
+        }else {
+            schedule.scheduledEvents?.events?.distinctBy { it.scheduledTime.toString() }
+                ?.map { event ->
+                    if (event.scheduledTime?.isCurrentTodayAndAfterTimeNow() == true)
+                        schedules.add(
+                            when (schedule.entityType) {
+                                ScheduleType.MEDICATION.scheduleType ->
+                                    MappingReminderTodayRemoteAsScheduleMedicationModel(event.scheduledTime).map(
+                                        schedule
+                                    )
 
-                        ScheduleType.MEDICAL_REMINDER.scheduleType -> MappingReminderTodayRemoteAsScheduleAppointmentModel(
-                            event.scheduledTime
-                        ).map(schedule)
-
-                        else -> MappingReminderTodayRemoteAsScheduleRoutineTestModel(event.scheduledTime).map(
-                            schedule
+                                else -> MappingReminderTodayRemoteAsScheduleRoutineTestModel(event.scheduledTime).map(
+                                    schedule
+                                )
+                            }
                         )
-                    }
-                )
+                }
         }
     }
 
@@ -139,7 +142,7 @@ class MappingReminderTodayRemoteAsScheduleMedicationModel(private val scheduledT
         }
 }
 
-class MappingReminderTodayRemoteAsScheduleAppointmentModel(private val scheduledTime: String?) :
+class MappingReminderTodayRemoteAsScheduleAppointmentModel(private val scheduledTime: String? = null) :
     Mapper<TodayScheduleResponse, Schedule> {
     override fun map(input: TodayScheduleResponse): Schedule =
         with(input) {
@@ -155,7 +158,8 @@ class MappingReminderTodayRemoteAsScheduleAppointmentModel(private val scheduled
                 ),
                 notes = entity?.notes ?: "",
                 scheduleType = entityType ?: "",
-                cronExpression = "",
+                cronExpression = cronExpression.toString(),
+                reminderTime = getReminderTimeFromCronExpression(cronExpression.toString()),
                 scheduledTimes = scheduledEvents?.events?.map { event -> event.scheduledTime.toString() }
                     ?: listOf(),
                 scheduledTodayTime = scheduledTime?.formatTime() ?: ""
