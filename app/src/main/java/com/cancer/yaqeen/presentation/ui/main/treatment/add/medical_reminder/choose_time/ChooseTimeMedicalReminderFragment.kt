@@ -34,6 +34,7 @@ import com.cancer.yaqeen.presentation.util.disable
 import com.cancer.yaqeen.presentation.util.enable
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.concurrent.TimeUnit
 
 
 @AndroidEntryPoint
@@ -273,6 +274,7 @@ class ChooseTimeMedicalReminderFragment : BaseFragment() {
         val medicalReminderTrack = medicalReminderViewModel.getMedicalReminderTrack()
         val startDate = medicalReminderTrack?.startDate ?: 0L
         val reminderTime = medicalReminderTrack?.reminderTime
+        val reminderBeforeInMinutes = medicalReminderTrack?.reminderBefore
 
         reminderTime?.let {
             val startDateTime = calculateStartDateTime(
@@ -280,8 +282,9 @@ class ChooseTimeMedicalReminderFragment : BaseFragment() {
                 reminderTime.hour24.toIntOrNull() ?: 0,
                 reminderTime.minute.toIntOrNull() ?: 0
             )
+            val reminderBeforeInMillis = TimeUnit.MINUTES.toMillis(reminderBeforeInMinutes?.timeInMinutes?.toLong() ?: 0)
 
-            if (startDateTime < System.currentTimeMillis()) {
+            if ((startDateTime - reminderBeforeInMillis) < System.currentTimeMillis()) {
                 Toast.makeText(requireContext(),
                     getString(R.string.you_must_select_a_new_datetime), Toast.LENGTH_SHORT)
                     .show()

@@ -1,6 +1,7 @@
 package com.cancer.yaqeen.presentation.ui.main.treatment.history
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -179,6 +180,8 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
 
         lifecycleScope {
             viewModel.viewStateMedications.collect { medications ->
+                if (medications.isNotEmpty())
+                    Log.d("medications", "observeStates: ${medications[26]}")
                 medicationsAdapter.setList(medications)
             }
         }

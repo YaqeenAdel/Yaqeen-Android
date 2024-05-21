@@ -107,6 +107,7 @@ class HomeViewModel @Inject constructor(
                         if (response.data?.isNotEmpty() == true){
                             if (prefEncryptionUtil.isLogged){
                                 getLocalBookmarkedArticlesUseCase().onEach { responseLocal ->
+                                    _viewStateLoading.emit(response.loading)
                                     when (responseLocal.status) {
                                         Status.ERROR, Status.SUCCESS -> {
                                             if(responseLocal.data.isNullOrEmpty()) {

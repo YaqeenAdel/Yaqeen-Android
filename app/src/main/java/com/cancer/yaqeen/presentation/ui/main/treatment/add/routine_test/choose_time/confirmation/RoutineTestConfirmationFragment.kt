@@ -31,7 +31,9 @@ import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindImage
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindImageURI
 import com.cancer.yaqeen.presentation.util.convertMilliSecondsToDate
+import com.cancer.yaqeen.presentation.util.disableTouch
 import com.cancer.yaqeen.presentation.util.enableStoragePermissions
+import com.cancer.yaqeen.presentation.util.enableTouch
 import com.cancer.yaqeen.presentation.util.schedulingPermissionsAreGranted
 import com.cancer.yaqeen.presentation.util.storagePermissionsAreGranted
 import com.cancer.yaqeen.presentation.util.tryPopBackStack
@@ -170,7 +172,10 @@ class RoutineTestConfirmationFragment : BaseFragment() {
     private fun observeStates() {
         lifecycleScope {
             routineTestViewModel.viewStateLoading.collectLatest {
-                //TODO: Enable an Disable the UI depend on the it
+                if (it)
+                    disableTouch()
+                else
+                    enableTouch()
                 onLoading(it)
             }
         }

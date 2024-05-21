@@ -219,6 +219,7 @@ class SchedulesHistoryViewModel @Inject constructor(
             getLocalMedicalAppointmentUseCase(
                 medicalAppointmentId = medicalAppointmentId
             ).collect { response ->
+                _viewStateLoading.emit(response.loading)
                 when (response.status) {
                     Status.ERROR -> {}
                     Status.SUCCESS -> {
@@ -268,6 +269,7 @@ class SchedulesHistoryViewModel @Inject constructor(
             getLocalRoutineTestUseCase(
                 routineTestId = routineTestId
             ).collect { response ->
+                _viewStateLoading.emit(response.loading)
                 when (response.status) {
                     Status.ERROR -> {}
                     Status.SUCCESS -> {
@@ -317,6 +319,7 @@ class SchedulesHistoryViewModel @Inject constructor(
             getLocalMedicationUseCase(
                 medicationId = medicationId
             ).collect { response ->
+                _viewStateLoading.emit(response.loading)
                 when (response.status) {
                     Status.ERROR -> {
                         _viewStateDeleteMedication.postValue(medicationId)

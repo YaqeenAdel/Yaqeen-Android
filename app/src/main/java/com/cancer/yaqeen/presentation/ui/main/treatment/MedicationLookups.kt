@@ -87,12 +87,14 @@ fun getUnitType(context: Context, unitType: String): UnitType?{
 fun getReminderTimeFromCronExpression(cronExpression: String): ReminderTime {
     val fields = cronExpression.split(" ")
 
-    val minute = fields[0]
+    var minute = fields[0]
+
+    minute = if (minute == "0") "00" else minute
 
     val hourField = fields[1]
 
     // if time is every 8 or 12 days
-    val hour24 = if (hourField.contains("/")){
+    var hour24 = if (hourField.contains("/")){
         val hourFields = hourField.split("/")
         hourFields[0]
     }else {
@@ -101,11 +103,15 @@ fun getReminderTimeFromCronExpression(cronExpression: String): ReminderTime {
 
     val (hour12, isAM) = if (hour24.toInt() == 0){
         "12" to true
+    } else if (hour24.toInt() == 12){
+        "12" to false
     } else if (hour24.toInt() < 12){
         hour24 to true
     }else {
         (hour24.toInt() - 12).toString() to false
     }
+
+    hour24 = if (hour24 == "0") "00" else hour24
 
     return ReminderTime(
         hour12, hour24, minute, "", isAM, "$hour12:$minute"

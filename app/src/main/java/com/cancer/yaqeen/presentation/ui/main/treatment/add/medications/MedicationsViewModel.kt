@@ -304,6 +304,7 @@ class MedicationsViewModel @Inject constructor(
             getLocalMedicationUseCase(
                 medicationId = medicationId
             ).collect { response ->
+                _viewStateLoading.emit(response.loading)
                 when (response.status) {
                     Status.ERROR -> {
                         _viewStateEditMedication.postValue(false to medicationDB.apply { isReminded = false })

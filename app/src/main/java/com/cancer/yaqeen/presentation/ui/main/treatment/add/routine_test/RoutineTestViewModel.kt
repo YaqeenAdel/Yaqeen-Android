@@ -385,6 +385,7 @@ class RoutineTestViewModel @Inject constructor(
             getLocalRoutineTestUseCase(
                 routineTestId = routineTestId
             ).collect { response ->
+                _viewStateLoading.emit(response.loading)
                 when (response.status) {
                     Status.ERROR -> {
                         _viewStateEditRoutineTest.postValue(false to routineTestDB)

@@ -24,6 +24,8 @@ import com.cancer.yaqeen.presentation.util.Constants.UPDATE_LOCAL_SCHEDULES_ACTI
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindResourceImage
 import com.cancer.yaqeen.presentation.util.convertMilliSecondsToDate
+import com.cancer.yaqeen.presentation.util.disableTouch
+import com.cancer.yaqeen.presentation.util.enableTouch
 import com.cancer.yaqeen.presentation.util.schedulingPermissionsAreGranted
 import com.cancer.yaqeen.presentation.util.tryPopBackStack
 import dagger.hilt.android.AndroidEntryPoint
@@ -123,7 +125,10 @@ class MedicationConfirmationFragment : BaseFragment() {
     private fun observeStates() {
         lifecycleScope {
             medicationsViewModel.viewStateLoading.collectLatest {
-                //TODO: Enable an Disable the UI depend on the it
+                if (it)
+                    disableTouch()
+                else
+                    enableTouch()
                 onLoading(it)
             }
         }

@@ -24,8 +24,10 @@ import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindImage
 import com.cancer.yaqeen.presentation.util.changeVisibility
+import com.cancer.yaqeen.presentation.util.disableTouch
 import com.cancer.yaqeen.presentation.util.dpToPx
 import com.cancer.yaqeen.presentation.util.enableStoragePermissions
+import com.cancer.yaqeen.presentation.util.enableTouch
 import com.cancer.yaqeen.presentation.util.recyclerview.HorizontalMarginItemDecoration
 import com.cancer.yaqeen.presentation.util.recyclerview.VerticalMarginItemDecoration
 import com.cancer.yaqeen.presentation.util.storagePermissionsAreGranted
@@ -162,7 +164,10 @@ class SymptomConfirmationFragment : BaseFragment() {
     private fun observeStates() {
         lifecycleScope {
             symptomsViewModel.viewStateLoading.collectLatest {
-                //TODO: Enable an Disable the UI depend on the it
+                if (it)
+                    disableTouch()
+                else
+                    enableTouch()
                 onLoading(it)
             }
         }

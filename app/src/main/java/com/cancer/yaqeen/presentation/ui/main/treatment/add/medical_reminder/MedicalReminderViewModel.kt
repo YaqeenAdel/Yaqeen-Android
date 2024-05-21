@@ -248,6 +248,7 @@ class MedicalReminderViewModel @Inject constructor(
             getLocalMedicalAppointmentUseCase(
                 medicalAppointmentId = medicalAppointmentId
             ).collect { response ->
+                _viewStateLoading.emit(response.loading)
                 when (response.status) {
                     Status.ERROR -> {
                         _viewStateEditMedicalReminder.postValue(false to medicalAppointmentDB)
