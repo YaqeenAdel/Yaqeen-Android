@@ -2,9 +2,11 @@ package com.cancer.yaqeen.data.di
 
 import android.annotation.SuppressLint
 import android.content.Context
+import com.cancer.yaqeen.BuildConfig
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.data.network.NetworkConnectionInterceptor
 import com.cancer.yaqeen.data.network.error.ErrorHandlerImpl
+import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.google.gson.GsonBuilder
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import dagger.Module
@@ -64,6 +66,9 @@ object NetworkModule {
             .readTimeout(15, TimeUnit.SECONDS)
             .connectTimeout(15, TimeUnit.SECONDS)
             .writeTimeout(15, TimeUnit.SECONDS)
+
+        if (BuildConfig.DEBUG)
+            client.addInterceptor(ChuckerInterceptor.Builder(context).build())
 
         client.addInterceptor(loggingInterceptor)
 
