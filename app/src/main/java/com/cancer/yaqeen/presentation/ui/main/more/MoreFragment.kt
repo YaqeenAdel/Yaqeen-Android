@@ -17,6 +17,7 @@ import com.cancer.yaqeen.presentation.ui.MainActivity
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindImage
 import com.cancer.yaqeen.presentation.util.changeVisibility
+import com.cancer.yaqeen.presentation.util.schedulingPermissionsAreGranted
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -59,6 +60,12 @@ class MoreFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
 
         setLanguage()
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        updateUI()
     }
 
     private fun setListener(){
@@ -119,13 +126,31 @@ class MoreFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
         alpha = if (isLogged) 1.0f else 0.5f
     }
 
+    private fun navigateToAddingSchedule(onNavigate:() -> Unit) {
+        if (moreViewModel.userIsLoggedIn()) {
+            if (schedulingPermissionsAreGranted(requireActivity(), requireContext()))
+                onNavigate()
+        }
+        else {
+            navController.tryNavigate(R.id.authFragment)
+        }
+    }
+
     override fun onClick(v: View?) {
         when(v?.id){
             R.id.btn_medicine -> {
-                navController.tryNavigate(MoreFragmentDirections.actionMoreFragmentToMedicationsFragment(null))
+                navigateToAddingSchedule {
+                    navController.tryNavigate(MoreFragmentDirections.actionMoreFragmentToMedicationsFragment(null))
+                }
             }
             R.id.btn_symptoms -> {
-                navController.tryNavigate(MoreFragmentDirections.actionMoreFragmentToSymptomsTypesFragment(null))
+                navigateToAddingSchedule {
+                    navController.tryNavigate(
+                        MoreFragmentDirections.actionMoreFragmentToSymptomsTypesFragment(
+                            null
+                        )
+                    )
+                }
             }
             R.id.btn_saved_articles -> {
                 navController.tryNavigate(MoreFragmentDirections.actionMoreFragmentToSavedArticlesFragment())

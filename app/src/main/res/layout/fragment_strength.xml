@@ -142,6 +142,7 @@
                 android:id="@+id/edit_text_count"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:maxLength="5"
                 android:imeOptions="actionGo"
                 android:layout_gravity="center"
                 android:gravity="center"

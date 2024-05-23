@@ -272,6 +272,7 @@
                 android:id="@+id/edit_text_dosage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:maxLength="5"
                 android:layout_gravity="center"
                 android:hint="@string/dosage"
                 android:importantForAutofill="noExcludeDescendants"

@@ -18,7 +18,6 @@ import com.cancer.yaqeen.presentation.service.AlarmReminder
 import com.cancer.yaqeen.presentation.service.ReminderManager
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.medical_reminder.MedicalReminderViewModel
 import com.cancer.yaqeen.presentation.ui.main.treatment.history.adapters.SmallPhotosAdapter
-import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.Constants.OPEN_MEDICAL_APPOINTMENT_WINDOW_ACTION
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindImage
@@ -79,10 +78,15 @@ class MedicalReminderConfirmationFragment : BaseFragment() {
         binding.tvShowLess.setOnClickListener {
             binding.groupSymptom.changeVisibility(show = true, isGone = true)
             binding.groupSymptomDetails.changeVisibility(show = false, isGone = true)
+
+            updateSymptomUI(false)
         }
         binding.tvShowMore.setOnClickListener {
             binding.groupSymptom.changeVisibility(show = false, isGone = true)
             binding.groupSymptomDetails.changeVisibility(show = true, isGone = true)
+
+            val isReminder = binding.tvReminderSymptomVal.text?.isNotEmpty() == true
+            updateSymptomUI(isReminder)
         }
     }
 
@@ -110,7 +114,6 @@ class MedicalReminderConfirmationFragment : BaseFragment() {
 
             symptom?.run {
                 val types = symptomTypes?.joinToString(separator = "\n"){ it.name } ?: ""
-                val isReminder = doctorName?.isNotEmpty() == true
 
                 bindImage(binding.ivSymptom, photosList?.firstOrNull()?.url)
                 binding.tvSymptomTypes.text = types
@@ -122,13 +125,16 @@ class MedicalReminderConfirmationFragment : BaseFragment() {
                 binding.tvSymptomsVal.text = types
                 binding.tvSymptomNotesVal.text = details
                 binding.tvReminderSymptomVal.text = doctorName ?: ""
-                binding.tvReminderSymptom.changeVisibility(show = isReminder, isGone = true)
-                binding.tvReminderSymptomVal.changeVisibility(show = isReminder, isGone = true)
                 binding.tvDateTimeVal.text = "$reminderTime - $startDate"
 
             }
 
         }
+    }
+
+    private fun updateSymptomUI(isReminder: Boolean) {
+        binding.tvReminderSymptom.changeVisibility(show = isReminder, isGone = true)
+        binding.tvReminderSymptomVal.changeVisibility(show = isReminder, isGone = true)
     }
 
     private fun setupPhotosAdapter(photosList: List<String>) {
