@@ -13,6 +13,7 @@ data class MedicalReminderTrack(
     var reminderBefore: ReminderBefore = ReminderBefore.MINUTES_0,
     var notes: String? = null,
     var symptom: Symptom? = null,
+    var oldSymptomId: Int? = null,
     val editable: Boolean = false,
     val medicalReminderId: Int? = null
 )

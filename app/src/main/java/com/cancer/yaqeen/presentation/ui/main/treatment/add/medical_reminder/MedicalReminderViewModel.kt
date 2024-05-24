@@ -213,7 +213,8 @@ class MedicalReminderViewModel @Inject constructor(
                 editMedicalReminderUseCase(
                     medicalReminderId ?: 0,
                     requestBuilder.buildRequestBody(),
-                    symptom?.id
+
+                    if (symptom?.id == oldSymptomId) null else symptom?.id
                 ).collect { response ->
                     _viewStateLoading.emit(response.loading)
                     when (response.status) {

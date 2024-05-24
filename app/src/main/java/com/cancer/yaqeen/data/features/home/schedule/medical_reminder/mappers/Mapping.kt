@@ -91,6 +91,7 @@ class MappingMedicalReminderAsMedicalReminderTrack(val context: Context): Mapper
             reminderBefore = reminderBefore,
             notes = notes,
             symptom = symptom,
+            oldSymptomId = symptom?.id,
             editable = true,
         )
     }
