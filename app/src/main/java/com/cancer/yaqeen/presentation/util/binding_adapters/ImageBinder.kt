@@ -9,11 +9,10 @@ import com.bumptech.glide.request.RequestOptions
 import com.cancer.yaqeen.R
 
 
-@BindingAdapter("imageUrl")
-fun bindImage(imageView: ImageView, imgUrl: String?) {
+fun bindImage(imageView: ImageView, imgUrl: String?, placeHolderIsAppIcon: Boolean = true) {
+    val placeHolderId = if (placeHolderIsAppIcon) R.drawable.logo_launcher else R.color.white_gray
     if (imgUrl.isNullOrEmpty()) {
-//        imageView.setImageResource(R.color.silver_medal)
-        imageView.setImageResource(R.drawable.logo_launcher)
+        imageView.setImageResource(placeHolderId)
     } else {
         try {
             imageView.clipToOutline = true
@@ -23,8 +22,8 @@ fun bindImage(imageView: ImageView, imgUrl: String?) {
                     RequestOptions()
                         .placeholder(R.drawable.background_view_gray)
                 )
-                .error(R.drawable.logo_launcher)
-                .placeholder(R.drawable.logo_launcher)
+                .error(placeHolderId)
+                .placeholder(placeHolderId)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imageView)
         } catch (e: Exception) {

@@ -71,7 +71,7 @@ class ArticlesAdapter(
 
         fun bind(position: Int, item: Article) {
             with(item){
-                bindImage(itemBinding.ivArticleImage, thumbnail)
+                bindImage(itemBinding.ivArticleImage, thumbnail, placeHolderIsAppIcon = false)
                 itemBinding.tvArticleHeadline.text = title
                 itemBinding.tvArticleDate.text = createdDate
                 itemBinding.tvInterestName.text = interests.firstOrNull()?.interestName
