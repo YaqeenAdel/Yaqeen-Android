@@ -63,9 +63,9 @@ object NetworkModule {
             .addInterceptor(NetworkConnectionInterceptor(context, sharedPrefUtil))
             .sslSocketFactory(sslSocketFactory, arrTrustManager[0] as X509TrustManager)
             .hostnameVerifier { hostname, session -> true }
-            .readTimeout(15, TimeUnit.SECONDS)
-            .connectTimeout(15, TimeUnit.SECONDS)
-            .writeTimeout(15, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
 
         if (BuildConfig.DEBUG)
             client.addInterceptor(ChuckerInterceptor.Builder(context).build())

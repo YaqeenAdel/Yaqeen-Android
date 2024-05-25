@@ -55,6 +55,7 @@ import com.cancer.yaqeen.data.network.base.flowStatus
 import com.cancer.yaqeen.data.network.error.ErrorHandlerImpl
 import com.cancer.yaqeen.data.utils.compressImage
 import com.cancer.yaqeen.presentation.util.FileUtils
+import com.chuckerteam.chucker.api.ChuckerInterceptor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -67,6 +68,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 import okio.ByteString.Companion.toByteString
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class ScheduleRepositoryImpl @Inject constructor(
@@ -158,8 +160,15 @@ class ScheduleRepositoryImpl @Inject constructor(
                             .build()
 
                         try {
+
+                            val client = OkHttpClient.Builder()
+                                .connectTimeout(30, TimeUnit.SECONDS)
+                                .writeTimeout(30, TimeUnit.SECONDS)
+                                .readTimeout(30, TimeUnit.SECONDS)
+                                .build()
+
                             val response =
-                                OkHttpClient().newCall(putRequest).execute()
+                                client.newCall(putRequest).execute()
 
                             if (response.isSuccessful) {
                                 val pathURL = restCreateLocationAPI.data?.path.toString()
