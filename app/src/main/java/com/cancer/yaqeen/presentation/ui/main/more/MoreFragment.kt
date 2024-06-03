@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -14,6 +15,7 @@ import com.cancer.yaqeen.presentation.service.AlarmReminder
 import com.cancer.yaqeen.presentation.service.ReminderManager
 import com.cancer.yaqeen.presentation.service.WorkerReminder
 import com.cancer.yaqeen.presentation.ui.MainActivity
+import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindImage
 import com.cancer.yaqeen.presentation.util.changeVisibility
@@ -51,6 +53,14 @@ class MoreFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setFragmentResultListener(Constants.REQUEST_USER_LOG_IN_KEY) { requestKey, bundle ->
+            if(requestKey == Constants.REQUEST_USER_LOG_IN_KEY) {
+                val isLoggedIn = bundle.getBoolean(Constants.USER_LOG_IN_KEY)
+                if(isLoggedIn)
+                    updateUI()
+            }
+        }
+
         navController = findNavController()
 
         setListener()
@@ -76,6 +86,7 @@ class MoreFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
         binding.btnAccountSetting.setOnClickListener(this)
         binding.btnHelp.setOnClickListener(this)
         binding.btnLogOut.setOnClickListener(this)
+        binding.btnLogIn.setOnClickListener(this)
 
     }
     private fun observeStates() {
@@ -106,6 +117,9 @@ class MoreFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
         binding.btnLogOut.changeVisibility(isLogged, isGone = true)
         binding.ivLogOut.changeVisibility(isLogged, isGone = true)
         binding.viewLogOut.changeVisibility(isLogged, isGone = true)
+        binding.btnLogIn.changeVisibility(!isLogged, isGone = true)
+        binding.ivLogIn.changeVisibility(!isLogged, isGone = true)
+        binding.viewLogIn.changeVisibility(!isLogged, isGone = true)
 
         binding.tvNameUser.text = user?.name ?: ""
         binding.tvEmailUser.text = user?.email ?: ""
@@ -164,6 +178,9 @@ class MoreFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
             }
             R.id.btn_log_out -> {
                 moreViewModel.logout(requireContext())
+            }
+            R.id.btn_log_in -> {
+                navController.tryNavigate(R.id.authFragment)
             }
         }
     }

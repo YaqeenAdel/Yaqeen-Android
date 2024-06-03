@@ -512,6 +512,54 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btn_log_out" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_log_in"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_marginStart="@dimen/_20sdp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/iv_log_in"
+            app:layout_constraintTop_toBottomOf="@id/view_help"
+            android:layout_marginTop="@dimen/_2sdp"
+            app:backgroundTint="@color/white"
+            android:textColor="@color/light_black"
+            android:textSize="@dimen/_12ssp"
+            android:text="@string/log_in"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="start|center"
+            android:textAllCaps="false"
+            app:cornerRadius="@dimen/_6sdp"
+            android:paddingStart="@dimen/_8sdp"
+            android:paddingEnd="@dimen/_16sdp"
+            android:paddingVertical="@dimen/_14sdp"
+            app:iconPadding="@dimen/_8sdp"
+            app:icon="@drawable/ic_login"
+            app:iconTint="@color/primary_color"
+            app:iconGravity="start"/>
+
+        <ImageView
+            android:id="@+id/iv_log_in"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_20sdp"
+            android:padding="@dimen/_5sdp"
+            android:src="@drawable/baseline_arrow_forward_ios_24"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btn_log_in"
+            app:layout_constraintBottom_toBottomOf="@id/btn_log_in"
+            app:layout_constraintTop_toTopOf="@id/btn_log_in" />
+
+        <View
+            android:id="@+id/view_log_in"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="@dimen/_20sdp"
+            android:background="@color/secondary_color_30"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_log_in" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
         </ScrollView>

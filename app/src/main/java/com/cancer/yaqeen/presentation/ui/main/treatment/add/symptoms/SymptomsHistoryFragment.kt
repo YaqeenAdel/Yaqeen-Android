@@ -31,7 +31,7 @@ import kotlinx.coroutines.flow.collectLatest
 
 
 @AndroidEntryPoint
-class SymptomsHistoryFragment : BaseBottomSheetDialogFragment() {
+class SymptomsHistoryFragment : BaseBottomSheetDialogFragment(showBottomMenu = true) {
 
     private var binding: FragmentSymptomsHistoryBinding by autoCleared()
 

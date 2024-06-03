@@ -180,8 +180,6 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
 
         lifecycleScope {
             viewModel.viewStateMedications.collect { medications ->
-                if (medications.isNotEmpty())
-                    Log.d("medications", "observeStates: ${medications[26]}")
                 medicationsAdapter.setList(medications)
             }
         }
