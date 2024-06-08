@@ -309,10 +309,21 @@ class ChooseTimeFragment : BaseFragment() {
         val textColorId: Int
         val backgroundColorId: Int
 
-        if (date.isNotEmpty() && time.isNotEmpty() && medicationTimesAdapter.selectedPosition() == 4 && daysAdapter.anyItemIsSelected() && dosageAmount.isNotEmpty()) {
-            binding.btnNext.enable()
-            textColorId = R.color.white
-            backgroundColorId = R.color.primary_color
+        if (date.isNotEmpty() && time.isNotEmpty()) {
+            if (medicationTimesAdapter.selectedPosition() != 4){
+                binding.btnNext.enable()
+                textColorId = R.color.white
+                backgroundColorId = R.color.primary_color
+            } else if (medicationTimesAdapter.selectedPosition() == 4 && daysAdapter.anyItemIsSelected() && dosageAmount.isNotEmpty()){
+                binding.btnNext.enable()
+                textColorId = R.color.white
+                backgroundColorId = R.color.primary_color
+            }else{
+                binding.btnNext.disable()
+                textColorId = R.color.medium_gray
+                backgroundColorId = R.color.light_gray
+            }
+
         } else {
             binding.btnNext.disable()
             textColorId = R.color.medium_gray

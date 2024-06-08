@@ -315,6 +315,7 @@
                 android:id="@+id/edit_text_doctor_name"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:imeOptions="actionDone"
                 android:layout_gravity="center"
                 android:hint="@string/doctor_s_name"
                 android:importantForAutofill="noExcludeDescendants"
