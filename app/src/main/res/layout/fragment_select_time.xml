@@ -13,6 +13,18 @@
         android:background="@color/white"
         tools:context=".presentation.ui.main.treatment.add.medications.strength.choose_time.select_time.SelectTimeFragment">
 
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/btn_next"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
@@ -42,17 +54,6 @@
             android:textSize="@dimen/_12ssp"
             tools:text="Capsule"/>
 
-    <ScrollView
-        android:id="@+id/scrollView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/btn_next"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_medication_type">
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/tv_page_number"
@@ -61,7 +62,7 @@
             android:layout_marginTop="@dimen/_16sdp"
             android:layout_marginStart="@dimen/_16sdp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_medication_type"
             android:textColor="@color/maiden_mist"
             android:textSize="@dimen/_11ssp"
             android:text="3/3"/>
@@ -272,6 +273,8 @@
                 android:id="@+id/edit_text_dosage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:imeOptions="actionNext"
+                android:maxLength="5"
                 android:layout_gravity="center"
                 android:hint="@string/dosage"
                 android:importantForAutofill="noExcludeDescendants"
@@ -302,6 +305,7 @@
             app:boxCornerRadiusTopStart="@dimen/_8sdp"
             app:boxCornerRadiusBottomStart="@dimen/_8sdp"
             app:boxCornerRadiusBottomEnd="@dimen/_8sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@id/relativeLayout"
             app:layout_constraintEnd_toEndOf="@id/relativeLayout"
             app:layout_constraintTop_toBottomOf="@id/text_layout_dosage">
@@ -310,6 +314,7 @@
                 android:id="@+id/edit_text_note"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:imeOptions="actionDone"
                 android:layout_gravity="center"
                 android:hint="@string/notes"
                 android:importantForAutofill="noExcludeDescendants"
@@ -343,7 +348,8 @@
             app:backgroundTint="@color/light_gray"
             app:cornerRadius="@dimen/_16sdp"
             android:layout_marginBottom="@dimen/_18sdp"
-            android:layout_marginHorizontal="@dimen/_16sdp"
+            android:layout_marginStart="@dimen/_16sdp"
+            android:layout_marginEnd="@dimen/_20sdp"
             app:layout_constraintTop_toBottomOf="@id/scrollView"
             app:layout_constraintStart_toStartOf="@id/scrollView"
             app:layout_constraintBottom_toBottomOf="parent"

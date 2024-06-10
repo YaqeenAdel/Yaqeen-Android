@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -14,9 +15,11 @@ import com.cancer.yaqeen.presentation.service.AlarmReminder
 import com.cancer.yaqeen.presentation.service.ReminderManager
 import com.cancer.yaqeen.presentation.service.WorkerReminder
 import com.cancer.yaqeen.presentation.ui.MainActivity
+import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindImage
 import com.cancer.yaqeen.presentation.util.changeVisibility
+import com.cancer.yaqeen.presentation.util.schedulingPermissionsAreGranted
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -34,6 +37,10 @@ class MoreFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
         AlarmReminder(requireContext())
     }
 
+    private val workerReminderPeriodically: ReminderManager by lazy {
+        WorkerReminder(requireContext())
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -46,6 +53,14 @@ class MoreFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setFragmentResultListener(Constants.REQUEST_USER_LOG_IN_KEY) { requestKey, bundle ->
+            if(requestKey == Constants.REQUEST_USER_LOG_IN_KEY) {
+                val isLoggedIn = bundle.getBoolean(Constants.USER_LOG_IN_KEY)
+                if(isLoggedIn)
+                    updateUI()
+            }
+        }
+
         navController = findNavController()
 
         setListener()
@@ -57,6 +72,12 @@ class MoreFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        updateUI()
+    }
+
     private fun setListener(){
         binding.btnMedicine.setOnClickListener(this)
         binding.btnSymptoms.setOnClickListener(this)
@@ -65,15 +86,19 @@ class MoreFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
         binding.btnAccountSetting.setOnClickListener(this)
         binding.btnHelp.setOnClickListener(this)
         binding.btnLogOut.setOnClickListener(this)
+        binding.btnLogIn.setOnClickListener(this)
 
     }
     private fun observeStates() {
-
         lifecycleScope {
             moreViewModel.viewStateLogoutSuccess.observe(viewLifecycleOwner) { response ->
-                if(response == true){
-                    workerReminder.cancelAllReminders()
-                    navController.tryNavigate(MoreFragmentDirections.actionMoreFragmentToOnBoardingFragment())
+                response?.let { (logoutSuccess, appHasWorker) ->
+                    if(logoutSuccess){
+                        workerReminder.cancelAllReminders()
+                        if (appHasWorker)
+                            workerReminderPeriodically.cancelAllReminders()
+                        navController.tryNavigate(MoreFragmentDirections.actionMoreFragmentToOnBoardingFragment())
+                    }
                 }
             }
         }
@@ -92,6 +117,9 @@ class MoreFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
         binding.btnLogOut.changeVisibility(isLogged, isGone = true)
         binding.ivLogOut.changeVisibility(isLogged, isGone = true)
         binding.viewLogOut.changeVisibility(isLogged, isGone = true)
+        binding.btnLogIn.changeVisibility(!isLogged, isGone = true)
+        binding.ivLogIn.changeVisibility(!isLogged, isGone = true)
+        binding.viewLogIn.changeVisibility(!isLogged, isGone = true)
 
         binding.tvNameUser.text = user?.name ?: ""
         binding.tvEmailUser.text = user?.email ?: ""
@@ -112,13 +140,31 @@ class MoreFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
         alpha = if (isLogged) 1.0f else 0.5f
     }
 
+    private fun navigateToAddingSchedule(onNavigate:() -> Unit) {
+        if (moreViewModel.userIsLoggedIn()) {
+            if (schedulingPermissionsAreGranted(requireActivity(), requireContext()))
+                onNavigate()
+        }
+        else {
+            navController.tryNavigate(R.id.authFragment)
+        }
+    }
+
     override fun onClick(v: View?) {
         when(v?.id){
             R.id.btn_medicine -> {
-                navController.tryNavigate(MoreFragmentDirections.actionMoreFragmentToMedicationsFragment(null))
+                navigateToAddingSchedule {
+                    navController.tryNavigate(MoreFragmentDirections.actionMoreFragmentToMedicationsFragment(null))
+                }
             }
             R.id.btn_symptoms -> {
-                navController.tryNavigate(MoreFragmentDirections.actionMoreFragmentToSymptomsTypesFragment(null))
+                navigateToAddingSchedule {
+                    navController.tryNavigate(
+                        MoreFragmentDirections.actionMoreFragmentToSymptomsTypesFragment(
+                            null
+                        )
+                    )
+                }
             }
             R.id.btn_saved_articles -> {
                 navController.tryNavigate(MoreFragmentDirections.actionMoreFragmentToSavedArticlesFragment())
@@ -132,6 +178,9 @@ class MoreFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
             }
             R.id.btn_log_out -> {
                 moreViewModel.logout(requireContext())
+            }
+            R.id.btn_log_in -> {
+                navController.tryNavigate(R.id.authFragment)
             }
         }
     }

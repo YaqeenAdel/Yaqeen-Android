@@ -107,14 +107,14 @@ class HomeViewModel @Inject constructor(
                         if (response.data?.isNotEmpty() == true){
                             if (prefEncryptionUtil.isLogged){
                                 getLocalBookmarkedArticlesUseCase().onEach { responseLocal ->
+                                    _viewStateLoading.emit(response.loading)
                                     when (responseLocal.status) {
                                         Status.ERROR, Status.SUCCESS -> {
                                             if(responseLocal.data.isNullOrEmpty()) {
                                                 getBookmarkedArticles(response.data)
                                             }
                                             else {
-                                                val articles = injectLocalArticlesToArticles(response.data, responseLocal.data)
-                                                _viewStateArticles.emit(articles)
+                                                injectLocalArticlesToArticles(response.data, responseLocal.data)
                                             }
                                         }
                                         else -> {}
@@ -134,12 +134,12 @@ class HomeViewModel @Inject constructor(
     private fun getBookmarkedArticles(articles: List<Article>) {
         viewModelScope.launch(Dispatchers.IO) {
             getBookmarkedArticlesUseCase().onEach { response ->
+                _viewStateLoading.emit(response.loading)
                 when (response.status) {
                     Status.ERROR -> _viewStateArticles.emit(articles)
                     Status.SUCCESS -> {
                         if (response.data?.isNotEmpty() == true){
-                            val articles = injectBookmarkedArticlesToArticles(articles, response.data)
-                            _viewStateArticles.emit(articles)
+                            injectBookmarkedArticlesToArticles(articles, response.data)
                         }else {
                             _viewStateArticles.emit(articles)
                         }
@@ -170,31 +170,35 @@ class HomeViewModel @Inject constructor(
     private fun injectLocalArticlesToArticles(
         articles: List<Article>,
         bookmarkedArticles: List<LocalArticle>
-    ): List<Article> {
-        bookmarkedArticles.sortedBy { it.articleID }.onEach { bookmarkedArticle ->
-            articles.sortedBy { it.contentID }.first {
-                it.contentID == bookmarkedArticle.articleID
-            }.apply {
-                bookmarkID = bookmarkedArticle.bookmarkID
-                isFavorite = true
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            bookmarkedArticles.sortedBy { it.articleID }.onEach { bookmarkedArticle ->
+                articles.sortedBy { it.contentID }.first {
+                    it.contentID == bookmarkedArticle.articleID
+                }.apply {
+                    bookmarkID = bookmarkedArticle.bookmarkID
+                    isFavorite = true
+                }
             }
+            _viewStateArticles.emit(articles)
         }
-        return articles
     }
 
     private fun injectBookmarkedArticlesToArticles(
         articles: List<Article>,
         bookmarkedArticles: List<Article>
-    ): List<Article> {
-        bookmarkedArticles.sortedBy { it.contentID }.onEach { bookmarkedArticle ->
-            articles.sortedBy { it.contentID }.first {
-                it.contentID == bookmarkedArticle.contentID
-            }.apply {
-                bookmarkID = bookmarkedArticle.bookmarkID
-                isFavorite = true
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            bookmarkedArticles.sortedBy { it.contentID }.onEach { bookmarkedArticle ->
+                articles.sortedBy { it.contentID }.first {
+                    it.contentID == bookmarkedArticle.contentID
+                }.apply {
+                    bookmarkID = bookmarkedArticle.bookmarkID
+                    isFavorite = true
+                }
             }
+            _viewStateArticles.emit(articles)
         }
-        return articles
     }
 
     fun getUserInfo(){

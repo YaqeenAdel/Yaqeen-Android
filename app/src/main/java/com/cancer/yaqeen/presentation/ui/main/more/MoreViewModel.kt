@@ -43,8 +43,8 @@ class MoreViewModel @Inject constructor(
     private val _viewStateUser = MutableStateFlow<Pair<User?, Boolean>>(null to false)
     val viewStateUser = _viewStateUser.asStateFlow()
 
-    private val _viewStateLogoutSuccess = SingleLiveEvent<Boolean?>()
-    val viewStateLogoutSuccess: LiveData<Boolean?> = _viewStateLogoutSuccess
+    private val _viewStateLogoutSuccess = SingleLiveEvent<Pair<Boolean, Boolean>?>()
+    val viewStateLogoutSuccess: LiveData<Pair<Boolean, Boolean>?> = _viewStateLogoutSuccess
 
     fun getUserInfo(){
         viewModelScope.launch(Dispatchers.IO) {
@@ -85,12 +85,13 @@ class MoreViewModel @Inject constructor(
 //                    Status.ERROR -> emitError(response.errorEntity)
                     Status.SUCCESS -> {
                         response.data?.let {
-                            _viewStateLogoutSuccess.postValue(it)
+                            _viewStateLogoutSuccess.postValue(it to prefEncryptionUtil.hasWorker)
                             if (it){
                                 removeBookmarkedArticles()
                                 removeLocalMedications()
                                 removeLocalRoutineTests()
                                 removeLocalMedicalAppointments()
+                                prefEncryptionUtil.clearUserPreferenceStorage()
                             }
                         }
                     }

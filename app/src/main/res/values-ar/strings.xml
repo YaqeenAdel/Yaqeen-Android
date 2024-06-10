@@ -141,6 +141,7 @@
     <string name="appointment_added_successfully">تمت إضافة الموعد بنجاح</string>
     <string name="appointment_edited_successfully">تم تعديل الموعد بنجاح</string>
     <string name="appointment_deleted_successfully">تم مسح الموعد بنجاح</string>
+    <string name="medication_deleted_successfully">تم مسح الدواء بنجاح</string>
     <string name="routine_test_added_successfully">تمت إضافة الاختبار الروتيني بنجاح</string>
     <string name="routine_test_edited_successfully">تمت تعديل الاختبار الروتيني بنجاح</string>
     <string name="routine_test_deleted_successfully">تمت مسح الاختبار الروتيني بنجاحy</string>
@@ -178,6 +179,8 @@
     <string name="every_8_hours">كل 8 ساعات</string>
     <string name="every_12_hours">كل 12 ساعة</string>
     <string name="day_after_day">يوم بعد يوم</string>
+    <string name="every_week">كل اسبوع</string>
+    <string name="every_month">كل شهر</string>
 
     <string name="name_articles">"%sمقالات ال"</string>
     <string name="common_of_symptoms">الأعراض الشائعة.</string>
@@ -231,6 +234,8 @@
     <string name="multiple_myeloma">ورم نقيي متعدد</string>
     <string name="thyroid">غدة درقية</string>
     <string name="ok">حسنا</string>
+    <string name="you_must_select_a_new_datetime">يجب عليك تحديد تاريخ/وقت جديد</string>
+    <string name="please_select_the_allow_all_option">PLease select the \'Allow all\' option</string>
 
     <string-array name="languages_array">
         <item>English</item>

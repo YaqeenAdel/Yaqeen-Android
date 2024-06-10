@@ -23,6 +23,7 @@ class ReminderRequest private constructor() {
         private var requestCode: Int = 0
         private var objectJsonKey: String = ""
         private var objectJsonValue: String = ""
+        private var oneTime: Boolean = true
         private var alarmType: Int = AlarmManager.RTC_WAKEUP
 
         fun setStartDateTime(dateTime: Long): Builder {
@@ -75,6 +76,11 @@ class ReminderRequest private constructor() {
             return this
         }
 
+        fun setReminderType(oneTime: Boolean): Builder {
+            this.oneTime = oneTime
+            return this
+        }
+
         private fun createPendingIntent(): PendingIntent {
             val intent = Intent(context, NotificationReceiver::class.java).apply {
                 action = actionName
@@ -91,30 +97,24 @@ class ReminderRequest private constructor() {
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             val pendingIntent = createPendingIntent()
 
-            alarmManager.setRepeating(
-                alarmType,
-                startDateTime,
-                getIntervalInMillis(periodTimeId),
-                pendingIntent
-            )
+            if (oneTime){
+                val alarmClockInfo = AlarmManager.AlarmClockInfo(
+                    startDateTime,
+                    pendingIntent
+                )
 
-            return requestCode.toString()
-        }
-
-
-        fun buildOneTime(): String {
-            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            val pendingIntent = createPendingIntent()
-
-            val alarmClockInfo = AlarmManager.AlarmClockInfo(
-                startDateTime,
-                pendingIntent
-            )
-
-            alarmManager.setAlarmClock(
-                alarmClockInfo,
-                pendingIntent
-            )
+                alarmManager.setAlarmClock(
+                    alarmClockInfo,
+                    pendingIntent
+                )
+            }else {
+                alarmManager.setRepeating(
+                    alarmType,
+                    startDateTime,
+                    getIntervalInMillis(periodTimeId),
+                    pendingIntent
+                )
+            }
 
             return requestCode.toString()
         }

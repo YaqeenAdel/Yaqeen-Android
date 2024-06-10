@@ -17,11 +17,14 @@ import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.service.AlarmReminder
 import com.cancer.yaqeen.presentation.service.ReminderManager
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.medical_reminder.MedicalReminderViewModel
-import com.cancer.yaqeen.presentation.util.Constants
+import com.cancer.yaqeen.presentation.ui.main.treatment.history.adapters.SmallPhotosAdapter
 import com.cancer.yaqeen.presentation.util.Constants.OPEN_MEDICAL_APPOINTMENT_WINDOW_ACTION
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindImage
 import com.cancer.yaqeen.presentation.util.changeVisibility
+import com.cancer.yaqeen.presentation.util.convertMilliSecondsToDate
+import com.cancer.yaqeen.presentation.util.disableTouch
+import com.cancer.yaqeen.presentation.util.enableTouch
 import com.cancer.yaqeen.presentation.util.schedulingPermissionsAreGranted
 import com.cancer.yaqeen.presentation.util.tryPopBackStack
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,6 +40,9 @@ class MedicalReminderConfirmationFragment : BaseFragment() {
 
     private val medicalReminderViewModel: MedicalReminderViewModel by activityViewModels()
 
+
+    private lateinit var photosAdapter: SmallPhotosAdapter
+
     private val workerReminder: ReminderManager by lazy {
         AlarmReminder(requireContext())
     }
@@ -44,7 +50,7 @@ class MedicalReminderConfirmationFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = FragmentMedicalReminderConfirmationBinding.inflate(inflater, container, false)
         return binding.root
@@ -69,6 +75,19 @@ class MedicalReminderConfirmationFragment : BaseFragment() {
             if (schedulingPermissionsAreGranted(requireActivity(), requireContext()))
                 medicalReminderViewModel.modifyMedicalReminder()
         }
+        binding.tvShowLess.setOnClickListener {
+            binding.groupSymptom.changeVisibility(show = true, isGone = true)
+            binding.groupSymptomDetails.changeVisibility(show = false, isGone = true)
+
+            updateSymptomUI(false)
+        }
+        binding.tvShowMore.setOnClickListener {
+            binding.groupSymptom.changeVisibility(show = false, isGone = true)
+            binding.groupSymptomDetails.changeVisibility(show = true, isGone = true)
+
+            val isReminder = binding.tvReminderSymptomVal.text?.isNotEmpty() == true
+            updateSymptomUI(isReminder)
+        }
     }
 
     private fun updateUI() {
@@ -78,8 +97,11 @@ class MedicalReminderConfirmationFragment : BaseFragment() {
             binding.tvDoctorName.text = doctorName ?: ""
             binding.tvNotesVal.text = notes ?: ""
             binding.tvLocationVal.text = location ?: ""
-            binding.tvStartingDateVal.text = startDate ?: ""
-            binding.tvTimeVal.text = reminderTime ?: ""
+            binding.tvStartingDateVal.text = startDate?.let { convertMilliSecondsToDate(it) }
+            reminderTime?.run {
+                val timing = if (isAM) getString(R.string.am) else getString(R.string.pm)
+                binding.tvTimeVal.text = "$text $timing"
+            }
 
             val reminderBeforeTime = getReminderBeforeTime(reminderBefore)
             binding.tvReminderVal.text = reminderBeforeTime
@@ -88,6 +110,7 @@ class MedicalReminderConfirmationFragment : BaseFragment() {
             val symptomIsSelected = symptom != null
 
             binding.groupSymptom.changeVisibility(show = symptomIsSelected, isGone = true)
+            binding.groupSymptomDetails.changeVisibility(show = false, isGone = true)
 
             symptom?.run {
                 val types = symptomTypes?.joinToString(separator = "\n"){ it.name } ?: ""
@@ -95,9 +118,36 @@ class MedicalReminderConfirmationFragment : BaseFragment() {
                 bindImage(binding.ivSymptom, photosList?.firstOrNull()?.url)
                 binding.tvSymptomTypes.text = types
 
+                photosList?.let {
+                    setupPhotosAdapter(photosList!!.map { it.url ?: "" })
+                }
+
+                binding.tvSymptomsVal.text = types
+                binding.tvSymptomNotesVal.text = details
+                binding.tvReminderSymptomVal.text = doctorName ?: ""
+                binding.tvDateTimeVal.text = "$reminderTime - $startDate"
+
             }
 
         }
+    }
+
+    private fun updateSymptomUI(isReminder: Boolean) {
+        binding.tvReminderSymptom.changeVisibility(show = isReminder, isGone = true)
+        binding.tvReminderSymptomVal.changeVisibility(show = isReminder, isGone = true)
+    }
+
+    private fun setupPhotosAdapter(photosList: List<String>) {
+        photosAdapter = SmallPhotosAdapter {
+
+        }
+
+        binding.rvSymptomPhotos.apply {
+            adapter = photosAdapter
+        }
+
+        photosAdapter.submitList(photosList)
+
     }
 
     private fun getReminderBeforeTime(reminderBefore: ReminderBefore): String =
@@ -109,6 +159,10 @@ class MedicalReminderConfirmationFragment : BaseFragment() {
     private fun observeStates() {
         lifecycleScope {
             medicalReminderViewModel.viewStateLoading.collectLatest {
+                if (it)
+                    disableTouch()
+                else
+                    enableTouch()
                 onLoading(it)
             }
         }
@@ -122,7 +176,7 @@ class MedicalReminderConfirmationFragment : BaseFragment() {
             medicalReminderViewModel.viewStateAddMedicalReminder.observe(viewLifecycleOwner) { response ->
                 response?.let { (added, medicalAppointment) ->
                     if (added) {
-                        val (workID, workBeforeID) = workerReminder.setPeriodReminder(medicalAppointment.apply { json = toJson() })
+                        val (workID, workBeforeID) = workerReminder.setReminder(medicalAppointment.apply { json = toJson() })
                         medicalReminderViewModel.saveLocalMedicalAppointment(medicalAppointment, workID, workBeforeID)
                         Toast.makeText(requireContext(),
                             getString(R.string.appointment_added_successfully), Toast.LENGTH_SHORT).show()
@@ -138,7 +192,7 @@ class MedicalReminderConfirmationFragment : BaseFragment() {
         lifecycleScope {
             medicalReminderViewModel.viewStateEditMedicalReminder.observe(viewLifecycleOwner) { response ->
                 response?.let { (edited, medicalAppointment) ->
-                    val (workID, workBeforeID) = workerReminder.setPeriodReminder(medicalAppointment.apply { json = toJson() })
+                    val (workID, workBeforeID) = workerReminder.setReminder(medicalAppointment.apply { json = toJson() })
                     if (edited) {
                         medicalReminderViewModel.editLocalMedicalAppointment(medicalAppointment, workID, workBeforeID)
                     }else{

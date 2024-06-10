@@ -23,6 +23,7 @@ class WorkerRequest private constructor(){
         private var actionName: String = ""
         private var objectJsonKey: String = ""
         private var objectJsonValue: String = ""
+        private var oneTime: Boolean = true
 
         fun setStartDateTime(dateTime: Long): Builder {
             this.startDateTime = dateTime
@@ -59,6 +60,11 @@ class WorkerRequest private constructor(){
             return this
         }
 
+        fun setReminderType(oneTime: Boolean): Builder {
+            this.oneTime = oneTime
+            return this
+        }
+
         fun build(): PeriodicWorkRequest {
             return buildPeriodicWorkRequestBuilder(periodTimeId)
                 .setInitialDelay(startDateTime, TimeUnit.MILLISECONDS)
@@ -90,6 +96,10 @@ class WorkerRequest private constructor(){
 
                 PeriodTimeEnum.EVERY_8_HOURS.id -> {
                     initPeriodicWorkEveryXHours(8)
+                }
+
+                PeriodTimeEnum.EVERY_3_HOURS.id -> {
+                    initPeriodicWorkEveryXHours(3)
                 }
 
                 PeriodTimeEnum.EVERY_12_HOURS.id -> {

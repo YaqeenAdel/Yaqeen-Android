@@ -27,6 +27,7 @@ import com.cancer.yaqeen.domain.features.home.schedule.routine_test.EditRoutineT
 import com.cancer.yaqeen.domain.features.home.schedule.routine_test.GetLocalRoutineTestUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.routine_test.SaveLocalRoutineTestUseCase
 import com.cancer.yaqeen.presentation.util.SingleLiveEvent
+import com.cancer.yaqeen.presentation.util.calculateStartDateTime
 import com.cancer.yaqeen.presentation.util.generateFileName
 import com.cancer.yaqeen.presentation.util.getCurrentTimeMillis
 import com.cancer.yaqeen.presentation.util.timestampToDay
@@ -227,11 +228,7 @@ class RoutineTestViewModel @Inject constructor(
                 notes = notes,
                 scheduleType = ScheduleType.ROUTINE_TESTS.scheduleType,
                 cronExpression = cronExpression,
-                startDate = startDate ?: 0L,
-                hour24 = reminderTime?.hour24?.toIntOrNull() ?: 0,
-                minute = reminderTime?.minute?.toIntOrNull() ?: 0,
-                isAM = reminderTime?.isAM ?: false,
-                time = reminderTime?.text.toString(),
+                startDateTime = calculateStartDateTime(startDate ?: 0L, reminderTime?.hour24?.toIntOrNull() ?: 0, reminderTime?.minute?.toIntOrNull() ?: 0),
                 periodTimeId = periodTimeId,
                 reminderBeforeInMinutes = reminderBeforeInMinutes,
                 specificDaysIds = specificDaysIds ?: listOf()
@@ -388,6 +385,7 @@ class RoutineTestViewModel @Inject constructor(
             getLocalRoutineTestUseCase(
                 routineTestId = routineTestId
             ).collect { response ->
+                _viewStateLoading.emit(response.loading)
                 when (response.status) {
                     Status.ERROR -> {
                         _viewStateEditRoutineTest.postValue(false to routineTestDB)
@@ -420,12 +418,18 @@ class RoutineTestViewModel @Inject constructor(
         val (dayOfMonth, dayOfWeek) = when (time?.id) {
             PeriodTimeEnum.DAY_AFTER_DAY.id -> "$startingDay/2" to "*"
             PeriodTimeEnum.EVERY_WEEK.id -> "$startingDay/7" to "*"
-            PeriodTimeEnum.EVERY_MONTH.id -> startingDay to "*"
+            // Every month and ignore different days of the month (28, 30, 31)
+//            PeriodTimeEnum.EVERY_MONTH.id -> startingDay to "*"
+            PeriodTimeEnum.EVERY_MONTH.id -> "$startingDay/30" to "*"
             PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id -> "*" to (specificDays?.map { it.id }?.joinToString(separator = ",") { it.toString() } ?: "")
             else -> "$startingDay/1" to "*"
         }
-        val month = if(time?.id == PeriodTimeEnum.EVERY_MONTH.id) "*"
-            else "$startingMonth/1"
+
+        // Every month and ignore different days of the month (28, 30, 31)
+//        val month = if(time?.id == PeriodTimeEnum.EVERY_MONTH.id) "*"
+//            else "$startingMonth/1"
+
+        val month = "$startingMonth/1"
         val year = "$startingYear/1"
 
         return "$minutes $hours $dayOfMonth $month $dayOfWeek"
@@ -501,6 +505,21 @@ class RoutineTestViewModel @Inject constructor(
 
     fun userIsLoggedIn() =
         prefEncryptionUtil.isLogged
+
+
+    fun hasWorker() =
+        prefEncryptionUtil.hasWorker
+
+    fun saveWorkerReminderPeriodicallyInfo(
+        periodReminderId: String,
+        workRunningInMilliSeconds: Long
+    ) {
+        with(prefEncryptionUtil){
+            hasWorker = true
+            workId = periodReminderId
+            workRunningInMillis = workRunningInMilliSeconds
+        }
+    }
 
     private suspend fun emitError(errorEntity: ErrorEntity?) {
         _viewStateError.emit(errorEntity)

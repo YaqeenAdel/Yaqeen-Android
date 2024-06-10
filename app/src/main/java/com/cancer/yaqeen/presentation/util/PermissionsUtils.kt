@@ -13,6 +13,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.PowerManager
 import android.provider.Settings
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
@@ -27,15 +28,20 @@ private fun checkSelfPermission(context: Context, permission: String): Boolean =
 
 
 fun storagePermissionsAreGranted(context: Context) =
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+        checkSelfPermission(
+            context,
+            Manifest.permission.READ_MEDIA_IMAGES
+        ) && checkSelfPermission(
+            context,
+            Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED
+        )
+    }
+    else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         checkSelfPermission(
             context,
             Manifest.permission.READ_MEDIA_IMAGES,
         )
-//                && checkSelfPermission(
-//            context,
-//            Manifest.permission.READ_MEDIA_VIDEO
-//        )
     } else {
         checkSelfPermission(
             context,
@@ -61,8 +67,29 @@ private fun requestPermission(requestPermissionsLauncher: ActivityResultLauncher
     )
 
 
-fun enableStoragePermissions(requestMultiplePermissionsLauncher: ActivityResultLauncher<Array<String>?>) {
-    if(Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
+fun enableStoragePermissions(requestMultiplePermissionsLauncher: ActivityResultLauncher<Array<String>?>, context: Context? = null) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+        context?.let {
+            Toast.makeText(context,
+                context.getString(R.string.please_select_the_allow_all_option), Toast.LENGTH_LONG).show()
+        }
+        requestMultiplePermissions(
+            requestMultiplePermissionsLauncher,
+            arrayOf(
+                Manifest.permission.READ_MEDIA_IMAGES,
+                Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED,
+            )
+        )
+    }
+    else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        requestMultiplePermissions(
+            requestMultiplePermissionsLauncher,
+            arrayOf(
+                Manifest.permission.READ_MEDIA_IMAGES,
+            )
+        )
+    }
+    else if(Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
         requestMultiplePermissions(
             requestMultiplePermissionsLauncher,
             arrayOf(
@@ -71,14 +98,7 @@ fun enableStoragePermissions(requestMultiplePermissionsLauncher: ActivityResultL
             )
         )
     }
-    else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        requestMultiplePermissions(
-            requestMultiplePermissionsLauncher,
-            arrayOf(
-                Manifest.permission.READ_MEDIA_IMAGES
-            )
-        )
-    } else {
+    else {
         requestMultiplePermissions(
             requestMultiplePermissionsLauncher,
             arrayOf(
@@ -153,6 +173,9 @@ fun requestExactAlarmPermission(activity: Activity, context: Context): Boolean {
 
 
 fun exactAlarmPermissionIsGranted(context: Context): Boolean {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+        return true
+
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
         // For Android Q (API level 29) and above, you can directly check the permission status
         val permissionStatus = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -218,6 +241,23 @@ fun requestNotificationPolicyPermission(activity: Activity): Boolean {
         }
     }
     return true
+}
+
+fun alarmPermissionsAreGranted(context: Context) =
+    checkSelfPermission(
+        context,
+        Manifest.permission.SCHEDULE_EXACT_ALARM
+    )
+
+fun enableAlarmPermission(requestPermissionLauncher: ActivityResultLauncher<String?>) {
+    Log.d("TAG", "enableAlarmPermission: SCHEDULE_EXACT_ALARM")
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        requestPermission(
+            requestPermissionLauncher,
+            Manifest.permission.SCHEDULE_EXACT_ALARM
+        )
+    }
 }
 
 fun schedulingPermissionsAreGranted(activity: Activity, context: Context): Boolean {

@@ -35,7 +35,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class AuthFragment : BaseBottomSheetDialogFragment() {
+class AuthFragment : BaseBottomSheetDialogFragment(showBottomMenu = true) {
 
     private var binding: FragmentAuthBinding by autoCleared()
 

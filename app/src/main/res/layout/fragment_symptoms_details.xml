@@ -133,7 +133,7 @@
                 android:layout_height="match_parent"
                 android:gravity="top|start"
                 android:minHeight="@dimen/_160sdp"
-                android:imeOptions="actionGo"
+                android:imeOptions="actionDone"
                 android:importantForAutofill="noExcludeDescendants"
                 android:inputType="textMultiLine|textImeMultiLine"
                 android:fontFamily="sans-serif"

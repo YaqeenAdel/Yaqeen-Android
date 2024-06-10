@@ -57,7 +57,7 @@ data class AddMedicalReminderRequestBuilder(
                     notes = notes,
                     notifyBeforeMinutes = notifyBeforeMinutes
                 ),
-                startDate = "${startDate?.formatDateAPI() ?: ""} ${time?.formatTimeAPI() ?: ""}"
+                startDate = "${startDate?.formatDateAPI() ?: ""} ${time ?: ""}"
             )
         )
 }

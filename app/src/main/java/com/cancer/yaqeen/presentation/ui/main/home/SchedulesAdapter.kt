@@ -123,12 +123,19 @@ class SchedulesAdapter(
     ) : RecyclerView.ViewHolder(itemBinding.root) {
 
         private val _context = itemBinding.root.context
+        private var timing = ""
+        private var time = ""
 
         fun bind(item: Schedule) {
             with(item){
-//                val timing = if(reminderTime?.isAM == true) _context.getString(R.string.am) else _context.getString(R.string.pm)
-//                itemBinding.tvTime.text = "${reminderTime?.text} $timing"
-                itemBinding.tvTime.text = scheduledTodayTime
+                time = scheduledTodayTime.ifEmpty {
+                    timing =
+                        if (reminderTime?.isAM == true) _context.getString(R.string.am) else _context.getString(
+                            R.string.pm
+                        )
+                    "${reminderTime?.text} $timing"
+                }
+                itemBinding.tvTime.text = time
                 itemBinding.tvNotes.text = notes
                 appointment?.run {
                     itemBinding.tvDoctorName.text = doctorName

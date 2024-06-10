@@ -326,11 +326,6 @@ class RoutineTestInfoFragment : BaseFragment() {
                     cronExpression = PeriodTimeEnum.EVERY_DAY.cronExpression
                 ),
                 Time(
-                    id = PeriodTimeEnum.EVERY_8_HOURS.id,
-                    time = getString(R.string.every_8_hours),
-                    cronExpression = PeriodTimeEnum.EVERY_8_HOURS.cronExpression
-                ),
-                Time(
                     id = PeriodTimeEnum.EVERY_12_HOURS.id,
                     time = getString(R.string.every_12_hours),
                     cronExpression = PeriodTimeEnum.EVERY_12_HOURS.cronExpression
@@ -339,6 +334,16 @@ class RoutineTestInfoFragment : BaseFragment() {
                     id = PeriodTimeEnum.DAY_AFTER_DAY.id,
                     time = getString(R.string.day_after_day),
                     cronExpression = PeriodTimeEnum.DAY_AFTER_DAY.cronExpression
+                ),
+                Time(
+                    id = PeriodTimeEnum.EVERY_WEEK.id,
+                    time = getString(R.string.every_week),
+                    cronExpression = PeriodTimeEnum.EVERY_WEEK.cronExpression
+                ),
+                Time(
+                    id = PeriodTimeEnum.EVERY_MONTH.id,
+                    time = getString(R.string.every_month),
+                    cronExpression = PeriodTimeEnum.EVERY_MONTH.cronExpression
                 ),
                 Time(
                     id = PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id,
@@ -354,7 +359,7 @@ class RoutineTestInfoFragment : BaseFragment() {
     }
 
     private fun displayDays(id: Int): Boolean {
-        val specificDaysIsNotSelected = id != 5
+        val specificDaysIsNotSelected = id != PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id
         binding.groupSpecificDays.changeVisibility(show = !specificDaysIsNotSelected, isGone = true)
 
         return specificDaysIsNotSelected
@@ -370,8 +375,8 @@ class RoutineTestInfoFragment : BaseFragment() {
 
         if (
             routineTestName.isNotEmpty() &&
-            ((selectedPositionTime != -1 && selectedPositionTime != 4)
-                            || (selectedPositionTime == 4 && daysAdapter.anyItemIsSelected()))
+            ((selectedPositionTime != -1 && selectedPositionTime != 5)
+                            || (selectedPositionTime == 5 && daysAdapter.anyItemIsSelected()))
         ) {
             binding.btnNext.enable()
             textColorId = R.color.white

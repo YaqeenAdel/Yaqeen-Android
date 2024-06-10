@@ -7,6 +7,7 @@ import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.models.Med
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.room.MedicalAppointmentDB
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Medication
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.ScheduleType
+import com.cancer.yaqeen.data.features.home.schedule.medication.room.MedicationDB
 import com.cancer.yaqeen.data.features.home.schedule.routine_test.models.RoutineTest
 import com.cancer.yaqeen.data.features.home.schedule.routine_test.room.RoutineTestDB
 import com.cancer.yaqeen.data.features.home.schedule.symptom.models.Symptom
@@ -17,7 +18,9 @@ import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.DeleteSc
 import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.GetLocalMedicalAppointmentUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.GetMedicalRemindersUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.RemoveLocalMedicalAppointmentUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.medication.GetLocalMedicationUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.GetMedicationRemindersUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.medication.RemoveLocalMedicationUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.routine_test.GetLocalRoutineTestUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.routine_test.GetRoutineTestsUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.routine_test.RemoveLocalRoutineTestUseCase
@@ -43,8 +46,10 @@ class SchedulesHistoryViewModel @Inject constructor(
     private val deleteScheduleUseCase: DeleteScheduleUseCase,
     private val getLocalRoutineTestUseCase: GetLocalRoutineTestUseCase,
     private val getLocalMedicalAppointmentUseCase: GetLocalMedicalAppointmentUseCase,
+    private val getLocalMedicationUseCase: GetLocalMedicationUseCase,
     private val removeLocalRoutineTestUseCase: RemoveLocalRoutineTestUseCase,
     private val removeLocalMedicalAppointmentUseCase: RemoveLocalMedicalAppointmentUseCase,
+    private val removeLocalMedicationUseCase: RemoveLocalMedicationUseCase,
 ) : ViewModel() {
 
     private var viewModelJob: Job? = null
@@ -69,6 +74,12 @@ class SchedulesHistoryViewModel @Inject constructor(
 
     private val _viewStateDeleteRoutineTest = SingleLiveEvent<Int?>()
     val viewStateDeleteRoutineTest: LiveData<Int?> = _viewStateDeleteRoutineTest
+
+    private val _viewStateDeleteMedication = SingleLiveEvent<Int?>()
+    val viewStateDeleteMedication: LiveData<Int?> = _viewStateDeleteMedication
+
+    private val _viewStateOldMedication = SingleLiveEvent<MedicationDB?>()
+    val viewStateOldMedication: LiveData<MedicationDB?> = _viewStateOldMedication
 
     private val _viewStateOldRoutineTest = SingleLiveEvent<RoutineTestDB?>()
     val viewStateOldRoutineTest: LiveData<RoutineTestDB?> = _viewStateOldRoutineTest
@@ -208,6 +219,7 @@ class SchedulesHistoryViewModel @Inject constructor(
             getLocalMedicalAppointmentUseCase(
                 medicalAppointmentId = medicalAppointmentId
             ).collect { response ->
+                _viewStateLoading.emit(response.loading)
                 when (response.status) {
                     Status.ERROR -> {}
                     Status.SUCCESS -> {
@@ -257,6 +269,7 @@ class SchedulesHistoryViewModel @Inject constructor(
             getLocalRoutineTestUseCase(
                 routineTestId = routineTestId
             ).collect { response ->
+                _viewStateLoading.emit(response.loading)
                 when (response.status) {
                     Status.ERROR -> {}
                     Status.SUCCESS -> {
@@ -277,6 +290,60 @@ class SchedulesHistoryViewModel @Inject constructor(
         viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             removeLocalRoutineTestUseCase(
                 routineTestId = routineTestId
+            ).collect {}
+        }
+    }
+
+    fun deleteMedication(scheduleId: Int) {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
+            deleteScheduleUseCase(
+                scheduleId = scheduleId
+            ).collect { response ->
+                _viewStateLoading.emit(response.loading)
+                when (response.status) {
+                    Status.ERROR -> emitError(response.errorEntity)
+                    Status.SUCCESS -> {
+                        if (response.data == true) {
+                            getLocalMedication(scheduleId)
+                        }
+                    }
+                    else -> {}
+                }
+            }
+        }
+    }
+
+
+    private fun getLocalMedication(medicationId: Int) {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
+            getLocalMedicationUseCase(
+                medicationId = medicationId
+            ).collect { response ->
+                _viewStateLoading.emit(response.loading)
+                when (response.status) {
+                    Status.ERROR -> {
+                        _viewStateDeleteMedication.postValue(medicationId)
+                    }
+                    Status.SUCCESS -> {
+                        response.data?.workID?.let {
+                            _viewStateOldMedication.postValue(response.data)
+                        }
+
+                        removeLocalMedication(medicationId)
+
+                        _viewStateDeleteMedication.postValue(medicationId)
+                    }
+                    else -> {}
+                }
+            }
+        }
+    }
+
+
+    private fun removeLocalMedication(medicationId: Int) {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
+            removeLocalMedicationUseCase(
+                medicationId = medicationId
             ).collect {}
         }
     }

@@ -6,8 +6,10 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import android.util.Log
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.room.MedicalAppointmentDB
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.DayEnum
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.PeriodTimeEnum
 import com.cancer.yaqeen.data.features.home.schedule.medication.room.MedicationDB
 import com.cancer.yaqeen.data.features.home.schedule.routine_test.room.RoutineTestDB
 import com.cancer.yaqeen.presentation.receiver.NotificationReceiver
@@ -15,32 +17,30 @@ import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.Constants.OPEN_MEDICAL_APPOINTMENT_WINDOW_ACTION
 import com.cancer.yaqeen.presentation.util.Constants.OPEN_MEDICATION_WINDOW_ACTION
 import com.cancer.yaqeen.presentation.util.Constants.OPEN_ROUTINE_TEST_WINDOW_ACTION
+import java.util.concurrent.TimeUnit
 
 
 class AlarmReminder(private val context: Context): ReminderManager() {
-
-    override fun setPeriodReminder(medication: MedicationDB): String {
+    override fun setReminder(medication: MedicationDB, oneTime: Boolean): String {
         val uuid = with(medication) {
-            val timeDelayInSeconds = calculateStartDateTime(startDate, hour24, minute)
             ReminderRequest.Builder(context)
-                .setStartDateTime(timeDelayInSeconds)
+                .setStartDateTime(startDateTime)
                 .setPeriodTime(periodTimeId)
-//                .setTitle(context.getString(R.string.medication_reminder))
-//                .setBody(context.getString(R.string.reminder_text_message))
                 .setActionName(OPEN_MEDICATION_WINDOW_ACTION)
                 .setRequestCode(System.currentTimeMillis().toInt())
                 .setObjectKey(Constants.MEDICATION)
                 .setJson(json)
+                .setReminderType(oneTime)
                 .build()
         }
 
         return uuid
     }
 
-    override fun setPeriodReminderDays(medication: MedicationDB): List<String> {
+    override fun setReminderDays(medication: MedicationDB, oneTime: Boolean): List<String> {
         val workIds = arrayListOf<String>()
         medication.specificDaysIds?.forEach {  id ->
-            val uuid = setPeriodReminderSpecificDay(medication, DayEnum.getDay(id).dayId)
+            val uuid = setReminderSpecificDay(medication, DayEnum.getDay(id).dayId, oneTime)
 
             workIds.add(uuid)
         }
@@ -48,36 +48,33 @@ class AlarmReminder(private val context: Context): ReminderManager() {
         return workIds
     }
 
-    private fun setPeriodReminderSpecificDay(medication: MedicationDB, dayId: Int): String {
+    private fun setReminderSpecificDay(medication: MedicationDB, dayId: Int, oneTime: Boolean): String {
         val uuid = with(medication) {
-            val timeDelayInSeconds = calculateStartDateTimeForSpecificDay(startDate, hour24, minute, dayId)
+            val timeDelayInMilliSeconds = calculateStartDateTimeForSpecificDay(startDateTime, dayId)
             ReminderRequest.Builder(context)
-                .setStartDateTime(timeDelayInSeconds)
+                .setStartDateTime(timeDelayInMilliSeconds)
                 .setPeriodTime(periodTimeId)
-//                .setTitle(context.getString(R.string.medication_reminder))
-//                .setBody(context.getString(R.string.reminder_text_message))
                 .setActionName(OPEN_MEDICATION_WINDOW_ACTION)
                 .setRequestCode(System.currentTimeMillis().toInt())
                 .setObjectKey(Constants.MEDICATION)
                 .setJson(json)
+                .setReminderType(oneTime)
                 .build()
         }
 
         return uuid
     }
 
-    override fun setPeriodReminder(routineTest: RoutineTestDB): Pair<String, String?> {
+    override fun setReminder(routineTest: RoutineTestDB, oneTime: Boolean): Pair<String, String?> {
         val uuid = with(routineTest){
-            val timeDelayInSeconds = calculateStartDateTime(startDate, hour24, minute)
             ReminderRequest.Builder(context)
-                .setStartDateTime(timeDelayInSeconds)
+                .setStartDateTime(startDateTime)
                 .setPeriodTime(periodTimeId)
-//                .setTitle(context.getString(R.string.routine_test_reminder))
-//                .setBody(context.getString(R.string.reminder_text_message))
                 .setActionName(OPEN_ROUTINE_TEST_WINDOW_ACTION)
                 .setRequestCode(System.currentTimeMillis().toInt())
                 .setObjectKey(Constants.ROUTINE_TEST)
                 .setJson(json)
+                .setReminderType(oneTime)
                 .build()
         }
 
@@ -89,23 +86,12 @@ class AlarmReminder(private val context: Context): ReminderManager() {
     }
 
     override fun scheduleReminder(routineTest: RoutineTestDB): String {
-        val (hour24, minute) = if (routineTest.minute >= routineTest.reminderBeforeInMinutes)
-            (routineTest.hour24) to (routineTest.minute - routineTest.reminderBeforeInMinutes)
-        else (routineTest.hour24 - 1) to (routineTest.minute - routineTest.reminderBeforeInMinutes + 60)
-
-
         val uuid = with(routineTest){
-            val timeDelayInSeconds =
-                calculateStartDateTime(
-                    startDate,
-                    hour24,
-                    minute
-                )
+            val timeDelayInMilliSeconds =
+                startDateTime - TimeUnit.MINUTES.toMillis(routineTest.reminderBeforeInMinutes.toLong())
             ReminderRequest.Builder(context)
-                .setStartDateTime(timeDelayInSeconds)
+                .setStartDateTime(timeDelayInMilliSeconds)
                 .setPeriodTime(periodTimeId)
-//                .setTitle(context.getString(R.string.routine_test_reminder))
-//                .setBody(context.getString(R.string.reminder_text_message))
                 .setActionName(OPEN_ROUTINE_TEST_WINDOW_ACTION)
                 .setRequestCode(System.currentTimeMillis().toInt())
                 .setObjectKey(Constants.ROUTINE_TEST)
@@ -116,14 +102,14 @@ class AlarmReminder(private val context: Context): ReminderManager() {
         return uuid
     }
 
-    override fun setPeriodReminderDays(routineTest: RoutineTestDB): Pair<List<String>, String?> {
+    override fun setReminderDays(routineTest: RoutineTestDB, oneTime: Boolean): Pair<List<String>, String?> {
         val reminderBeforeID = if (routineTest.reminderBeforeInMinutes > 0) {
             scheduleReminder(routineTest.apply { reminderBeforeIsAvailable = true })
         }else { null }
 
         val workIds = arrayListOf<String>()
         routineTest.specificDaysIds?.forEach {  id ->
-            val uuid = setPeriodReminderSpecificDay(routineTest, DayEnum.getDay(id).dayId)
+            val uuid = setReminderSpecificDay(routineTest, DayEnum.getDay(id).dayId, oneTime)
 
             workIds.add(uuid)
         }
@@ -131,41 +117,39 @@ class AlarmReminder(private val context: Context): ReminderManager() {
         return workIds to reminderBeforeID
     }
 
-    private fun setPeriodReminderSpecificDay(routineTest: RoutineTestDB, dayId: Int): String {
+    private fun setReminderSpecificDay(routineTest: RoutineTestDB, dayId: Int, oneTime: Boolean): String {
         val uuid = with(routineTest) {
-            val timeDelayInSeconds = calculateStartDateTimeForSpecificDay(startDate, hour24, minute, dayId)
+            val timeDelayInMilliSeconds = calculateStartDateTimeForSpecificDay(startDateTime, dayId)
             ReminderRequest.Builder(context)
-                .setStartDateTime(timeDelayInSeconds)
+                .setStartDateTime(timeDelayInMilliSeconds)
                 .setPeriodTime(periodTimeId)
-//                .setTitle(context.getString(R.string.medication_reminder))
-//                .setBody(context.getString(R.string.reminder_text_message))
                 .setActionName(OPEN_MEDICATION_WINDOW_ACTION)
                 .setRequestCode(System.currentTimeMillis().toInt())
                 .setObjectKey(Constants.MEDICATION)
                 .setJson(json)
+                .setReminderType(oneTime)
                 .build()
         }
 
         return uuid
     }
 
-    override fun setPeriodReminder(medicalAppointment: MedicalAppointmentDB): Pair<String, String?> {
+    override fun setReminder(medicalAppointment: MedicalAppointmentDB, oneTime: Boolean): Pair<String, String?> {
         val uuid = with(medicalAppointment){
-            val timeDelayInSeconds =
+            val timeDelayInMilliSeconds =
                 calculateStartDateTime(
                     startDate,
                     hour24,
                     minute
                 )
             ReminderRequest.Builder(context)
-                .setStartDateTime(timeDelayInSeconds)
-//                .setTitle(context.getString(R.string.medical_appointment_reminder))
-//                .setBody(context.getString(R.string.reminder_text_message))
+                .setStartDateTime(timeDelayInMilliSeconds)
                 .setActionName(OPEN_MEDICAL_APPOINTMENT_WINDOW_ACTION)
                 .setRequestCode(System.currentTimeMillis().toInt())
                 .setObjectKey(Constants.MEDICAL_APPOINTMENT)
                 .setJson(json)
-                .buildOneTime()
+                .setReminderType(oneTime)
+                .build()
         }
 
         val reminderBeforeID = if (medicalAppointment.reminderBeforeInMinutes > 0) {
@@ -181,21 +165,21 @@ class AlarmReminder(private val context: Context): ReminderManager() {
         else (medicalAppointment.hour24 - 1) to (medicalAppointment.minute - medicalAppointment.reminderBeforeInMinutes + 60)
 
         val uuid = with(medicalAppointment){
-            val timeDelayInSeconds =
+            val timeDelayInMilliSeconds =
                 calculateStartDateTime(
                     startDate,
                     hour24,
                     minute
                 )
             ReminderRequest.Builder(context)
-                .setStartDateTime(timeDelayInSeconds)
+                .setStartDateTime(timeDelayInMilliSeconds)
 //                .setTitle(context.getString(R.string.medical_appointment_reminder))
 //                .setBody(context.getString(R.string.reminder_text_message))
                 .setActionName(OPEN_MEDICAL_APPOINTMENT_WINDOW_ACTION)
                 .setRequestCode(System.currentTimeMillis().toInt())
                 .setObjectKey(Constants.MEDICAL_APPOINTMENT)
                 .setJson(json)
-                .buildOneTime()
+                .build()
         }
 
         return uuid

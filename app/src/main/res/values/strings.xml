@@ -141,6 +141,7 @@
     <string name="appointment_added_successfully">Appointment Added Successfully</string>
     <string name="appointment_edited_successfully">Appointment Edited Successfully</string>
     <string name="appointment_deleted_successfully">Appointment Deleted Successfully</string>
+    <string name="medication_deleted_successfully">Medication Deleted Successfully</string>
     <string name="routine_test_added_successfully">Routine Test Added Successfully</string>
     <string name="routine_test_edited_successfully">Routine Test Edited Successfully</string>
     <string name="routine_test_deleted_successfully">Routine Test Deleted Successfully</string>
@@ -187,6 +188,8 @@
     <string name="every_8_hours">Every 8 hours</string>
     <string name="every_12_hours">Every 12 hours</string>
     <string name="day_after_day">Day after day</string>
+    <string name="every_week">Every Week</string>
+    <string name="every_month">Every Month</string>
     <string name="name_articles">"%s’s articles"</string>
     <string name="common_of_symptoms">Common of Symptoms.</string>
     <string name="symptoms_details">Symptoms Details</string>
@@ -239,6 +242,8 @@
     <string name="multiple_myeloma">Multiple Myeloma</string>
     <string name="thyroid">Thyroid</string>
     <string name="ok">OK</string>
+    <string name="you_must_select_a_new_datetime">You must select a new datetime</string>
+    <string name="please_select_the_allow_all_option">PLease select the \'Allow all\' option</string>
 
     <string-array name="languages_array">
         <item>English</item>
