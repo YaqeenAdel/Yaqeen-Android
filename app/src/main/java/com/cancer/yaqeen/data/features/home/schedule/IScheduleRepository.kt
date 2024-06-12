@@ -34,6 +34,7 @@ interface IScheduleRepository {
      suspend fun getSymptoms(): Flow<DataState<List<Symptom>>>
      suspend fun addMedicalReminder(request: AddMedicalReminderRequest, symptomId: Int?): Flow<DataState<ModifyMedicalReminder?>>
      suspend fun getMedicalReminders(scheduleType: String): Flow<DataState<List<MedicalReminder>>>
+     suspend fun deleteSymptomFromMedicalReminder(scheduleId: Int, symptomId: Int): Flow<DataState<Boolean>>
      suspend fun deleteSchedule(scheduleId: Int): Flow<DataState<Boolean>>
      suspend fun addRoutineTest(builder: AddRoutineTestRequestBuilder): Flow<DataState<ModifyScheduleResponse?>>
      suspend fun addRoutineTestWithoutPhoto(request: AddRoutineTestRequest): Flow<DataState<Int?>>

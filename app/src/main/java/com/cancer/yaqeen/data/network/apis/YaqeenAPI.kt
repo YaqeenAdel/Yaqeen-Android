@@ -9,6 +9,7 @@ import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.requests.A
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.requests.AddSymptomToMedicalReminderRequest
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.responses.AddMedicalReminderResponse
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.responses.AddSymptomToMedicalReminderResponse
+import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.responses.DeleteSymptomFromScheduleResponse
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.responses.EditMedicalReminderResponse
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.responses.GetMedicalRemindersResponse
 import com.cancer.yaqeen.data.features.onboarding.requests.UpdateInterestsUserRequestBody
@@ -159,6 +160,12 @@ interface YaqeenAPI {
     suspend fun addSymptomToMedicalReminder(
         @Body requestBody: AddSymptomToMedicalReminderRequest
     ): Response<AddSymptomToMedicalReminderResponse>
+
+    @DELETE("ScheduleSymptom/{SchedulesScheduleId}/{SymptomId}")
+    suspend fun deleteSymptomFromMedicalReminder(
+        @Path("SchedulesScheduleId") scheduleId: Int,
+        @Path("SymptomId") symptomId: Int
+    ): Response<DeleteSymptomFromScheduleResponse>
 
     @GET("Schedules/{scheduleType}")
     suspend fun getMedicalReminders(

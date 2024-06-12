@@ -1,5 +1,6 @@
 package com.cancer.yaqeen.presentation.ui.main.treatment.add.medical_reminder
 
+import android.util.Log
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
@@ -15,6 +16,7 @@ import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.data.network.base.Status
 import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.AddMedicalReminderUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.DeleteSymptomFromScheduleUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.EditLocalMedicalAppointmentUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.EditMedicalReminderUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.GetLocalMedicalAppointmentUseCase
@@ -41,6 +43,7 @@ class MedicalReminderViewModel @Inject constructor(
     private val saveLocalMedicalAppointmentUseCase: SaveLocalMedicalAppointmentUseCase,
     private val editLocalMedicalAppointmentUseCase: EditLocalMedicalAppointmentUseCase,
     private val getLocalMedicalAppointmentUseCase: GetLocalMedicalAppointmentUseCase,
+    private val deleteSymptomFromScheduleUseCase: DeleteSymptomFromScheduleUseCase,
 ) : ViewModel() {
 
     private var viewModelJob: Job? = null
@@ -55,6 +58,9 @@ class MedicalReminderViewModel @Inject constructor(
 
     private val _viewStateOldMedicalReminder = SingleLiveEvent<MedicalAppointmentDB?>()
     val viewStateOldMedicalReminder: LiveData<MedicalAppointmentDB?> = _viewStateOldMedicalReminder
+
+    private val _viewStateDeleteSymptomFromSchedule = SingleLiveEvent<Boolean?>()
+    val viewStateDeleteSymptomFromSchedule: LiveData<Boolean?> = _viewStateDeleteSymptomFromSchedule
 
     private val _viewStateLoading = MutableStateFlow<Boolean>(false)
     val viewStateLoading = _viewStateLoading.asStateFlow()
@@ -295,6 +301,34 @@ class MedicalReminderViewModel @Inject constructor(
                     this.workBeforeID = workBeforeID
                 }
             ).collect()
+        }
+    }
+
+    fun deleteSymptomFromSchedule() {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
+            medicalReminderTrackField.get()?.let { medicalReminder ->
+                if (medicalReminder.editable && medicalReminder.symptom?.id == medicalReminder.oldSymptomId){
+                    deleteSymptomFromScheduleUseCase(
+                        scheduleId = medicalReminder.medicalReminderId ?: 0,
+                        symptomId = medicalReminder.symptom?.id ?: 0
+                    ).collect { response ->
+                        _viewStateLoading.emit(response.loading)
+                        when (response.status) {
+                            Status.ERROR -> emitError(response.errorEntity)
+                            Status.SUCCESS -> {
+                                setSymptom(null)
+                                _viewStateDeleteSymptomFromSchedule.postValue(response.data)
+                            }
+                            else -> {}
+                        }
+                    }
+                } else {
+                    setSymptom(null)
+                    _viewStateDeleteSymptomFromSchedule.postValue(true)
+                }
+
+            }
+
         }
     }
 

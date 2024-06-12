@@ -7,6 +7,7 @@ import com.cancer.yaqeen.data.features.home.schedule.data_sources.ScheduleLocalD
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.mappers.MappingAddMedicalReminderRemoteAsUIModel
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.mappers.MappingAddSymptomToMedicalReminderRemoteAsUIModel
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.mappers.MappingDeleteScheduleRemoteAsUIModel
+import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.mappers.MappingDeleteSymptomFromScheduleRemoteAsUIModel
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.mappers.MappingEditMedicalReminderRemoteAsUIModel
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.mappers.MappingMedicalRemindersRemoteAsModel
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.models.ModifyMedicalReminder
@@ -383,6 +384,12 @@ class ScheduleRepositoryImpl @Inject constructor(
 
         }
 
+    override suspend fun deleteSymptomFromMedicalReminder(scheduleId: Int, symptomId: Int): Flow<DataState<Boolean>> =
+        flowStatus {
+            getResultRestAPI(MappingDeleteSymptomFromScheduleRemoteAsUIModel()) {
+                apiService.deleteSymptomFromMedicalReminder(scheduleId, symptomId)
+            }
+        }
 
     override suspend fun getMedicalReminders(scheduleType: String): Flow<DataState<List<MedicalReminder>>> =
         flowStatus {

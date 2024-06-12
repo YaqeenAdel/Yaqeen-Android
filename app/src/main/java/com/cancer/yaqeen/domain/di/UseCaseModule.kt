@@ -18,6 +18,7 @@ import com.cancer.yaqeen.domain.features.home.articles.usecases.SaveArticleUseCa
 import com.cancer.yaqeen.domain.features.home.articles.usecases.UnBookmarkArticleUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.AddMedicalReminderUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.DeleteScheduleUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.DeleteSymptomFromScheduleUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.EditLocalMedicalAppointmentUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.EditMedicalReminderUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.GetLocalMedicalAppointmentUseCase
@@ -202,6 +203,11 @@ object UseCaseModule {
     @Provides
     fun provideGetMedicalRemindersUseCase(repository: ScheduleRepositoryImpl) =
         GetMedicalRemindersUseCase(repository)
+
+    @Singleton
+    @Provides
+    fun provideDeleteSymptomFromScheduleUseCase(repository: ScheduleRepositoryImpl) =
+        DeleteSymptomFromScheduleUseCase(repository)
 
     @Singleton
     @Provides

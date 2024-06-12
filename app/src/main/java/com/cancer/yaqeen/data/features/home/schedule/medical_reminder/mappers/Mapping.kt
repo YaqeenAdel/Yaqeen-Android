@@ -7,6 +7,7 @@ import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.models.Med
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.models.MedicalReminderTrack
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.responses.AddMedicalReminderResponse
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.responses.AddSymptomToMedicalReminderResponse
+import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.responses.DeleteSymptomFromScheduleResponse
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.responses.EditMedicalReminderResponse
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.responses.GetMedicalRemindersResponse
 import com.cancer.yaqeen.data.features.home.schedule.routine_test.models.ReminderBefore
@@ -48,10 +49,17 @@ class MappingAddSymptomToMedicalReminderRemoteAsUIModel(private val scheduleID: 
     }
 }
 
+class MappingDeleteSymptomFromScheduleRemoteAsUIModel :
+    Mapper<DeleteSymptomFromScheduleResponse, Boolean> {
+    override fun map(input: DeleteSymptomFromScheduleResponse): Boolean {
+        return input.response != null
+    }
+}
+
 class MappingDeleteScheduleRemoteAsUIModel :
     Mapper<Any, Boolean> {
     override fun map(input: Any): Boolean {
-        return input!= null
+        return input != null
     }
 }
 
