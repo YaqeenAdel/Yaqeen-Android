@@ -1,11 +1,28 @@
 package com.cancer.yaqeen.presentation.service
 
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.NotificationManager.IMPORTANCE_HIGH
+import android.app.PendingIntent
+import android.app.PendingIntent.getActivity
 import android.content.Context
+import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
+import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
+import android.content.pm.ServiceInfo
 import android.net.Uri
+import android.os.Build.VERSION.SDK_INT
+import android.os.Build.VERSION_CODES.O
+import android.os.Build.VERSION_CODES.Q
+import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
+import androidx.work.CoroutineWorker
+import androidx.work.ForegroundInfo
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.PeriodTimeEnum
 import com.cancer.yaqeen.data.features.home.schedule.medication.room.MedicationDB
 import com.cancer.yaqeen.data.features.home.schedule.routine_test.room.RoutineTestDB
@@ -18,6 +35,7 @@ import com.cancer.yaqeen.domain.features.home.schedule.medication.GetLocalMedica
 import com.cancer.yaqeen.domain.features.home.schedule.routine_test.EditLocalRoutineTestUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.routine_test.GetLocalRoutineTestsUseCase
 import com.cancer.yaqeen.presentation.receiver.NotificationReceiver
+import com.cancer.yaqeen.presentation.ui.MainActivity
 import com.cancer.yaqeen.presentation.util.Constants.ACTION_KEY
 import com.cancer.yaqeen.presentation.util.Constants.OBJECT_JSON
 import com.cancer.yaqeen.presentation.util.Constants.UPDATE_LOCAL_MEDICATION_ACTION
@@ -41,7 +59,7 @@ class ReminderWorker @AssistedInject constructor(
     val editLocalRoutineTestUseCase: EditLocalRoutineTestUseCase,
     val getLocalMedicationsUseCase: GetLocalMedicationsUseCase,
     val getLocalRoutineTestsUseCase: GetLocalRoutineTestsUseCase,
-) : Worker(context, params) {
+) : CoroutineWorker(context, params) {
 
     @Inject
     lateinit var yaqeenDao: YaqeenDao
@@ -54,7 +72,8 @@ class ReminderWorker @AssistedInject constructor(
         WorkerReminder(context)
     }
 
-    override fun doWork(): Result {
+    override suspend fun doWork(): Result {
+//        createForegroundInfo()
         val objectJsonValue = inputData.getString(OBJECT_JSON)
 
         when (val actionName = inputData.getString(ACTION_KEY)) {
@@ -231,5 +250,30 @@ class ReminderWorker @AssistedInject constructor(
             }
         }
 
-
+    private fun createForegroundInfo(): ForegroundInfo {
+        return if(SDK_INT>= Q) {
+            ForegroundInfo(15, sendNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
+        }else{
+            ForegroundInfo(15, sendNotification())
+        }
+    }
+    private fun sendNotification(): Notification {
+        val intent = Intent(applicationContext, MainActivity::class.java)
+        intent.flags = FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK
+        val notificationManager = applicationContext.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        val pendingIntent = getActivity(applicationContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+        val notification = NotificationCompat.Builder(applicationContext, "NOTIFICATION_CHANNEL")
+            .setSmallIcon(R.drawable.logo_launcher)
+            .setContentTitle("Android 14 service test")
+            .setContentText("SDK14")
+            .setContentIntent(pendingIntent)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+        if (SDK_INT >= O) {
+            notification.setChannelId("NOTIFICATION_CHANNEL")
+            val channel = NotificationChannel("NOTIFICATION_CHANNEL", "NOTIFICATION_NAME", IMPORTANCE_HIGH)
+            notificationManager.createNotificationChannel(channel)
+        }
+        notificationManager.notify(101, notification.build())
+        return notification.build()
+    }
 }

@@ -20,6 +20,7 @@ import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.models.Med
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.ReminderTime
 import com.cancer.yaqeen.data.features.home.schedule.routine_test.models.ReminderBefore
 import com.cancer.yaqeen.data.features.home.schedule.symptom.models.Symptom
+import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.databinding.FragmentChooseTimeMedicalReminderBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.medical_reminder.MedicalReminderViewModel
@@ -31,9 +32,12 @@ import com.cancer.yaqeen.presentation.util.calculateStartDateTime
 import com.cancer.yaqeen.presentation.util.changeVisibility
 import com.cancer.yaqeen.presentation.util.convertMilliSecondsToDate
 import com.cancer.yaqeen.presentation.util.disable
+import com.cancer.yaqeen.presentation.util.disableTouch
 import com.cancer.yaqeen.presentation.util.enable
+import com.cancer.yaqeen.presentation.util.enableTouch
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import java.util.concurrent.TimeUnit
 
 
@@ -90,6 +94,43 @@ class ChooseTimeMedicalReminderFragment : BaseFragment() {
 
         setListener()
 
+        observeStates()
+    }
+
+    private fun observeStates() {
+        lifecycleScope {
+            medicalReminderViewModel.viewStateLoading.collectLatest {
+                if (it)
+                    disableTouch()
+                else
+                    enableTouch()
+                onLoading(it)
+            }
+        }
+        lifecycleScope {
+            medicalReminderViewModel.viewStateError.collectLatest {
+                handleResponseError(it)
+            }
+        }
+
+        lifecycleScope {
+            medicalReminderViewModel.viewStateDeleteSymptomFromSchedule.observe(viewLifecycleOwner) { response ->
+                if (response == true){
+                    updateUI(symptom = null)
+                }
+            }
+        }
+    }
+
+    private fun handleResponseError(errorEntity: ErrorEntity?) {
+        val errorMessage = handleError(errorEntity)
+        displayErrorMessage(errorMessage)
+    }
+
+    private fun displayErrorMessage(errorMessage: String?) {
+        errorMessage?.let {
+            Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun setReminderTime(reminderTime: ReminderTime?) {
@@ -254,8 +295,7 @@ class ChooseTimeMedicalReminderFragment : BaseFragment() {
         }
 
         binding.btnDeleteSymptom.setOnClickListener {
-            updateUI(symptom = null)
-            medicalReminderViewModel.setSymptom(null)
+            medicalReminderViewModel.deleteSymptomFromSchedule()
         }
 
         binding.btnIncrease.setOnClickListener {
