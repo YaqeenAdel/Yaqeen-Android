@@ -30,6 +30,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
@@ -69,7 +70,7 @@ class SymptomsViewModel @Inject constructor(
     fun getSymptomsTypes(){
         viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             getSymptomsTypesUseCase().collect { response ->
-                _viewStateLoading.emit(response.loading)
+                emitLoading(response.loading)
                 when (response.status) {
                     Status.ERROR -> emitError(response.errorEntity)
                     Status.SUCCESS -> {
@@ -122,7 +123,7 @@ class SymptomsViewModel @Inject constructor(
                         photos = photosList ?: listOf(),
                     )
                 ).onEach { response ->
-                    _viewStateLoading.emit(response.loading)
+                    emitLoading(response.loading)
                     when (response.status) {
                         Status.ERROR -> emitError(response.errorEntity)
                         Status.SUCCESS -> {
@@ -158,7 +159,7 @@ class SymptomsViewModel @Inject constructor(
                         photos = listOf(),
                     ).buildRequestBody()
                 ).collect { response ->
-                    _viewStateLoading.emit(response.loading)
+                    emitLoading(response.loading)
                     when (response.status) {
                         Status.ERROR -> emitError(response.errorEntity)
                         Status.SUCCESS -> {
@@ -201,7 +202,7 @@ class SymptomsViewModel @Inject constructor(
                         photos = photosList ?: listOf(),
                     ).buildRequestBody()
                 ).onEach { response ->
-                    _viewStateLoading.emit(response.loading)
+                    emitLoading(response.loading)
                     when (response.status) {
                         Status.ERROR -> emitError(response.errorEntity)
                         Status.SUCCESS -> {
@@ -236,7 +237,7 @@ class SymptomsViewModel @Inject constructor(
                         photos = photosList ?: listOf(),
                     )
                 ).collect { response ->
-                    _viewStateLoading.emit(response.loading)
+                    emitLoading(response.loading)
                     when (response.status) {
                         Status.ERROR -> emitError(response.errorEntity)
                         Status.SUCCESS -> {
@@ -336,10 +337,17 @@ class SymptomsViewModel @Inject constructor(
         symptomTrackField.get()?.also {
             it.doctorName = doctorName
         }
+    private suspend fun emitLoading(isLoading: Boolean) {
+        withContext(Dispatchers.Main) {
+            _viewStateLoading.emit(isLoading)
+        }
+    }
 
     private suspend fun emitError(errorEntity: ErrorEntity?) {
-        _viewStateError.emit(errorEntity)
-        _viewStateError.emit(null)
+        withContext(Dispatchers.Main) {
+            _viewStateError.emit(errorEntity)
+            _viewStateError.emit(null)
+        }
     }
 
     override fun onCleared() {
