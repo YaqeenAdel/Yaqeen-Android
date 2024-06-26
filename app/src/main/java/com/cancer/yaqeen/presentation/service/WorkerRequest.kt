@@ -67,6 +67,7 @@ class WorkerRequest private constructor(){
 
         fun build(): PeriodicWorkRequest {
             return buildPeriodicWorkRequestBuilder(periodTimeId)
+                .addTag("MY_WORK_TAG")
                 .setInitialDelay(startDateTime, TimeUnit.MILLISECONDS)
                 .setInputData(
                     workDataOf(

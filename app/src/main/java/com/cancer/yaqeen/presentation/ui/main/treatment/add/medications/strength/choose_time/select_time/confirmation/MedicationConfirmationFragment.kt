@@ -1,6 +1,7 @@
 package com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.strength.choose_time.select_time.confirmation
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -107,6 +108,7 @@ class MedicationConfirmationFragment : BaseFragment() {
     }
 
     private fun addWorkerReminderPeriodically() {
+        Log.d("NotificationReceiver", "addWorkerReminderPeriodically: ${medicationsViewModel.hasWorker()}")
         if (!medicationsViewModel.hasWorker()) {
             val timeDelayInMilliSeconds = TimeUnit.MINUTES.toMillis(5L)
             val currentTimeInMilliSeconds = System.currentTimeMillis()
@@ -119,6 +121,8 @@ class MedicationConfirmationFragment : BaseFragment() {
             )
 
             medicationsViewModel.saveWorkerReminderPeriodicallyInfo(periodReminderId, workRunningInMilliSeconds)
+
+            workerReminderPeriodically.checkWorkerStatus(this)
         }
     }
 
@@ -142,6 +146,7 @@ class MedicationConfirmationFragment : BaseFragment() {
             medicationsViewModel.viewStateAddMedication.observe(viewLifecycleOwner) { response ->
                 response?.let { (added, medication) ->
                     if(added){
+                        Log.d("NotificationReceiver", "viewStateEditMedication: added")
                         addWorkerReminderPeriodically()
                         if (medication.periodTimeId == PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id){
                             val uuids = workerReminder.setReminderDays(medication.apply { json = toJson() })

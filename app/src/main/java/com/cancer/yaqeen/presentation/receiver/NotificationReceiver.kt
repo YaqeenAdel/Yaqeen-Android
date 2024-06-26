@@ -3,8 +3,10 @@ package com.cancer.yaqeen.presentation.receiver
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.room.MedicalAppointmentDB
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.PeriodTimeEnum
@@ -45,6 +47,16 @@ class NotificationReceiver : BroadcastReceiver() {
         notificationUtils = NotificationUtils(context)
         // Handle the custom action here
         when (intent.action) {
+            Intent.ACTION_BOOT_COMPLETED -> {
+                Toast.makeText(context, "ACTION_BOOT_COMPLETED", Toast.LENGTH_SHORT).show()
+                // Start the background service
+//                val serviceIntent = Intent(context, YourService::class.java)
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                    context.startForegroundService(serviceIntent)
+//                } else {
+//                    context.startService(serviceIntent)
+//                }
+            }
             IGNORE_NOTIFICATION_ACTION -> {
                 val notificationId = intent.getIntExtra(NOTIFICATION_ID, 1)
                 notificationUtils.cancelNotification(notificationId)

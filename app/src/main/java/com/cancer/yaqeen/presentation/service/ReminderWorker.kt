@@ -13,14 +13,16 @@ import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.content.pm.ServiceInfo
 import android.net.Uri
+import android.os.Build
 import android.os.Build.VERSION.SDK_INT
 import android.os.Build.VERSION_CODES.O
 import android.os.Build.VERSION_CODES.Q
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
-import androidx.work.Worker
+import androidx.work.WorkInfo
 import androidx.work.WorkerParameters
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.PeriodTimeEnum
@@ -73,58 +75,72 @@ class ReminderWorker @AssistedInject constructor(
     }
 
     override suspend fun doWork(): Result {
+        try {
+
 //        createForegroundInfo()
-        val objectJsonValue = inputData.getString(OBJECT_JSON)
+            val objectJsonValue = inputData.getString(OBJECT_JSON)
+            Log.d("ReminderWorker", "doWork: ${inputData.getString(ACTION_KEY)}")
 
-        when (val actionName = inputData.getString(ACTION_KEY)) {
-            UPDATE_LOCAL_SCHEDULES_ACTION -> {
-                prefEncryptionUtil.workRunningInMillis =
-                    System.currentTimeMillis() + PeriodTimeEnum.EVERY_3_HOURS.timeInMillis
-                getSchedules()
-            }
-            UPDATE_LOCAL_MEDICATION_ACTION -> {
-                val medication: MedicationDB? =
-                    objectJsonValue.toString().fromJson(MedicationDB::class.java)
-                medication?.let {
-                    updateMedication(
-                        it.apply {
-                            workID = null
-                            workSpecificDaysIDs = listOf()
-                            isReminded = true
-                            startDateTime = increaseDateTime(it.startDateTime, it.periodTimeId)
-                        }
-                    )
-                }
-            }
-            UPDATE_LOCAL_ROUTINE_TEST_ACTION -> {
-                val routineTest: RoutineTestDB? =
-                    objectJsonValue.toString().fromJson(RoutineTestDB::class.java)
-                routineTest?.let {
-
-                    updateRoutineTest(
-                        it.apply {
-                            workID = null
-                            workSpecificDaysIDs = listOf()
-                            isReminded = true
-                            startDateTime = increaseDateTime(it.startDateTime, it.periodTimeId)
-                        }
-                    )
+            when (val actionName = inputData.getString(ACTION_KEY)) {
+                UPDATE_LOCAL_SCHEDULES_ACTION -> {
+                    prefEncryptionUtil.workRunningInMillis =
+                        System.currentTimeMillis() + PeriodTimeEnum.EVERY_3_HOURS.timeInMillis
+                    getSchedules()
                 }
 
-            }
-            else -> {
-                objectJsonValue?.let {
-                    val intent = Intent(context, NotificationReceiver::class.java).apply {
-                        action = actionName
-                        data = Uri.parse(objectJsonValue)
+                UPDATE_LOCAL_MEDICATION_ACTION -> {
+                    val medication: MedicationDB? =
+                        objectJsonValue.toString().fromJson(MedicationDB::class.java)
+                    medication?.let {
+                        updateMedication(
+                            it.apply {
+                                workID = null
+                                workSpecificDaysIDs = listOf()
+                                isReminded = true
+                                startDateTime = increaseDateTime(it.startDateTime, it.periodTimeId)
+                            }
+                        )
                     }
+                }
 
-                    applicationContext.sendBroadcast(intent)
+                UPDATE_LOCAL_ROUTINE_TEST_ACTION -> {
+                    val routineTest: RoutineTestDB? =
+                        objectJsonValue.toString().fromJson(RoutineTestDB::class.java)
+                    routineTest?.let {
+                        updateRoutineTest(
+                            it.apply {
+                                workID = null
+                                workSpecificDaysIDs = listOf()
+                                isReminded = true
+                                startDateTime = increaseDateTime(it.startDateTime, it.periodTimeId)
+                            }
+                        )
+                    }
+                }
+
+                else -> {
+                    objectJsonValue?.let {
+                        val intent = Intent(context, NotificationReceiver::class.java).apply {
+                            action = actionName
+                            data = Uri.parse(objectJsonValue)
+                        }
+
+                        applicationContext.sendBroadcast(intent)
+                    }
                 }
             }
-        }
 
-        return Result.success()
+            return Result.success()
+        } catch (e: Exception) {
+            if (SDK_INT >= Build.VERSION_CODES.S) {
+                throw Exception("Reminder-Worker: $stopReason $e")
+            }else {
+                throw Exception("Reminder-Worker: ${WorkInfo.STOP_REASON_UNKNOWN} $e")
+            }
+            return Result.retry()
+        } finally {
+            throw Exception("Reminder-Worker: $stopReason")
+        }
     }
 
     private fun getSchedules() {
@@ -226,42 +242,55 @@ class ReminderWorker @AssistedInject constructor(
     }
 
     private fun increaseDateTime(startDateTime: Long, periodTimeId: Int?): Long =
-        when(periodTimeId){
+        when (periodTimeId) {
             PeriodTimeEnum.EVERY_DAY.id -> {
                 startDateTime + PeriodTimeEnum.EVERY_DAY.timeInMillis
             }
+
             PeriodTimeEnum.EVERY_8_HOURS.id -> {
                 startDateTime + PeriodTimeEnum.EVERY_8_HOURS.timeInMillis
             }
+
             PeriodTimeEnum.EVERY_12_HOURS.id -> {
                 startDateTime + PeriodTimeEnum.EVERY_12_HOURS.timeInMillis
             }
+
             PeriodTimeEnum.DAY_AFTER_DAY.id -> {
                 startDateTime + PeriodTimeEnum.DAY_AFTER_DAY.timeInMillis
             }
+
             PeriodTimeEnum.EVERY_WEEK.id -> {
                 startDateTime + PeriodTimeEnum.EVERY_WEEK.timeInMillis
             }
+
             PeriodTimeEnum.EVERY_MONTH.id -> {
                 startDateTime + PeriodTimeEnum.EVERY_MONTH.timeInMillis
             }
+
             else -> {
                 0L
             }
         }
 
     private fun createForegroundInfo(): ForegroundInfo {
-        return if(SDK_INT>= Q) {
+        return if (SDK_INT >= Q) {
             ForegroundInfo(15, sendNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
-        }else{
+        } else {
             ForegroundInfo(15, sendNotification())
         }
     }
+
     private fun sendNotification(): Notification {
         val intent = Intent(applicationContext, MainActivity::class.java)
         intent.flags = FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK
-        val notificationManager = applicationContext.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        val pendingIntent = getActivity(applicationContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+        val notificationManager =
+            applicationContext.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        val pendingIntent = getActivity(
+            applicationContext,
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
         val notification = NotificationCompat.Builder(applicationContext, "NOTIFICATION_CHANNEL")
             .setSmallIcon(R.drawable.logo_launcher)
             .setContentTitle("Android 14 service test")
@@ -270,10 +299,12 @@ class ReminderWorker @AssistedInject constructor(
             .setPriority(NotificationCompat.PRIORITY_HIGH)
         if (SDK_INT >= O) {
             notification.setChannelId("NOTIFICATION_CHANNEL")
-            val channel = NotificationChannel("NOTIFICATION_CHANNEL", "NOTIFICATION_NAME", IMPORTANCE_HIGH)
+            val channel =
+                NotificationChannel("NOTIFICATION_CHANNEL", "NOTIFICATION_NAME", IMPORTANCE_HIGH)
             notificationManager.createNotificationChannel(channel)
         }
         notificationManager.notify(101, notification.build())
         return notification.build()
     }
+
 }
