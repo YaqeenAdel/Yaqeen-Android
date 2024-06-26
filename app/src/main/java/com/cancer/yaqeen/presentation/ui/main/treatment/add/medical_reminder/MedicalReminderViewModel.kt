@@ -32,6 +32,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
@@ -154,7 +155,7 @@ class MedicalReminderViewModel @Inject constructor(
                     requestBuilder.buildRequestBody(),
                     symptom?.id
                 ).collect { response ->
-                    _viewStateLoading.emit(response.loading)
+                    emitLoading(response.loading)
                     when (response.status) {
                         Status.ERROR -> emitError(response.errorEntity)
                         Status.SUCCESS -> {
@@ -222,7 +223,7 @@ class MedicalReminderViewModel @Inject constructor(
 
                     if (symptom?.id == oldSymptomId) null else symptom?.id
                 ).collect { response ->
-                    _viewStateLoading.emit(response.loading)
+                    emitLoading(response.loading)
                     when (response.status) {
                         Status.ERROR -> emitError(response.errorEntity)
                         Status.SUCCESS -> {
@@ -255,7 +256,7 @@ class MedicalReminderViewModel @Inject constructor(
             getLocalMedicalAppointmentUseCase(
                 medicalAppointmentId = medicalAppointmentId
             ).collect { response ->
-                _viewStateLoading.emit(response.loading)
+                emitLoading(response.loading)
                 when (response.status) {
                     Status.ERROR -> {
                         _viewStateEditMedicalReminder.postValue(false to medicalAppointmentDB)
@@ -312,7 +313,7 @@ class MedicalReminderViewModel @Inject constructor(
                         scheduleId = medicalReminder.medicalReminderId ?: 0,
                         symptomId = medicalReminder.symptom?.id ?: 0
                     ).collect { response ->
-                        _viewStateLoading.emit(response.loading)
+                        emitLoading(response.loading)
                         when (response.status) {
                             Status.ERROR -> emitError(response.errorEntity)
                             Status.SUCCESS -> {
@@ -335,9 +336,17 @@ class MedicalReminderViewModel @Inject constructor(
     fun userIsLoggedIn() =
         prefEncryptionUtil.isLogged
 
+    private suspend fun emitLoading(isLoading: Boolean) {
+        withContext(Dispatchers.Main) {
+            _viewStateLoading.emit(isLoading)
+        }
+    }
+
     private suspend fun emitError(errorEntity: ErrorEntity?) {
-        _viewStateError.emit(errorEntity)
-        _viewStateError.emit(null)
+        withContext(Dispatchers.Main) {
+            _viewStateError.emit(errorEntity)
+            _viewStateError.emit(null)
+        }
     }
 
     override fun onCleared() {

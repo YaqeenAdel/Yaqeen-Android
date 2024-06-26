@@ -33,6 +33,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -82,7 +83,7 @@ class HomeViewModel @Inject constructor(
 
         viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             getTodayRemindersUseCase().collect { response ->
-                _viewStateLoading.emit(response.loading)
+                emitLoading(response.loading)
                 when (response.status) {
                     Status.ERROR -> emitError(response.errorEntity)
                     Status.SUCCESS -> {
@@ -100,14 +101,14 @@ class HomeViewModel @Inject constructor(
     fun getArticles(searchQuery: String = "") {
         viewModelScope.launch(Dispatchers.IO) {
             getArticlesUseCase(searchQuery).onEach { response ->
-                _viewStateLoading.emit(response.loading)
+                emitLoading(response.loading)
                 when (response.status) {
                     Status.ERROR -> emitError(response.errorEntity)
                     Status.SUCCESS -> {
                         if (response.data?.isNotEmpty() == true){
                             if (prefEncryptionUtil.isLogged){
                                 getLocalBookmarkedArticlesUseCase().onEach { responseLocal ->
-                                    _viewStateLoading.emit(response.loading)
+                                    emitLoading(response.loading)
                                     when (responseLocal.status) {
                                         Status.ERROR, Status.SUCCESS -> {
                                             if(responseLocal.data.isNullOrEmpty()) {
@@ -134,7 +135,7 @@ class HomeViewModel @Inject constructor(
     private fun getBookmarkedArticles(articles: List<Article>) {
         viewModelScope.launch(Dispatchers.IO) {
             getBookmarkedArticlesUseCase().onEach { response ->
-                _viewStateLoading.emit(response.loading)
+                emitLoading(response.loading)
                 when (response.status) {
                     Status.ERROR -> _viewStateArticles.emit(articles)
                     Status.SUCCESS -> {
@@ -153,7 +154,7 @@ class HomeViewModel @Inject constructor(
     fun getSavedArticles() {
         viewModelScope.launch(Dispatchers.IO) {
             getBookmarkedArticlesUseCase().onEach { response ->
-                _viewStateLoading.emit(response.loading)
+                emitLoading(response.loading)
                 when (response.status) {
                     Status.ERROR -> emitError(response.errorEntity)
                     Status.SUCCESS -> {
@@ -234,7 +235,7 @@ class HomeViewModel @Inject constructor(
             bookmarkArticleUseCase(
                 BookmarkArticleRequest(article.contentID)
             ).collect { response ->
-                _viewStateLoading.emit(response.loading)
+                emitLoading(response.loading)
                 when (response.status) {
                     Status.ERROR -> emitError(response.errorEntity)
                     Status.SUCCESS -> {
@@ -262,7 +263,7 @@ class HomeViewModel @Inject constructor(
             unBookmarkArticleUseCase(
                 article.bookmarkID ?: 0
             ).collect { response ->
-                _viewStateLoading.emit(response.loading)
+                emitLoading(response.loading)
                 when (response.status) {
                     Status.ERROR -> emitError(response.errorEntity)
                     Status.SUCCESS -> {
@@ -285,9 +286,17 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    private suspend fun emitLoading(isLoading: Boolean) {
+        withContext(Dispatchers.Main) {
+            _viewStateLoading.emit(isLoading)
+        }
+    }
+
     private suspend fun emitError(errorEntity: ErrorEntity?) {
-        _viewStateError.emit(errorEntity)
-        _viewStateError.emit(null)
+        withContext(Dispatchers.Main) {
+            _viewStateError.emit(errorEntity)
+            _viewStateError.emit(null)
+        }
     }
     override fun onCleared() {
         super.onCleared()
