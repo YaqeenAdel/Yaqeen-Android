@@ -50,6 +50,8 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.util.Random
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltWorker
@@ -76,8 +78,6 @@ class ReminderWorker @AssistedInject constructor(
 
     override suspend fun doWork(): Result {
         try {
-
-//        createForegroundInfo()
             val objectJsonValue = inputData.getString(OBJECT_JSON)
             Log.d("ReminderWorker", "doWork: ${inputData.getString(ACTION_KEY)}")
 
@@ -89,6 +89,7 @@ class ReminderWorker @AssistedInject constructor(
                 }
 
                 UPDATE_LOCAL_MEDICATION_ACTION -> {
+                    Log.d("NotificationReceiver", "onReceive: UPDATE_LOCAL_MEDICATION_ACTION")
                     val medication: MedicationDB? =
                         objectJsonValue.toString().fromJson(MedicationDB::class.java)
                     medication?.let {
@@ -274,9 +275,9 @@ class ReminderWorker @AssistedInject constructor(
 
     private fun createForegroundInfo(): ForegroundInfo {
         return if (SDK_INT >= Q) {
-            ForegroundInfo(15, sendNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
+            ForegroundInfo(Random().nextInt(), sendNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
         } else {
-            ForegroundInfo(15, sendNotification())
+            ForegroundInfo(Random().nextInt(), sendNotification())
         }
     }
 

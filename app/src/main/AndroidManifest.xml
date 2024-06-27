@@ -116,6 +116,11 @@
         <service android:name="androidx.work.impl.foreground.SystemForegroundService"
             android:foregroundServiceType="dataSync"/>
 
+        <service
+            android:name=".presentation.service.AlarmService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:exported="true"/>
+
     </application>
 
 </manifest>

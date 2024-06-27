@@ -27,6 +27,7 @@ import com.cancer.yaqeen.presentation.util.binding_adapters.bindResourceImage
 import com.cancer.yaqeen.presentation.util.convertMilliSecondsToDate
 import com.cancer.yaqeen.presentation.util.disableTouch
 import com.cancer.yaqeen.presentation.util.enableTouch
+import com.cancer.yaqeen.presentation.util.scheduleJobService
 import com.cancer.yaqeen.presentation.util.schedulingPermissionsAreGranted
 import com.cancer.yaqeen.presentation.util.tryPopBackStack
 import dagger.hilt.android.AndroidEntryPoint
@@ -108,22 +109,23 @@ class MedicationConfirmationFragment : BaseFragment() {
     }
 
     private fun addWorkerReminderPeriodically() {
+        scheduleJobService(requireContext(), TimeUnit.MINUTES.toMillis(15))
         Log.d("NotificationReceiver", "addWorkerReminderPeriodically: ${medicationsViewModel.hasWorker()}")
-        if (!medicationsViewModel.hasWorker()) {
-            val timeDelayInMilliSeconds = TimeUnit.MINUTES.toMillis(5L)
-            val currentTimeInMilliSeconds = System.currentTimeMillis()
-            val workRunningInMilliSeconds = currentTimeInMilliSeconds + timeDelayInMilliSeconds
+//        if (!medicationsViewModel.hasWorker()) {
+//            val timeDelayInMilliSeconds = TimeUnit.MINUTES.toMillis(5L)
+//            val currentTimeInMilliSeconds = System.currentTimeMillis()
+//            val workRunningInMilliSeconds = currentTimeInMilliSeconds + timeDelayInMilliSeconds
 
-            val periodReminderId = workerReminderPeriodically.setPeriodReminder(
-                timeDelayInMilliSeconds,
-                PeriodTimeEnum.EVERY_3_HOURS.id,
-                UPDATE_LOCAL_SCHEDULES_ACTION
-            )
+//            val periodReminderId = workerReminderPeriodically.setPeriodReminder(
+//                timeDelayInMilliSeconds,
+//                PeriodTimeEnum.EVERY_3_HOURS.id,
+//                UPDATE_LOCAL_SCHEDULES_ACTION
+//            )
+//
+//            medicationsViewModel.saveWorkerReminderPeriodicallyInfo(periodReminderId, workRunningInMilliSeconds)
 
-            medicationsViewModel.saveWorkerReminderPeriodicallyInfo(periodReminderId, workRunningInMilliSeconds)
-
-            workerReminderPeriodically.checkWorkerStatus(this)
-        }
+//            workerReminderPeriodically.checkWorkerStatus(this)
+//        }
     }
 
     private fun observeStates() {

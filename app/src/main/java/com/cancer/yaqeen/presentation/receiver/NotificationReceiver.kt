@@ -30,6 +30,7 @@ import com.cancer.yaqeen.presentation.util.Constants.TITLE_KEY
 import com.cancer.yaqeen.presentation.util.Constants.UPDATE_LOCAL_MEDICATION_ACTION
 import com.cancer.yaqeen.presentation.util.Constants.UPDATE_LOCAL_ROUTINE_TEST_ACTION
 import com.cancer.yaqeen.presentation.util.NotificationUtils
+import com.cancer.yaqeen.presentation.util.scheduleJobService
 import com.cancer.yaqeen.presentation.util.windows.MedicalAppointmentWindow
 import com.cancer.yaqeen.presentation.util.windows.MedicationWindow
 import com.cancer.yaqeen.presentation.util.windows.RoutineTestWindow
@@ -49,6 +50,8 @@ class NotificationReceiver : BroadcastReceiver() {
         when (intent.action) {
             Intent.ACTION_BOOT_COMPLETED -> {
                 Toast.makeText(context, "ACTION_BOOT_COMPLETED", Toast.LENGTH_SHORT).show()
+
+                scheduleJobService(context, TimeUnit.MINUTES.toMillis(15))
                 // Start the background service
 //                val serviceIntent = Intent(context, YourService::class.java)
 //                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

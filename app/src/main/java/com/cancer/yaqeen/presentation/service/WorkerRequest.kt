@@ -1,6 +1,7 @@
 package com.cancer.yaqeen.presentation.service
 
 import android.content.Context
+import android.util.Log
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequest
@@ -66,6 +67,7 @@ class WorkerRequest private constructor(){
         }
 
         fun build(): PeriodicWorkRequest {
+            Log.d("NotificationReceiver", "WorkerRequest: build")
             return buildPeriodicWorkRequestBuilder(periodTimeId)
                 .addTag("MY_WORK_TAG")
                 .setInitialDelay(startDateTime, TimeUnit.MILLISECONDS)
