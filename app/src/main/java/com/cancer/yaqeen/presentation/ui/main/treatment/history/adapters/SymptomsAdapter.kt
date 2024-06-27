@@ -94,7 +94,6 @@ class SymptomsAdapter(
                 }
 
                 itemBinding.tvSymptomTypes.text = types
-                itemBinding.tvSymptomNotes.text = details
                 itemBinding.tvSymptomsVal.text = types
                 itemBinding.tvNotesVal.text = details
                 itemBinding.tvReminderVal.text = doctorName ?: ""
