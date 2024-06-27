@@ -33,6 +33,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -101,12 +102,14 @@ class SchedulesHistoryViewModel @Inject constructor(
             getMedicationRemindersUseCase(
                 scheduleType = ScheduleType.MEDICATION.scheduleType
             ).collect { response ->
-                _viewStateLoading.emit(response.loading)
+                emitLoading(response.loading)
                 when (response.status) {
                     Status.ERROR -> emitError(response.errorEntity)
                     Status.SUCCESS -> {
                         response.data?.let {
-                            _viewStateMedications.emit(it)
+                            withContext(Dispatchers.Main){
+                                _viewStateMedications.emit(it)
+                            }
                         }
                     }
 
@@ -121,12 +124,14 @@ class SchedulesHistoryViewModel @Inject constructor(
             return
         viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             getSymptomsUseCase().collect { response ->
-                _viewStateLoading.emit(response.loading)
+                emitLoading(response.loading)
                 when (response.status) {
                     Status.ERROR -> emitError(response.errorEntity)
                     Status.SUCCESS -> {
-                        response.data?.let {
-                            _viewStateSymptoms.emit(it)
+                            response.data?.let {
+                                withContext(Dispatchers.Main) {
+                                    _viewStateSymptoms.emit(it)
+                                }
                         }
                     }
 
@@ -141,7 +146,7 @@ class SchedulesHistoryViewModel @Inject constructor(
             return
         viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             getMedicalRemindersUseCase(scheduleType = ScheduleType.MEDICAL_REMINDER.scheduleType).collect { response ->
-                _viewStateLoading.emit(response.loading)
+                emitLoading(response.loading)
                 when (response.status) {
                     Status.ERROR -> emitError(response.errorEntity)
                     Status.SUCCESS -> {
@@ -161,7 +166,7 @@ class SchedulesHistoryViewModel @Inject constructor(
             return
         viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             getRoutineTestsUseCase(scheduleType = ScheduleType.ROUTINE_TESTS.scheduleType).collect { response ->
-                _viewStateLoading.emit(response.loading)
+                emitLoading(response.loading)
                 when (response.status) {
                     Status.ERROR -> emitError(response.errorEntity)
                     Status.SUCCESS -> {
@@ -180,7 +185,7 @@ class SchedulesHistoryViewModel @Inject constructor(
             deleteSymptomUseCase(
                 symptomId = symptomId
             ).collect { response ->
-                _viewStateLoading.emit(response.loading)
+                emitLoading(response.loading)
                 when (response.status) {
                     Status.ERROR -> emitError(response.errorEntity)
                     Status.SUCCESS -> {
@@ -198,7 +203,7 @@ class SchedulesHistoryViewModel @Inject constructor(
             deleteScheduleUseCase(
                 scheduleId = scheduleId
             ).collect { response ->
-                _viewStateLoading.emit(response.loading)
+                emitLoading(response.loading)
                 when (response.status) {
                     Status.ERROR -> emitError(response.errorEntity)
                     Status.SUCCESS -> {
@@ -219,7 +224,7 @@ class SchedulesHistoryViewModel @Inject constructor(
             getLocalMedicalAppointmentUseCase(
                 medicalAppointmentId = medicalAppointmentId
             ).collect { response ->
-                _viewStateLoading.emit(response.loading)
+                emitLoading(response.loading)
                 when (response.status) {
                     Status.ERROR -> {}
                     Status.SUCCESS -> {
@@ -248,7 +253,7 @@ class SchedulesHistoryViewModel @Inject constructor(
             deleteScheduleUseCase(
                 scheduleId = scheduleId
             ).collect { response ->
-                _viewStateLoading.emit(response.loading)
+                emitLoading(response.loading)
                 when (response.status) {
                     Status.ERROR -> emitError(response.errorEntity)
                     Status.SUCCESS -> {
@@ -269,7 +274,7 @@ class SchedulesHistoryViewModel @Inject constructor(
             getLocalRoutineTestUseCase(
                 routineTestId = routineTestId
             ).collect { response ->
-                _viewStateLoading.emit(response.loading)
+                emitLoading(response.loading)
                 when (response.status) {
                     Status.ERROR -> {}
                     Status.SUCCESS -> {
@@ -299,7 +304,7 @@ class SchedulesHistoryViewModel @Inject constructor(
             deleteScheduleUseCase(
                 scheduleId = scheduleId
             ).collect { response ->
-                _viewStateLoading.emit(response.loading)
+                emitLoading(response.loading)
                 when (response.status) {
                     Status.ERROR -> emitError(response.errorEntity)
                     Status.SUCCESS -> {
@@ -319,7 +324,7 @@ class SchedulesHistoryViewModel @Inject constructor(
             getLocalMedicationUseCase(
                 medicationId = medicationId
             ).collect { response ->
-                _viewStateLoading.emit(response.loading)
+                emitLoading(response.loading)
                 when (response.status) {
                     Status.ERROR -> {
                         _viewStateDeleteMedication.postValue(medicationId)
@@ -353,9 +358,17 @@ class SchedulesHistoryViewModel @Inject constructor(
         prefEncryptionUtil.isLogged
 
 
+    private suspend fun emitLoading(isLoading: Boolean) {
+        withContext(Dispatchers.Main) {
+            _viewStateLoading.emit(isLoading)
+        }
+    }
+
     private suspend fun emitError(errorEntity: ErrorEntity?) {
-        _viewStateError.emit(errorEntity)
-        _viewStateError.emit(null)
+        withContext(Dispatchers.Main) {
+            _viewStateError.emit(errorEntity)
+            _viewStateError.emit(null)
+        }
     }
 
     override fun onCleared() {

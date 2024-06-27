@@ -34,6 +34,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
@@ -138,7 +139,7 @@ class MedicationsViewModel @Inject constructor(
                 addMedicationUseCase(
                     requestBuilder.buildRequestBody()
                 ).collect { response ->
-                    _viewStateLoading.emit(response.loading)
+                    emitLoading(response.loading)
                     when (response.status) {
                         Status.ERROR -> emitError(response.errorEntity)
                         Status.SUCCESS -> {
@@ -237,7 +238,7 @@ class MedicationsViewModel @Inject constructor(
                     scheduleId = medicationId ?: 0,
                     request = requestBuilder.buildRequestBody()
                 ).collect { response ->
-                    _viewStateLoading.emit(response.loading)
+                    emitLoading(response.loading)
                     when (response.status) {
                         Status.ERROR -> emitError(response.errorEntity)
                         Status.SUCCESS -> {
@@ -304,7 +305,7 @@ class MedicationsViewModel @Inject constructor(
             getLocalMedicationUseCase(
                 medicationId = medicationId
             ).collect { response ->
-                _viewStateLoading.emit(response.loading)
+                emitLoading(response.loading)
                 when (response.status) {
                     Status.ERROR -> {
                         _viewStateEditMedication.postValue(false to medicationDB.apply { isReminded = false })
@@ -365,9 +366,17 @@ class MedicationsViewModel @Inject constructor(
         }
     }
 
+    private suspend fun emitLoading(isLoading: Boolean) {
+        withContext(Dispatchers.Main) {
+            _viewStateLoading.emit(isLoading)
+        }
+    }
+
     private suspend fun emitError(errorEntity: ErrorEntity?) {
-        _viewStateError.emit(errorEntity)
-        _viewStateError.emit(null)
+        withContext(Dispatchers.Main) {
+            _viewStateError.emit(errorEntity)
+            _viewStateError.emit(null)
+        }
     }
 
     override fun onCleared() {
