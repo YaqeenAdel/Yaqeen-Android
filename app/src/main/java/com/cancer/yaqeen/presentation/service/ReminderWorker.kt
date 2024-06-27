@@ -48,7 +48,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.util.Random
 import javax.inject.Inject
 
 @HiltWorker
@@ -253,9 +252,9 @@ class ReminderWorker @AssistedInject constructor(
 
     private fun createForegroundInfo(): ForegroundInfo {
         return if(SDK_INT>= Q) {
-            ForegroundInfo(Random().nextInt(), sendNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
+            ForegroundInfo(15, sendNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
         }else{
-            ForegroundInfo(Random().nextInt(), sendNotification())
+            ForegroundInfo(15, sendNotification())
         }
     }
     private fun sendNotification(): Notification {

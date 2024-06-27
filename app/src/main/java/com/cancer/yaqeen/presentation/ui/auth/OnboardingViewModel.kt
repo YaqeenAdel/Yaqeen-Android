@@ -34,7 +34,6 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -96,7 +95,7 @@ class OnboardingViewModel @Inject constructor(
     fun getResources() {
         viewModelScope.launch(Dispatchers.IO) {
             getResourcesUseCase().onEach { response ->
-                emitLoading(response.loading)
+                _viewStateLoading.emit(response.loading)
                 when (response.status) {
                     Status.ERROR -> emitError(response.errorEntity)
                     Status.SUCCESS -> {
@@ -114,7 +113,7 @@ class OnboardingViewModel @Inject constructor(
     fun getUniversities(countryCode: String, stateCode: String) {
         viewModelScope.launch(Dispatchers.IO) {
             getUniversitiesUseCase(countryCode, stateCode).onEach { response ->
-                emitLoading(response.loading)
+                _viewStateLoading.emit(response.loading)
                 when (response.status) {
                     Status.ERROR -> emitError(response.errorEntity)
                     Status.SUCCESS -> {
@@ -170,7 +169,7 @@ class OnboardingViewModel @Inject constructor(
     private fun getProfile(user: User) {
         viewModelScope.launch(Dispatchers.IO) {
             getUserProfileUseCase().onEach { response ->
-//                emitLoading(response.loading)
+//                _viewStateLoading.emit(response.loading)
                 when (response.status) {
                     Status.ERROR -> {
                         emitError(response.errorEntity)
@@ -233,7 +232,7 @@ class OnboardingViewModel @Inject constructor(
                     ).buildRequestBody()
 
                 ).onEach { response ->
-                    emitLoading(response.loading)
+                    _viewStateLoading.emit(response.loading)
                     when (response.status) {
                         Status.ERROR -> emitError(response.errorEntity)
                         Status.SUCCESS -> {
@@ -258,7 +257,7 @@ class OnboardingViewModel @Inject constructor(
 //                        interestModuleIds
 //                    ).buildRequestBody()
 //                ).onEach { response ->
-//                    emitLoading(response.loading)
+//                    _viewStateLoading.emit(response.loading)
 //                    when (response.status) {
 //                        Status.ERROR -> emitError(response.errorEntity)
 //                        Status.SUCCESS -> {
@@ -276,17 +275,9 @@ class OnboardingViewModel @Inject constructor(
 //        }
 //    }
 
-    private suspend fun emitLoading(isLoading: Boolean) {
-        withContext(Dispatchers.Main) {
-            _viewStateLoading.emit(isLoading)
-        }
-    }
-
     private suspend fun emitError(errorEntity: ErrorEntity?) {
-        withContext(Dispatchers.Main) {
-            _viewStateError.emit(errorEntity)
-            _viewStateError.emit(null)
-        }
+        _viewStateError.emit(errorEntity)
+        _viewStateError.emit(null)
     }
 
     private fun setProfileUser(

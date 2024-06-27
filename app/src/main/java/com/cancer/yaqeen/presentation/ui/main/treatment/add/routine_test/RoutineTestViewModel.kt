@@ -40,7 +40,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
@@ -184,7 +183,7 @@ class RoutineTestViewModel @Inject constructor(
                 addRoutineTestUseCase(
                     requestBuilder
                 ).collect { response ->
-                    emitLoading(response.loading)
+                    _viewStateLoading.emit(response.loading)
                     when (response.status) {
                         Status.ERROR -> emitError(response.errorEntity)
                         Status.SUCCESS -> {
@@ -257,7 +256,7 @@ class RoutineTestViewModel @Inject constructor(
                     routineTestId ?: 0,
                     requestBuilder
                 ).collect { response ->
-                    emitLoading(response.loading)
+                    _viewStateLoading.emit(response.loading)
                     when (response.status) {
                         Status.ERROR -> emitError(response.errorEntity)
                         Status.SUCCESS -> {
@@ -305,7 +304,7 @@ class RoutineTestViewModel @Inject constructor(
                 addRoutineTestWithoutPhotoUseCase(
                     requestBuilder.buildRequestBody()
                 ).collect { response ->
-                    emitLoading(response.loading)
+                    _viewStateLoading.emit(response.loading)
                     when (response.status) {
                         Status.ERROR -> emitError(response.errorEntity)
                         Status.SUCCESS -> {
@@ -353,7 +352,7 @@ class RoutineTestViewModel @Inject constructor(
                     routineTestId ?: 0,
                     requestBuilder.buildRequestBody()
                 ).collect { response ->
-                    emitLoading(response.loading)
+                    _viewStateLoading.emit(response.loading)
                     when (response.status) {
                         Status.ERROR -> emitError(response.errorEntity)
                         Status.SUCCESS -> {
@@ -386,7 +385,7 @@ class RoutineTestViewModel @Inject constructor(
             getLocalRoutineTestUseCase(
                 routineTestId = routineTestId
             ).collect { response ->
-                emitLoading(response.loading)
+                _viewStateLoading.emit(response.loading)
                 when (response.status) {
                     Status.ERROR -> {
                         _viewStateEditRoutineTest.postValue(false to routineTestDB)
@@ -521,17 +520,10 @@ class RoutineTestViewModel @Inject constructor(
             workRunningInMillis = workRunningInMilliSeconds
         }
     }
-    private suspend fun emitLoading(isLoading: Boolean) {
-        withContext(Dispatchers.Main) {
-            _viewStateLoading.emit(isLoading)
-        }
-    }
 
     private suspend fun emitError(errorEntity: ErrorEntity?) {
-        withContext(Dispatchers.Main) {
-            _viewStateError.emit(errorEntity)
-            _viewStateError.emit(null)
-        }
+        _viewStateError.emit(errorEntity)
+        _viewStateError.emit(null)
     }
 
     override fun onCleared() {
