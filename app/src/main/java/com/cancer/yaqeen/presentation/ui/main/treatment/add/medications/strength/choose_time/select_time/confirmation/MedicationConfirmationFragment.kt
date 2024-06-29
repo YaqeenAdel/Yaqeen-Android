@@ -1,6 +1,7 @@
 package com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.strength.choose_time.select_time.confirmation
 
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -21,7 +22,8 @@ import com.cancer.yaqeen.presentation.service.ReminderManager
 import com.cancer.yaqeen.presentation.service.WorkerReminder
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.MedicationsViewModel
 import com.cancer.yaqeen.presentation.util.Constants.OPEN_MEDICATION_WINDOW_ACTION
-import com.cancer.yaqeen.presentation.util.Constants.UPDATE_LOCAL_SCHEDULES_ACTION
+import com.cancer.yaqeen.presentation.util.Constants.UPDATE_LOCAL_REMINDED_SCHEDULES_ACTION
+import com.cancer.yaqeen.presentation.util.Constants.UPDATE_LOCAL_SCHEDULES_ACTION_KEY
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindResourceImage
 import com.cancer.yaqeen.presentation.util.convertMilliSecondsToDate
@@ -109,7 +111,12 @@ class MedicationConfirmationFragment : BaseFragment() {
     }
 
     private fun addWorkerReminderPeriodically() {
-        scheduleJobService(requireContext(), TimeUnit.MINUTES.toMillis(15))
+        scheduleJobService(requireContext(), TimeUnit.MINUTES.toMillis(15), PersistableBundle().apply {
+            putString(
+                UPDATE_LOCAL_SCHEDULES_ACTION_KEY,
+                UPDATE_LOCAL_REMINDED_SCHEDULES_ACTION
+            )
+        })
         Log.d("NotificationReceiver", "addWorkerReminderPeriodically: ${medicationsViewModel.hasWorker()}")
 //        if (!medicationsViewModel.hasWorker()) {
 //            val timeDelayInMilliSeconds = TimeUnit.MINUTES.toMillis(5L)
@@ -119,7 +126,7 @@ class MedicationConfirmationFragment : BaseFragment() {
 //            val periodReminderId = workerReminderPeriodically.setPeriodReminder(
 //                timeDelayInMilliSeconds,
 //                PeriodTimeEnum.EVERY_3_HOURS.id,
-//                UPDATE_LOCAL_SCHEDULES_ACTION
+//                UPDATE_LOCAL_PENDING_SCHEDULES_ACTION
 //            )
 //
 //            medicationsViewModel.saveWorkerReminderPeriodicallyInfo(periodReminderId, workRunningInMilliSeconds)

@@ -8,6 +8,7 @@ import androidx.room.Update
 import com.cancer.yaqeen.data.features.home.articles.room.Article
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.room.MedicalAppointmentDB
 import com.cancer.yaqeen.data.features.home.schedule.medication.room.MedicationDB
+import com.cancer.yaqeen.data.features.home.schedule.medication.room.ReminderStatus
 import com.cancer.yaqeen.data.features.home.schedule.routine_test.room.RoutineTestDB
 
 @Dao
@@ -49,8 +50,11 @@ interface YaqeenDao {
     @Query("DELETE FROM Medication")
     suspend fun deleteMedications(): Int
 
-    @Query("SELECT * FROM Medication WHERE isReminded = :isReminded ")
-    suspend fun selectMedications(isReminded: Boolean = true): List<MedicationDB>?
+    @Query("SELECT * FROM Medication")
+    suspend fun selectMedications(): List<MedicationDB>?
+
+    @Query("SELECT * FROM Medication WHERE statusReminder = :statusReminder")
+    suspend fun selectRemindedMedications(statusReminder: ReminderStatus = ReminderStatus.REMINDED): List<MedicationDB>?
 
     @Query("SELECT * FROM RoutineTest WHERE routineTestId = :routineTestId")
     suspend fun selectRoutineTest(routineTestId: Int): RoutineTestDB?
@@ -67,8 +71,11 @@ interface YaqeenDao {
     @Query("DELETE FROM RoutineTest")
     suspend fun deleteRoutineTests(): Int
 
-    @Query("SELECT * FROM RoutineTest WHERE isReminded = :isReminded ")
-    suspend fun selectRoutineTests(isReminded: Boolean = true): List<RoutineTestDB>?
+    @Query("SELECT * FROM RoutineTest WHERE statusReminder = :statusReminder")
+    suspend fun selectRemindedRoutineTests(statusReminder: ReminderStatus = ReminderStatus.REMINDED): List<RoutineTestDB>?
+
+    @Query("SELECT * FROM RoutineTest")
+    suspend fun selectRoutineTests(): List<RoutineTestDB>?
 
     @Query("SELECT * FROM MedicalAppointment WHERE medicalAppointmentId = :medicalAppointmentId")
     suspend fun selectMedicalAppointment(medicalAppointmentId: Int): MedicalAppointmentDB?

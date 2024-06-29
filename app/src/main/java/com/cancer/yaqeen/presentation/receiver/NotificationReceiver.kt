@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.util.Log
 import android.widget.Toast
 import com.cancer.yaqeen.R
@@ -29,6 +30,8 @@ import com.cancer.yaqeen.presentation.util.Constants.ROUTINE_TEST
 import com.cancer.yaqeen.presentation.util.Constants.TITLE_KEY
 import com.cancer.yaqeen.presentation.util.Constants.UPDATE_LOCAL_MEDICATION_ACTION
 import com.cancer.yaqeen.presentation.util.Constants.UPDATE_LOCAL_ROUTINE_TEST_ACTION
+import com.cancer.yaqeen.presentation.util.Constants.UPDATE_LOCAL_SCHEDULES_ACTION
+import com.cancer.yaqeen.presentation.util.Constants.UPDATE_LOCAL_SCHEDULES_ACTION_KEY
 import com.cancer.yaqeen.presentation.util.NotificationUtils
 import com.cancer.yaqeen.presentation.util.scheduleJobService
 import com.cancer.yaqeen.presentation.util.windows.MedicalAppointmentWindow
@@ -49,16 +52,9 @@ class NotificationReceiver : BroadcastReceiver() {
         // Handle the custom action here
         when (intent.action) {
             Intent.ACTION_BOOT_COMPLETED -> {
-                Toast.makeText(context, "ACTION_BOOT_COMPLETED", Toast.LENGTH_SHORT).show()
-
-                scheduleJobService(context, TimeUnit.MINUTES.toMillis(15))
-                // Start the background service
-//                val serviceIntent = Intent(context, YourService::class.java)
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                    context.startForegroundService(serviceIntent)
-//                } else {
-//                    context.startService(serviceIntent)
-//                }
+                scheduleJobService(context, TimeUnit.MINUTES.toMillis(15), PersistableBundle().apply {
+                    putString(UPDATE_LOCAL_SCHEDULES_ACTION_KEY, UPDATE_LOCAL_SCHEDULES_ACTION)
+                })
             }
             IGNORE_NOTIFICATION_ACTION -> {
                 val notificationId = intent.getIntExtra(NOTIFICATION_ID, 1)

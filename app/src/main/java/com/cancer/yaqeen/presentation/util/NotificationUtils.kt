@@ -99,7 +99,7 @@ class NotificationUtils @Inject constructor(val context: Context) {
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setDefaultSound()
             .enableAutoCanceling(true)
-            .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+            .setCategory(NotificationCompat.CATEGORY_ALARM)
             .setGroup(title)
             .setStyle(
                 NotificationCompat.BigTextStyle()
@@ -127,6 +127,33 @@ class NotificationUtils @Inject constructor(val context: Context) {
         notificationBuilder.build().show(notificationId)
     }
 
+    fun createNotificationService(title: String, details: String): Notification {
+
+        val notificationBuilder = MyNotificationManager.Builder(
+            context = context,
+            channelId = "YAQEEN_APP_Notify_Service",
+            channelName = "YAQEEN_APP Service",
+            mute = true
+        )
+            .setDefaultsId(Notification.DEFAULT_ALL)
+            .enableColorized(true)
+            .setColorId(R.color.crow_black_blue)
+            .setTitle(title)
+            .setText(details)
+            .setSmallIconId(R.mipmap.ic_launcher)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setSilent()
+            .enableAutoCanceling(false)
+            .setCategory(NotificationCompat.CATEGORY_SERVICE)
+            .setGroup(title)
+            .setStyle(
+                NotificationCompat.BigTextStyle()
+                    .bigText(details)
+                    .setBigContentTitle(title)
+            )
+
+        return  notificationBuilder.createNotification()
+    }
 
     fun cancelNotification(id: Int) {
         val notificationManager: NotificationManager =

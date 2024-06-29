@@ -3,6 +3,7 @@ package com.cancer.yaqeen.data.features.home.schedule.routine_test.room
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.cancer.yaqeen.data.features.home.schedule.medication.room.ReminderStatus
 import com.cancer.yaqeen.data.utils.convertMillisecondsToTime
 import com.cancer.yaqeen.presentation.util.convertMilliSecondsToDate
 import com.cancer.yaqeen.presentation.util.getCurrentTimeMillis
@@ -32,7 +33,8 @@ data class RoutineTestDB(
     var workBeforeID: String? = null,
     var workSpecificDaysIDs: List<String> = listOf(),
     var json: String? = null,
-    var isReminded: Boolean = false
+    var isReminded: Boolean = false,
+    var statusReminder: ReminderStatus = ReminderStatus.NEW
 ): Parcelable{
 
     fun createNotificationMessage(): String{

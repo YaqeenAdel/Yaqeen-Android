@@ -27,6 +27,7 @@ import androidx.work.WorkerParameters
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.PeriodTimeEnum
 import com.cancer.yaqeen.data.features.home.schedule.medication.room.MedicationDB
+import com.cancer.yaqeen.data.features.home.schedule.medication.room.ReminderStatus
 import com.cancer.yaqeen.data.features.home.schedule.routine_test.room.RoutineTestDB
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.data.room.YaqeenDao
@@ -34,7 +35,9 @@ import com.cancer.yaqeen.data.utils.fromJson
 import com.cancer.yaqeen.data.utils.toJson
 import com.cancer.yaqeen.domain.features.home.schedule.medication.EditLocalMedicationUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.GetLocalMedicationsUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.medication.GetLocalRemindedMedicationsUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.routine_test.EditLocalRoutineTestUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.routine_test.GetLocalRemindedRoutineTestsUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.routine_test.GetLocalRoutineTestsUseCase
 import com.cancer.yaqeen.presentation.receiver.NotificationReceiver
 import com.cancer.yaqeen.presentation.ui.MainActivity
@@ -42,6 +45,7 @@ import com.cancer.yaqeen.presentation.util.Constants.ACTION_KEY
 import com.cancer.yaqeen.presentation.util.Constants.OBJECT_JSON
 import com.cancer.yaqeen.presentation.util.Constants.UPDATE_LOCAL_MEDICATION_ACTION
 import com.cancer.yaqeen.presentation.util.Constants.UPDATE_LOCAL_ROUTINE_TEST_ACTION
+import com.cancer.yaqeen.presentation.util.Constants.UPDATE_LOCAL_REMINDED_SCHEDULES_ACTION
 import com.cancer.yaqeen.presentation.util.Constants.UPDATE_LOCAL_SCHEDULES_ACTION
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -51,7 +55,6 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.Random
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltWorker
@@ -63,6 +66,8 @@ class ReminderWorker @AssistedInject constructor(
     val editLocalRoutineTestUseCase: EditLocalRoutineTestUseCase,
     val getLocalMedicationsUseCase: GetLocalMedicationsUseCase,
     val getLocalRoutineTestsUseCase: GetLocalRoutineTestsUseCase,
+    val getLocalRemindedMedicationsUseCase: GetLocalRemindedMedicationsUseCase,
+    val getLocalRemindedRoutineTestsUseCase: GetLocalRemindedRoutineTestsUseCase,
 ) : CoroutineWorker(context, params) {
 
     @Inject
@@ -83,9 +88,12 @@ class ReminderWorker @AssistedInject constructor(
 
             when (val actionName = inputData.getString(ACTION_KEY)) {
                 UPDATE_LOCAL_SCHEDULES_ACTION -> {
-                    prefEncryptionUtil.workRunningInMillis =
-                        System.currentTimeMillis() + PeriodTimeEnum.EVERY_3_HOURS.timeInMillis
                     getSchedules()
+                }
+                UPDATE_LOCAL_REMINDED_SCHEDULES_ACTION -> {
+//                    prefEncryptionUtil.workRunningInMillis =
+//                        System.currentTimeMillis() + PeriodTimeEnum.EVERY_3_HOURS.timeInMillis
+                    getRemindedSchedules()
                 }
 
                 UPDATE_LOCAL_MEDICATION_ACTION -> {
@@ -93,14 +101,24 @@ class ReminderWorker @AssistedInject constructor(
                     val medication: MedicationDB? =
                         objectJsonValue.toString().fromJson(MedicationDB::class.java)
                     medication?.let {
-                        updateMedication(
+                        setMedicationReminder(
                             it.apply {
+//                                isReminded = true
+                                statusReminder = ReminderStatus.NEW
                                 workID = null
                                 workSpecificDaysIDs = listOf()
-                                isReminded = true
                                 startDateTime = increaseDateTime(it.startDateTime, it.periodTimeId)
                             }
                         )
+//                        updateMedication(
+//                            it.apply {
+//                                workID = null
+//                                workSpecificDaysIDs = listOf()
+//                                isReminded = true
+//                                statusReminder = ReminderStatus.NEW
+//                                startDateTime = increaseDateTime(it.startDateTime, it.periodTimeId)
+//                            }
+//                        )
                     }
                 }
 
@@ -108,14 +126,24 @@ class ReminderWorker @AssistedInject constructor(
                     val routineTest: RoutineTestDB? =
                         objectJsonValue.toString().fromJson(RoutineTestDB::class.java)
                     routineTest?.let {
-                        updateRoutineTest(
+                        setRoutineTestReminder(
                             it.apply {
+//                                isReminded = true
+                                statusReminder = ReminderStatus.NEW
                                 workID = null
                                 workSpecificDaysIDs = listOf()
-                                isReminded = true
                                 startDateTime = increaseDateTime(it.startDateTime, it.periodTimeId)
                             }
                         )
+//                        updateRoutineTest(
+//                            it.apply {
+//                                workID = null
+//                                workSpecificDaysIDs = listOf()
+//                                isReminded = true
+//                                statusReminder = ReminderStatus.NEW
+//                                startDateTime = increaseDateTime(it.startDateTime, it.periodTimeId)
+//                            }
+//                        )
                     }
                 }
 
@@ -171,30 +199,63 @@ class ReminderWorker @AssistedInject constructor(
         }
     }
 
-    private fun setMedicationReminders(medications: List<MedicationDB>) {
-        medications.onEach { medication ->
-            medication.isReminded = false
-            if (medication.periodTimeId == PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id) {
-                val uuids =
-                    workerReminder.setReminderDays(medication.apply { json = toJson() })
+    private fun getRemindedSchedules() {
+        getLocalRemindedMedications()
+        getLocalRemindedRoutineTests()
+    }
 
-                updateMedication(
-                    medication.apply {
-                        workSpecificDaysIDs = uuids
-                    }
-                )
-
-            } else {
-                val uuid = workerReminder.setReminder(medication.apply { json = toJson() })
-
-                updateMedication(
-                    medication.apply {
-                        workID = uuid
-                    }
-                )
+    private fun getLocalRemindedMedications() {
+        GlobalScope.launch(Dispatchers.Default) {
+            getLocalRemindedMedicationsUseCase().collectLatest {
+                it.data?.let { localMedications ->
+                    if (localMedications.isNotEmpty())
+                        setMedicationReminders(localMedications)
+                }
             }
         }
     }
+
+    private fun getLocalRemindedRoutineTests() {
+        GlobalScope.launch(Dispatchers.Default) {
+            getLocalRemindedRoutineTestsUseCase().collectLatest {
+                it.data?.let { localRoutineTests ->
+                    if (localRoutineTests.isNotEmpty())
+                        setRoutineTestReminders(localRoutineTests)
+                }
+            }
+        }
+    }
+
+    private fun setMedicationReminders(medications: List<MedicationDB>) {
+        Log.d("NotificationReceiver", "setMedicationReminders")
+        medications.onEach { medication ->
+            medication.statusReminder = ReminderStatus.NEW
+            setMedicationReminder(medication)
+        }
+    }
+
+    private fun setMedicationReminder(medication: MedicationDB){
+        if (medication.periodTimeId == PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id) {
+            val uuids =
+                workerReminder.setReminderDays(medication.apply { json = toJson() })
+
+            updateMedication(
+                medication.apply {
+                    workSpecificDaysIDs = uuids
+                }
+            )
+
+        } else {
+            val uuid = workerReminder.setReminder(medication.apply { json = toJson() })
+
+            updateMedication(
+                medication.apply {
+                    workID = uuid
+                }
+            )
+        }
+    }
+
 
     private fun updateMedication(medication: MedicationDB) {
         GlobalScope.launch((Dispatchers.IO)) {
@@ -206,31 +267,35 @@ class ReminderWorker @AssistedInject constructor(
 
     private fun setRoutineTestReminders(routineTests: List<RoutineTestDB>) {
         routineTests.onEach { routineTest ->
-            routineTest.isReminded = false
-            if (routineTest.periodTimeId == PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id) {
-                val (uuids, workBeforeID) = workerReminder.setReminderDays(routineTest.apply {
-                    json = toJson()
-                })
+            routineTest.statusReminder = ReminderStatus.NEW
+            setRoutineTestReminder(routineTest)
+        }
+    }
 
-                updateRoutineTest(
-                    routineTest.apply {
-                        workSpecificDaysIDs = uuids
-                        this.workBeforeID = workBeforeID
-                    }
-                )
-            } else {
-                val (periodicWorkID, workBeforeID) = workerReminder.setReminder(routineTest.apply {
-                    json = toJson()
-                })
+    private fun setRoutineTestReminder(routineTest: RoutineTestDB){
+        if (routineTest.periodTimeId == PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id) {
+            val (uuids, workBeforeID) = workerReminder.setReminderDays(routineTest.apply {
+                json = toJson()
+            })
 
-                updateRoutineTest(
-                    routineTest.apply {
-                        workID = periodicWorkID
-                        this.workBeforeID = workBeforeID
-                    }
-                )
+            updateRoutineTest(
+                routineTest.apply {
+                    workSpecificDaysIDs = uuids
+                    this.workBeforeID = workBeforeID
+                }
+            )
+        } else {
+            val (periodicWorkID, workBeforeID) = workerReminder.setReminder(routineTest.apply {
+                json = toJson()
+            })
 
-            }
+            updateRoutineTest(
+                routineTest.apply {
+                    workID = periodicWorkID
+                    this.workBeforeID = workBeforeID
+                }
+            )
+
         }
     }
 

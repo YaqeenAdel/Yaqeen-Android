@@ -26,6 +26,9 @@ abstract class ReminderManager {
     open fun setPeriodReminder(timeDelayInMilliSeconds: Long, periodTimeId: Int, actionName: String): String {
         return ""
     }
+    open fun setReminder(timeDelayInMilliSeconds: Long, actionName: String): String {
+        return ""
+    }
     open fun<T> setReminder(timeDelayInMilliSeconds: Long, obj: T, actionName: String): String {
         return ""
     }

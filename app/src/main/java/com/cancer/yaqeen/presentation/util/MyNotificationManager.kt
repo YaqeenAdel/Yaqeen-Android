@@ -31,11 +31,11 @@ class MyNotificationManager private constructor(private val context: Context) {
 
     private val notificationManager: NotificationManager =
         context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-    private fun initNotificationManager(channelId: String){
+    private fun initNotificationManager(channelId: String, channelName: String, mute: Boolean){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationChannel = NotificationChannel(
                 channelId,
-                "YAQEEN_APP_Notification",
+                channelName,
                 NotificationManager.IMPORTANCE_DEFAULT
             )
 
@@ -43,18 +43,22 @@ class MyNotificationManager private constructor(private val context: Context) {
             notificationChannel.enableLights(true)
             notificationChannel.lightColor = context.getColor(R.color.purple_700)
             notificationChannel.enableVibration(true)
+            if (mute){
+                notificationChannel.setSound(null, null)
+            }
+
             notificationManager.createNotificationChannel(notificationChannel)
         }
     }
 
-    class Builder(val context: Context, channelId: String = "YAQEEN_APP_Notify") {
+    class Builder(val context: Context, channelId: String = "YAQEEN_APP_Notify", channelName: String = "YAQEEN_APP_Notification", mute: Boolean = false) {
 
         private var builder: NotificationCompat.Builder
 
         private val mNotificationManager = MyNotificationManager(context)
 
         init {
-            mNotificationManager.initNotificationManager(channelId)
+            mNotificationManager.initNotificationManager(channelId, channelName, mute)
             builder = NotificationCompat.Builder(context, channelId)
         }
 
@@ -98,13 +102,19 @@ class MyNotificationManager private constructor(private val context: Context) {
             return this
         }
 
-        fun setSoundUri(soundUri: Uri): Builder {
+        fun setSoundUri(soundUri: Uri?): Builder {
             builder.setSound(soundUri)
+            return this
+        }
+
+        fun setSilent(silent: Boolean = true): Builder {
+            builder.setSilent(silent)
             return this
         }
 
         fun enableAutoCanceling(autoCancel: Boolean): Builder {
             builder.setAutoCancel(autoCancel)
+            builder.setOngoing(!autoCancel)
             return this
         }
 
@@ -158,6 +168,10 @@ class MyNotificationManager private constructor(private val context: Context) {
             val notification = builder.build()
             mNotificationManager.notification = notification
             return mNotificationManager
+        }
+
+        fun createNotification(): Notification {
+            return builder.build()
         }
     }
 

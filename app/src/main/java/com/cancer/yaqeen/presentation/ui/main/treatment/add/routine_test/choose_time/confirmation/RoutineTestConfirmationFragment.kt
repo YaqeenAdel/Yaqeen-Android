@@ -3,6 +3,7 @@ package com.cancer.yaqeen.presentation.ui.main.treatment.add.routine_test.choose
 import android.Manifest
 import android.net.Uri
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,9 +25,9 @@ import com.cancer.yaqeen.presentation.service.AlarmReminder
 import com.cancer.yaqeen.presentation.service.ReminderManager
 import com.cancer.yaqeen.presentation.service.WorkerReminder
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.routine_test.RoutineTestViewModel
-import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.Constants.OPEN_ROUTINE_TEST_WINDOW_ACTION
-import com.cancer.yaqeen.presentation.util.Constants.UPDATE_LOCAL_SCHEDULES_ACTION
+import com.cancer.yaqeen.presentation.util.Constants.UPDATE_LOCAL_REMINDED_SCHEDULES_ACTION
+import com.cancer.yaqeen.presentation.util.Constants.UPDATE_LOCAL_SCHEDULES_ACTION_KEY
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindImage
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindImageURI
@@ -34,6 +35,7 @@ import com.cancer.yaqeen.presentation.util.convertMilliSecondsToDate
 import com.cancer.yaqeen.presentation.util.disableTouch
 import com.cancer.yaqeen.presentation.util.enableStoragePermissions
 import com.cancer.yaqeen.presentation.util.enableTouch
+import com.cancer.yaqeen.presentation.util.scheduleJobService
 import com.cancer.yaqeen.presentation.util.schedulingPermissionsAreGranted
 import com.cancer.yaqeen.presentation.util.storagePermissionsAreGranted
 import com.cancer.yaqeen.presentation.util.tryPopBackStack
@@ -154,19 +156,25 @@ class RoutineTestConfirmationFragment : BaseFragment() {
     }
 
     private fun addWorkerReminderPeriodically() {
-        if (!routineTestViewModel.hasWorker()) {
-            val timeDelayInMilliSeconds = TimeUnit.MINUTES.toMillis(5L)
-            val currentTimeInMilliSeconds = System.currentTimeMillis()
-            val workRunningInMilliSeconds = currentTimeInMilliSeconds + timeDelayInMilliSeconds
-
-            val periodReminderId = workerReminderPeriodically.setPeriodReminder(
-                timeDelayInMilliSeconds,
-                PeriodTimeEnum.EVERY_3_HOURS.id,
-                UPDATE_LOCAL_SCHEDULES_ACTION
+        scheduleJobService(requireContext(), TimeUnit.MINUTES.toMillis(15), PersistableBundle().apply {
+            putString(
+                UPDATE_LOCAL_SCHEDULES_ACTION_KEY,
+                UPDATE_LOCAL_REMINDED_SCHEDULES_ACTION
             )
-
-            routineTestViewModel.saveWorkerReminderPeriodicallyInfo(periodReminderId, workRunningInMilliSeconds)
-        }
+        })
+//        if (!routineTestViewModel.hasWorker()) {
+//            val timeDelayInMilliSeconds = TimeUnit.MINUTES.toMillis(5L)
+//            val currentTimeInMilliSeconds = System.currentTimeMillis()
+//            val workRunningInMilliSeconds = currentTimeInMilliSeconds + timeDelayInMilliSeconds
+//
+//            val periodReminderId = workerReminderPeriodically.setPeriodReminder(
+//                timeDelayInMilliSeconds,
+//                PeriodTimeEnum.EVERY_3_HOURS.id,
+//                UPDATE_LOCAL_PENDING_SCHEDULES_ACTION
+//            )
+//
+//            routineTestViewModel.saveWorkerReminderPeriodicallyInfo(periodReminderId, workRunningInMilliSeconds)
+//        }
     }
 
     private fun observeStates() {

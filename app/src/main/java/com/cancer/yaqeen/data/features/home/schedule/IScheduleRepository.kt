@@ -47,11 +47,13 @@ interface IScheduleRepository {
      // Local Database
      suspend fun getMedication(medicationId: Int): Flow<DataState<MedicationDB?>>
      suspend fun getMedications(): Flow<DataState<List<MedicationDB>?>>
+     suspend fun getRemindedMedications(): Flow<DataState<List<MedicationDB>?>>
      suspend fun saveMedication(medication: MedicationDB): Flow<DataState<Long>>
      suspend fun editMedication(medication: MedicationDB): Flow<DataState<Int>>
      suspend fun removeMedication(medicationId: Int): Flow<DataState<Int>>
      suspend fun removeMedications(): Flow<DataState<Int>>
      suspend fun getRoutineTest(routineTestId: Int): Flow<DataState<RoutineTestDB?>>
+     suspend fun getRemindedRoutineTests(): Flow<DataState<List<RoutineTestDB>?>>
      suspend fun getRoutineTests(): Flow<DataState<List<RoutineTestDB>?>>
      suspend fun saveRoutineTest(routineTest: RoutineTestDB): Flow<DataState<Long>>
      suspend fun editRoutineTest(routineTest: RoutineTestDB): Flow<DataState<Int>>

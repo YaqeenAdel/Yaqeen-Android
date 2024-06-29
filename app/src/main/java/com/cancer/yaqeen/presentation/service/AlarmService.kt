@@ -1,29 +1,24 @@
 package com.cancer.yaqeen.presentation.service
 
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
-import android.app.Service
 import android.app.job.JobParameters
 import android.app.job.JobService
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.cancer.yaqeen.R
-import com.cancer.yaqeen.data.features.home.schedule.medication.models.PeriodTimeEnum
-import com.cancer.yaqeen.presentation.ui.MainActivity
-import com.cancer.yaqeen.presentation.util.Constants
+import com.cancer.yaqeen.presentation.util.Constants.NOTIFICATION_REMINDER_SERVICE_ID
+import com.cancer.yaqeen.presentation.util.Constants.UPDATE_LOCAL_SCHEDULES_ACTION_KEY
+import com.cancer.yaqeen.presentation.util.Constants.UPDATE_LOCAL_REMINDED_SCHEDULES_ACTION
 import com.cancer.yaqeen.presentation.util.NotificationUtils
-import com.cancer.yaqeen.presentation.util.runWorker
 import java.util.concurrent.TimeUnit
 
 class AlarmService: JobService() {
 
-    private val workerReminderPeriodically: ReminderManager by lazy {
+    private val workerReminder: ReminderManager by lazy {
         WorkerReminder(this)
     }
 
@@ -31,19 +26,30 @@ class AlarmService: JobService() {
         NotificationUtils(this)
     }
 
-    override fun onStartJob(p0: JobParameters?): Boolean {
-        Log.d("NotificationReceiver", "AlarmService: onStartJob")
+    override fun onStartJob(params: JobParameters?): Boolean {
+        val actionName = params?.extras?.getString(UPDATE_LOCAL_SCHEDULES_ACTION_KEY, UPDATE_LOCAL_REMINDED_SCHEDULES_ACTION) ?: UPDATE_LOCAL_REMINDED_SCHEDULES_ACTION
+
+        workerReminder.setReminder(
+            TimeUnit.MINUTES.toMillis(5L),
+            actionName
+        )
+
+        val notification = notificationUtils.createNotificationService(
+            title = "Yaqeen Reminder",
+            details = "Running..."
+        )
+        startForeground(NOTIFICATION_REMINDER_SERVICE_ID, notification)
 
 
-        workerReminderPeriodically.runWorker()
-        sendNotification()
         return true
     }
 
 
-    override fun onStopJob(p0: JobParameters?): Boolean {
+    override fun onStopJob(params: JobParameters?): Boolean {
         Log.d("NotificationReceiver", "AlarmService: onStopJob")
-
+        val notificationManager: NotificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.cancel(1)
         return false
     }
 
@@ -54,7 +60,6 @@ class AlarmService: JobService() {
     override fun onCreate() {
         super.onCreate()
 
-        notificationUtils.notify("title", "detailsMedication", 13453)
         Log.d("NotificationReceiver", "AlarmService: onCreate")
     }
 
@@ -62,25 +67,5 @@ class AlarmService: JobService() {
         super.onDestroy()
     }
 
-    private fun sendNotification() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val notificationChannelId = "YOUR_NOTIFICATION_CHANNEL_ID"
-            val channel = NotificationChannel(
-                notificationChannelId,
-                "My Service",
-                NotificationManager.IMPORTANCE_DEFAULT
-            )
-            val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            manager.createNotificationChannel(channel)
-
-            val notification = NotificationCompat.Builder(this, notificationChannelId)
-                .setContentTitle("My Service")
-                .setContentText("Running...")
-                .setSmallIcon(R.drawable.ic_notification)
-                .build()
-
-            startForeground(1, notification)
-        }
-    }
 
 }

@@ -209,6 +209,17 @@ class WorkerReminder(private val context: Context): ReminderManager() {
         return periodicWorkRequest.id.toString()
     }
 
+    override fun setReminder(timeDelayInMilliSeconds: Long, actionName: String): String {
+        val periodicWorkRequest = WorkerRequest.Builder()
+            .setStartDateTime(timeDelayInMilliSeconds)
+            .setActionName(actionName)
+            .buildOneTimeWork()
+
+        enqueueWork(periodicWorkRequest)
+
+        return periodicWorkRequest.id.toString()
+    }
+
     override fun cancelReminder(workRequestId: String) {
         workManager.cancelWorkById(
             UUID.fromString(workRequestId)
