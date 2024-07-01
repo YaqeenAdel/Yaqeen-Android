@@ -162,13 +162,13 @@ class ReminderWorker @AssistedInject constructor(
             return Result.success()
         } catch (e: Exception) {
             if (SDK_INT >= Build.VERSION_CODES.S) {
-                throw Exception("Reminder-Worker: $stopReason $e")
+//                throw Exception("Reminder-Worker: $stopReason $e")
             }else {
-                throw Exception("Reminder-Worker: ${WorkInfo.STOP_REASON_UNKNOWN} $e")
+//                throw Exception("Reminder-Worker: ${WorkInfo.STOP_REASON_UNKNOWN} $e")
             }
             return Result.retry()
         } finally {
-            throw Exception("Reminder-Worker: $stopReason")
+//            throw Exception("Reminder-Worker: $stopReason")
         }
     }
 

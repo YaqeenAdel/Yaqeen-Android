@@ -236,9 +236,116 @@
     <string name="ok">حسنا</string>
     <string name="you_must_select_a_new_datetime">يجب عليك تحديد تاريخ/وقت جديد</string>
     <string name="please_select_the_allow_all_option">PLease select the \'Allow all\' option</string>
+    <string name="good_morning">صباح الخير</string>
+    <string name="good_afternoon">مساء الخير</string>
+    <string name="good_evening">مساء الخير</string>
+    <string name="reminder_running">جاري تشغيل التذكير…</string>
 
     <string-array name="languages_array">
         <item>English</item>
         <item>Arabic</item>
+    </string-array>
+
+    <string-array name="motivating_phrases_array">
+        <item>انت اقوى مما تفكر.</item>
+        <item>كل يوم هو انتصار.</item>
+        <item>استمر في القتال، أنت لست وحدك.</item>
+        <item>الأمل هو أفضل دواء.</item>
+        <item>انت محارب.</item>
+        <item>ثق بقوتك.</item>
+        <item>لا تفقد الأمل أبدا.</item>
+        <item>شجاعتك تلهم الآخرين.</item>
+        <item>الشفاء رحلة وليس سباق.</item>
+        <item>يمكنك التغلب على هذا.</item>
+        <item>استمر في الدفع للأمام.</item>
+        <item>وليكن إيمانك أكبر من خوفك.</item>
+        <item>روحك غير قابلة للكسر.</item>
+        <item>الشجاعة هي قوتك العظمى.</item>
+        <item>أنت لست وحدك في هذه المعركة.</item>
+        <item>كل معركة لها انتصار.</item>
+        <item>أنت أكثر شجاعة مما تعتقد.</item>
+        <item>أبقي رأسك عاليا.</item>
+        <item>لديك قلب محارب.</item>
+        <item>كل يوم هي فرصة جديدة.</item>
+        <item>تابع المسير للامام.</item>
+        <item>أنت أحد الناجين.</item>
+        <item>تنمو القوة في اللحظات التي تعتقد فيها أنك لا تستطيع الاستمرار ولكنك تستمر في ذلك.</item>
+        <item>معركتك هي معركتنا.</item>
+        <item>احتضن كل يوم بالأمل.</item>
+        <item>أنت نور للآخرين.</item>
+        <item>إبقاء الأمل حيا.</item>
+        <item>قوتك تلهم الجميع من حولك.</item>
+        <item>كن إيجابيا، المعجزات تحدث كل يوم.</item>
+        <item>أنت محبوب إلى أبعد الحدود.</item>
+        <item>معنا نحن اقوى.</item>
+        <item>استمر في الإيمان بنفسك.</item>
+        <item>عزيمتك رائعة.</item>
+        <item>كل يوم هي فرصة للشفاء.</item>
+        <item>أنت قادر على أشياء مذهلة.</item>
+        <item>خذ القوة ممن حولك.</item>
+        <item>معركتك هي مصدر إلهام.</item>
+        <item>أنت مقاتل، والمقاتلون لا يستسلمون.</item>
+        <item>الأمل يرسي الروح.</item>
+        <item>تمسك بأحلامك.</item>
+        <item>أنت لست وحدك أبدا في هذه المعركة.</item>
+        <item>أبق أحلامك حية.</item>
+        <item>الشجاعة لا تزأر دائمًا.</item>
+        <item>رحلتك قوية.</item>
+        <item>أنت لا تقاتل وحدك.</item>
+        <item>الحب يحيط بك.</item>
+        <item>دع الأمل يرشدك.</item>
+        <item>روحك لا تقهر.</item>
+        <item>آمن بقوة الشفاء.</item>
+        <item>أنت محبوب ومدعوم.</item>
+        <item>استمر في التألق، حتى في أحلك الأوقات.</item>
+        <item>أنتم منارة الأمل.</item>
+        <item>الإيمان على الخوف.</item>
+        <item>أنت تلهم المزيد من الناس مما تدرك.</item>
+        <item>لديك القوة للتغلب عليها.</item>
+        <item>حافظ على إيمانك قويا.</item>
+        <item>آمن بالمستحيل.</item>
+        <item>شجاعتك لا تعرف حدودا.</item>
+        <item>أنت بطل في هذه الرحلة.</item>
+        <item>ابقَ قويًا، فالعالم يحتاج إلى نورك.</item>
+        <item>أنت لست وحدك، نحن معك.</item>
+        <item>كل يوم هي خطوة نحو التعافي.</item>
+        <item>حافظ على أملك حيا.</item>
+        <item>أنت مصدر إلهام لنا جميعا.</item>
+        <item>خليك إيجابي، خليك متفائل.</item>
+        <item>استمر في القتال من كل قلبك.</item>
+        <item>الأمل هو أقوى من الخوف.</item>
+        <item>أنت مرن وشجاع.</item>
+        <item>قوتك لا تصدق.</item>
+        <item>استمر في الإيمان بالمعجزات.</item>
+        <item>أنت محارب حقيقي.</item>
+        <item>كل يوم هي بداية جديدة.</item>
+        <item>حافظ على روحك غير منكسرة.</item>
+        <item>حافظ على روحك دون انقطاع.</item>
+        <item>أنت محاط بالحب والدعم.</item>
+        <item>ابق قويا، استمر في القتال.</item>
+        <item>لديك قلب محارب.</item>
+        <item>حافظ على الإيمان، هناك أيام أفضل في المستقبل.</item>
+        <item>شجاعتك تضيء العالم.</item>
+        <item>كل خطوة تتخذها هي انتصار.</item>
+        <item>أنت محبوب أكثر مما تعرف.</item>
+        <item>لا تقلل من قوتك.</item>
+        <item>أنت لست وحدك، نحن نقف معك.</item>
+        <item>قصتك ملهمة.</item>
+        <item>أنت قادر على أكثر مما تتخيل.</item>
+        <item>لديك قلب بطل.</item>
+        <item>ابق متفائلاً، ابق شجاعًا.</item>
+        <item>مرونتك هي قوتك.</item>
+        <item>أنت ناجٍ، وأنت تلهمنا جميعًا.</item>
+        <item>استمر، العالم يهتف لك.</item>
+        <item>أنت مقاتل حقيقي.</item>
+        <item>القوة تأتي من الداخل.</item>
+        <item>الأمل يقود الطريق.</item>
+        <item>ابق مرنًا وشجاعًا.</item>
+        <item>الشجاعة لا تتعثر أبدا.</item>
+        <item>الأمل يدوم.</item>
+        <item>حافظ على ثقتك بنفسك.</item>
+        <item>ابق قويا وثابتا.</item>
+        <item>أنت تشع القوة.</item>
+        <item>أنت رمز للأمل.</item>
     </string-array>
 </resources>
