@@ -11,11 +11,11 @@ fun calculateStartDateTime(startDate: Long, hour24: Int, minute: Int): Long {
 
 fun getWelcomeMessage(resources: Resources): String {
     val calendar = Calendar.getInstance()
-    val hour = calendar.get(Calendar.HOUR_OF_DAY)
 
-    return when {
-        hour < 12 -> resources.getString(R.string.good_morning)
-        hour < 18 -> resources.getString(R.string.good_afternoon)
-        else -> resources.getString(R.string.good_evening)
+    return when (calendar.get(Calendar.HOUR_OF_DAY)) {
+        in 4 until 12 -> resources.getString(R.string.good_morning)
+        in 12 until 18 -> resources.getString(R.string.good_afternoon)
+        in 18 until 22 -> resources.getString(R.string.good_evening)
+        else -> resources.getString(R.string.good_night)
     }
 }
