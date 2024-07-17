@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
@@ -62,6 +64,12 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
 
     private val workerReminder: ReminderManager by lazy {
         AlarmReminder(requireContext())
+    }
+
+    private val requestPermissionLauncher: ActivityResultLauncher<String?> = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+
     }
 
     override fun onCreateView(
@@ -441,7 +449,7 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
         when(v?.id){
             R.id.btn_add -> {
                 if (viewModel.userIsLoggedIn()) {
-                    if (schedulingPermissionsAreGranted(requireActivity(), requireContext()))
+                    if (schedulingPermissionsAreGranted(requireActivity(), requireContext(), requestPermissionLauncher))
                         navController.tryNavigate(
                             TreatmentHistoryFragmentDirections.actionTreatmentHistoryFragmentToTreatmentFragment()
                         )

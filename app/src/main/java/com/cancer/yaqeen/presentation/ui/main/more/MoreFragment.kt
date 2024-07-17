@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
@@ -39,6 +41,12 @@ class MoreFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
 
     private val workerReminderPeriodically: ReminderManager by lazy {
         WorkerReminder(requireContext())
+    }
+
+    private val requestPermissionLauncher: ActivityResultLauncher<String?> = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+
     }
 
     override fun onCreateView(
@@ -142,7 +150,7 @@ class MoreFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
 
     private fun navigateToAddingSchedule(onNavigate:() -> Unit) {
         if (moreViewModel.userIsLoggedIn()) {
-            if (schedulingPermissionsAreGranted(requireActivity(), requireContext()))
+            if (schedulingPermissionsAreGranted(requireActivity(), requireContext(), requestPermissionLauncher))
                 onNavigate()
         }
         else {

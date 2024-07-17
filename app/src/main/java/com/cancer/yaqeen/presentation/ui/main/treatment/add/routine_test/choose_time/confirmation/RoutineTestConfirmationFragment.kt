@@ -64,6 +64,12 @@ class RoutineTestConfirmationFragment : BaseFragment() {
             }
         }
 
+    private val requestPermissionLauncher: ActivityResultLauncher<String?> = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+
+    }
+
     private val workerReminder: ReminderManager by lazy {
         AlarmReminder(requireContext())
     }
@@ -150,7 +156,7 @@ class RoutineTestConfirmationFragment : BaseFragment() {
             return
         }
 
-        if (schedulingPermissionsAreGranted(requireActivity(), requireContext())) {
+        if (schedulingPermissionsAreGranted(requireActivity(), requireContext(), requestPermissionLauncher)) {
             routineTestViewModel.modifyRoutineTest()
         }
     }

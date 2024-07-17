@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -52,6 +54,12 @@ class MedicationConfirmationFragment : BaseFragment() {
 
     private val workerReminderPeriodically: ReminderManager by lazy {
         WorkerReminder(requireContext())
+    }
+
+    private val requestPermissionLauncher: ActivityResultLauncher<String?> = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+
     }
 
     override fun onCreateView(
@@ -100,7 +108,7 @@ class MedicationConfirmationFragment : BaseFragment() {
         }
 
         binding.btnConfirm.setOnClickListener {
-            if (schedulingPermissionsAreGranted(requireActivity(), requireContext())) {
+            if (schedulingPermissionsAreGranted(requireActivity(), requireContext(), requestPermissionLauncher)) {
                 val medicationTrack = medicationsViewModel.getMedicationTrack()
                 if (medicationTrack?.editable == true)
                     medicationsViewModel.editMedication()
