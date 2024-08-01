@@ -141,5 +141,11 @@ class WorkerRequest private constructor(){
                 repeatInterval,
                 TimeUnit.HOURS
             )
+
+        private fun initPeriodicWorkEveryXMinutes(repeatInterval: Long): PeriodicWorkRequest.Builder =
+            PeriodicWorkRequestBuilder<ReminderWorker>(
+                repeatInterval,
+                TimeUnit.MINUTES
+            )
     }
 }
