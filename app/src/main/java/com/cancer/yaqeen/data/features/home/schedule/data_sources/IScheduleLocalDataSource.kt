@@ -4,17 +4,18 @@ import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.room.Medic
 import com.cancer.yaqeen.data.features.home.schedule.medication.room.MedicationDB
 import com.cancer.yaqeen.data.features.home.schedule.routine_test.room.RoutineTestDB
 import com.cancer.yaqeen.data.network.base.DataState
-import kotlinx.coroutines.flow.Flow
 
 interface IScheduleLocalDataSource {
     suspend fun getMedication(medicationId: Int): DataState<MedicationDB?>
     suspend fun getMedications(): DataState<List<MedicationDB>?>
+    suspend fun getRemindedMedications(): DataState<List<MedicationDB>?>
     suspend fun saveMedication(medication: MedicationDB): DataState<Long>
     suspend fun editMedication(medication: MedicationDB): DataState<Int>
     suspend fun removeMedication(medicationId: Int): DataState<Int>
     suspend fun removeMedications(): DataState<Int>
     suspend fun getRoutineTest(routineTestId: Int): DataState<RoutineTestDB?>
     suspend fun getRoutineTests(): DataState<List<RoutineTestDB>?>
+    suspend fun getRemindedRoutineTests(): DataState<List<RoutineTestDB>?>
     suspend fun saveRoutineTest(routineTest: RoutineTestDB): DataState<Long>
     suspend fun editRoutineTest(routineTest: RoutineTestDB): DataState<Int>
     suspend fun removeRoutineTest(routineTestId: Int): DataState<Int>

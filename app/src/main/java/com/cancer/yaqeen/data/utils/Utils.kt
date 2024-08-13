@@ -132,139 +132,6 @@ fun Float.calculatePriceAfterDiscount(discountPercentage: Float): Float {
     return this - discountAmount
 }
 
-fun Long.formatDate(pattern: String = "dd MMM yyyy"): String {
-    val dateFormat = SimpleDateFormat(pattern, Locale.getDefault())
-    val date = toDate()
-    return dateFormat.format(date)
-}
-
-fun Long.toDate(): Date {
-    return Date(this)
-}
-
-fun String.formatDate(): String {
-    return try {
-        val inputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
-        val outputDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-
-        val inputDate = inputDateFormat.parse(this)
-        outputDateFormat.format(inputDate)
-    } catch (_: Exception) {
-        ""
-    }
-}
-
-fun String.convertToMillis(): Long {
-    return try {
-        val inputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
-        val outputDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-
-        val inputDate = inputDateFormat.parse(this)
-        inputDate.time
-    } catch (_: Exception) {
-        0L
-    }
-}
-
-fun String.formatDateAPI(): String {
-    return try {
-        val inputDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
-        val outputDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
-
-        val inputDate = inputDateFormat.parse(this)
-        outputDateFormat.format(inputDate)
-    } catch (_: Exception) {
-        ""
-    }
-}
-
-fun String.formatTime(): String {
-    return try {
-        val inputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
-        val outputTimeFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
-
-        val inputDate = inputDateFormat.parse(this)
-        outputTimeFormat.format(inputDate)
-    } catch (_: Exception) {
-        ""
-    }
-}
-
-fun String.formatTimeAPI(): String {
-    return try {
-        val inputDateFormat = SimpleDateFormat("hh:mm a", Locale.ENGLISH)
-        val outputTimeFormat = SimpleDateFormat("HH:mm", Locale.ENGLISH)
-
-        val inputDate = inputDateFormat.parse(this)
-        outputTimeFormat.format(inputDate)
-    } catch (_: Exception) {
-        ""
-    }
-}
-
-fun convertMillisecondsToTime(milliseconds: Long, pattern: String = "hh:mm a"): String {
-    val currentTimestamp = System.currentTimeMillis()
-    val timestamp = Date(milliseconds)
-
-    val dateFormat = SimpleDateFormat(pattern, Locale.getDefault())
-    return dateFormat.format(timestamp)
-}
-
-fun String.isCurrentTodayAndAfterTimeNow(): Boolean {
-    val currentTimestamp = System.currentTimeMillis()
-    val currentDate = currentTimestamp.toDate()
-
-    val inputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
-    val inputDate = inputDateFormat.parse(this)
-
-    return if (isSameDay(currentDate, inputDate)) {
-        val date = Calendar.getInstance()
-        date.time = inputDate
-
-        return date.timeInMillis >= currentTimestamp
-    } else {
-        false
-    }
-}
-
-fun String.isCurrentToday(): Boolean {
-    val currentTimestamp = System.currentTimeMillis()
-    val currentDate = currentTimestamp.toDate()
-
-    val inputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
-    val inputDate = inputDateFormat.parse(this)
-
-    return isSameDay(currentDate, inputDate)
-}
-
-fun isSameDay(dateFirst: Date, dateSecond: Date): Boolean {
-    val calFirst = Calendar.getInstance()
-    calFirst.time = dateFirst
-    val calSecond = Calendar.getInstance()
-    calSecond.time = dateSecond
-
-    return calFirst.get(Calendar.YEAR) == calSecond.get(Calendar.YEAR) &&
-            calFirst.get(Calendar.DAY_OF_YEAR) == calSecond.get(Calendar.DAY_OF_YEAR)
-}
-
-fun String.isAfterNow(pattern: String = "yyyy-MM-dd'T'HH:mm:ss"): Boolean {
-    val currentTimestamp = System.currentTimeMillis()
-
-    val inputDateFormat = SimpleDateFormat(pattern, Locale.getDefault())
-    val inputDate = inputDateFormat.parse(this)
-
-    val date = Calendar.getInstance()
-    date.time = inputDate
-
-    return currentTimestamp >= date.timeInMillis
-}
-
-fun getTodayDate(): String {
-    val currentTimestamp = System.currentTimeMillis()
-
-    return currentTimestamp.formatDate()
-}
-
 fun String.tryToLong(): Long {
     return try {
         toLong()
@@ -343,9 +210,13 @@ fun calculateScaleFactor(
     maxWidth: Int,
     maxHeight: Int
 ): Float {
-    val widthRatio = maxWidth.toFloat() / originalWidth
-    val heightRatio = maxHeight.toFloat() / originalHeight
-    return if (widthRatio < heightRatio) widthRatio else heightRatio
+    return try {
+        val widthRatio = maxWidth.toFloat() / originalWidth
+        val heightRatio = maxHeight.toFloat() / originalHeight
+        if (widthRatio < heightRatio) widthRatio else heightRatio
+    } catch (e: Exception) {
+        0F
+    }
 }
 
 

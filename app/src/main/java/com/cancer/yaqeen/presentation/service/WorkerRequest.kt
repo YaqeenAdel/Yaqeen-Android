@@ -1,6 +1,7 @@
 package com.cancer.yaqeen.presentation.service
 
 import android.content.Context
+import android.util.Log
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequest
@@ -66,7 +67,9 @@ class WorkerRequest private constructor(){
         }
 
         fun build(): PeriodicWorkRequest {
+            Log.d("NotificationReceiver", "WorkerRequest: build")
             return buildPeriodicWorkRequestBuilder(periodTimeId)
+                .addTag("MY_WORK_TAG")
                 .setInitialDelay(startDateTime, TimeUnit.MILLISECONDS)
                 .setInputData(
                     workDataOf(
@@ -138,5 +141,19 @@ class WorkerRequest private constructor(){
                 repeatInterval,
                 TimeUnit.HOURS
             )
+
+        private fun initPeriodicWorkEveryXMinutes(repeatInterval: Long): PeriodicWorkRequest.Builder {
+            val repeatInterval = if (repeatInterval < 15)
+                15
+            else
+                repeatInterval
+
+            return PeriodicWorkRequestBuilder<ReminderWorker>(
+                repeatInterval,
+                TimeUnit.MINUTES
+            )
+
+        }
+
     }
 }

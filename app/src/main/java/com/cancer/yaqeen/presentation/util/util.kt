@@ -67,10 +67,10 @@ fun overrideLocale(localeCode: String? = null, resources: Resources) {
     newConfig.setLocale(local)
     resources.updateConfiguration(newConfig, resources.displayMetrics)
 }
-fun convertMilliSecondsToDate(milliseconds: Long, pattern: String = "dd/MM/yyyy"): String {
+fun convertMilliSecondsToDate(milliseconds: Long, pattern: String = "dd/MM/yyyy", local: Locale = Locale.getDefault()): String {
     val timestamp = Date(milliseconds)
 
-    val dateFormat = SimpleDateFormat(pattern, Locale.getDefault())
+    val dateFormat = SimpleDateFormat(pattern, local)
     return dateFormat.format(timestamp)
 }
 fun convertDateToMilliSeconds(date: String, pattern: String = "dd/MM/yyyy"): Long {

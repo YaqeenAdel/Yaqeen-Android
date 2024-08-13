@@ -227,9 +227,12 @@
     <string name="please_enable_permission_to_draw_over_other_apps">Please enable permission to draw over other apps</string>
     <string name="ignore">Ignore</string>
     <string name="medication_reminder">Medication Reminder</string>
+    <string name="medication_reminder_message">Hello! Just a friendly reminder to take %s: %s from %s: %s now as prescribed today. Your health is important, so let\'s stay on track together. 😊</string>
+    <string name="routine_test_message">Hello! Just a friendly reminder to test: %s at %s %s as prescribed for today. Your health is important, so let\'s stay on track together. 😊</string>
     <string name="reminder_text_message">Hello! Just a friendly reminder to take your medicine now as prescribed today. Your health is important, so let\'s stay on track together. 😊</string>
     <string name="routine_test_reminder">Routine Test Reminder</string>
     <string name="medical_appointment_reminder">Medical Appointment Reminder</string>
+    <string name="medical_appointment_message">Hello! Just a friendly reminder to you have an appointment at %s %s with doctor: %s in %s, note for you phone number: %s. Your health is important, so let\'s stay on track together. 😊</string>
     <string name="no_app_found_to_share_it">No app found to share it</string>
     <string name="share_via">Share Via</string>
     <string name="non_hodgkin_s_lymphoma">Non-Hodgkin’s Lymphoma</string>
@@ -244,9 +247,117 @@
     <string name="ok">OK</string>
     <string name="you_must_select_a_new_datetime">You must select a new datetime</string>
     <string name="please_select_the_allow_all_option">PLease select the \'Allow all\' option</string>
+    <string name="good_morning">Good Morning</string>
+    <string name="good_afternoon">Good Afternoon</string>
+    <string name="good_evening">Good Evening</string>
+    <string name="good_night">Good Night</string>
+    <string name="reminder_running">Reminder Running…</string>
 
     <string-array name="languages_array">
         <item>English</item>
         <item>Arabic</item>
+    </string-array>
+
+    <string-array name="motivating_phrases_array">
+        <item>You are stronger than you think.</item>
+        <item>Every day is a victory.</item>
+        <item>Keep fighting, you\'re not alone.</item>
+        <item>Hope is the best medicine.</item>
+        <item>You are a warrior.</item>
+        <item>Believe in your strength.</item>
+        <item>Never give up hope.</item>
+        <item>Your courage inspires others.</item>
+        <item>Healing is a journey, not a race.</item>
+        <item>You can overcome this.</item>
+        <item>Keep pushing forward.</item>
+        <item>Let your faith be bigger than your fear.</item>
+        <item>Your spirit is unbreakable.</item>
+        <item>Courage is your superpower.</item>
+        <item>You are not alone in this fight.</item>
+        <item>Every battle has a victory.</item>
+        <item>You are braver than you believe.</item>
+        <item>Keep your head high.</item>
+        <item>You have the heart of a warrior.</item>
+        <item>Each day is a new opportunity.</item>
+        <item>Keep moving forward.</item>
+        <item>You are a survivor.</item>
+        <item>Strength grows in the moments you think you can\'t go on but you keep going.</item>
+        <item>Your fight is our fight.</item>
+        <item>Embrace each day with hope.</item>
+        <item>You are a light to others.</item>
+        <item>Keep hope alive.</item>
+        <item>Your strength inspires everyone around you.</item>
+        <item>Stay positive, miracles happen every day.</item>
+        <item>You are loved beyond measure.</item>
+        <item>Together, we are stronger.</item>
+        <item>Keep believing in yourself.</item>
+        <item>Your resilience is remarkable.</item>
+        <item>Every day is a chance to heal.</item>
+        <item>You are capable of amazing things.</item>
+        <item>Take strength from those around you.</item>
+        <item>Your fight is an inspiration.</item>
+        <item>You\'re a fighter, and fighters don\'t quit.</item>
+        <item>Hope anchors the soul.</item>
+        <item>Hold on to your dreams.</item>
+        <item>You are never alone in this battle.</item>
+        <item>Keep your dreams alive.</item>
+        <item>Courage doesn\'t always roar.</item>
+        <item>Your journey is powerful.</item>
+        <item>You are not fighting alone.</item>
+        <item>Love surrounds you.</item>
+        <item>Let hope guide you.</item>
+        <item>Your spirit is indomitable.</item>
+        <item>Believe in the power of healing.</item>
+        <item>You are loved and supported.</item>
+        <item>Keep shining, even in the darkest times.</item>
+        <item>You are a beacon of hope.</item>
+        <item>Faith over fear.</item>
+        <item>You inspire more people than you realize.</item>
+        <item>You have the strength to overcome.</item>
+        <item>Keep your faith strong.</item>
+        <item>Believe in the impossible.</item>
+        <item>Your courage knows no bounds.</item>
+        <item>You are a hero in this journey.</item>
+        <item>Stay strong; the world needs your light.</item>
+        <item>You\'re not alone, we are with you.</item>
+        <item>Every day is a step towards recovery.</item>
+        <item>Keep your hope alive.</item>
+        <item>You’re an inspiration to us all.</item>
+        <item>Stay positive, stay hopeful.</item>
+        <item>Keep fighting with all your heart.</item>
+        <item>Hope is stronger than fear.</item>
+        <item>You are resilient and brave.</item>
+        <item>Your strength is incredible.</item>
+        <item>Keep believing in miracles.</item>
+        <item>You are a true warrior.</item>
+        <item>Every day is a fresh start.</item>
+        <item>Keep your spirit unbroken.</item>
+        <item>Your journey is a testament to your strength.</item>
+        <item>You are surrounded by love and support.</item>
+        <item>Stay strong, keep fighting.</item>
+        <item>You have a warrior\'s heart.</item>
+        <item>Keep the faith, better days are ahead.</item>
+        <item>Your courage lights up the world.</item>
+        <item>Every step you take is a victory.</item>
+        <item>You are loved more than you know.</item>
+        <item>Never underestimate your strength.</item>
+        <item>You are not alone, we stand with you.</item>
+        <item>Your story is inspiring.</item>
+        <item>You are capable of more than you imagine.</item>
+        <item>You have the heart of a champion.</item>
+        <item>Stay hopeful, stay brave.</item>
+        <item>Your resilience is your strength.</item>
+        <item>You are a survivor, and you inspire us all.</item>
+        <item>Keep going, the world is cheering for you.</item>
+        <item>You are a true fighter.</item>
+        <item>Strength comes from within.</item>
+        <item>Hope leads the way.</item>
+        <item>Stay resilient and brave.</item>
+        <item>Bravery never falters.</item>
+        <item>Hope endures.</item>
+        <item>Keep faith in yourself.</item>
+        <item>Stay strong and steady.</item>
+        <item>You radiate strength.</item>
+        <item>You are a symbol of hope.</item>
     </string-array>
 </resources>

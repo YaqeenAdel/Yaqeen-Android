@@ -3,6 +3,7 @@ package com.cancer.yaqeen.presentation.ui.main.treatment.add.routine_test.choose
 import android.Manifest
 import android.net.Uri
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,7 +27,7 @@ import com.cancer.yaqeen.presentation.service.WorkerReminder
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.routine_test.RoutineTestViewModel
 import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.Constants.OPEN_ROUTINE_TEST_WINDOW_ACTION
-import com.cancer.yaqeen.presentation.util.Constants.UPDATE_LOCAL_SCHEDULES_ACTION
+import com.cancer.yaqeen.presentation.util.Constants.UPDATE_LOCAL_REMINDED_SCHEDULES_ACTION
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindImage
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindImageURI
@@ -34,6 +35,7 @@ import com.cancer.yaqeen.presentation.util.convertMilliSecondsToDate
 import com.cancer.yaqeen.presentation.util.disableTouch
 import com.cancer.yaqeen.presentation.util.enableStoragePermissions
 import com.cancer.yaqeen.presentation.util.enableTouch
+import com.cancer.yaqeen.presentation.util.scheduleJobServicePeriodically
 import com.cancer.yaqeen.presentation.util.schedulingPermissionsAreGranted
 import com.cancer.yaqeen.presentation.util.storagePermissionsAreGranted
 import com.cancer.yaqeen.presentation.util.tryPopBackStack
@@ -61,6 +63,12 @@ class RoutineTestConfirmationFragment : BaseFragment() {
                     confirmRoutineTest()
             }
         }
+
+    private val requestPermissionLauncher: ActivityResultLauncher<String?> = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+
+    }
 
     private val workerReminder: ReminderManager by lazy {
         AlarmReminder(requireContext())
@@ -98,7 +106,7 @@ class RoutineTestConfirmationFragment : BaseFragment() {
         routineTestTrack?.run {
             binding.tvRoutineTestName.text = routineTestName ?: ""
             binding.tvNotesVal.text = notes ?: ""
-            binding.tvDaysVal.text = if (specificDays.isNullOrEmpty()) periodTime?.time ?: "" else specificDays!!.joinToString { it.name }
+            binding.tvDaysVal.text = if (specificDays.isNullOrEmpty()) periodTime?.timeEn ?: "" else specificDays!!.joinToString { it.name }
             binding.tvStartFromVal.text = startDate?.let { convertMilliSecondsToDate(it) } ?: ""
             val reminderBeforeTime = getReminderBeforeTime(reminderBefore)
             binding.tvReminderVal.text = reminderBeforeTime
@@ -148,25 +156,31 @@ class RoutineTestConfirmationFragment : BaseFragment() {
             return
         }
 
-        if (schedulingPermissionsAreGranted(requireActivity(), requireContext())) {
+        if (schedulingPermissionsAreGranted(requireActivity(), requireContext(), requestPermissionLauncher)) {
             routineTestViewModel.modifyRoutineTest()
         }
     }
 
     private fun addWorkerReminderPeriodically() {
-        if (!routineTestViewModel.hasWorker()) {
-            val timeDelayInMilliSeconds = TimeUnit.MINUTES.toMillis(5L)
-            val currentTimeInMilliSeconds = System.currentTimeMillis()
-            val workRunningInMilliSeconds = currentTimeInMilliSeconds + timeDelayInMilliSeconds
-
-            val periodReminderId = workerReminderPeriodically.setPeriodReminder(
-                timeDelayInMilliSeconds,
-                PeriodTimeEnum.EVERY_3_HOURS.id,
-                UPDATE_LOCAL_SCHEDULES_ACTION
+        scheduleJobServicePeriodically(requireContext(), TimeUnit.MINUTES.toMillis(15), PersistableBundle().apply {
+            putString(
+                Constants.ACTION_KEY,
+                UPDATE_LOCAL_REMINDED_SCHEDULES_ACTION
             )
-
-            routineTestViewModel.saveWorkerReminderPeriodicallyInfo(periodReminderId, workRunningInMilliSeconds)
-        }
+        })
+//        if (!routineTestViewModel.hasWorker()) {
+//            val timeDelayInMilliSeconds = TimeUnit.MINUTES.toMillis(5L)
+//            val currentTimeInMilliSeconds = System.currentTimeMillis()
+//            val workRunningInMilliSeconds = currentTimeInMilliSeconds + timeDelayInMilliSeconds
+//
+//            val periodReminderId = workerReminderPeriodically.setPeriodReminder(
+//                timeDelayInMilliSeconds,
+//                PeriodTimeEnum.EVERY_3_HOURS.id,
+//                UPDATE_LOCAL_PENDING_SCHEDULES_ACTION
+//            )
+//
+//            routineTestViewModel.saveWorkerReminderPeriodicallyInfo(periodReminderId, workRunningInMilliSeconds)
+//        }
     }
 
     private fun observeStates() {

@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -166,7 +165,9 @@ class ChooseTimeFragment : BaseFragment() {
         }
         binding.editTextStartFrom.setOnClickListener {
             navController.tryNavigate(
-                R.id.calendarFragment
+                ChooseTimeFragmentDirections.actionChooseTimeFragmentToCalendarFragment(
+                    0L, true
+                )
             )
         }
         binding.editTextTime.setOnClickListener {
@@ -275,20 +276,21 @@ class ChooseTimeFragment : BaseFragment() {
         medicationTimesAdapter.submitList(
             listOf(
                 Time(
-                    id = PeriodTimeEnum.EVERY_DAY.id, time = getString(R.string.every_day), cronExpression = PeriodTimeEnum.EVERY_DAY.cronExpression
+                    id = PeriodTimeEnum.EVERY_DAY.id, timeEn = getString(R.string.every_day), timeAr = "", cronExpression = PeriodTimeEnum.EVERY_DAY.cronExpression
                 ),
                 Time(
-                    id = PeriodTimeEnum.EVERY_8_HOURS.id, time = getString(R.string.every_8_hours), cronExpression = PeriodTimeEnum.EVERY_8_HOURS.cronExpression
+                    id = PeriodTimeEnum.EVERY_8_HOURS.id, timeEn = getString(R.string.every_8_hours), timeAr = "", cronExpression = PeriodTimeEnum.EVERY_8_HOURS.cronExpression
                 ),
                 Time(
-                    id = PeriodTimeEnum.EVERY_12_HOURS.id, time = getString(R.string.every_12_hours), cronExpression = PeriodTimeEnum.EVERY_12_HOURS.cronExpression
+                    id = PeriodTimeEnum.EVERY_12_HOURS.id, timeEn = getString(R.string.every_12_hours), timeAr = "", cronExpression = PeriodTimeEnum.EVERY_12_HOURS.cronExpression
                 ),
                 Time(
-                    id = PeriodTimeEnum.DAY_AFTER_DAY.id, time = getString(R.string.day_after_day), cronExpression = PeriodTimeEnum.DAY_AFTER_DAY.cronExpression
+                    id = PeriodTimeEnum.DAY_AFTER_DAY.id, timeEn = getString(R.string.day_after_day), timeAr = "", cronExpression = PeriodTimeEnum.DAY_AFTER_DAY.cronExpression
                 ),
-                Time(
-                    id = PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id, time = getString(R.string.specific_days_of_the_week), cronExpression = PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.cronExpression
-                )
+                //TODO(SPECIFIC_DAYS_OF_THE_WEEK): Will reAdding this type after fix the issue.
+//                Time(
+//                    id = PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id, timeEn = getString(R.string.specific_days_of_the_week), timeAr = "", cronExpression = PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.cronExpression
+//                )
             )
         )
     }

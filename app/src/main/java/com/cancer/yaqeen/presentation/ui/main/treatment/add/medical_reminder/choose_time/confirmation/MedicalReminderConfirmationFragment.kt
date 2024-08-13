@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -47,6 +49,12 @@ class MedicalReminderConfirmationFragment : BaseFragment() {
         AlarmReminder(requireContext())
     }
 
+    private val requestPermissionLauncher: ActivityResultLauncher<String?> = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -72,7 +80,7 @@ class MedicalReminderConfirmationFragment : BaseFragment() {
         }
 
         binding.btnConfirm.setOnClickListener {
-            if (schedulingPermissionsAreGranted(requireActivity(), requireContext()))
+            if (schedulingPermissionsAreGranted(requireActivity(), requireContext(), requestPermissionLauncher))
                 medicalReminderViewModel.modifyMedicalReminder()
         }
         binding.tvShowLess.setOnClickListener {
@@ -125,7 +133,7 @@ class MedicalReminderConfirmationFragment : BaseFragment() {
                 binding.tvSymptomsVal.text = types
                 binding.tvSymptomNotesVal.text = details
                 binding.tvReminderSymptomVal.text = doctorName ?: ""
-                binding.tvDateTimeVal.text = "$reminderTime - $startDate"
+                binding.tvDateTimeVal.text = "${reminderTime2?.timeUI.toString()} - $startDateUI"
 
             }
 

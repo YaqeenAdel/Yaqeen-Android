@@ -28,7 +28,6 @@ import com.cancer.yaqeen.data.features.home.schedule.routine_test.mappers.Mappin
 import com.cancer.yaqeen.data.features.home.schedule.routine_test.models.RoutineTestTrack
 import com.cancer.yaqeen.databinding.FragmentRoutineTestInfoBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
-import com.cancer.yaqeen.presentation.ui.main.treatment.add.medical_reminder.MedicalReminderInfoFragmentArgs
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.strength.choose_time.DaysAdapter
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.strength.choose_time.MedicationTimesAdapter
 import com.cancer.yaqeen.presentation.util.Constants
@@ -322,34 +321,41 @@ class RoutineTestInfoFragment : BaseFragment() {
             listOf(
                 Time(
                     id = PeriodTimeEnum.EVERY_DAY.id,
-                    time = getString(R.string.every_day),
+                    timeEn = getString(R.string.every_day),
+                    timeAr = "",
                     cronExpression = PeriodTimeEnum.EVERY_DAY.cronExpression
                 ),
                 Time(
                     id = PeriodTimeEnum.EVERY_12_HOURS.id,
-                    time = getString(R.string.every_12_hours),
+                    timeEn = getString(R.string.every_12_hours),
+                    timeAr = "",
                     cronExpression = PeriodTimeEnum.EVERY_12_HOURS.cronExpression
                 ),
                 Time(
                     id = PeriodTimeEnum.DAY_AFTER_DAY.id,
-                    time = getString(R.string.day_after_day),
+                    timeEn = getString(R.string.day_after_day),
+                    timeAr = "",
                     cronExpression = PeriodTimeEnum.DAY_AFTER_DAY.cronExpression
                 ),
                 Time(
                     id = PeriodTimeEnum.EVERY_WEEK.id,
-                    time = getString(R.string.every_week),
+                    timeEn = getString(R.string.every_week),
+                    timeAr = "",
                     cronExpression = PeriodTimeEnum.EVERY_WEEK.cronExpression
                 ),
                 Time(
                     id = PeriodTimeEnum.EVERY_MONTH.id,
-                    time = getString(R.string.every_month),
+                    timeEn = getString(R.string.every_month),
+                    timeAr = "",
                     cronExpression = PeriodTimeEnum.EVERY_MONTH.cronExpression
                 ),
-                Time(
-                    id = PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id,
-                    time = getString(R.string.specific_days_of_the_week),
-                    cronExpression = PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.cronExpression
-                )
+                //TODO(SPECIFIC_DAYS_OF_THE_WEEK): Will reAdding this type after fix the issue.
+//                Time(
+//                    id = PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id,
+//                    timeEn = getString(R.string.specific_days_of_the_week),
+//                    timeAr = "",
+//                    cronExpression = PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.cronExpression
+//                )
             )
         )
     }

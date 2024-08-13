@@ -12,6 +12,7 @@ import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.changeVisibility
 
 class TimesAdapter(
+    private val selectedLanguageIsArabic: Boolean = false,
     private val onItemClick: (Time) -> Unit
 ) :
     ListAdapter<Time, TimesAdapter.TimesViewHolder>(Companion) {
@@ -80,7 +81,7 @@ class TimesAdapter(
 
         fun bind(position: Int, item: Time) {
             val isSelected = selectedPosition == position
-            itemBinding.tvTime.text = item.time
+            itemBinding.tvTime.text = if (selectedLanguageIsArabic) item.timeAr else item.timeEn
 
             itemBinding.viewLine.changeVisibility(!isSelected)
 

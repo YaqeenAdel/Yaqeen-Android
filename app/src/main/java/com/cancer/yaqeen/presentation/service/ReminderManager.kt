@@ -2,6 +2,7 @@ package com.cancer.yaqeen.presentation.service
 
 import android.os.Build
 import android.util.Log
+import androidx.lifecycle.LifecycleOwner
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.room.MedicalAppointmentDB
 import com.cancer.yaqeen.data.features.home.schedule.medication.room.MedicationDB
 import com.cancer.yaqeen.data.features.home.schedule.routine_test.room.RoutineTestDB
@@ -25,6 +26,9 @@ abstract class ReminderManager {
     open fun setPeriodReminder(timeDelayInMilliSeconds: Long, periodTimeId: Int, actionName: String): String {
         return ""
     }
+    open fun setReminder(timeDelayInMilliSeconds: Long, actionName: String): String {
+        return ""
+    }
     open fun<T> setReminder(timeDelayInMilliSeconds: Long, obj: T, actionName: String): String {
         return ""
     }
@@ -32,6 +36,7 @@ abstract class ReminderManager {
     open fun cancelReminder(reminderId: String, actionName: String, objectJsonValue: String){}
     abstract fun cancelAllReminders()
 
+    open fun checkWorkerStatus(owner: LifecycleOwner) {}
 
     protected fun calculateStartDateTime(startDate: Long, hour24: Int, minute: Int): Long {
         val (year, month, day) = startDate.convertMillisecondsToDateComponents()

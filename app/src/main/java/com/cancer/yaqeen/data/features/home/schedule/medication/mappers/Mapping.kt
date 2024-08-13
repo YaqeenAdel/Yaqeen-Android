@@ -15,7 +15,7 @@ import com.cancer.yaqeen.data.features.home.schedule.medication.responses.Schedu
 import com.cancer.yaqeen.data.features.home.schedule.medication.responses.TodayScheduleResponse
 import com.cancer.yaqeen.data.features.home.schedule.medication.responses.TodaySchedulesResponse
 import com.cancer.yaqeen.data.features.home.schedule.routine_test.models.ReminderBefore
-import com.cancer.yaqeen.data.utils.formatTime
+import com.cancer.yaqeen.data.utils.formatDateTimeAPIToTimeUI
 import com.cancer.yaqeen.data.utils.isCurrentTodayAndAfterTimeNow
 import com.cancer.yaqeen.presentation.ui.main.treatment.getMedicationType
 import com.cancer.yaqeen.presentation.ui.main.treatment.getPeriodTimeFromCronExpression
@@ -93,7 +93,7 @@ private fun mapRemindersFromNowRemoteByEvents(response: TodaySchedulesResponse):
         }else {
             schedule.scheduledEvents?.events?.distinctBy { it.scheduledTime.toString() }
                 ?.map { event ->
-                    if (event.scheduledTime?.isCurrentTodayAndAfterTimeNow() == true)
+                    if (isCurrentTodayAndAfterTimeNow(event.scheduledTime))
                         schedules.add(
                             when (schedule.entityType) {
                                 ScheduleType.MEDICATION.scheduleType ->
@@ -137,7 +137,7 @@ class MappingReminderTodayRemoteAsScheduleMedicationModel(private val scheduledT
                 cronExpression = "",
                 scheduledTimes = listOf(),
 //                scheduledTimes = scheduledEvents?.events?.map { event -> event.scheduledTime.toString() } ?: listOf(),
-                scheduledTodayTime = scheduledTime?.formatTime() ?: ""
+                scheduledTodayTime = formatDateTimeAPIToTimeUI(scheduledTime)
             )
         }
 }
@@ -162,7 +162,7 @@ class MappingReminderTodayRemoteAsScheduleAppointmentModel(private val scheduled
                 reminderTime = getReminderTimeFromCronExpression(cronExpression.toString()),
                 scheduledTimes = scheduledEvents?.events?.map { event -> event.scheduledTime.toString() }
                     ?: listOf(),
-                scheduledTodayTime = scheduledTime?.formatTime() ?: ""
+                scheduledTodayTime = formatDateTimeAPIToTimeUI(scheduledTime)
             )
         }
 }
@@ -184,7 +184,7 @@ class MappingReminderTodayRemoteAsScheduleRoutineTestModel(private val scheduled
                 cronExpression = "",
                 scheduledTimes = scheduledEvents?.events?.map { event -> event.scheduledTime.toString() }
                     ?: listOf(),
-                scheduledTodayTime = scheduledTime?.formatTime() ?: ""
+                scheduledTodayTime = formatDateTimeAPIToTimeUI(scheduledTime)
             )
         }
 }
@@ -207,9 +207,11 @@ class MappingReminderFromNowRemoteAsScheduleMedicationModel :
                 cronExpression = "",
                 scheduledTimes = scheduledEvents?.events?.map { event -> event.scheduledTime.toString() }
                     ?: listOf(),
-                scheduledTodayTime = scheduledEvents?.events?.firstOrNull { event ->
-                    event.scheduledTime?.isCurrentTodayAndAfterTimeNow() ?: false
-                }?.scheduledTime?.formatTime() ?: ""
+                scheduledTodayTime = formatDateTimeAPIToTimeUI(
+                    scheduledEvents?.events?.firstOrNull { event ->
+                        isCurrentTodayAndAfterTimeNow(event.scheduledTime)
+                    }?.scheduledTime
+                )
             )
         }
 }
@@ -233,9 +235,11 @@ class MappingReminderFromNowRemoteAsScheduleAppointmentModel :
                 cronExpression = "",
                 scheduledTimes = scheduledEvents?.events?.map { event -> event.scheduledTime.toString() }
                     ?: listOf(),
-                scheduledTodayTime = scheduledEvents?.events?.firstOrNull { event ->
-                    event.scheduledTime?.isCurrentTodayAndAfterTimeNow() ?: false
-                }?.scheduledTime?.formatTime() ?: ""
+                scheduledTodayTime = formatDateTimeAPIToTimeUI(
+                    scheduledEvents?.events?.firstOrNull { event ->
+                        isCurrentTodayAndAfterTimeNow(event.scheduledTime)
+                    }?.scheduledTime
+                )
             )
         }
 }

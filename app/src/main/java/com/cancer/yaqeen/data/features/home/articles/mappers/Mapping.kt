@@ -12,7 +12,7 @@ import com.cancer.yaqeen.data.features.home.articles.responses.HomeArticlesRespo
 import com.cancer.yaqeen.data.features.home.articles.responses.InterestResponse
 import com.cancer.yaqeen.data.features.home.articles.responses.SavedArticleResponse
 import com.cancer.yaqeen.data.features.home.articles.responses.UnBookmarkArticleResponse
-import com.cancer.yaqeen.data.utils.formatDate
+import com.cancer.yaqeen.data.utils.formatDateTimeAPIToDateUI
 
 
 class MappingArticlesRemoteAsModel : Mapper<HomeArticlesResponse, List<Article>> {
@@ -29,7 +29,7 @@ class MappingArticleRemoteAsModel : Mapper<ArticleResponse, Article> {
         Article(
             authorUserID = authorUserID ?: "",
             contentID = contentID ?: -1,
-            createdDate = createdDate?.formatDate() ?: "",
+            createdDate = formatDateTimeAPIToDateUI(createdDate),
             phase = phase ?: "",
             interests = interests?.filter { it.interest != null }?.map {
                 MappingInterestRemoteAsModel().map(
@@ -40,7 +40,7 @@ class MappingArticleRemoteAsModel : Mapper<ArticleResponse, Article> {
             link = translations?.firstOrNull()?.translationDetails?.link ?: "",
             thumbnail = translations?.firstOrNull()?.translationDetails?.thumbnail ?: "",
             title = translations?.firstOrNull()?.translationDetails?.title ?: "",
-            updatedAt = updatedAt?.formatDate() ?: "",
+            updatedAt = formatDateTimeAPIToDateUI(updatedAt),
             visibility = visibility.equals("true")
         )
     }
@@ -109,7 +109,7 @@ class MappingSavedArticleRemoteAsModel : Mapper<SavedArticleResponse, Article> {
             authorUserID = "",
             bookmarkID = bookmarkID ?: -1,
             contentID = contentID ?: -1,
-            createdDate = createdDate?.formatDate() ?: "",
+            createdDate = formatDateTimeAPIToDateUI(createdDate),
             phase = "",
             interests = listOf(),
             description = content?.translations?.firstOrNull()?.translationDetails?.description

@@ -104,6 +104,8 @@ class SharedPrefEncryptionUtil @Inject constructor(
 
     fun selectedLanguageIsEnglish(): Boolean = selectedLanguage == Language.ENGLISH.lang
 
+    fun selectedLanguageIsArabic(): Boolean = selectedLanguage == Language.ARABIC.lang
+
     var hasWorker: Boolean
         get() = sharedPreferences.getBoolean(PREF_HAS_WORKER, false)
         set(hasWorker) {

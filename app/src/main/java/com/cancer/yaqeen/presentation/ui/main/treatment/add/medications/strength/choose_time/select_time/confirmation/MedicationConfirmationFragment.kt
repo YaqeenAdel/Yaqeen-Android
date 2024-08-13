@@ -1,10 +1,14 @@
 package com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.strength.choose_time.select_time.confirmation
 
 import android.os.Bundle
+import android.os.PersistableBundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -19,18 +23,19 @@ import com.cancer.yaqeen.presentation.service.AlarmReminder
 import com.cancer.yaqeen.presentation.service.ReminderManager
 import com.cancer.yaqeen.presentation.service.WorkerReminder
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.MedicationsViewModel
+import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.Constants.OPEN_MEDICATION_WINDOW_ACTION
-import com.cancer.yaqeen.presentation.util.Constants.UPDATE_LOCAL_SCHEDULES_ACTION
+import com.cancer.yaqeen.presentation.util.Constants.UPDATE_LOCAL_REMINDED_SCHEDULES_ACTION
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindResourceImage
 import com.cancer.yaqeen.presentation.util.convertMilliSecondsToDate
 import com.cancer.yaqeen.presentation.util.disableTouch
 import com.cancer.yaqeen.presentation.util.enableTouch
+import com.cancer.yaqeen.presentation.util.scheduleJobServicePeriodically
 import com.cancer.yaqeen.presentation.util.schedulingPermissionsAreGranted
 import com.cancer.yaqeen.presentation.util.tryPopBackStack
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
-import java.util.concurrent.TimeUnit
 
 
 @AndroidEntryPoint
@@ -48,6 +53,12 @@ class MedicationConfirmationFragment : BaseFragment() {
 
     private val workerReminderPeriodically: ReminderManager by lazy {
         WorkerReminder(requireContext())
+    }
+
+    private val requestPermissionLauncher: ActivityResultLauncher<String?> = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+
     }
 
     override fun onCreateView(
@@ -80,7 +91,7 @@ class MedicationConfirmationFragment : BaseFragment() {
             medicationType?.apply { bindResourceImage(binding.ivMedicationType, iconResId) }
             binding.tvNotesVal.text = notes ?: ""
             binding.tvAmountVal.text = "${dosageAmount ?: ""} ${medicationType?.name ?: ""}"
-            binding.tvDaysVal.text = if (specificDays.isNullOrEmpty()) periodTime?.time ?: "" else specificDays!!.joinToString { it.name }
+            binding.tvDaysVal.text = if (specificDays.isNullOrEmpty()) periodTime?.timeEn ?: "" else specificDays!!.joinToString { it.name }
             binding.tvStartFromVal.text = startDate?.let { convertMilliSecondsToDate(it) } ?: ""
             binding.tvTimeVal.text = reminderTime?.run {
                 val timing = if (isAM) getString(R.string.am) else getString(R.string.pm)
@@ -96,7 +107,7 @@ class MedicationConfirmationFragment : BaseFragment() {
         }
 
         binding.btnConfirm.setOnClickListener {
-            if (schedulingPermissionsAreGranted(requireActivity(), requireContext())) {
+            if (schedulingPermissionsAreGranted(requireActivity(), requireContext(), requestPermissionLauncher)) {
                 val medicationTrack = medicationsViewModel.getMedicationTrack()
                 if (medicationTrack?.editable == true)
                     medicationsViewModel.editMedication()
@@ -107,19 +118,28 @@ class MedicationConfirmationFragment : BaseFragment() {
     }
 
     private fun addWorkerReminderPeriodically() {
-        if (!medicationsViewModel.hasWorker()) {
-            val timeDelayInMilliSeconds = TimeUnit.MINUTES.toMillis(5L)
-            val currentTimeInMilliSeconds = System.currentTimeMillis()
-            val workRunningInMilliSeconds = currentTimeInMilliSeconds + timeDelayInMilliSeconds
-
-            val periodReminderId = workerReminderPeriodically.setPeriodReminder(
-                timeDelayInMilliSeconds,
-                PeriodTimeEnum.EVERY_3_HOURS.id,
-                UPDATE_LOCAL_SCHEDULES_ACTION
+        scheduleJobServicePeriodically(context = requireContext(), bundle = PersistableBundle().apply {
+            putString(
+                Constants.ACTION_KEY,
+                UPDATE_LOCAL_REMINDED_SCHEDULES_ACTION
             )
+        })
+        Log.d("NotificationReceiver", "addWorkerReminderPeriodically: ${medicationsViewModel.hasWorker()}")
+//        if (!medicationsViewModel.hasWorker()) {
+//            val timeDelayInMilliSeconds = TimeUnit.MINUTES.toMillis(5L)
+//            val currentTimeInMilliSeconds = System.currentTimeMillis()
+//            val workRunningInMilliSeconds = currentTimeInMilliSeconds + timeDelayInMilliSeconds
 
-            medicationsViewModel.saveWorkerReminderPeriodicallyInfo(periodReminderId, workRunningInMilliSeconds)
-        }
+//            val periodReminderId = workerReminderPeriodically.setPeriodReminder(
+//                timeDelayInMilliSeconds,
+//                PeriodTimeEnum.EVERY_3_HOURS.id,
+//                UPDATE_LOCAL_PENDING_SCHEDULES_ACTION
+//            )
+//
+//            medicationsViewModel.saveWorkerReminderPeriodicallyInfo(periodReminderId, workRunningInMilliSeconds)
+
+//            workerReminderPeriodically.checkWorkerStatus(this)
+//        }
     }
 
     private fun observeStates() {
@@ -140,8 +160,9 @@ class MedicationConfirmationFragment : BaseFragment() {
 
         lifecycleScope {
             medicationsViewModel.viewStateAddMedication.observe(viewLifecycleOwner) { response ->
-                response?.let { (added, medication) ->
+                response?.let { (added, medication, destinationId) ->
                     if(added){
+                        Log.d("NotificationReceiver", "viewStateEditMedication: added")
                         addWorkerReminderPeriodically()
                         if (medication.periodTimeId == PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id){
                             val uuids = workerReminder.setReminderDays(medication.apply { json = toJson() })
@@ -153,7 +174,7 @@ class MedicationConfirmationFragment : BaseFragment() {
                         Toast.makeText(requireContext(),
                             getString(R.string.medication_added_successfully), Toast.LENGTH_SHORT).show()
                         navController.tryPopBackStack(
-                            R.id.treatmentHistoryFragment,
+                            destinationId ?: R.id.homeFragment,
                             false
                         )
                     }
@@ -163,7 +184,7 @@ class MedicationConfirmationFragment : BaseFragment() {
 
         lifecycleScope {
             medicationsViewModel.viewStateEditMedication.observe(viewLifecycleOwner) { response ->
-                response?.let { (edited, medication) ->
+                response?.let { (edited, medication, destinationId) ->
                     addWorkerReminderPeriodically()
 
                     var uuids = listOf<String>()
@@ -180,8 +201,9 @@ class MedicationConfirmationFragment : BaseFragment() {
 
                     Toast.makeText(requireContext(),
                         getString(R.string.medication_edited_successfully), Toast.LENGTH_SHORT).show()
+
                     navController.tryPopBackStack(
-                        R.id.treatmentHistoryFragment,
+                        destinationId ?: R.id.homeFragment,
                         false
                     )
                 }

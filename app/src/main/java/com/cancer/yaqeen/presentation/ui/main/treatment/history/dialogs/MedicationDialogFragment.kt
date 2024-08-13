@@ -96,7 +96,8 @@ class MedicationDialogFragment : BaseDialogFragment() {
         }
         binding.btnEdit.setOnClickListener {
             navController.tryNavigate(
-                MedicationDialogFragmentDirections.actionMedicationDialogFragmentToMedicationsFragment(medication)
+                MedicationDialogFragmentDirections.actionMedicationDialogFragmentToMedicationsFragment(medication,
+                    R.id.treatmentHistoryFragment)
             )
         }
         binding.btnDelete.setOnClickListener {

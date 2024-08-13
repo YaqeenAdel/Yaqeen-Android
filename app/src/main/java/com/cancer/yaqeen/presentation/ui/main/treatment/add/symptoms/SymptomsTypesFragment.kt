@@ -53,6 +53,10 @@ class SymptomsTypesFragment : BaseFragment() {
         args.symptom
     }
 
+    private val destinationId by lazy {
+        args.destinationId
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -62,6 +66,8 @@ class SymptomsTypesFragment : BaseFragment() {
             symptomsViewModel.setSymptomTrack(
                 MappingSymptomAsSymptomTrack().map(symptom!!)
             )
+
+        symptomsViewModel.setDestinationId(destinationId)
     }
 
     override fun onCreateView(

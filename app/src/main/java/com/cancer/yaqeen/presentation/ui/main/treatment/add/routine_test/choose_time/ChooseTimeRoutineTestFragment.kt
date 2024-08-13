@@ -121,7 +121,7 @@ class ChooseTimeRoutineTestFragment : BaseFragment() {
             binding.textLayoutSpecificDays.changeVisibility(!specificDaysIsNotSelected)
 
             if(specificDaysIsNotSelected)
-                binding.itemRoutineTestTime.tvMedicationTime.text = periodTime?.time ?: ""
+                binding.itemRoutineTestTime.tvMedicationTime.text = periodTime?.timeEn ?: ""
             else
                 binding.editTextSpecificDays.setText(specificDays?.joinToString { it.name } ?: "")
 
@@ -180,7 +180,9 @@ class ChooseTimeRoutineTestFragment : BaseFragment() {
 
         binding.editTextStartFrom.setOnClickListener {
             navController.tryNavigate(
-                R.id.calendarFragment
+                ChooseTimeRoutineTestFragmentDirections.actionChooseTimeRoutineTestFragmentToCalendarFragment(
+                    0L, true
+                )
             )
         }
         binding.editTextTime.setOnClickListener {

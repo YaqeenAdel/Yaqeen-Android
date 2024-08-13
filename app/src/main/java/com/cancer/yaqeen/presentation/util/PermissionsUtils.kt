@@ -243,6 +243,35 @@ fun requestNotificationPolicyPermission(activity: Activity): Boolean {
     return true
 }
 
+fun requestForegroundServicePermission(context: Context, requestPermissionLauncher: ActivityResultLauncher<String?>?): Boolean {
+    if (!foregroundServicePermissionIsGranted(context)){
+        requestPermissionLauncher?.let {
+            enableForegroundServicePermissions(requestPermissionLauncher)
+        }
+    }
+    return true
+}
+fun foregroundServicePermissionIsGranted(context: Context): Boolean {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+        ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.FOREGROUND_SERVICE
+        ) == PackageManager.PERMISSION_GRANTED
+    } else {
+        return true
+    }
+}
+
+
+fun enableForegroundServicePermissions(requestPermissionLauncher: ActivityResultLauncher<String?>) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+        requestPermission(
+            requestPermissionLauncher,
+            Manifest.permission.FOREGROUND_SERVICE
+        )
+    }
+}
+
 fun alarmPermissionsAreGranted(context: Context) =
     checkSelfPermission(
         context,
@@ -260,7 +289,7 @@ fun enableAlarmPermission(requestPermissionLauncher: ActivityResultLauncher<Stri
     }
 }
 
-fun schedulingPermissionsAreGranted(activity: Activity, context: Context): Boolean {
+fun schedulingPermissionsAreGranted(activity: Activity, context: Context, requestPermissionLauncher: ActivityResultLauncher<String?>? = null): Boolean {
     val exactAlarmPermissionIsGranted =
         requestExactAlarmPermission(activity, context)
     if (!exactAlarmPermissionIsGranted)
@@ -272,6 +301,10 @@ fun schedulingPermissionsAreGranted(activity: Activity, context: Context): Boole
     val notificationPolicyPermissionIsGranted =
         requestNotificationPolicyPermission(activity)
     if (!notificationPolicyPermissionIsGranted)
+        return false
+    val foregroundServicePermissionIsGranted =
+        requestForegroundServicePermission(context, requestPermissionLauncher)
+    if (!foregroundServicePermissionIsGranted)
         return false
     val drawOverlaysPermissionIsGranted =
         enableDrawOverlaysPermission(context)

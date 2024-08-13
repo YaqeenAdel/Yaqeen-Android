@@ -10,7 +10,9 @@ data class MedicationTrack(
     var specificDays: List<Day>? = null,
     var startDate: Long? = null,
     var reminderTime: ReminderTime? = null,
+    var reminderTime2: ReminderTime2? = null,
     var notes: String? = null,
     val editable: Boolean = false,
-    val medicationId: Int? = null
+    val medicationId: Int? = null,
+    var destinationId: Int? = null,
 )

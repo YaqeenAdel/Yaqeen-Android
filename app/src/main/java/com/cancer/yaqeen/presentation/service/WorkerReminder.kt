@@ -2,6 +2,8 @@ package com.cancer.yaqeen.presentation.service
 
 import android.content.Context
 import android.util.Log
+import androidx.lifecycle.LifecycleOwner
+import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.WorkRequest
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.room.MedicalAppointmentDB
@@ -184,15 +186,20 @@ class WorkerReminder(private val context: Context): ReminderManager() {
     }
 
     override fun setPeriodReminder(timeDelayInMilliSeconds: Long, periodTimeId: Int, actionName: String): String {
-        val periodicWorkRequest = WorkerRequest.Builder()
-            .setStartDateTime(timeDelayInMilliSeconds)
-            .setPeriodTime(periodTimeId)
-            .setActionName(actionName)
-            .build()
+        return try {
+            val periodicWorkRequest = WorkerRequest.Builder()
+                .setStartDateTime(timeDelayInMilliSeconds)
+                .setPeriodTime(periodTimeId)
+                .setActionName(actionName)
+                .build()
 
-        enqueueWork(periodicWorkRequest)
+            enqueueWork(periodicWorkRequest)
 
-        return periodicWorkRequest.id.toString()
+            periodicWorkRequest.id.toString()
+        }catch (_: Exception){
+            ""
+        }
+
     }
 
     override fun<T> setReminder(timeDelayInMilliSeconds: Long, obj: T, actionName: String): String {
@@ -200,6 +207,17 @@ class WorkerReminder(private val context: Context): ReminderManager() {
             .setStartDateTime(timeDelayInMilliSeconds)
             .setActionName(actionName)
             .setObject(obj)
+            .buildOneTimeWork()
+
+        enqueueWork(periodicWorkRequest)
+
+        return periodicWorkRequest.id.toString()
+    }
+
+    override fun setReminder(timeDelayInMilliSeconds: Long, actionName: String): String {
+        val periodicWorkRequest = WorkerRequest.Builder()
+            .setStartDateTime(timeDelayInMilliSeconds)
+            .setActionName(actionName)
             .buildOneTimeWork()
 
         enqueueWork(periodicWorkRequest)
@@ -219,5 +237,48 @@ class WorkerReminder(private val context: Context): ReminderManager() {
 
     private fun enqueueWork(workRequest: WorkRequest) {
         workManager.enqueue(workRequest)
+    }
+
+    override fun checkWorkerStatus(owner: LifecycleOwner){
+        Log.d("NotificationReceiver", "onReceive: checkWorkerStatus")
+        val workManager = WorkManager.getInstance(context)
+
+        workManager.getWorkInfosByTagLiveData("MY_WORK_TAG").observe(owner) { workInfo ->
+            if (workInfo != null && workInfo.isNotEmpty()) {
+                val info = workInfo[0]
+                when (info.state) {
+                    WorkInfo.State.ENQUEUED -> {
+                        Log.d("NotificationReceiver", "onReceive: ENQUEUED")
+                        // The worker is enqueued
+                    }
+
+                    WorkInfo.State.RUNNING -> {
+                        Log.d("NotificationReceiver", "onReceive: RUNNING")
+                        // The worker is currently running
+                    }
+
+                    WorkInfo.State.SUCCEEDED -> {
+                        Log.d("NotificationReceiver", "onReceive: SUCCEEDED")
+                        // The worker has completed successfully
+                    }
+
+                    WorkInfo.State.FAILED -> {
+                        Log.d("NotificationReceiver", "onReceive: FAILED")
+                        // The worker has failed
+                    }
+
+                    WorkInfo.State.BLOCKED -> {
+                        Log.d("NotificationReceiver", "onReceive: BLOCKED")
+                        // The worker is blocked
+                    }
+
+                    WorkInfo.State.CANCELLED -> {
+                        Log.d("NotificationReceiver", "onReceive: CANCELLED")
+                        // The worker has been cancelled
+                    }
+                }
+            }
+        }
+
     }
 }

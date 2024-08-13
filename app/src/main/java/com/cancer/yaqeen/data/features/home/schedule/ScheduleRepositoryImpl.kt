@@ -56,7 +56,6 @@ import com.cancer.yaqeen.data.network.base.flowStatus
 import com.cancer.yaqeen.data.network.error.ErrorHandlerImpl
 import com.cancer.yaqeen.data.utils.compressImage
 import com.cancer.yaqeen.presentation.util.FileUtils
-import com.chuckerteam.chucker.api.ChuckerInterceptor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -497,6 +496,11 @@ class ScheduleRepositoryImpl @Inject constructor(
             scheduleLocalDataSource.getMedications()
         }
 
+    override suspend fun getRemindedMedications(): Flow<DataState<List<MedicationDB>?>> =
+        flowStatus {
+            scheduleLocalDataSource.getRemindedMedications()
+        }
+
     override suspend fun saveMedication(medication: MedicationDB): Flow<DataState<Long>> =
         flowStatus {
             scheduleLocalDataSource.saveMedication(medication)
@@ -525,6 +529,11 @@ class ScheduleRepositoryImpl @Inject constructor(
     override suspend fun getRoutineTests(): Flow<DataState<List<RoutineTestDB>?>> =
         flowStatus {
             scheduleLocalDataSource.getRoutineTests()
+        }
+
+    override suspend fun getRemindedRoutineTests(): Flow<DataState<List<RoutineTestDB>?>> =
+        flowStatus {
+            scheduleLocalDataSource.getRemindedRoutineTests()
         }
 
     override suspend fun saveRoutineTest(routineTest: RoutineTestDB): Flow<DataState<Long>> =

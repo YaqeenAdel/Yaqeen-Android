@@ -1,8 +1,10 @@
 package com.cancer.yaqeen.data.features.home.schedule.medication.room
 
+import android.content.Context
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.cancer.yaqeen.R
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
@@ -29,9 +31,11 @@ data class MedicationDB(
     var workID: String? = null,
     var workSpecificDaysIDs: List<String> = listOf(),
     var json: String? = null,
-    var isReminded: Boolean = false
+    var isReminded: Boolean = false,
+    var statusReminder: ReminderStatus = ReminderStatus.NEW
 ): Parcelable {
-    fun createNotificationMessage(): String{
-        return "Hello! Just a friendly reminder to take $strengthAmount: $unitType from $medicationType: '$medicationName' now as prescribed today. Your health is important, so let's stay on track together. \uD83D\uDE0A"
+    fun createNotificationMessage(context: Context): String{
+        return context.getString(R.string.medication_reminder_message, strengthAmount, unitType, medicationType, medicationName)
+//        return "Hello! Just a friendly reminder to take $strengthAmount: $unitType from $medicationType: '$medicationName' now as prescribed today. Your health is important, so let's stay on track together. \uD83D\uDE0A"
     }
 }
