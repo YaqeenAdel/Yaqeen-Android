@@ -1,12 +1,12 @@
 package com.cancer.yaqeen.presentation.ui.splash
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.domain.features.auth.login.usecases.RefreshTokenUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -31,12 +31,12 @@ class SplashViewModel
 
     }
 
-    fun refreshToken(){
-        viewModelJob = viewModelScope.launch {
-            refreshTokenUseCase().onEach { response ->
-
-            }.launchIn(viewModelScope)
-        }
+    fun refreshToken(requireContext: Context) {
+        val isLoggedIn = prefUtil.isLogged
+        if (isLoggedIn)
+            viewModelJob = viewModelScope.launch(Dispatchers.IO) {
+                refreshTokenUseCase(requireContext)
+            }
     }
 
     override fun onCleared() {

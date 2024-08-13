@@ -7,6 +7,7 @@ import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
@@ -25,6 +26,7 @@ import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.MedicationsViewModel
 import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.autoCleared
+import com.cancer.yaqeen.presentation.util.calculateStartDateTime
 import com.cancer.yaqeen.presentation.util.changeVisibility
 import com.cancer.yaqeen.presentation.util.convertMilliSecondsToDate
 import com.cancer.yaqeen.presentation.util.disable
@@ -143,8 +145,14 @@ class ChooseTimeFragment : BaseFragment() {
         }
 
         binding.btnNext.setOnClickListener {
+            val isValid = checkOnSelectedDateTime()
+            if (!isValid)
+                return@setOnClickListener
+
             val notes = binding.editTextNote.text.toString().trim()
             val dosageAmount = binding.editTextDosage.text.toString().trim()
+
+
             medicationsViewModel.selectPeriodTime(
                 periodTime = medicationTimesAdapter.getItemSelected(),
                 specificDays = daysAdapter.getItemsSelected(),
@@ -157,7 +165,9 @@ class ChooseTimeFragment : BaseFragment() {
         }
         binding.editTextStartFrom.setOnClickListener {
             navController.tryNavigate(
-                R.id.calendarFragment
+                ChooseTimeFragmentDirections.actionChooseTimeFragmentToCalendarFragment(
+                    0L, true
+                )
             )
         }
         binding.editTextTime.setOnClickListener {
@@ -173,6 +183,28 @@ class ChooseTimeFragment : BaseFragment() {
         binding.editTextDosage.addTextChangedListener {
             checkPeriodTimeData()
         }
+    }
+
+    private fun checkOnSelectedDateTime(): Boolean {
+        val medicationTrack = medicationsViewModel.getMedicationTrack()
+        val startDate = medicationTrack?.startDate ?: 0L
+        val reminderTime = medicationTrack?.reminderTime
+
+        reminderTime?.let {
+            val startDateTime = calculateStartDateTime(
+                startDate,
+                reminderTime.hour24.toIntOrNull() ?: 0,
+                reminderTime.minute.toIntOrNull() ?: 0
+            )
+
+            if (startDateTime < System.currentTimeMillis()) {
+                Toast.makeText(requireContext(),
+                    getString(R.string.you_must_select_a_new_datetime), Toast.LENGTH_SHORT)
+                    .show()
+                return false
+            }
+        }
+        return true
     }
 
     private fun updateUI() {
@@ -244,20 +276,21 @@ class ChooseTimeFragment : BaseFragment() {
         medicationTimesAdapter.submitList(
             listOf(
                 Time(
-                    id = PeriodTimeEnum.EVERY_DAY.id, time = getString(R.string.every_day), cronExpression = PeriodTimeEnum.EVERY_DAY.cronExpression
+                    id = PeriodTimeEnum.EVERY_DAY.id, timeEn = getString(R.string.every_day), timeAr = "", cronExpression = PeriodTimeEnum.EVERY_DAY.cronExpression
                 ),
                 Time(
-                    id = PeriodTimeEnum.EVERY_8_HOURS.id, time = getString(R.string.every_8_hours), cronExpression = PeriodTimeEnum.EVERY_8_HOURS.cronExpression
+                    id = PeriodTimeEnum.EVERY_8_HOURS.id, timeEn = getString(R.string.every_8_hours), timeAr = "", cronExpression = PeriodTimeEnum.EVERY_8_HOURS.cronExpression
                 ),
                 Time(
-                    id = PeriodTimeEnum.EVERY_12_HOURS.id, time = getString(R.string.every_12_hours), cronExpression = PeriodTimeEnum.EVERY_12_HOURS.cronExpression
+                    id = PeriodTimeEnum.EVERY_12_HOURS.id, timeEn = getString(R.string.every_12_hours), timeAr = "", cronExpression = PeriodTimeEnum.EVERY_12_HOURS.cronExpression
                 ),
                 Time(
-                    id = PeriodTimeEnum.DAY_AFTER_DAY.id, time = getString(R.string.day_after_day), cronExpression = PeriodTimeEnum.DAY_AFTER_DAY.cronExpression
+                    id = PeriodTimeEnum.DAY_AFTER_DAY.id, timeEn = getString(R.string.day_after_day), timeAr = "", cronExpression = PeriodTimeEnum.DAY_AFTER_DAY.cronExpression
                 ),
-                Time(
-                    id = PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id, time = getString(R.string.specific_days_of_the_week), cronExpression = PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.cronExpression
-                )
+                //TODO(SPECIFIC_DAYS_OF_THE_WEEK): Will reAdding this type after fix the issue.
+//                Time(
+//                    id = PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id, timeEn = getString(R.string.specific_days_of_the_week), timeAr = "", cronExpression = PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.cronExpression
+//                )
             )
         )
     }
@@ -278,10 +311,21 @@ class ChooseTimeFragment : BaseFragment() {
         val textColorId: Int
         val backgroundColorId: Int
 
-        if (date.isNotEmpty() && time.isNotEmpty() && medicationTimesAdapter.selectedPosition() == 4 && daysAdapter.anyItemIsSelected() && dosageAmount.isNotEmpty()) {
-            binding.btnNext.enable()
-            textColorId = R.color.white
-            backgroundColorId = R.color.primary_color
+        if (date.isNotEmpty() && time.isNotEmpty()) {
+            if (medicationTimesAdapter.selectedPosition() != 4){
+                binding.btnNext.enable()
+                textColorId = R.color.white
+                backgroundColorId = R.color.primary_color
+            } else if (medicationTimesAdapter.selectedPosition() == 4 && daysAdapter.anyItemIsSelected() && dosageAmount.isNotEmpty()){
+                binding.btnNext.enable()
+                textColorId = R.color.white
+                backgroundColorId = R.color.primary_color
+            }else{
+                binding.btnNext.disable()
+                textColorId = R.color.medium_gray
+                backgroundColorId = R.color.light_gray
+            }
+
         } else {
             binding.btnNext.disable()
             textColorId = R.color.medium_gray

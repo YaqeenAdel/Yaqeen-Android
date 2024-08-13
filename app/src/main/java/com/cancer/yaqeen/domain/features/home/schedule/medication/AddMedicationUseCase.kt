@@ -9,7 +9,7 @@ import javax.inject.Inject
 class AddMedicationUseCase @Inject constructor(private val repository: IScheduleRepository) {
     suspend operator fun invoke(
         request: AddMedicationRequest
-    ): Flow<DataState<Boolean>> =
+    ): Flow<DataState<Int?>> =
         repository.addMedication(
             request
         )

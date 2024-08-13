@@ -12,8 +12,13 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.ReminderTime
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.ReminderTime2
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Time.Companion.getHours12
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Time.Companion.getMinutes
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.Timing
+import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
+import com.cancer.yaqeen.data.utils.convertEnglishTimeToHour24UI
+import com.cancer.yaqeen.data.utils.formatEnglishTimeUIToTimeUI
 import com.cancer.yaqeen.databinding.FragmentTimeBinding
 import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.autoCleared
@@ -23,6 +28,7 @@ import com.cancer.yaqeen.presentation.util.enable
 import com.cancer.yaqeen.presentation.util.recyclerview.VerticalMarginItemDecoration
 import com.cancer.yaqeen.presentation.util.tryNavigateUp
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
@@ -35,6 +41,8 @@ class TimeFragment : DialogFragment() {
     private lateinit var hoursAdapter: TimesAdapter
     private lateinit var minutesAdapter: TimesAdapter
 
+    @Inject
+    lateinit var sharedPrefUtil: SharedPrefEncryptionUtil
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -61,10 +69,18 @@ class TimeFragment : DialogFragment() {
 
     private fun setListener() {
         binding.btnNext.setOnClickListener {
-            val hourSelected = hoursAdapter.getItemSelected().time
-            val minuteSelected = minutesAdapter.getItemSelected().time
+            val hourSelected = hoursAdapter.getItemSelected().timeEn
+            val minuteSelected = minutesAdapter.getItemSelected().timeEn
             val isAM = binding.btnAm.isChecked
-            val timing = if (isAM) getString(R.string.am) else getString(R.string.pm)
+
+            val time = "$hourSelected:$minuteSelected"
+            val timing = if (isAM) Timing.AM else Timing.PM
+
+            val timeEN = "$time ${timing.id}"
+            val timeUI = formatEnglishTimeUIToTimeUI(timeEN)
+            val hour24 = convertEnglishTimeToHour24UI(timeEN)
+
+            val timingUI = if (isAM) getString(R.string.am) else getString(R.string.pm)
             setFragmentResult(
                 Constants.REQUEST_REMINDER_TIME_KEY,
                 bundleOf(
@@ -81,9 +97,14 @@ class TimeFragment : DialogFragment() {
                                 (hourSelected.toInt() + 12).toString()
                         },
                         minute = minuteSelected,
-                        timing = timing,
+                        timing = timingUI,
                         isAM = isAM,
                         text = "$hourSelected:$minuteSelected"
+                    ),
+                    Constants.REMINDER_TIME_KEY2 to ReminderTime2(
+                        timeEN = timeEN,
+                        timeUI = timeUI,
+                        hour24 = hour24
                     )
                 )
             )
@@ -100,7 +121,7 @@ class TimeFragment : DialogFragment() {
     }
 
     private fun setupMinutesAdapter() {
-        hoursAdapter = TimesAdapter {
+        hoursAdapter = TimesAdapter(sharedPrefUtil.selectedLanguageIsArabic()) {
             checkTimeData()
         }
 
@@ -120,7 +141,7 @@ class TimeFragment : DialogFragment() {
     }
 
     private fun setupHoursAdapter() {
-        minutesAdapter = TimesAdapter {
+        minutesAdapter = TimesAdapter(sharedPrefUtil.selectedLanguageIsArabic()) {
             checkTimeData()
         }
 

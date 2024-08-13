@@ -18,11 +18,37 @@ import com.cancer.yaqeen.domain.features.home.articles.usecases.SaveArticleUseCa
 import com.cancer.yaqeen.domain.features.home.articles.usecases.UnBookmarkArticleUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.AddMedicalReminderUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.DeleteScheduleUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.DeleteSymptomFromScheduleUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.EditLocalMedicalAppointmentUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.EditMedicalReminderUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.GetLocalMedicalAppointmentUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.GetMedicalRemindersUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.RemoveLocalMedicalAppointmentUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.RemoveLocalMedicalAppointmentsUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.medical_reminder.SaveLocalMedicalAppointmentUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.AddMedicationUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.medication.EditLocalMedicationUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.EditMedicationUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.medication.GetLocalMedicationUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.medication.GetLocalMedicationsUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.medication.GetLocalRemindedMedicationsUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.GetTodayRemindersUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.GetMedicationRemindersUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.medication.RemoveLocalMedicationUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.medication.RemoveLocalMedicationsUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.medication.SaveLocalMedicationUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.routine_test.AddRoutineTestUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.routine_test.AddRoutineTestWithoutPhotoUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.routine_test.EditLocalRoutineTestUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.routine_test.EditRoutineTestUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.routine_test.EditRoutineTestWithoutPhotoUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.routine_test.GetLocalRoutineTestUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.routine_test.GetLocalRemindedRoutineTestsUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.routine_test.GetLocalRoutineTestsUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.routine_test.GetRoutineTestsUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.routine_test.RemoveLocalRoutineTestUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.routine_test.RemoveLocalRoutineTestsUseCase
+import com.cancer.yaqeen.domain.features.home.schedule.routine_test.SaveLocalRoutineTestUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.symptom.AddSymptomUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.symptom.AddSymptomWithoutPhotoUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.symptom.DeleteSymptomUseCase
@@ -173,13 +199,121 @@ object UseCaseModule {
         AddMedicalReminderUseCase(repository)
     @Singleton
     @Provides
+    fun provideEditMedicalReminderUseCase(repository: ScheduleRepositoryImpl) =
+        EditMedicalReminderUseCase(repository)
+    @Singleton
+    @Provides
     fun provideGetMedicalRemindersUseCase(repository: ScheduleRepositoryImpl) =
         GetMedicalRemindersUseCase(repository)
 
     @Singleton
     @Provides
+    fun provideDeleteSymptomFromScheduleUseCase(repository: ScheduleRepositoryImpl) =
+        DeleteSymptomFromScheduleUseCase(repository)
+
+    @Singleton
+    @Provides
     fun provideDeleteScheduleUseCase(repository: ScheduleRepositoryImpl) =
         DeleteScheduleUseCase(repository)
+
+    @Singleton
+    @Provides
+    fun provideAddRoutineTestUseCase(repository: ScheduleRepositoryImpl) =
+        AddRoutineTestUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideAddRoutineTestWithoutPhotoUseCase(repository: ScheduleRepositoryImpl) =
+        AddRoutineTestWithoutPhotoUseCase(repository)
+
+    @Singleton
+    @Provides
+    fun provideEditRoutineTestUseCase(repository: ScheduleRepositoryImpl) =
+        EditRoutineTestUseCase(repository)
+
+    @Singleton
+    @Provides
+    fun provideEditRoutineTestWithoutPhotoUseCase(repository: ScheduleRepositoryImpl) =
+        EditRoutineTestWithoutPhotoUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideGetRoutineTestsUseCase(repository: ScheduleRepositoryImpl) =
+        GetRoutineTestsUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideSaveLocalMedicationUseCase(repository: ScheduleRepositoryImpl) =
+        SaveLocalMedicationUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideSaveLocalRoutineTestUseCase(repository: ScheduleRepositoryImpl) =
+        SaveLocalRoutineTestUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideSaveLocalMedicalAppointmentUseCase(repository: ScheduleRepositoryImpl) =
+        SaveLocalMedicalAppointmentUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideRemoveLocalMedicationUseCase(repository: ScheduleRepositoryImpl) =
+        RemoveLocalMedicationUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideRemoveLocalRoutineTestUseCase(repository: ScheduleRepositoryImpl) =
+        RemoveLocalRoutineTestUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideRemoveLocalMedicalAppointmentUseCase(repository: ScheduleRepositoryImpl) =
+        RemoveLocalMedicalAppointmentUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideEditLocalMedicationsUseCase(repository: ScheduleRepositoryImpl) =
+        EditLocalMedicationUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideEditLocalRoutineTestsUseCase(repository: ScheduleRepositoryImpl) =
+        EditLocalRoutineTestUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideEditLocalMedicalAppointmentsUseCase(repository: ScheduleRepositoryImpl) =
+        EditLocalMedicalAppointmentUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideRemoveLocalMedicationsUseCase(repository: ScheduleRepositoryImpl) =
+        RemoveLocalMedicationsUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideRemoveLocalRoutineTestsUseCase(repository: ScheduleRepositoryImpl) =
+        RemoveLocalRoutineTestsUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideRemoveLocalMedicalAppointmentsUseCase(repository: ScheduleRepositoryImpl) =
+        RemoveLocalMedicalAppointmentsUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideGetLocalMedicationUseCase(repository: ScheduleRepositoryImpl) =
+        GetLocalMedicationUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideGetLocalMedicationsUseCase(repository: ScheduleRepositoryImpl) =
+        GetLocalMedicationsUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideGetLocalRemindedMedicationsUseCase(repository: ScheduleRepositoryImpl) =
+        GetLocalRemindedMedicationsUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideGetLocalRoutineTestUseCase(repository: ScheduleRepositoryImpl) =
+        GetLocalRoutineTestUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideGetLocalRoutineTestsUseCase(repository: ScheduleRepositoryImpl) =
+        GetLocalRoutineTestsUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideGetLocalRemindedRoutineTestsUseCase(repository: ScheduleRepositoryImpl) =
+        GetLocalRemindedRoutineTestsUseCase(repository)
+    @Singleton
+    @Provides
+    fun provideGetLocalMedicalAppointmentUseCase(repository: ScheduleRepositoryImpl) =
+        GetLocalMedicalAppointmentUseCase(repository)
 
 
 }

@@ -1,20 +1,18 @@
 package com.cancer.yaqeen.presentation.ui.main.treatment.add.symptoms
 
 import android.net.Uri
-import android.util.Log
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Photo
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.ReminderTime2
 import com.cancer.yaqeen.data.features.home.schedule.symptom.models.SymptomTrack
 import com.cancer.yaqeen.data.features.home.schedule.symptom.models.SymptomType
 import com.cancer.yaqeen.data.features.home.schedule.symptom.requests.AddSymptomRequestBuilder
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.data.network.base.Status
 import com.cancer.yaqeen.data.network.error.ErrorEntity
-import com.cancer.yaqeen.data.utils.formatDateAPI
-import com.cancer.yaqeen.data.utils.formatTimeAPI
 import com.cancer.yaqeen.domain.features.home.schedule.symptom.AddSymptomUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.symptom.AddSymptomWithoutPhotoUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.symptom.EditSymptomUseCase
@@ -24,6 +22,7 @@ import com.cancer.yaqeen.presentation.util.SingleLiveEvent
 import com.cancer.yaqeen.presentation.util.generateFileName
 import com.cancer.yaqeen.presentation.util.getCurrentTimeMillis
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -31,6 +30,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
@@ -50,11 +50,11 @@ class SymptomsViewModel @Inject constructor(
     private val _viewStateSymptomsTypes = MutableStateFlow<List<SymptomType>>(listOf())
     val viewStateSymptomsTypes = _viewStateSymptomsTypes.asStateFlow()
 
-    private val _viewStateAddSymptom = SingleLiveEvent<Boolean?>()
-    val viewStateAddSymptom: LiveData<Boolean?> = _viewStateAddSymptom
+    private val _viewStateAddSymptom = SingleLiveEvent<Pair<Boolean, Int?>?>()
+    val viewStateAddSymptom: LiveData<Pair<Boolean, Int?>?> = _viewStateAddSymptom
 
-    private val _viewStateEditSymptom = SingleLiveEvent<Boolean?>()
-    val viewStateEditSymptom: LiveData<Boolean?> = _viewStateEditSymptom
+    private val _viewStateEditSymptom = SingleLiveEvent<Pair<Boolean, Int?>?>()
+    val viewStateEditSymptom: LiveData<Pair<Boolean, Int?>?> = _viewStateEditSymptom
 
     private val _viewStateLoading = MutableStateFlow<Boolean>(false)
     val viewStateLoading = _viewStateLoading.asStateFlow()
@@ -68,21 +68,19 @@ class SymptomsViewModel @Inject constructor(
 
 
     fun getSymptomsTypes(){
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             getSymptomsTypesUseCase().collect { response ->
-                _viewStateLoading.emit(response.loading)
+                emitLoading(response.loading)
                 when (response.status) {
                     Status.ERROR -> emitError(response.errorEntity)
                     Status.SUCCESS -> {
                         response.data?.let {
                             val symptomTypes = symptomTrackField.get()?.symptomTypes
-                            Log.d("TAG", "getSymptomsTypes: $symptomTypes")
                             symptomTypes?.forEach { type ->
                                 it.firstOrNull {
                                     it.id == type.id
                                 }?.selected = true
                             }
-                            Log.d("TAG", "getSymptomsTypes: $it")
 
                             _viewStateSymptomsTypes.emit(it)
                         }
@@ -95,14 +93,14 @@ class SymptomsViewModel @Inject constructor(
     }
 
     fun resetSymptomsTypes(){
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             _viewStateSymptomsTypes.emit(listOf())
         }
     }
 
 
     fun addSymptom() {
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             val symptomTrackField = getSymptomTrack()
             val isReadyToUploading = symptomTrackField?.photosList?.any { it.uri != null } ?: false
             if (isReadyToUploading)
@@ -112,28 +110,28 @@ class SymptomsViewModel @Inject constructor(
         }
     }
     private fun addSymptomWithPhoto() {
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             val symptomTrackField = getSymptomTrack()
             symptomTrackField?.run {
+                val destinationId = this.destinationId
                 addSymptomUseCase(
                     AddSymptomRequestBuilder(
                         details = details ?: "",
                         symptomLookupIds = symptomTypes?.map { it.id } ?: listOf(),
                         doctorName = doctorName ?: "",
-                        startDate = startDate,
-                        time = reminderTime,
+                        startDate = startDateEn,
+                        time = reminderTime2?.timeEN,
                         photos = photosList ?: listOf(),
                     )
                 ).onEach { response ->
-                    Log.d("TAG", "addSymptomFailed: ${response.errorEntity}")
-                    _viewStateLoading.emit(response.loading)
+                    emitLoading(response.loading)
                     when (response.status) {
                         Status.ERROR -> emitError(response.errorEntity)
                         Status.SUCCESS -> {
                             response.data?.let {
-                                if (it.symptomIsModified) {
+                                if (it.scheduleIsModified) {
                                     resetSymptomTrack()
-                                    _viewStateAddSymptom.postValue(true)
+                                    _viewStateAddSymptom.postValue(true to destinationId)
                                 }
                             }
                         }
@@ -149,26 +147,27 @@ class SymptomsViewModel @Inject constructor(
     }
 
     private fun addSymptomWithoutPhoto() {
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             val symptomTrackField = getSymptomTrack()
             symptomTrackField?.run {
+                val destinationId = this.destinationId
                 addSymptomWithoutPhotoUseCase(
                     AddSymptomRequestBuilder(
                         details = details ?: "",
                         symptomLookupIds = symptomTypes?.map { it.id } ?: listOf(),
                         doctorName = doctorName ?: "",
-                        startDate = startDate,
-                        time = reminderTime,
+                        startDate = startDateEn,
+                        time = reminderTime2?.timeEN,
                         photos = listOf(),
                     ).buildRequestBody()
                 ).collect { response ->
-                    _viewStateLoading.emit(response.loading)
+                    emitLoading(response.loading)
                     when (response.status) {
                         Status.ERROR -> emitError(response.errorEntity)
                         Status.SUCCESS -> {
                             response.data?.let {
                                 resetSymptomTrack()
-                                _viewStateAddSymptom.postValue(true)
+                                _viewStateAddSymptom.postValue(true to destinationId)
                             }
                         }
 
@@ -180,38 +179,39 @@ class SymptomsViewModel @Inject constructor(
     }
 
     fun editSymptom() {
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             val symptomTrackField = getSymptomTrack()
             val isReadyToUploading = symptomTrackField?.photosList?.any { it.uri != null } ?: false
             if (isReadyToUploading)
-                editSymptomWithoutUpload()
-            else
                 editSymptomWithUpload()
+            else
+                editSymptomWithoutUpload()
         }
     }
 
     private fun editSymptomWithoutUpload() {
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             val symptomTrackField = getSymptomTrack()
             symptomTrackField?.run {
+                val destinationId = this.destinationId
                 editSymptomWithoutUploadUseCase(
                     symptomId = symptomId ?: 0,
                     AddSymptomRequestBuilder(
                         details = details ?: "",
                         symptomLookupIds = symptomTypes?.map { it.id } ?: listOf(),
                         doctorName = doctorName ?: "",
-                        startDate = startDate,
-                        time = reminderTime,
+                        startDate = startDateEn,
+                        time = reminderTime2?.timeEN,
                         photos = photosList ?: listOf(),
                     ).buildRequestBody()
                 ).onEach { response ->
-                    _viewStateLoading.emit(response.loading)
+                    emitLoading(response.loading)
                     when (response.status) {
                         Status.ERROR -> emitError(response.errorEntity)
                         Status.SUCCESS -> {
                             if (response.data == true) {
                                 resetSymptomTrack()
-                                _viewStateEditSymptom.postValue(true)
+                                _viewStateEditSymptom.postValue(true to destinationId)
                             }
                         }
 
@@ -226,27 +226,28 @@ class SymptomsViewModel @Inject constructor(
     }
 
     private fun editSymptomWithUpload() {
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             val symptomTrackField = getSymptomTrack()
             symptomTrackField?.run {
+                val destinationId = this.destinationId
                 editSymptomUseCase(
                     symptomId = symptomId ?: 0,
                     AddSymptomRequestBuilder(
                         details = details ?: "",
                         symptomLookupIds = symptomTypes?.map { it.id } ?: listOf(),
                         doctorName = doctorName ?: "",
-                        startDate = startDate,
-                        time = reminderTime,
+                        startDate = startDateEn,
+                        time = reminderTime2?.timeEN,
                         photos = photosList ?: listOf(),
                     )
                 ).collect { response ->
-                    _viewStateLoading.emit(response.loading)
+                    emitLoading(response.loading)
                     when (response.status) {
                         Status.ERROR -> emitError(response.errorEntity)
                         Status.SUCCESS -> {
                             response.data?.let {
                                 resetSymptomTrack()
-                                _viewStateEditSymptom.postValue(true)
+                                _viewStateEditSymptom.postValue(true to destinationId)
                             }
                         }
 
@@ -268,6 +269,12 @@ class SymptomsViewModel @Inject constructor(
     fun resetSymptomTrack(){
         symptomTrackField.set(SymptomTrack())
         resetSymptomsTypes()
+    }
+
+    fun setDestinationId(destinationId: Int) {
+        symptomTrackField.get()?.also {
+            it.destinationId = destinationId
+        }
     }
 
     fun setSymptomTrack(symptomTrack: SymptomTrack) =
@@ -326,24 +333,32 @@ class SymptomsViewModel @Inject constructor(
     fun getSymptomPhotos(): List<Photo>? =
         symptomTrackField.get()?.photosList
 
-    fun selectStartDate(startDate: String) =
+    fun selectStartDate(startDateUI: String, startDateEn: String) =
         symptomTrackField.get()?.also {
-            it.startDate = startDate
+            it.startDateUI = startDateUI
+            it.startDateEn = startDateEn
         }
 
-    fun selectReminderTime(time: String?) =
+    fun selectReminderTime(reminderTime: ReminderTime2?) =
         symptomTrackField.get()?.also {
-            it.reminderTime = time
+            it.reminderTime2 = reminderTime
         }
 
     fun setDoctorName(doctorName: String) =
         symptomTrackField.get()?.also {
             it.doctorName = doctorName
         }
+    private suspend fun emitLoading(isLoading: Boolean) {
+        withContext(Dispatchers.Main) {
+            _viewStateLoading.emit(isLoading)
+        }
+    }
 
     private suspend fun emitError(errorEntity: ErrorEntity?) {
-        _viewStateError.emit(errorEntity)
-        _viewStateError.emit(null)
+        withContext(Dispatchers.Main) {
+            _viewStateError.emit(errorEntity)
+            _viewStateError.emit(null)
+        }
     }
 
     override fun onCleared() {

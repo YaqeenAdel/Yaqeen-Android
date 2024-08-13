@@ -1,13 +1,12 @@
 package com.cancer.yaqeen.data.di
 
 import com.auth0.android.Auth0
-import com.auth0.android.request.DefaultClient
 import com.cancer.yaqeen.BuildConfig
-
 import com.cancer.yaqeen.data.network.AUTH
 import com.cancer.yaqeen.data.network.DEFAULT
 import com.cancer.yaqeen.data.network.apis.Auth0API
 import com.cancer.yaqeen.data.network.apis.YaqeenAPI
+import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import dagger.Module
@@ -19,28 +18,40 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
+
 @Module
 @InstallIn(SingletonComponent::class)
 object RetrofitModule {
+
+
+    @Singleton
+    @Provides
+    fun provideGsonBuilder(): GsonBuilder = GsonBuilder()
+        .setLenient()
+        .serializeNulls()
+//        .setPrettyPrinting()
+//        .disableHtmlEscaping()
+//        .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
+
     @Singleton
     @Provides
     @DEFAULT
-    fun provideYaqeenRetrofit(httpClient: OkHttpClient): Retrofit.Builder =
+    fun provideYaqeenRetrofit(httpClient: OkHttpClient, gsonBuilder: GsonBuilder): Retrofit.Builder =
         Retrofit.Builder()
             .baseUrl(BuildConfig.BASE_URL)
             .client(httpClient)
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
-            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().serializeNulls().create()))
+            .addConverterFactory(GsonConverterFactory.create(gsonBuilder.create()))
 
     @Singleton
     @Provides
     @AUTH
-    fun provideAuthRetrofit(httpClient: OkHttpClient): Retrofit.Builder =
+    fun provideAuthRetrofit(httpClient: OkHttpClient, gsonBuilder: GsonBuilder): Retrofit.Builder =
         Retrofit.Builder()
             .baseUrl("https://${BuildConfig.AUTH_0_DOMAIN}/")
             .client(httpClient)
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
-            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().serializeNulls().create()))
+            .addConverterFactory(GsonConverterFactory.create(gsonBuilder.create()))
 
     @Singleton
     @Provides

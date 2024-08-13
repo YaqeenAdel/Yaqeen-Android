@@ -18,11 +18,13 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Day
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.DayEnum
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.PeriodTimeEnum
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Time
+import com.cancer.yaqeen.data.features.home.schedule.routine_test.mappers.MappingRoutineTestAsRoutineTestTrack
 import com.cancer.yaqeen.data.features.home.schedule.routine_test.models.RoutineTestTrack
 import com.cancer.yaqeen.databinding.FragmentRoutineTestInfoBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
@@ -53,6 +55,8 @@ class RoutineTestInfoFragment : BaseFragment() {
 
     private val routineTestViewModel: RoutineTestViewModel by activityViewModels()
 
+    private val args: RoutineTestInfoFragmentArgs by navArgs()
+
 
     private val getContentResultLauncher: ActivityResultLauncher<String?> =
         registerForActivityResult(
@@ -65,19 +69,19 @@ class RoutineTestInfoFragment : BaseFragment() {
 
         }
 
-//    private val medication by lazy {
-//        args.medication
-//    }
+    private val routineTest by lazy {
+        args.routineTest
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//        if (medicalReminder == null)
-        routineTestViewModel.resetRoutineTestTrack()
-//        else
-//            medicalReminderViewModel.setMedicalReminderTrack(
-//                MappingMedicationAsMedicationTrack(requireContext()).map(medication!!)
-//            )
+        if (routineTest == null)
+            routineTestViewModel.resetRoutineTestTrack()
+        else
+            routineTestViewModel.setRoutineTestTrack(
+                MappingRoutineTestAsRoutineTestTrack(requireContext()).map(routineTest!!)
+            )
     }
 
     override fun onCreateView(
@@ -317,29 +321,41 @@ class RoutineTestInfoFragment : BaseFragment() {
             listOf(
                 Time(
                     id = PeriodTimeEnum.EVERY_DAY.id,
-                    time = getString(R.string.every_day),
+                    timeEn = getString(R.string.every_day),
+                    timeAr = "",
                     cronExpression = PeriodTimeEnum.EVERY_DAY.cronExpression
                 ),
                 Time(
-                    id = PeriodTimeEnum.EVERY_8_HOURS.id,
-                    time = getString(R.string.every_8_hours),
-                    cronExpression = PeriodTimeEnum.EVERY_8_HOURS.cronExpression
-                ),
-                Time(
                     id = PeriodTimeEnum.EVERY_12_HOURS.id,
-                    time = getString(R.string.every_12_hours),
+                    timeEn = getString(R.string.every_12_hours),
+                    timeAr = "",
                     cronExpression = PeriodTimeEnum.EVERY_12_HOURS.cronExpression
                 ),
                 Time(
                     id = PeriodTimeEnum.DAY_AFTER_DAY.id,
-                    time = getString(R.string.day_after_day),
+                    timeEn = getString(R.string.day_after_day),
+                    timeAr = "",
                     cronExpression = PeriodTimeEnum.DAY_AFTER_DAY.cronExpression
                 ),
                 Time(
-                    id = PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id,
-                    time = getString(R.string.specific_days_of_the_week),
-                    cronExpression = PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.cronExpression
-                )
+                    id = PeriodTimeEnum.EVERY_WEEK.id,
+                    timeEn = getString(R.string.every_week),
+                    timeAr = "",
+                    cronExpression = PeriodTimeEnum.EVERY_WEEK.cronExpression
+                ),
+                Time(
+                    id = PeriodTimeEnum.EVERY_MONTH.id,
+                    timeEn = getString(R.string.every_month),
+                    timeAr = "",
+                    cronExpression = PeriodTimeEnum.EVERY_MONTH.cronExpression
+                ),
+                //TODO(SPECIFIC_DAYS_OF_THE_WEEK): Will reAdding this type after fix the issue.
+//                Time(
+//                    id = PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id,
+//                    timeEn = getString(R.string.specific_days_of_the_week),
+//                    timeAr = "",
+//                    cronExpression = PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.cronExpression
+//                )
             )
         )
     }
@@ -349,7 +365,7 @@ class RoutineTestInfoFragment : BaseFragment() {
     }
 
     private fun displayDays(id: Int): Boolean {
-        val specificDaysIsNotSelected = id != 5
+        val specificDaysIsNotSelected = id != PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id
         binding.groupSpecificDays.changeVisibility(show = !specificDaysIsNotSelected, isGone = true)
 
         return specificDaysIsNotSelected
@@ -365,8 +381,8 @@ class RoutineTestInfoFragment : BaseFragment() {
 
         if (
             routineTestName.isNotEmpty() &&
-            ((selectedPositionTime != -1 && selectedPositionTime != 4)
-                            || (selectedPositionTime == 4 && daysAdapter.anyItemIsSelected()))
+            ((selectedPositionTime != -1 && selectedPositionTime != 5)
+                            || (selectedPositionTime == 5 && daysAdapter.anyItemIsSelected()))
         ) {
             binding.btnNext.enable()
             textColorId = R.color.white

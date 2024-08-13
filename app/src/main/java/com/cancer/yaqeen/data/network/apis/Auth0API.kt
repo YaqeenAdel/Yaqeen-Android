@@ -8,10 +8,5 @@ import retrofit2.http.Headers
 import retrofit2.http.POST
 
 interface Auth0API {
-    @Headers("isAuth0: true")
-    @POST("oauth/token")
-    suspend fun refreshToken(
-        @Body requestBody: RefreshTokenRequestBody
-    ): Response<RefreshTokenResponse>
 
 }

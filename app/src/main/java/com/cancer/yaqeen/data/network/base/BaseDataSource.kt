@@ -55,9 +55,11 @@ abstract class BaseDataSource(
     protected suspend fun <T> getResultDao(call: suspend () -> T): DataState<T> {
         return try {
             val response = call()
+            Log.d("TAG", "getResultDao response: $response")
             DataState.Success(response)
 
         } catch (e: Exception) {
+            Log.d("TAG", "getResultDao Exception: $e")
             error(errorHandler.getError(e))
         }
     }

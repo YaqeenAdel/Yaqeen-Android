@@ -94,13 +94,14 @@ class ArticleDetailsFragment : BaseFragment() {
             type = "text/plain"
         }
 
-        val shareIntent = Intent.createChooser(sendIntent, "Share Via")
+        val shareIntent = Intent.createChooser(sendIntent, getString(R.string.share_via))
 
         try {
             if (shareIntent.resolveActivity(requireContext().packageManager) != null) {
                 startActivity(shareIntent)
             } else {
-                Toast.makeText(context, "No app found to share it", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context,
+                    getString(R.string.no_app_found_to_share_it), Toast.LENGTH_SHORT).show()
             }
         }catch (_: Exception){}
 

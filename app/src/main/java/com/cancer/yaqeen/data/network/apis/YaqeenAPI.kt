@@ -9,6 +9,8 @@ import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.requests.A
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.requests.AddSymptomToMedicalReminderRequest
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.responses.AddMedicalReminderResponse
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.responses.AddSymptomToMedicalReminderResponse
+import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.responses.DeleteSymptomFromScheduleResponse
+import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.responses.EditMedicalReminderResponse
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.responses.GetMedicalRemindersResponse
 import com.cancer.yaqeen.data.features.onboarding.requests.UpdateInterestsUserRequestBody
 import com.cancer.yaqeen.data.features.onboarding.requests.UpdateProfileRequestBody
@@ -20,6 +22,10 @@ import com.cancer.yaqeen.data.features.home.schedule.medication.responses.AddMed
 import com.cancer.yaqeen.data.features.home.schedule.medication.responses.EditMedicationResponse
 import com.cancer.yaqeen.data.features.home.schedule.medication.responses.SchedulesResponse
 import com.cancer.yaqeen.data.features.home.schedule.medication.responses.TodaySchedulesResponse
+import com.cancer.yaqeen.data.features.home.schedule.routine_test.requests.AddRoutineTestRequest
+import com.cancer.yaqeen.data.features.home.schedule.routine_test.responses.AddRoutineTestResponse
+import com.cancer.yaqeen.data.features.home.schedule.routine_test.responses.EditRoutineTestResponse
+import com.cancer.yaqeen.data.features.home.schedule.routine_test.responses.GetRoutineTestsResponse
 import com.cancer.yaqeen.data.features.home.schedule.symptom.requests.AddSymptomRequest
 import com.cancer.yaqeen.data.features.home.schedule.symptom.requests.UploadUrlRequest
 import com.cancer.yaqeen.data.features.home.schedule.symptom.responses.AddSymptomResponse
@@ -155,14 +161,43 @@ interface YaqeenAPI {
         @Body requestBody: AddSymptomToMedicalReminderRequest
     ): Response<AddSymptomToMedicalReminderResponse>
 
+    @DELETE("ScheduleSymptom/{SchedulesScheduleId}/{SymptomId}")
+    suspend fun deleteSymptomFromMedicalReminder(
+        @Path("SchedulesScheduleId") scheduleId: Int,
+        @Path("SymptomId") symptomId: Int
+    ): Response<DeleteSymptomFromScheduleResponse>
+
     @GET("Schedules/{scheduleType}")
     suspend fun getMedicalReminders(
-        @Path("scheduleType") scheduleType: String
+        @Path("scheduleType") scheduleType: String,
+        @Query("lang") lang: String,
     ): Response<GetMedicalRemindersResponse>
 
     @DELETE("Schedules/{scheduleId}")
     suspend fun deleteSchedule(
         @Path("scheduleId") scheduleId: Int
     ): Response<Any>
+
+    @POST("Schedules")
+    suspend fun addRoutineTest(
+        @Body requestBody: AddRoutineTestRequest
+    ): Response<AddRoutineTestResponse>
+
+    @POST("Schedules/{scheduleId}")
+    suspend fun editRoutineTest(
+        @Path("scheduleId") scheduleId: Int,
+        @Body requestBody: AddRoutineTestRequest
+    ): Response<EditRoutineTestResponse>
+
+    @POST("Schedules/{scheduleId}")
+    suspend fun editMedicalReminder(
+        @Path("scheduleId") scheduleId: Int,
+        @Body requestBody: AddMedicalReminderRequest
+    ): Response<EditMedicalReminderResponse>
+
+    @GET("Schedules/{scheduleType}")
+    suspend fun getRoutineTests(
+        @Path("scheduleType") scheduleType: String
+    ): Response<GetRoutineTestsResponse>
 
 }

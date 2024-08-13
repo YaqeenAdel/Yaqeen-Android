@@ -10,5 +10,12 @@ data class ReminderTime(
     val minute: String,
     val timing: String,
     val isAM: Boolean,
-    val text: String,
-): Parcelable
+    val text: String
+): Parcelable {
+
+    fun getAccurateHour24(): String =
+        if (hour24.toIntOrNull() == 24)
+            "00"
+        else hour24
+
+}

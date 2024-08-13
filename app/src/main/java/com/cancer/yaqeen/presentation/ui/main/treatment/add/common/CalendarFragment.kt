@@ -8,6 +8,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.databinding.FragmentCalendarBinding
 import com.cancer.yaqeen.presentation.util.Constants
@@ -22,6 +23,18 @@ class CalendarFragment : BottomSheetDialogFragment() {
     private var binding: FragmentCalendarBinding by autoCleared()
 
     private lateinit var navController: NavController
+
+
+    private val args: CalendarFragmentArgs by navArgs()
+
+    private val _minDate by lazy {
+        args.minDate
+    }
+
+    private val hasMinDate by lazy {
+        args.hasMinDate
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -59,13 +72,20 @@ class CalendarFragment : BottomSheetDialogFragment() {
     override fun onResume() {
         super.onResume()
 
-        val currentDate = Calendar.getInstance()
-
         // If i want to set the minimum date for the CalendarView to tomorrow
 //        currentDate.add(Calendar.DAY_OF_MONTH, 1)
 
-        // Set the minimum date for the CalendarView to today
-        binding.calendarView.minDate = currentDate.timeInMillis
+        // Set the minimum date for the CalendarView to today if the minDate arg not passed or passed with (null or zero)
+        // Don't set minimum date for the CalendarView if the hasMinDate arg not passed or passed with false
+        if(hasMinDate){
+            val minDate = if (_minDate > 0L)
+                _minDate
+            else
+                Calendar.getInstance().timeInMillis
+
+            binding.calendarView.minDate = minDate
+        }
+
     }
 
     private fun setFragmentResult(timeInMillis: Long) {

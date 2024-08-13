@@ -12,6 +12,7 @@ import com.cancer.yaqeen.presentation.ui.main.treatment.getMedicationType
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindResourceImage
 
 class MedicationsAdapter(
+    private var items: MutableList<Medication> = arrayListOf(),
     private val onItemClick: (Medication) -> Unit,
 ) :
     ListAdapter<Medication, MedicationsAdapter.MedicationsViewHolder>(Companion) {
@@ -43,10 +44,30 @@ class MedicationsAdapter(
     }
 
     override fun onBindViewHolder(holder: MedicationsViewHolder, position: Int) {
-        val item = currentList[position]
+        val item = getItem(position)
         item?.let {
             holder.bind(it)
         }
+    }
+    fun setList(list: List<Medication>?) {
+        submitList(list)
+
+        if (items.isEmpty())
+            items = (list)?.toMutableList() ?: arrayListOf()
+    }
+
+    fun deleteMedication(medicationId: Int) {
+        val position = items.indexOfFirst { it.id == medicationId }
+
+        if (position == -1)
+            return
+
+        if (items.size == 1)
+            items = arrayListOf()
+        else
+            items.removeAt(position)
+        super.submitList(items)
+        notifyDataSetChanged()
     }
 
     inner class MedicationsViewHolder(

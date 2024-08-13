@@ -1,4 +1,4 @@
-package com.codesroots.imakeapp.core.network.di
+package com.cancer.yaqeen.data.di
 
 import android.content.Context
 import android.content.SharedPreferences

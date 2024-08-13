@@ -84,16 +84,16 @@ class SearchFragment : BaseFragment(), OnClickListener {
 
     override fun onClick(v: View?) {
         val (interestName, isInterest) = when(v?.id){
-            R.id.chip_one -> "Non-Hodgkin’s Lymphoma" to true
-            R.id.chip_two -> "Therapy Treatment" to true
-            R.id.chip_three -> "Prostate" to true
-            R.id.chip_four -> "Lung Cancer" to true
-            R.id.chip_five -> "Pancreatic" to true
-            R.id.chip_sex -> "Leukaemia" to true
-            R.id.chip_seven -> "Kidney" to true
-            R.id.chip_eight -> "Testicular" to true
-            R.id.chip_nine -> "Multiple Myeloma" to true
-            R.id.chip_ten -> "Thyroid" to true
+            R.id.chip_one -> getString(R.string.non_hodgkin_s_lymphoma) to true
+            R.id.chip_two -> getString(R.string.therapy_treatment) to true
+            R.id.chip_three -> getString(R.string.prostate) to true
+            R.id.chip_four -> getString(R.string.lung_cancer) to true
+            R.id.chip_five -> getString(R.string.pancreatic) to true
+            R.id.chip_sex -> getString(R.string.leukaemia) to true
+            R.id.chip_seven -> getString(R.string.kidney) to true
+            R.id.chip_eight -> getString(R.string.testicular) to true
+            R.id.chip_nine -> getString(R.string.multiple_myeloma) to true
+            R.id.chip_ten -> getString(R.string.thyroid) to true
             R.id.btn_confirm -> binding.editTextArticleName.text.toString().trim() to true
             else -> "" to false
         }

@@ -6,7 +6,10 @@ import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.net.Uri
 import com.cancer.yaqeen.R
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.Photo
 import com.cancer.yaqeen.data.network.error.ErrorEntity
+import com.cancer.yaqeen.presentation.util.generateFileName
+import com.cancer.yaqeen.presentation.util.getCurrentTimeMillis
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -38,12 +41,17 @@ fun Context.handleError(errorEntity: ErrorEntity?, onAccessDenied: () -> Unit = 
 
         is ErrorEntity.ApiError.AccessDenied -> {
             onAccessDenied()
-            null
+            getString(R.string.error_occurred)
         }
 
         is ErrorEntity.ApiError.ServerErrorResponse -> {
             errorEntity.error.run {
-                errorsStr ?: getString(R.string.error_occurred)
+                if (errorsStr?.contains("Expire") == true){
+                    onAccessDenied()
+                    null
+                }else{
+                    errorsStr ?: getString(R.string.error_occurred)
+                }
             }
         }
 
@@ -58,8 +66,12 @@ fun Context.handleError(errorEntity: ErrorEntity?, onAccessDenied: () -> Unit = 
     }
 }
 
-fun <A> String.fromJson(type: Class<A>): A =
-    Gson().fromJson(this, type)
+fun <A> String.fromJson(type: Class<A>): A? =
+    try {
+        Gson().fromJson(this, type)
+    }catch (_: Exception){
+        null
+    }
 
 fun <A> A.toJson(): String = Gson().toJson(this)
 
@@ -118,127 +130,6 @@ fun Float.calculatePriceAfterDiscount(discountPercentage: Float): Float {
     val perc = discountPercentage / 100
     val discountAmount = this * perc
     return this - discountAmount
-}
-
-fun Long.formatDate(pattern: String = "dd MMM yyyy"): String {
-    val dateFormat = SimpleDateFormat(pattern, Locale.getDefault())
-    val date = toDate()
-    return dateFormat.format(date)
-}
-
-fun Long.toDate(): Date {
-    return Date(this)
-}
-
-fun String.formatDate(): String {
-    return try {
-        val inputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
-        val outputDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-
-        val inputDate = inputDateFormat.parse(this)
-        outputDateFormat.format(inputDate)
-    } catch (_: Exception) {
-        ""
-    }
-}
-
-fun String.formatDateAPI(): String {
-    return try {
-        val inputDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-        val outputDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-
-        val inputDate = inputDateFormat.parse(this)
-        outputDateFormat.format(inputDate)
-    } catch (_: Exception) {
-        ""
-    }
-}
-
-fun String.formatTime(): String {
-    return try {
-        val inputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
-        val outputTimeFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
-
-        val inputDate = inputDateFormat.parse(this)
-        outputTimeFormat.format(inputDate)
-    } catch (_: Exception) {
-        ""
-    }
-}
-
-fun String.formatTimeAPI(): String {
-    return try {
-        val inputDateFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
-        val outputTimeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
-
-        val inputDate = inputDateFormat.parse(this)
-        outputTimeFormat.format(inputDate)
-    } catch (_: Exception) {
-        ""
-    }
-}
-
-fun convertMillisecondsToTime(milliseconds: Long, pattern: String = "hh:mm a"): String {
-    val currentTimestamp = System.currentTimeMillis()
-    val timestamp = Date(milliseconds)
-
-    val dateFormat = SimpleDateFormat(pattern, Locale.getDefault())
-    return dateFormat.format(timestamp)
-}
-
-fun String.isCurrentTodayAndAfterTimeNow(): Boolean {
-    val currentTimestamp = System.currentTimeMillis()
-    val currentDate = currentTimestamp.toDate()
-
-    val inputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
-    val inputDate = inputDateFormat.parse(this)
-
-    return if (isSameDay(currentDate, inputDate)) {
-        val date = Calendar.getInstance()
-        date.time = inputDate
-
-        return date.timeInMillis >= currentTimestamp
-    } else {
-        false
-    }
-}
-
-fun String.isCurrentToday(): Boolean {
-    val currentTimestamp = System.currentTimeMillis()
-    val currentDate = currentTimestamp.toDate()
-
-    val inputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
-    val inputDate = inputDateFormat.parse(this)
-
-    return isSameDay(currentDate, inputDate)
-}
-
-fun isSameDay(dateFirst: Date, dateSecond: Date): Boolean {
-    val calFirst = Calendar.getInstance()
-    calFirst.time = dateFirst
-    val calSecond = Calendar.getInstance()
-    calSecond.time = dateSecond
-
-    return calFirst.get(Calendar.YEAR) == calSecond.get(Calendar.YEAR) &&
-            calFirst.get(Calendar.DAY_OF_YEAR) == calSecond.get(Calendar.DAY_OF_YEAR)
-}
-
-fun String.isAfterNow(): Boolean {
-    val currentTimestamp = System.currentTimeMillis()
-
-    val inputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
-    val inputDate = inputDateFormat.parse(this)
-
-    val date = Calendar.getInstance()
-    date.time = inputDate
-
-    return currentTimestamp >= date.timeInMillis
-}
-
-fun getTodayDate(): String {
-    val currentTimestamp = System.currentTimeMillis()
-
-    return currentTimestamp.formatDate()
 }
 
 fun String.tryToLong(): Long {
@@ -319,7 +210,45 @@ fun calculateScaleFactor(
     maxWidth: Int,
     maxHeight: Int
 ): Float {
-    val widthRatio = maxWidth.toFloat() / originalWidth
-    val heightRatio = maxHeight.toFloat() / originalHeight
-    return if (widthRatio < heightRatio) widthRatio else heightRatio
+    return try {
+        val widthRatio = maxWidth.toFloat() / originalWidth
+        val heightRatio = maxHeight.toFloat() / originalHeight
+        if (widthRatio < heightRatio) widthRatio else heightRatio
+    } catch (e: Exception) {
+        0F
+    }
+}
+
+
+fun createPhotosList(photoPath: String?, url: String?, urls: List<String?>?): List<Photo> {
+    val photos: MutableList<Photo> = arrayListOf()
+    val photosPaths = photoPath?.split(",") ?: listOf()
+//        val photosUrls = url?.split(",") ?: listOf()
+
+    val photosUrls = urls ?: listOf()
+
+    val pathsSize = photosPaths.size
+    val urlsSize = photosUrls.size
+
+    val size = if(pathsSize < urlsSize) pathsSize else urlsSize
+
+    var pathURL = ""
+    var imageName = ""
+
+    for (index in 0 until size){
+        pathURL = photosPaths[index]
+        imageName = pathURL.substringAfterLast("/")
+        imageName = imageName.ifEmpty { generateFileName() }
+
+        photos.add(
+            Photo(
+                id = getCurrentTimeMillis(),
+                url = photosUrls[index],
+                pathURL = pathURL,
+                imageName = imageName
+            )
+        )
+    }
+
+    return photos
 }

@@ -53,16 +53,21 @@ class SymptomsTypesFragment : BaseFragment() {
         args.symptom
     }
 
+    private val destinationId by lazy {
+        args.destinationId
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Log.d("TAG", "onCreatesavedInstanceState: $symptom")
         if (symptom == null)
             symptomsViewModel.resetSymptomTrack()
         else
             symptomsViewModel.setSymptomTrack(
                 MappingSymptomAsSymptomTrack().map(symptom!!)
             )
+
+        symptomsViewModel.setDestinationId(destinationId)
     }
 
     override fun onCreateView(
@@ -98,7 +103,6 @@ class SymptomsTypesFragment : BaseFragment() {
 
     private fun updateUI(symptomTrack: SymptomTrack?) {
         symptomTrack?.run {
-            Log.d("TAG", "updateUI: symptomTrack $symptomTypes")
 //            if (symptomTypes == null)
 //                symptomsTypesAdapter.setList(null)
 //            else
@@ -157,7 +161,6 @@ class SymptomsTypesFragment : BaseFragment() {
 
         lifecycleScope {
             symptomsViewModel.viewStateSymptomsTypes.collect { symptomsTypes ->
-                Log.d("TAG", "updateUI: symptomTrack2 $symptomsTypes")
                 symptomsTypesAdapter.setList(symptomsTypes)
                 checkSymptomData()
             }

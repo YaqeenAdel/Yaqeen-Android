@@ -26,8 +26,8 @@ data class SymptomResponse (
     @SerializedName("UpdatedAt")
     val updatedAt: String?,
 
-    @SerializedName("SymptomLookup")
-    val symptomLookup: SymptomLookupResponse,
+    @SerializedName("SymptomLookups")
+    val symptomLookups: List<SymptomLookupElementResponse>?,
 
     @SerializedName("PhotoLink")
     val photoLink: String?,
@@ -48,7 +48,20 @@ data class DownloadPhotoLinksResponse (
 )
 
 data class SignedUrlResponse (
+    val path: String?,
+
     @SerializedName("signed_url")
     val url: String?
+)
+data class SymptomLookupElementResponse (
+    @SerializedName("Details")
+    val details: SymptomLookupDetailsResponse?
+)
+data class SymptomLookupDetailsResponse (
+    @SerializedName("Translations")
+    val translations: List<SymptomLookupTranslationResponse>?,
+
+    @SerializedName("SymptomLookupId")
+    val symptomLookupID: Int?
 )
 

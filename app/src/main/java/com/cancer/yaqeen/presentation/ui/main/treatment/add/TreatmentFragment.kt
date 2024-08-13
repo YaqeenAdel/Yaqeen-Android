@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Time.Companion.getHours24
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Timing
+import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.data.utils.getTodayDate
 import com.cancer.yaqeen.databinding.FragmentTreatmentBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
@@ -25,6 +26,7 @@ import com.cancer.yaqeen.presentation.util.timestampToTiming
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class TreatmentFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
@@ -34,6 +36,9 @@ class TreatmentFragment : BaseFragment(showBottomMenu = true), View.OnClickListe
     private lateinit var navController: NavController
 
     private lateinit var timesAdapter: TimesAdapter
+
+    @Inject
+    lateinit var sharedPrefUtil: SharedPrefEncryptionUtil
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,7 +69,7 @@ class TreatmentFragment : BaseFragment(showBottomMenu = true), View.OnClickListe
 
     }
 
-    private fun setListener(){
+    private fun setListener() {
         binding.toolbar.setNavigationOnClickListener {
             navController.popBackStack()
         }
@@ -74,15 +79,23 @@ class TreatmentFragment : BaseFragment(showBottomMenu = true), View.OnClickListe
         binding.btnMedicalAppointment.setOnClickListener(this)
 
     }
+
     private fun updateUI() {
         val spannable = SpannableStringBuilder("1/3")
-        spannable.setSpan(ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.primary_color)), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        spannable.setSpan(
+            ForegroundColorSpan(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.primary_color
+                )
+            ), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
         binding.tvPageNumber.text = spannable
 
     }
 
     private fun setupTimesAdapter() {
-        timesAdapter = TimesAdapter {
+        timesAdapter = TimesAdapter(sharedPrefUtil.selectedLanguageIsArabic()) {
 
         }
 
@@ -94,6 +107,7 @@ class TreatmentFragment : BaseFragment(showBottomMenu = true), View.OnClickListe
         )
 
     }
+
     private fun getCurrentHour(): Int {
         val currentDate = Calendar.getInstance()
         val timing = (currentDate.timeInMillis.timestampToTiming())
@@ -104,7 +118,7 @@ class TreatmentFragment : BaseFragment(showBottomMenu = true), View.OnClickListe
 
     private fun selectItem(itemId: Int) {
         val selectItemPosition = timesAdapter.selectItem(itemId)
-        if(selectItemPosition >= Constants.MAX_POSITION_TO_SCROLL) {
+        if (selectItemPosition >= Constants.MAX_POSITION_TO_SCROLL) {
             val position = when (selectItemPosition) {
                 timesAdapter.itemCount - Constants.MAX_POSITION_TO_SCROLL -> selectItemPosition + 1
                 timesAdapter.itemCount - 1 -> selectItemPosition
@@ -117,25 +131,38 @@ class TreatmentFragment : BaseFragment(showBottomMenu = true), View.OnClickListe
     }
 
     override fun onClick(v: View?) {
-        when(v?.id){
+        when (v?.id) {
             R.id.btn_medications -> {
                 navController.tryNavigate(
-                    TreatmentFragmentDirections.actionTreatmentFragmentToMedicationsFragment(null)
+                    TreatmentFragmentDirections.actionTreatmentFragmentToMedicationsFragment(
+                        null,
+                        R.id.treatmentHistoryFragment
+                    )
                 )
             }
+
             R.id.btn_symptoms -> {
                 navController.tryNavigate(
-                    TreatmentFragmentDirections.actionTreatmentFragmentToSymptomsTypesFragment(null)
+                    TreatmentFragmentDirections.actionTreatmentFragmentToSymptomsTypesFragment(
+                        null,
+                        R.id.treatmentHistoryFragment
+                    )
                 )
             }
+
             R.id.btn_routine_tests -> {
                 navController.tryNavigate(
-                    TreatmentFragmentDirections.actionTreatmentFragmentToRoutineTestInfoFragment()
+                    TreatmentFragmentDirections.actionTreatmentFragmentToRoutineTestInfoFragment(
+                        null
+                    )
                 )
             }
+
             R.id.btn_medical_appointment -> {
                 navController.tryNavigate(
-                    TreatmentFragmentDirections.actionTreatmentFragmentToMedicalReminderInfoFragment()
+                    TreatmentFragmentDirections.actionTreatmentFragmentToMedicalReminderInfoFragment(
+                        null
+                    )
                 )
             }
         }

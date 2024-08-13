@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -18,18 +17,16 @@ import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.databinding.FragmentSymptomConfirmationBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.symptoms.SymptomsViewModel
-import com.cancer.yaqeen.presentation.ui.main.treatment.add.symptoms.details.AttachedPhotosAdapter
 import com.cancer.yaqeen.presentation.ui.main.treatment.history.adapters.PhotosAdapter
-import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindImage
 import com.cancer.yaqeen.presentation.util.changeVisibility
+import com.cancer.yaqeen.presentation.util.disableTouch
 import com.cancer.yaqeen.presentation.util.dpToPx
 import com.cancer.yaqeen.presentation.util.enableStoragePermissions
+import com.cancer.yaqeen.presentation.util.enableTouch
 import com.cancer.yaqeen.presentation.util.recyclerview.HorizontalMarginItemDecoration
-import com.cancer.yaqeen.presentation.util.recyclerview.VerticalMarginItemDecoration
 import com.cancer.yaqeen.presentation.util.storagePermissionsAreGranted
-import com.cancer.yaqeen.presentation.util.tryNavigate
 import com.cancer.yaqeen.presentation.util.tryPopBackStack
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -90,7 +87,7 @@ class SymptomConfirmationFragment : BaseFragment() {
             binding.tvReminderVal.text = doctorName ?: ""
             binding.tvReminder.changeVisibility(show = isReminder, isGone = true)
             binding.tvReminderVal.changeVisibility(show = isReminder, isGone = true)
-            binding.tvDateTimeVal.text = "$reminderTime - ${startDate ?: ""}"
+            binding.tvDateTimeVal.text = "${reminderTime2?.timeUI.toString()} - ${startDateUI ?: ""}"
 
             val isMoreThanPhoto = (photosList?.size ?: 0) > 1
 
@@ -146,8 +143,9 @@ class SymptomConfirmationFragment : BaseFragment() {
     }
 
     private fun confirmSymptom() {
-        if (!storagePermissionsAreGranted(requireContext())) {
-            enableStoragePermissions(requestMultiplePermissionsLauncher)
+        val symptomTrack = symptomsViewModel.getSymptomTrack()
+        if (!storagePermissionsAreGranted(requireContext())&& symptomTrack?.photosList?.any { it.uri != null } == true) {
+            enableStoragePermissions(requestMultiplePermissionsLauncher, requireContext())
             return
         }
 
@@ -161,6 +159,10 @@ class SymptomConfirmationFragment : BaseFragment() {
     private fun observeStates() {
         lifecycleScope {
             symptomsViewModel.viewStateLoading.collectLatest {
+                if (it)
+                    disableTouch()
+                else
+                    enableTouch()
                 onLoading(it)
             }
         }
@@ -172,26 +174,30 @@ class SymptomConfirmationFragment : BaseFragment() {
 
         lifecycleScope {
             symptomsViewModel.viewStateAddSymptom.observe(viewLifecycleOwner) { response ->
-                if(response == true){
-                    Toast.makeText(requireContext(),
-                        getString(R.string.symptom_added_successfully), Toast.LENGTH_SHORT).show()
-                    navController.tryPopBackStack(
-                        R.id.treatmentHistoryFragment,
-                        false
-                    )
+                response?.let { (added, destinationId) ->
+                    if(added){
+                        Toast.makeText(requireContext(),
+                            getString(R.string.symptom_added_successfully), Toast.LENGTH_SHORT).show()
+                        navController.tryPopBackStack(
+                            destinationId ?: R.id.homeFragment,
+                            false
+                        )
+                    }
                 }
             }
         }
 
         lifecycleScope {
             symptomsViewModel.viewStateEditSymptom.observe(viewLifecycleOwner) { response ->
-                if(response == true){
-                    Toast.makeText(requireContext(),
-                        getString(R.string.symptom_edited_successfully), Toast.LENGTH_SHORT).show()
-                    navController.tryPopBackStack(
-                        R.id.treatmentHistoryFragment,
-                        false
-                    )
+                response?.let { (edited, destinationId) ->
+                    if(edited){
+                        Toast.makeText(requireContext(),
+                            getString(R.string.symptom_edited_successfully), Toast.LENGTH_SHORT).show()
+                        navController.tryPopBackStack(
+                            destinationId ?: R.id.homeFragment,
+                            false
+                        )
+                    }
                 }
             }
         }

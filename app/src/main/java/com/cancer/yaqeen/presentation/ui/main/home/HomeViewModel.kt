@@ -23,13 +23,17 @@ import com.cancer.yaqeen.domain.features.home.schedule.medication.GetTodayRemind
 import com.cancer.yaqeen.domain.features.onboarding.usecases.GetUserProfileUseCase
 import com.cancer.yaqeen.presentation.util.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -48,6 +52,8 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
 
     private var viewModelJob: Job? = null
+
+    private val defaultDispatcher = CoroutineScope(Dispatchers.Default + SupervisorJob())
 
     private val _viewStateSchedules = MutableStateFlow<List<Schedule>>(listOf())
     val viewStateScheduleS = _viewStateSchedules.asStateFlow()
@@ -75,9 +81,9 @@ class HomeViewModel @Inject constructor(
         if(!userIsLoggedIn())
             return
 
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             getTodayRemindersUseCase().collect { response ->
-                _viewStateLoading.emit(response.loading)
+                emitLoading(response.loading)
                 when (response.status) {
                     Status.ERROR -> emitError(response.errorEntity)
                     Status.SUCCESS -> {
@@ -93,23 +99,23 @@ class HomeViewModel @Inject constructor(
     }
 
     fun getArticles(searchQuery: String = "") {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             getArticlesUseCase(searchQuery).onEach { response ->
-                _viewStateLoading.emit(response.loading)
+                emitLoading(response.loading)
                 when (response.status) {
                     Status.ERROR -> emitError(response.errorEntity)
                     Status.SUCCESS -> {
                         if (response.data?.isNotEmpty() == true){
                             if (prefEncryptionUtil.isLogged){
                                 getLocalBookmarkedArticlesUseCase().onEach { responseLocal ->
+                                    emitLoading(response.loading)
                                     when (responseLocal.status) {
                                         Status.ERROR, Status.SUCCESS -> {
                                             if(responseLocal.data.isNullOrEmpty()) {
                                                 getBookmarkedArticles(response.data)
                                             }
                                             else {
-                                                val articles = injectLocalArticlesToArticles(response.data, responseLocal.data)
-                                                _viewStateArticles.emit(articles)
+                                                injectLocalArticlesToArticles(response.data, responseLocal.data)
                                             }
                                         }
                                         else -> {}
@@ -127,14 +133,14 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun getBookmarkedArticles(articles: List<Article>) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             getBookmarkedArticlesUseCase().onEach { response ->
+                emitLoading(response.loading)
                 when (response.status) {
                     Status.ERROR -> _viewStateArticles.emit(articles)
                     Status.SUCCESS -> {
                         if (response.data?.isNotEmpty() == true){
-                            val articles = injectBookmarkedArticlesToArticles(articles, response.data)
-                            _viewStateArticles.emit(articles)
+                            injectBookmarkedArticlesToArticles(articles, response.data)
                         }else {
                             _viewStateArticles.emit(articles)
                         }
@@ -146,9 +152,9 @@ class HomeViewModel @Inject constructor(
     }
 
     fun getSavedArticles() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             getBookmarkedArticlesUseCase().onEach { response ->
-                _viewStateLoading.emit(response.loading)
+                emitLoading(response.loading)
                 when (response.status) {
                     Status.ERROR -> emitError(response.errorEntity)
                     Status.SUCCESS -> {
@@ -165,35 +171,39 @@ class HomeViewModel @Inject constructor(
     private fun injectLocalArticlesToArticles(
         articles: List<Article>,
         bookmarkedArticles: List<LocalArticle>
-    ): List<Article> {
-        bookmarkedArticles.sortedBy { it.articleID }.onEach { bookmarkedArticle ->
-            articles.sortedBy { it.contentID }.first {
-                it.contentID == bookmarkedArticle.articleID
-            }.apply {
-                bookmarkID = bookmarkedArticle.bookmarkID
-                isFavorite = true
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            bookmarkedArticles.sortedBy { it.articleID }.onEach { bookmarkedArticle ->
+                articles.sortedBy { it.contentID }.first {
+                    it.contentID == bookmarkedArticle.articleID
+                }.apply {
+                    bookmarkID = bookmarkedArticle.bookmarkID
+                    isFavorite = true
+                }
             }
+            _viewStateArticles.emit(articles)
         }
-        return articles
     }
 
     private fun injectBookmarkedArticlesToArticles(
         articles: List<Article>,
         bookmarkedArticles: List<Article>
-    ): List<Article> {
-        bookmarkedArticles.sortedBy { it.contentID }.onEach { bookmarkedArticle ->
-            articles.sortedBy { it.contentID }.first {
-                it.contentID == bookmarkedArticle.contentID
-            }.apply {
-                bookmarkID = bookmarkedArticle.bookmarkID
-                isFavorite = true
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            bookmarkedArticles.sortedBy { it.contentID }.onEach { bookmarkedArticle ->
+                articles.sortedBy { it.contentID }.first {
+                    it.contentID == bookmarkedArticle.contentID
+                }.apply {
+                    bookmarkID = bookmarkedArticle.bookmarkID
+                    isFavorite = true
+                }
             }
+            _viewStateArticles.emit(articles)
         }
-        return articles
     }
 
     fun getUserInfo(){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val isLoggedIn = prefEncryptionUtil.isLogged
             val user = prefEncryptionUtil.getModelData(
                 SharedPrefEncryptionUtil.PREF_USER,
@@ -221,11 +231,11 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun bookmarkArticle(article: Article) {
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             bookmarkArticleUseCase(
                 BookmarkArticleRequest(article.contentID)
             ).collect { response ->
-                _viewStateLoading.emit(response.loading)
+                emitLoading(response.loading)
                 when (response.status) {
                     Status.ERROR -> emitError(response.errorEntity)
                     Status.SUCCESS -> {
@@ -241,7 +251,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun saveArticle(article: Article){
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             saveArticleUseCase(
                 LocalArticle(articleID = article.contentID, bookmarkID = article.bookmarkID)
             ).collect()
@@ -249,11 +259,11 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun unBookmarkArticle(article: Article) {
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             unBookmarkArticleUseCase(
                 article.bookmarkID ?: 0
             ).collect { response ->
-                _viewStateLoading.emit(response.loading)
+                emitLoading(response.loading)
                 when (response.status) {
                     Status.ERROR -> emitError(response.errorEntity)
                     Status.SUCCESS -> {
@@ -269,16 +279,24 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun removeBookmarkedArticle(articleID: Int){
-        viewModelJob = viewModelScope.launch {
+        viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             removeBookmarkedArticleUseCase(
                 articleID = articleID
             ).collect()
         }
     }
 
+    private suspend fun emitLoading(isLoading: Boolean) {
+        withContext(Dispatchers.Main) {
+            _viewStateLoading.emit(isLoading)
+        }
+    }
+
     private suspend fun emitError(errorEntity: ErrorEntity?) {
-        _viewStateError.emit(errorEntity)
-        _viewStateError.emit(null)
+        withContext(Dispatchers.Main) {
+            _viewStateError.emit(errorEntity)
+            _viewStateError.emit(null)
+        }
     }
     override fun onCleared() {
         super.onCleared()

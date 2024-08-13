@@ -19,6 +19,7 @@ import com.cancer.yaqeen.databinding.ActivityMainBinding
 import com.cancer.yaqeen.databinding.ProgressBarBinding
 import com.cancer.yaqeen.presentation.util.MyContextWrapper
 import com.cancer.yaqeen.presentation.util.changeVisibility
+import com.cancer.yaqeen.presentation.util.enableDrawOverlaysPermission
 import com.cancer.yaqeen.presentation.util.updateConfiguration
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint

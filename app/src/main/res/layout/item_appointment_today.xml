@@ -7,10 +7,25 @@
 
     </data>
 
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_24sdp"
+        android:layout_marginTop="@dimen/_14sdp"
+        android:layout_marginStart="@dimen/_2sdp"
+        android:layout_marginEnd="@dimen/_12sdp"
+        app:strokeWidth="@dimen/_1sdp"
+        app:strokeColor="@color/light_gray"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="@dimen/_18sdp">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/item_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_12sdp">
+
+
 
         <TextView
             android:id="@+id/tv_time"
@@ -32,7 +47,7 @@
             tools:text="10:00 pm" />
 
         <com.makeramen.roundedimageview.RoundedImageView
-            android:id="@+id/iv_symptom_background"
+            android:id="@+id/iv_medication_background"
             android:layout_width="@dimen/_64sdp"
             android:layout_height="@dimen/_64sdp"
             android:layout_marginTop="@dimen/_14sdp"
@@ -44,37 +59,60 @@
             app:riv_tile_mode="clamp" />
 
         <ImageView
-            android:id="@+id/iv_symptom_icon"
+            android:id="@+id/iv_appointment_icon"
             android:layout_width="@dimen/_64sdp"
             android:layout_height="@dimen/_64sdp"
             android:padding="@dimen/_14sdp"
-            tools:src="@drawable/ic_capsule"
-            app:layout_constraintBottom_toBottomOf="@id/iv_symptom_background"
-            app:layout_constraintStart_toStartOf="@id/iv_symptom_background"
-            app:layout_constraintEnd_toEndOf="@id/iv_symptom_background"
-            app:layout_constraintTop_toTopOf="@id/iv_symptom_background"
+            android:src="@drawable/ic_medical_reminder"
+            app:layout_constraintBottom_toBottomOf="@id/iv_medication_background"
+            app:layout_constraintStart_toStartOf="@id/iv_medication_background"
+            app:layout_constraintEnd_toEndOf="@id/iv_medication_background"
+            app:layout_constraintTop_toTopOf="@id/iv_medication_background"
             app:tint="@color/rose_penk" />
 
         <TextView
-            android:id="@+id/tv_symptom_details"
+            android:id="@+id/tv_doctor_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="center|start"
-            android:layout_marginEnd="@dimen/_4sdp"
-            android:paddingVertical="@dimen/_4sdp"
             android:layout_marginStart="@dimen/_10sdp"
-            tools:text="CINNARIZINE 75 MG 20"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_12ssp"
-            android:fontFamily="sans-serif-medium"
-            android:singleLine="true"
+            android:layout_marginEnd="@dimen/_4sdp"
             android:ellipsize="marquee"
             android:focusable="true"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center|start"
             android:marqueeRepeatLimit="marquee_forever"
+            android:paddingVertical="@dimen/_4sdp"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/iv_symptom_background"
-            app:layout_constraintTop_toTopOf="@+id/iv_symptom_background" />
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@id/iv_medication_background"
+            app:layout_constraintTop_toTopOf="@+id/iv_medication_background"
+            tools:text="Dr/ Ahmed Essam" />
 
+        <ImageView
+            android:id="@+id/iv_date"
+            android:layout_width="@dimen/_14sdp"
+            android:layout_height="@dimen/_14sdp"
+            android:layout_marginTop="@dimen/_4sdp"
+            app:layout_constraintStart_toStartOf="@id/tv_doctor_name"
+            app:layout_constraintTop_toBottomOf="@id/tv_doctor_name"
+            tools:src="@drawable/ic_calender"
+            app:tint="@color/x_dark_gray" />
+        <TextView
+            android:id="@+id/tv_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/iv_date"
+            app:layout_constraintBottom_toBottomOf="@id/iv_date"
+            app:layout_constraintEnd_toEndOf="@id/tv_doctor_name"
+            app:layout_constraintStart_toEndOf="@id/iv_date"
+            android:layout_marginStart="@dimen/_4sdp"
+            tools:text="Tomorrow 02/10"
+            android:textColor="@color/light_black"
+            android:textSize="@dimen/_10ssp"
+            android:fontFamily="sans-serif" />
 
         <TextView
             android:id="@+id/tv_notes"
@@ -85,18 +123,18 @@
             android:ellipsize="marquee"
             android:focusable="true"
             android:marqueeRepeatLimit="marquee_forever"
-            android:layout_marginTop="@dimen/_4sdp"
+            android:layout_marginTop="@dimen/_6sdp"
             android:paddingVertical="@dimen/_2sdp"
             tools:text="After breakfast, drinking water"
             android:textColor="@color/crow_black_blue"
             android:textSize="@dimen/_10ssp"
             android:fontFamily="sans-serif"
             android:layout_marginBottom="@dimen/_24sdp"
-            app:layout_constraintVertical_bias="0"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/tv_symptom_details"
-            app:layout_constraintStart_toStartOf="@id/tv_symptom_details"
-            app:layout_constraintTop_toBottomOf="@+id/tv_symptom_details" />
+            app:layout_constraintEnd_toEndOf="@id/tv_doctor_name"
+            app:layout_constraintStart_toStartOf="@id/tv_doctor_name"
+            app:layout_constraintTop_toBottomOf="@+id/tv_date" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
 </layout>

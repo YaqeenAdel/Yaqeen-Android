@@ -1,13 +1,15 @@
 package com.cancer.yaqeen.data.features.home.schedule.medication.models
 
-enum class DayEnum(val id: Int, val cronExpression: String) {
-    SUN(0, "SUN"),
-    MON(1, "MON"),
-    TUE(2, "TUE"),
-    WED(3, "WED"),
-    THU(4, "THU"),
-    FRI(5, "FRI"),
-    SAT(6, "SAT");
+import java.util.Calendar
+
+enum class DayEnum(val id: Int, val cronExpression: String, val dayId: Int) {
+    SUN(0, "SUN", Calendar.SUNDAY),
+    MON(1, "MON", Calendar.MONDAY),
+    TUE(2, "TUE", Calendar.TUESDAY),
+    WED(3, "WED", Calendar.WEDNESDAY),
+    THU(4, "THU", Calendar.THURSDAY),
+    FRI(5, "FRI", Calendar.FRIDAY),
+    SAT(6, "SAT", Calendar.SATURDAY);
 
     companion object {
         fun getDay(id: Int): DayEnum{

@@ -1,6 +1,7 @@
 package com.cancer.yaqeen.presentation.util
 
 import android.graphics.Bitmap
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.util.Patterns
@@ -16,8 +17,14 @@ import androidx.viewpager2.widget.ViewPager2
 import com.cancer.yaqeen.R
 import com.google.android.material.textfield.TextInputLayout
 import java.text.SimpleDateFormat
+import java.time.Duration
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 
 fun View.changeVisibility(show: Boolean, isGone: Boolean = false) =
     if (show) {
@@ -212,4 +219,22 @@ fun Bitmap.cropImageToSquare(): Bitmap {
 }
 
 fun String.isValidPhone() =
-    Patterns.PHONE.matcher(this).matches() && length < 11
+    Patterns.PHONE.matcher(this).matches() && length == 11
+
+
+fun Long.convertMillisecondsToDateComponents(): Triple<Int, Int, Int> =
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        val instant = Instant.ofEpochMilli(this)
+        val localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault())
+        val year = localDateTime.year
+        val month = localDateTime.monthValue
+        val day = localDateTime.dayOfMonth
+        Triple(year, month, day)
+    } else {
+        val calendar = Calendar.getInstance(TimeZone.getDefault())
+        calendar.timeInMillis = this
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH) + 1 // Month is zero-based, so adding 1
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+        Triple(year, month, day)
+    }

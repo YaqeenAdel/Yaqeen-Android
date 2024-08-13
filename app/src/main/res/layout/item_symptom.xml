@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:layout_marginBottom="@dimen/_10sdp"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/iv_symptom"
@@ -46,16 +46,33 @@
             android:layout_marginStart="@dimen/_6sdp"
             android:layout_marginEnd="@dimen/_14sdp"
             android:layout_marginBottom="@dimen/_15sdp"
-            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_4sdp"
             android:textColor="@color/black"
             android:textSize="@dimen/_10ssp"
             android:fontFamily="sans-serif-medium"
-            android:lines="2"
             android:lineSpacingMultiplier="1.4"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/iv_symptom"
             app:layout_constraintStart_toEndOf="@id/iv_symptom"
             app:layout_constraintTop_toTopOf="@id/iv_symptom" />
+
+        <TextView
+            android:id="@+id/tv_symptom_notes"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="start|top"
+            tools:text="Bloating\nBleeding when cough"
+            android:layout_marginTop="@dimen/_4sdp"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_10ssp"
+            android:fontFamily="sans-serif"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            app:layout_constraintBottom_toBottomOf="@id/iv_symptom"
+            app:layout_constraintEnd_toEndOf="@id/tv_symptom_types"
+            app:layout_constraintStart_toStartOf="@id/tv_symptom_types"
+            app:layout_constraintTop_toBottomOf="@id/tv_symptom_types" />
 
 
         <com.google.android.material.button.MaterialButton
@@ -76,7 +93,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_symptom_types"
+            app:layout_constraintTop_toBottomOf="@id/tv_symptom_notes"
             app:layout_constraintVertical_bias="0" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -87,7 +104,7 @@
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:layout_marginBottom="@dimen/_10sdp"
-            android:visibility="gone">
+            android:visibility="visible">
 
 
             <androidx.recyclerview.widget.RecyclerView
@@ -106,17 +123,6 @@
                 android:layout_marginStart="@dimen/_14sdp"
                 tools:itemCount="4"
                 tools:listitem="@layout/item_photo_small" />
-<!--            <ImageView-->
-<!--                android:id="@+id/iv_symptom_2"-->
-<!--                android:layout_width="@dimen/_44sdp"-->
-<!--                android:layout_height="@dimen/_44sdp"-->
-<!--                tools:src="@mipmap/ic_launcher"-->
-<!--                android:scaleType="fitXY"-->
-<!--                android:layout_marginTop="@dimen/_15sdp"-->
-<!--                app:layout_constraintTop_toTopOf="parent"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                android:layout_marginVertical="@dimen/_10sdp"-->
-<!--                android:layout_marginStart="@dimen/_14sdp"/>-->
 
 
             <com.google.android.material.button.MaterialButton

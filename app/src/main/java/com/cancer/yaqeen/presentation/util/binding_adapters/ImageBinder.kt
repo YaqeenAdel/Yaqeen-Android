@@ -9,34 +9,35 @@ import com.bumptech.glide.request.RequestOptions
 import com.cancer.yaqeen.R
 
 
-@BindingAdapter("imageUrl")
-fun bindImage(imageView: ImageView, imgUrl: String?) {
-    imgUrl?.let {
-        if (it.isNotEmpty()) {
-            try {
-                imageView.clipToOutline = true
-                Glide.with(imageView.context)
-                    .load(it)
-                    .apply(
-                        RequestOptions()
-                            .placeholder(R.drawable.background_view_gray)
-                    )
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(imageView)
-            } catch (e: Exception) {
-            }
+fun bindImage(imageView: ImageView, imgUrl: String?, placeHolderIsAppIcon: Boolean = true) {
+    val placeHolderId = if (placeHolderIsAppIcon) R.drawable.logo_launcher else R.color.white_gray
+    if (imgUrl.isNullOrEmpty()) {
+        imageView.setImageResource(placeHolderId)
+    } else {
+        try {
+            imageView.clipToOutline = true
+            Glide.with(imageView.context)
+                .load(imgUrl)
+                .apply(
+                    RequestOptions()
+                        .placeholder(R.drawable.background_view_gray)
+                )
+                .error(placeHolderId)
+                .placeholder(placeHolderId)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(imageView)
+        } catch (e: Exception) {
         }
-        else imageView.setImageResource(R.color.silver_medal)
     }
 }
 
 @BindingAdapter("imageURI")
-fun bindImageURI(imageView: ImageView, uri: Uri?){
+fun bindImageURI(imageView: ImageView, uri: Uri?) {
     imageView.setImageURI(uri)
 }
 
 @BindingAdapter("resourceId")
-fun bindResourceImage(imageView: ImageView, resourceId: Int){
+fun bindResourceImage(imageView: ImageView, resourceId: Int) {
     Glide.with(imageView.context)
         .load(resourceId)
         .into(imageView)

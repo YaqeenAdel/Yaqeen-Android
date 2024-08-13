@@ -10,9 +10,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.databinding.FragmentQuoteBinding
-import com.cancer.yaqeen.databinding.FragmentSplashBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
-import com.cancer.yaqeen.presentation.ui.auth.OnBoardingFragmentDirections
 import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindResourceImage
@@ -48,6 +46,8 @@ class QuoteFragment : BaseFragment() {
 
             )
         }
+
+        splashViewModel.refreshToken(requireContext())
 
         displayRandomView()
     }

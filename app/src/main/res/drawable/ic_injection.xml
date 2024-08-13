@@ -3,6 +3,6 @@
     android:width="24dp" xmlns:android="http://schemas.android.com/apk/res/android">
     <path android:fillColor="#00000000"
         android:pathData="M5.287,5.4L5.343,5.344M5.287,5.4L5.399,5.288M5.287,5.4C4.528,6.159 4.504,7.381 5.231,8.17L5.965,8.965M5.343,5.344L5.399,5.288M5.343,5.344L3.222,3.223M5.399,5.288C6.158,4.529 7.38,4.504 8.169,5.232L8.965,5.965M5.965,8.965L8.965,5.965M5.965,8.965C5.621,9.308 5.621,9.865 5.965,10.208L13.121,17.365C13.902,18.146 15.169,18.146 15.95,17.365L17.364,15.951C18.145,15.17 18.145,13.903 17.364,13.122L10.207,5.965C9.864,5.622 9.308,5.622 8.965,5.965M18.778,18.779L16.657,16.657M18.778,18.779L20.899,16.657M18.778,18.779L16.657,20.9"
-        android:strokeColor="#1BAFB7" android:strokeLineCap="round"
+        android:strokeColor="@color/rose_penk" android:strokeLineCap="round"
         android:strokeLineJoin="round" android:strokeWidth="1.5"/>
 </vector>

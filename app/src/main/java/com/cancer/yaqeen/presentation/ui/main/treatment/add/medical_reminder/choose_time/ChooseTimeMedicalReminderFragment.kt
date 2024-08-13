@@ -7,6 +7,7 @@ import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
@@ -16,7 +17,9 @@ import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.models.MedicalReminderTrack
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.ReminderTime
+import com.cancer.yaqeen.data.features.home.schedule.routine_test.models.ReminderBefore
 import com.cancer.yaqeen.data.features.home.schedule.symptom.models.Symptom
+import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.databinding.FragmentChooseTimeMedicalReminderBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.medical_reminder.MedicalReminderViewModel
@@ -24,12 +27,17 @@ import com.cancer.yaqeen.presentation.ui.main.treatment.history.adapters.SmallPh
 import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindImage
+import com.cancer.yaqeen.presentation.util.calculateStartDateTime
 import com.cancer.yaqeen.presentation.util.changeVisibility
 import com.cancer.yaqeen.presentation.util.convertMilliSecondsToDate
 import com.cancer.yaqeen.presentation.util.disable
+import com.cancer.yaqeen.presentation.util.disableTouch
 import com.cancer.yaqeen.presentation.util.enable
+import com.cancer.yaqeen.presentation.util.enableTouch
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import java.util.concurrent.TimeUnit
 
 
 @AndroidEntryPoint
@@ -85,6 +93,43 @@ class ChooseTimeMedicalReminderFragment : BaseFragment() {
 
         setListener()
 
+        observeStates()
+    }
+
+    private fun observeStates() {
+        lifecycleScope {
+            medicalReminderViewModel.viewStateLoading.collectLatest {
+                if (it)
+                    disableTouch()
+                else
+                    enableTouch()
+                onLoading(it)
+            }
+        }
+        lifecycleScope {
+            medicalReminderViewModel.viewStateError.collectLatest {
+                handleResponseError(it)
+            }
+        }
+
+        lifecycleScope {
+            medicalReminderViewModel.viewStateDeleteSymptomFromSchedule.observe(viewLifecycleOwner) { response ->
+                if (response == true){
+                    updateUI(symptom = null)
+                }
+            }
+        }
+    }
+
+    private fun handleResponseError(errorEntity: ErrorEntity?) {
+        val errorMessage = handleError(errorEntity)
+        displayErrorMessage(errorMessage)
+    }
+
+    private fun displayErrorMessage(errorMessage: String?) {
+        errorMessage?.let {
+            Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun setReminderTime(reminderTime: ReminderTime?) {
@@ -99,7 +144,7 @@ class ChooseTimeMedicalReminderFragment : BaseFragment() {
         else null
 
         binding.editTextTime.setText(time ?: "")
-        medicalReminderViewModel.selectReminderTime(time)
+        medicalReminderViewModel.selectReminderTime(reminderTime)
 
         checkMedicalReminderTimeData()
     }
@@ -114,7 +159,7 @@ class ChooseTimeMedicalReminderFragment : BaseFragment() {
     private fun setDate(date: Long) {
         val startDate = convertMilliSecondsToDate(date)
         binding.editTextStartFrom.setText(startDate)
-        medicalReminderViewModel.selectStartDate(startDate)
+        medicalReminderViewModel.selectStartDate(date)
 
         checkMedicalReminderTimeData()
     }
@@ -125,15 +170,17 @@ class ChooseTimeMedicalReminderFragment : BaseFragment() {
             binding.tvDoctorPhoneNumber.text = phoneNumber
             binding.tvDoctorAddress.text = location
 
-            if (startDate?.isNotEmpty() == true) {
-                binding.editTextStartFrom.setText(startDate)
+            startDate?.let {
+                binding.editTextStartFrom.setText(convertMilliSecondsToDate(startDate!!))
             }
-            if (reminderTime?.isNotEmpty() == true) {
-                binding.editTextTime.setText(reminderTime)
+
+            reminderTime?.run {
+                val timing = if (isAM) getString(R.string.am) else getString(R.string.pm)
+                binding.editTextTime.setText("$text $timing")
             }
-            if (reminderBeforeTime?.isNotEmpty() == true) {
-                binding.editTextReminderBeforeTime.setText(reminderBeforeTime)
-            }
+
+            val reminderBeforeTime = getReminderBeforeTime(reminderBefore)
+            binding.editTextReminderBeforeTime.setText(reminderBeforeTime)
             if (notes?.isNotEmpty() == true) {
                 binding.editTextNote.setText(notes)
             }
@@ -167,7 +214,7 @@ class ChooseTimeMedicalReminderFragment : BaseFragment() {
             binding.itemSymptom.tvReminderVal.text = doctorName ?: ""
             binding.itemSymptom.tvReminder.changeVisibility(show = isReminder, isGone = true)
             binding.itemSymptom.tvReminderVal.changeVisibility(show = isReminder, isGone = true)
-            binding.itemSymptom.tvDateTimeVal.text = "$reminderTime - $startDate"
+            binding.itemSymptom.tvDateTimeVal.text = "${reminderTime2?.timeUI.toString()} - $startDateUI"
 
             binding.itemSymptom.layoutLess.changeVisibility(show = true)
             binding.itemSymptom.layoutMore.changeVisibility(show = false, isGone = true)
@@ -175,6 +222,19 @@ class ChooseTimeMedicalReminderFragment : BaseFragment() {
             binding.itemSymptom.linearLayout.changeVisibility(show = false, isGone = true)
         }
     }
+
+    private fun updateUI(reminderBefore: ReminderBefore?) {
+        reminderBefore?.run {
+            val reminderBeforeTime = getReminderBeforeTime(reminderBefore)
+            binding.editTextReminderBeforeTime.setText(reminderBeforeTime)
+        }
+    }
+
+    private fun getReminderBeforeTime(reminderBefore: ReminderBefore): String =
+        if (reminderBefore.isMoreThanOrEqualHour)
+            getString(R.string.reminder_before_hour, reminderBefore.time)
+        else
+            getString(R.string.reminder_before_min, reminderBefore.time)
 
     private fun setupPhotosAdapter(photosList: List<String>) {
         photosAdapter = SmallPhotosAdapter {
@@ -199,6 +259,11 @@ class ChooseTimeMedicalReminderFragment : BaseFragment() {
             )
         }
         binding.btnNext.setOnClickListener {
+
+            val isValid = checkOnSelectedDateTime()
+            if (!isValid)
+                return@setOnClickListener
+
             saveMedicalData()
 
             navController.tryNavigate(
@@ -207,7 +272,9 @@ class ChooseTimeMedicalReminderFragment : BaseFragment() {
         }
         binding.editTextStartFrom.setOnClickListener {
             navController.tryNavigate(
-                R.id.calendarFragment
+                ChooseTimeMedicalReminderFragmentDirections.actionChooseTimeMedicalReminderFragmentToCalendarFragment(
+                    0L, true
+                )
             )
         }
         binding.editTextTime.setOnClickListener {
@@ -229,18 +296,49 @@ class ChooseTimeMedicalReminderFragment : BaseFragment() {
         }
 
         binding.btnDeleteSymptom.setOnClickListener {
-            updateUI(symptom = null)
-            medicalReminderViewModel.setSymptom(null)
+            medicalReminderViewModel.deleteSymptomFromSchedule()
+        }
+
+        binding.btnIncrease.setOnClickListener {
+            val reminderBefore = medicalReminderViewModel.increaseReminderBefore()
+            updateUI(reminderBefore)
+        }
+
+        binding.btnDecrease.setOnClickListener {
+            val reminderBefore = medicalReminderViewModel.decreaseReminderBefore()
+            updateUI(reminderBefore)
         }
     }
 
-    private fun saveMedicalData() {
 
-        val reminderBeforeTime = binding.editTextReminderBeforeTime.text.toString()
+    private fun checkOnSelectedDateTime(): Boolean {
+        val medicalReminderTrack = medicalReminderViewModel.getMedicalReminderTrack()
+        val startDate = medicalReminderTrack?.startDate ?: 0L
+        val reminderTime = medicalReminderTrack?.reminderTime
+        val reminderBeforeInMinutes = medicalReminderTrack?.reminderBefore
+
+        reminderTime?.let {
+            val startDateTime = calculateStartDateTime(
+                startDate,
+                reminderTime.hour24.toIntOrNull() ?: 0,
+                reminderTime.minute.toIntOrNull() ?: 0
+            )
+            val reminderBeforeInMillis = TimeUnit.MINUTES.toMillis(reminderBeforeInMinutes?.timeInMinutes?.toLong() ?: 0)
+
+            if ((startDateTime - reminderBeforeInMillis) < System.currentTimeMillis()) {
+                Toast.makeText(requireContext(),
+                    getString(R.string.you_must_select_a_new_datetime), Toast.LENGTH_SHORT)
+                    .show()
+                return false
+            }
+        }
+        return true
+    }
+
+    private fun saveMedicalData() {
         val notes = binding.editTextNote.text.toString()
 
-        medicalReminderViewModel.setReminderBeforeTimeAndNotes(
-            reminderBeforeTime = reminderBeforeTime,
+        medicalReminderViewModel.setNotes(
             notes = notes
         )
     }

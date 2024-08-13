@@ -6,21 +6,24 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.DisplayMetrics
-import androidx.core.content.ContextCompat
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.ViewTreeObserver
 import com.cancer.yaqeen.data.features.onboarding.models.Language
+import com.cancer.yaqeen.databinding.DialogImageBinding
+import com.cancer.yaqeen.presentation.util.binding_adapters.bindImage
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.floor
 import kotlin.math.roundToInt
 
 
@@ -64,11 +67,36 @@ fun overrideLocale(localeCode: String? = null, resources: Resources) {
     newConfig.setLocale(local)
     resources.updateConfiguration(newConfig, resources.displayMetrics)
 }
-fun convertMilliSecondsToDate(milliseconds: Long, pattern: String = "dd/MM/yyyy"): String {
+fun convertMilliSecondsToDate(milliseconds: Long, pattern: String = "dd/MM/yyyy", local: Locale = Locale.getDefault()): String {
     val timestamp = Date(milliseconds)
 
-    val dateFormat = SimpleDateFormat(pattern, Locale.getDefault())
+    val dateFormat = SimpleDateFormat(pattern, local)
     return dateFormat.format(timestamp)
+}
+fun convertDateToMilliSeconds(date: String, pattern: String = "dd/MM/yyyy"): Long {
+    return try {
+        val dateFormat = SimpleDateFormat(pattern, Locale.getDefault())
+
+        dateFormat.parse(date)?.time ?: 0L
+    }catch (_: Exception){
+        0L
+    }
+}
+fun getDateWithSpecificDay(timeInMillis: Long, dayId: Int): Calendar {
+    val calendar = Calendar.getInstance(TimeZone.getDefault())
+    calendar.timeInMillis = timeInMillis
+    val nextDate = calendar.clone() as Calendar
+    while (nextDate.get(Calendar.DAY_OF_WEEK) != dayId) {
+        nextDate.add(Calendar.DAY_OF_MONTH, 1)
+    }
+    return nextDate
+}
+
+fun getDateTime(year: Int, month: Int, day: Int, hour24: Int, minute: Int, second: Int = 0): Calendar {
+    val calendar = Calendar.getInstance(TimeZone.getDefault())
+    calendar.set(year, month - 1, day, hour24, minute, second)
+
+    return calendar
 }
 
 fun getImageUri(context: Context, image: Bitmap): Uri? {
@@ -163,4 +191,32 @@ SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
     .format(getCurrentTimeMillis()) + ".jpg"
 
 
+fun showImageDialog(layoutInflater: LayoutInflater, context: Context, imageUrl: String? = null, imageUri: Uri? = null) {
+    val popUpDialogBinding = DialogImageBinding.inflate(layoutInflater)
 
+    val dialog: androidx.appcompat.app.AlertDialog = MaterialAlertDialogBuilder(context).apply {
+        setView(popUpDialogBinding.root)
+    }.create()
+
+    val observer = popUpDialogBinding.imageView.viewTreeObserver
+
+    observer.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+        override fun onGlobalLayout() {
+            // Remove the listener to prevent multiple calls to this method
+            popUpDialogBinding.imageView.viewTreeObserver.removeOnGlobalLayoutListener(this)
+            // Get the width of the ViewPager
+            val width = popUpDialogBinding.imageView.width
+            // Set the height of the ViewPager to be the same as its width
+            popUpDialogBinding.imageView.layoutParams.height = width
+            // Request a new layout to update the ViewPager's height
+            popUpDialogBinding.imageView.requestLayout()
+        }
+    })
+
+    if(imageUrl != null)
+        bindImage(popUpDialogBinding.imageView, imageUrl)
+    else
+        popUpDialogBinding.imageView.setImageURI(imageUri)
+
+    dialog.show()
+}

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.articles.models.Article
 import com.cancer.yaqeen.databinding.ItemArticleBinding
+import com.cancer.yaqeen.presentation.util.binding_adapters.bindImage
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindResourceImage
 import com.cancer.yaqeen.presentation.util.changeVisibility
 
@@ -70,7 +71,7 @@ class ArticlesAdapter(
 
         fun bind(position: Int, item: Article) {
             with(item){
-                itemBinding.articleImageUrl = thumbnail
+                bindImage(itemBinding.ivArticleImage, thumbnail, placeHolderIsAppIcon = false)
                 itemBinding.tvArticleHeadline.text = title
                 itemBinding.tvArticleDate.text = createdDate
                 itemBinding.tvInterestName.text = interests.firstOrNull()?.interestName

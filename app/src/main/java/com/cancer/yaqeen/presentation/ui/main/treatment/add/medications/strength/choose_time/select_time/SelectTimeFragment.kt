@@ -8,6 +8,7 @@ import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
@@ -22,6 +23,7 @@ import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.MedicationsViewModel
 import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.autoCleared
+import com.cancer.yaqeen.presentation.util.calculateStartDateTime
 import com.cancer.yaqeen.presentation.util.changeVisibility
 import com.cancer.yaqeen.presentation.util.convertMilliSecondsToDate
 import com.cancer.yaqeen.presentation.util.disable
@@ -114,7 +116,7 @@ class SelectTimeFragment : BaseFragment() {
             binding.textLayoutSpecificDays.changeVisibility(!specificDaysIsNotSelected)
 
             if(specificDaysIsNotSelected)
-                binding.itemMedicationTime.tvMedicationTime.text = periodTime?.time ?: ""
+                binding.itemMedicationTime.tvMedicationTime.text = periodTime?.timeEn ?: ""
             else
                 binding.editTextSpecificDays.setText(specificDays?.joinToString { it.name } ?: "")
         }
@@ -129,9 +131,14 @@ class SelectTimeFragment : BaseFragment() {
         }
 
         binding.btnNext.setOnClickListener {
+            val isValid = checkOnSelectedDateTime()
+            if (!isValid)
+                return@setOnClickListener
+
             val notes = binding.editTextNote.text.toString().trim()
             val dosageAmount = binding.editTextDosage.text.toString().trim()
             medicationsViewModel.selectNotesAndDosageAmount(notes = notes, dosageAmount = dosageAmount)
+
             navController.tryNavigate(
                 SelectTimeFragmentDirections.actionSelectTimeFragmentToMedicationConfirmationFragment()
             )
@@ -139,7 +146,9 @@ class SelectTimeFragment : BaseFragment() {
 
         binding.editTextStartFrom.setOnClickListener {
             navController.tryNavigate(
-                R.id.calendarFragment
+                SelectTimeFragmentDirections.actionSelectTimeFragmentToCalendarFragment(
+                    0L, true
+                )
             )
         }
         binding.editTextTime.setOnClickListener {
@@ -155,6 +164,28 @@ class SelectTimeFragment : BaseFragment() {
         binding.editTextDosage.addTextChangedListener {
             checkTimeData()
         }
+    }
+
+    private fun checkOnSelectedDateTime(): Boolean {
+        val medicationTrack = medicationsViewModel.getMedicationTrack()
+        val startDate = medicationTrack?.startDate ?: 0L
+        val reminderTime = medicationTrack?.reminderTime
+
+        reminderTime?.let {
+            val startDateTime = calculateStartDateTime(
+                startDate,
+                reminderTime.hour24.toIntOrNull() ?: 0,
+                reminderTime.minute.toIntOrNull() ?: 0
+            )
+
+            if (startDateTime < System.currentTimeMillis()) {
+                Toast.makeText(requireContext(),
+                    getString(R.string.you_must_select_a_new_datetime), Toast.LENGTH_SHORT)
+                    .show()
+                return false
+            }
+        }
+        return true
     }
 
     private fun updateUI() {

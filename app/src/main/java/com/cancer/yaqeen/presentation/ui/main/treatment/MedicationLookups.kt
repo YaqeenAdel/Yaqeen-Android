@@ -1,7 +1,6 @@
 package com.cancer.yaqeen.presentation.ui.main.treatment
 
 import android.content.Context
-import android.util.Log
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Day
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.DayEnum
@@ -12,9 +11,9 @@ import com.cancer.yaqeen.data.features.home.schedule.medication.models.ReminderT
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Time
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.UnitType
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.UnitTypeEnum
-import java.time.LocalDate
+import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Date
+import java.util.Locale
 
 fun getMedicationTypes(context: Context) =
     listOf(
@@ -87,23 +86,31 @@ fun getUnitType(context: Context, unitType: String): UnitType?{
 fun getReminderTimeFromCronExpression(cronExpression: String): ReminderTime {
     val fields = cronExpression.split(" ")
 
-    val minute = fields[0]
+    var minute = fields[0]
+
+    minute = if (minute == "0") "00" else minute
 
     val hourField = fields[1]
 
     // if time is every 8 or 12 days
-    val hour24 = if (hourField.contains("/")){
+    var hour24 = if (hourField.contains("/")){
         val hourFields = hourField.split("/")
         hourFields[0]
     }else {
         hourField
     }
 
-    val (hour12, isAM) = if (hour24.toInt() < 12){
+    val (hour12, isAM) = if (hour24.toInt() == 0){
+        "12" to true
+    } else if (hour24.toInt() == 12){
+        "12" to false
+    } else if (hour24.toInt() < 12){
         hour24 to true
     }else {
         (hour24.toInt() - 12).toString() to false
     }
+
+    hour24 = if (hour24 == "0") "00" else hour24
 
     return ReminderTime(
         hour12, hour24, minute, "", isAM, "$hour12:$minute"
@@ -115,16 +122,16 @@ fun getPeriodTimeFromCronExpression(cronExpression: String): Time {
 
     val hourField = fields[1]
 
-    // if time is every 8 or 12 days
+    // if time is every 8 or 12 hours
     val periodTime: Time = if (hourField.contains("/")){
         val hourFields = hourField.split("/")
         if (hourFields[1] == "8")
             Time(
-                id = PeriodTimeEnum.EVERY_8_HOURS.id, time = "", cronExpression = PeriodTimeEnum.EVERY_8_HOURS.cronExpression
+                id = PeriodTimeEnum.EVERY_8_HOURS.id, timeEn = "", timeAr = "", cronExpression = PeriodTimeEnum.EVERY_8_HOURS.cronExpression
             )
         else
             Time(
-                id = PeriodTimeEnum.EVERY_12_HOURS.id, time = "", cronExpression = PeriodTimeEnum.EVERY_12_HOURS.cronExpression
+                id = PeriodTimeEnum.EVERY_12_HOURS.id, timeEn = "", timeAr = "", cronExpression = PeriodTimeEnum.EVERY_12_HOURS.cronExpression
             )
 
     }else {
@@ -132,18 +139,25 @@ fun getPeriodTimeFromCronExpression(cronExpression: String): Time {
 
         if(dayOfMonthField == "*")
             Time(
-                id = PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id, time = "", cronExpression = PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.cronExpression
+                id = PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id, timeEn = "", timeAr = "", cronExpression = PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.cronExpression
             )
         else{
-            val isEveryDay = dayOfMonthField.split("/")[1] == "1"
-            if (isEveryDay)
-                Time(
-                    id = PeriodTimeEnum.EVERY_DAY.id, time = "", cronExpression = PeriodTimeEnum.EVERY_DAY.cronExpression
+
+            when(dayOfMonthField.split("/")[1]){
+                "1" -> Time(
+                    id = PeriodTimeEnum.EVERY_DAY.id, timeEn = "", timeAr = "", cronExpression = PeriodTimeEnum.EVERY_DAY.cronExpression
                 )
-            else
-                Time(
-                    id = PeriodTimeEnum.DAY_AFTER_DAY.id, time = "", cronExpression = PeriodTimeEnum.DAY_AFTER_DAY.cronExpression
+                "7" -> Time(
+                    id = PeriodTimeEnum.EVERY_WEEK.id, timeEn = "", timeAr = "", cronExpression = PeriodTimeEnum.EVERY_WEEK.cronExpression
                 )
+                "30" -> Time(
+                    id = PeriodTimeEnum.EVERY_MONTH.id, timeEn = "", timeAr = "", cronExpression = PeriodTimeEnum.EVERY_MONTH.cronExpression
+                )
+                else ->
+                    Time(
+                    id = PeriodTimeEnum.DAY_AFTER_DAY.id, timeEn = "", timeAr = "", cronExpression = PeriodTimeEnum.DAY_AFTER_DAY.cronExpression
+                )
+            }
         }
     }
 
@@ -190,4 +204,48 @@ fun getSpecificDaysFromCronExpression(cronExpression: String): List<Day>? {
         val day = DayEnum.getDay(it.toInt())
         Day(day.id, it)
     }
+}
+fun getReminderTimeFromTime(time: String): ReminderTime {
+    if(time.isEmpty())
+        return ReminderTime(
+            "0", "0", "0", "", true, "00:00"
+        )
+    val isAM = time.lowercase().contains("am")
+    val hour12 = time.substringBefore(":")
+    val hour24 = ((hour12.toIntOrNull() ?: 0) + 12).toString()
+    val minute = time.substringAfter(":").subSequence(0, 2).toString()
+
+
+    return ReminderTime(
+        hour12, hour24, minute, "", isAM, "$hour12:$minute"
+    )
+}
+fun getReminderTimeFromDateTime(dateTime: String): ReminderTime {
+    return try {
+        val inputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+        val outputDateFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+
+        val inputDate = inputDateFormat.parse(dateTime)
+        val dateTime = outputDateFormat.format(inputDate)
+
+        val isAM = dateTime.lowercase().contains("am")
+        val hour12 = dateTime.substringBefore(":")
+        val hour24 = ((hour12.toIntOrNull() ?: 0) + 12).toString()
+        val minute = dateTime.substringAfter(":").subSequence(0, 2).toString()
+
+
+        ReminderTime(
+            hour12, hour24, minute, "", isAM, "$hour12:$minute"
+        )
+
+    } catch (_: Exception) {
+        ReminderTime(
+            "0", "0", "0", "", true, "00:00"
+        )
+    }
+
+    if(dateTime.isEmpty())
+        return ReminderTime(
+            "0", "0", "0", "", true, "00:00"
+        )
 }

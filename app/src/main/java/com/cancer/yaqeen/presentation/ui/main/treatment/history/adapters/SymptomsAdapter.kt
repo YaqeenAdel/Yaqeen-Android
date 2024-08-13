@@ -9,8 +9,6 @@ import com.cancer.yaqeen.data.features.home.schedule.symptom.models.Symptom
 import com.cancer.yaqeen.databinding.ItemSymptomBinding
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindImage
 import com.cancer.yaqeen.presentation.util.changeVisibility
-import com.cancer.yaqeen.presentation.util.dpToPx
-import com.cancer.yaqeen.presentation.util.recyclerview.HorizontalMarginItemDecoration
 
 class SymptomsAdapter(
     private val itemClickable: Boolean = false,
@@ -63,7 +61,13 @@ class SymptomsAdapter(
     fun deleteSymptom(symptomId: Int) {
         val position = items.indexOfFirst { it.id == symptomId }
 
-        items.removeAt(position)
+        if (position == -1)
+            return
+
+        if (items.size == 1)
+            items = arrayListOf()
+        else
+            items.removeAt(position)
         super.submitList(items)
         notifyDataSetChanged()
     }
@@ -91,12 +95,13 @@ class SymptomsAdapter(
                 }
 
                 itemBinding.tvSymptomTypes.text = types
+                itemBinding.tvSymptomNotes.text = details
                 itemBinding.tvSymptomsVal.text = types
                 itemBinding.tvNotesVal.text = details
                 itemBinding.tvReminderVal.text = doctorName ?: ""
                 itemBinding.tvReminder.changeVisibility(show = isReminder, isGone = true)
                 itemBinding.tvReminderVal.changeVisibility(show = isReminder, isGone = true)
-                itemBinding.tvDateTimeVal.text = "$reminderTime - $startDate"
+                    itemBinding.tvDateTimeVal.text = "${reminderTime2?.timeUI.toString()} - $startDateUI"
 
                 itemBinding.layoutLess.changeVisibility(show = true)
                 itemBinding.layoutMore.changeVisibility(show = false, isGone = true)
@@ -109,8 +114,8 @@ class SymptomsAdapter(
 
         private fun setListener(item: Symptom) {
             itemBinding.btnShowMore.setOnClickListener {
-                itemBinding.layoutLess.changeVisibility(show = false, isGone = true)
                 itemBinding.layoutMore.changeVisibility(show = true)
+                itemBinding.layoutLess.changeVisibility(show = false, isGone = true)
             }
 
             itemBinding.btnShowLess.setOnClickListener {

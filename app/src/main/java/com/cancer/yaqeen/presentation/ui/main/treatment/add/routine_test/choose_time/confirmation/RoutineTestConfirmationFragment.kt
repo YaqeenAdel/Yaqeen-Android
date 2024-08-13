@@ -3,7 +3,7 @@ package com.cancer.yaqeen.presentation.ui.main.treatment.add.routine_test.choose
 import android.Manifest
 import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.os.PersistableBundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,21 +14,34 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.PeriodTimeEnum
+import com.cancer.yaqeen.data.features.home.schedule.routine_test.models.ReminderBefore
+import com.cancer.yaqeen.data.features.home.schedule.routine_test.room.RoutineTestDB
 import com.cancer.yaqeen.data.network.error.ErrorEntity
+import com.cancer.yaqeen.data.utils.toJson
 import com.cancer.yaqeen.databinding.FragmentRoutineTestConfirmationBinding
-import com.cancer.yaqeen.databinding.FragmentSymptomConfirmationBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
+import com.cancer.yaqeen.presentation.service.AlarmReminder
+import com.cancer.yaqeen.presentation.service.ReminderManager
+import com.cancer.yaqeen.presentation.service.WorkerReminder
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.routine_test.RoutineTestViewModel
+import com.cancer.yaqeen.presentation.util.Constants
+import com.cancer.yaqeen.presentation.util.Constants.OPEN_ROUTINE_TEST_WINDOW_ACTION
+import com.cancer.yaqeen.presentation.util.Constants.UPDATE_LOCAL_REMINDED_SCHEDULES_ACTION
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindImage
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindImageURI
-import com.cancer.yaqeen.presentation.util.binding_adapters.bindResourceImage
 import com.cancer.yaqeen.presentation.util.convertMilliSecondsToDate
+import com.cancer.yaqeen.presentation.util.disableTouch
 import com.cancer.yaqeen.presentation.util.enableStoragePermissions
+import com.cancer.yaqeen.presentation.util.enableTouch
+import com.cancer.yaqeen.presentation.util.scheduleJobServicePeriodically
+import com.cancer.yaqeen.presentation.util.schedulingPermissionsAreGranted
 import com.cancer.yaqeen.presentation.util.storagePermissionsAreGranted
 import com.cancer.yaqeen.presentation.util.tryPopBackStack
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import java.util.concurrent.TimeUnit
 
 
 @AndroidEntryPoint
@@ -50,6 +63,21 @@ class RoutineTestConfirmationFragment : BaseFragment() {
                     confirmRoutineTest()
             }
         }
+
+    private val requestPermissionLauncher: ActivityResultLauncher<String?> = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+
+    }
+
+    private val workerReminder: ReminderManager by lazy {
+        AlarmReminder(requireContext())
+    }
+
+
+    private val workerReminderPeriodically: ReminderManager by lazy {
+        WorkerReminder(requireContext())
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -78,9 +106,10 @@ class RoutineTestConfirmationFragment : BaseFragment() {
         routineTestTrack?.run {
             binding.tvRoutineTestName.text = routineTestName ?: ""
             binding.tvNotesVal.text = notes ?: ""
-            binding.tvDaysVal.text = if (specificDays.isNullOrEmpty()) periodTime?.time ?: "" else specificDays!!.joinToString { it.name }
+            binding.tvDaysVal.text = if (specificDays.isNullOrEmpty()) periodTime?.timeEn ?: "" else specificDays!!.joinToString { it.name }
             binding.tvStartFromVal.text = startDate?.let { convertMilliSecondsToDate(it) } ?: ""
-            binding.tvReminderVal.text = getString(R.string.before_time, reminderBeforeTime ?: "")
+            val reminderBeforeTime = getReminderBeforeTime(reminderBefore)
+            binding.tvReminderVal.text = reminderBeforeTime
             binding.tvTimeVal.text = reminderTime?.run {
                 val timing = if (isAM) getString(R.string.am) else getString(R.string.pm)
                 "$text $timing"
@@ -96,6 +125,12 @@ class RoutineTestConfirmationFragment : BaseFragment() {
             }
         }
     }
+
+    private fun getReminderBeforeTime(reminderBefore: ReminderBefore): String =
+        if (reminderBefore.isMoreThanOrEqualHour)
+            getString(R.string.before_time_hour, reminderBefore.timeDigits)
+        else
+            getString(R.string.before_time_min, reminderBefore.timeDigits)
 
     private fun updateUI(url: String) {
         bindImage(binding.ivRoutine, url)
@@ -115,56 +150,178 @@ class RoutineTestConfirmationFragment : BaseFragment() {
     }
 
     private fun confirmRoutineTest() {
-        if (!storagePermissionsAreGranted(requireContext())) {
-            enableStoragePermissions(requestMultiplePermissionsLauncher)
+        val routineTestTrack = routineTestViewModel.getRoutineTestTrack()
+        if (!storagePermissionsAreGranted(requireContext()) && routineTestTrack?.photo?.uri != null) {
+            enableStoragePermissions(requestMultiplePermissionsLauncher, requireContext())
             return
         }
 
-//        val medicationTrack = symptomsViewModel.getSymptomTrack()
-//        if (medicationTrack?.editable == true)
-//            symptomsViewModel.editSymptom()
-//        else
-//            symptomsViewModel.addSymptom()
+        if (schedulingPermissionsAreGranted(requireActivity(), requireContext(), requestPermissionLauncher)) {
+            routineTestViewModel.modifyRoutineTest()
+        }
+    }
+
+    private fun addWorkerReminderPeriodically() {
+        scheduleJobServicePeriodically(requireContext(), TimeUnit.MINUTES.toMillis(15), PersistableBundle().apply {
+            putString(
+                Constants.ACTION_KEY,
+                UPDATE_LOCAL_REMINDED_SCHEDULES_ACTION
+            )
+        })
+//        if (!routineTestViewModel.hasWorker()) {
+//            val timeDelayInMilliSeconds = TimeUnit.MINUTES.toMillis(5L)
+//            val currentTimeInMilliSeconds = System.currentTimeMillis()
+//            val workRunningInMilliSeconds = currentTimeInMilliSeconds + timeDelayInMilliSeconds
+//
+//            val periodReminderId = workerReminderPeriodically.setPeriodReminder(
+//                timeDelayInMilliSeconds,
+//                PeriodTimeEnum.EVERY_3_HOURS.id,
+//                UPDATE_LOCAL_PENDING_SCHEDULES_ACTION
+//            )
+//
+//            routineTestViewModel.saveWorkerReminderPeriodicallyInfo(periodReminderId, workRunningInMilliSeconds)
+//        }
     }
 
     private fun observeStates() {
         lifecycleScope {
-//            symptomsViewModel.viewStateLoading.collectLatest {
-//                onLoading(it)
-//            }
+            routineTestViewModel.viewStateLoading.collectLatest {
+                if (it)
+                    disableTouch()
+                else
+                    enableTouch()
+                onLoading(it)
+            }
         }
         lifecycleScope {
-//            symptomsViewModel.viewStateError.collectLatest {
-//                handleResponseError(it)
-//            }
+            routineTestViewModel.viewStateError.collectLatest {
+                handleResponseError(it)
+            }
         }
 
-//        lifecycleScope {
-//            symptomsViewModel.viewStateAddSymptom.observe(viewLifecycleOwner) { response ->
-//                if(response == true){
-//                    Toast.makeText(requireContext(),
-//                        getString(R.string.symptom_added_successfully), Toast.LENGTH_SHORT).show()
-//                    navController.tryPopBackStack(
-//                        R.id.treatmentHistoryFragment,
-//                        false
-//                    )
-//                }
-//            }
-//        }
-//
-//        lifecycleScope {
-//            symptomsViewModel.viewStateEditSymptom.observe(viewLifecycleOwner) { response ->
-//                if(response == true){
-//                    Toast.makeText(requireContext(),
-//                        getString(R.string.symptom_edited_successfully), Toast.LENGTH_SHORT).show()
-//                    navController.tryPopBackStack(
-//                        R.id.treatmentHistoryFragment,
-//                        false
-//                    )
-//                }
-//            }
-//        }
+        lifecycleScope {
+            routineTestViewModel.viewStateAddRoutineTest.observe(viewLifecycleOwner) { response ->
+                response?.let { (added, routineTest) ->
+                    if (added) {
+                        addWorkerReminderPeriodically()
+                        if (routineTest.periodTimeId == PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id){
+                            val (uuids, workBeforeID) = workerReminder.setReminderDays(routineTest.apply { json = toJson() })
+                            routineTestViewModel.saveLocalRoutineTest(routineTest, uuids, workBeforeID)
+                        }else {
+                            val (periodicWorkID, workBeforeID) = workerReminder.setReminder(
+                                routineTest.apply { json = toJson() })
+                            routineTestViewModel.saveLocalRoutineTest(
+                                routineTest,
+                                periodicWorkID,
+                                workBeforeID
+                            )
+                        }
+                        Toast.makeText(requireContext(),
+                            getString(R.string.routine_test_added_successfully), Toast.LENGTH_SHORT).show()
+                        navController.tryPopBackStack(
+                            R.id.treatmentHistoryFragment,
+                            false
+                        )
+                    }
+                }
+            }
+        }
+
+        lifecycleScope {
+            routineTestViewModel.viewStateEditRoutineTest.observe(viewLifecycleOwner) { response ->
+                response?.let { (edited, routineTest) ->
+
+                    addWorkerReminderPeriodically()
+
+                    var uuids = listOf<String>()
+                    var periodicWorkID = ""
+                    var workBeforeID: String? = null
+                    if (routineTest.periodTimeId == PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id){
+                        val reminderInfo = workerReminder.setReminderDays(routineTest.apply { json = toJson() })
+
+                        uuids = reminderInfo.first
+                        workBeforeID = reminderInfo.second
+
+                        modifyLocalRoutineTest(
+                            edited,
+                            routineTest,
+                            uuids,
+                            workBeforeID
+                        )
+                    }else {
+                        val reminderInfo = workerReminder.setReminder(routineTest.apply { json = toJson() })
+
+                        periodicWorkID = reminderInfo.first
+                        workBeforeID = reminderInfo.second
+
+                        modifyLocalRoutineTest(
+                            edited,
+                            routineTest,
+                            periodicWorkID,
+                            workBeforeID
+                        )
+                    }
+
+
+                    Toast.makeText(requireContext(),
+                        getString(R.string.routine_test_edited_successfully), Toast.LENGTH_SHORT).show()
+                    navController.tryPopBackStack(
+                        R.id.treatmentHistoryFragment,
+                        false
+                    )
+                }
+            }
+        }
+
+        lifecycleScope {
+            routineTestViewModel.viewStateOldRoutineTest.observe(viewLifecycleOwner) { routineTest ->
+                routineTest?.run {
+                    val actionName = OPEN_ROUTINE_TEST_WINDOW_ACTION
+                    val objectJsonValue = routineTest.json.toString()
+                    workerReminder.cancelReminder(workID.toString(), actionName, objectJsonValue)
+                    workerReminder.cancelReminder(workID.toString())
+                    workBeforeID?.let {
+                        workerReminder.cancelReminder(it)
+                    }
+                }
+            }
+        }
     }
+
+    private fun modifyLocalRoutineTest(
+        edited: Boolean,
+        routineTest: RoutineTestDB,
+        periodicWorkID: String,
+        workBeforeID: String?
+    ) {
+        if (edited) {
+            routineTestViewModel.editLocalRoutineTest(
+                routineTest,
+                periodicWorkID,
+                workBeforeID
+            )
+        }else{
+            routineTestViewModel.saveLocalRoutineTest(routineTest, periodicWorkID, workBeforeID)
+        }
+    }
+
+    private fun modifyLocalRoutineTest(
+        edited: Boolean,
+        routineTest: RoutineTestDB,
+        uuids: List<String>,
+        workBeforeID: String?
+    ) {
+        if (edited) {
+            routineTestViewModel.editLocalRoutineTest(
+                routineTest,
+                uuids,
+                workBeforeID
+            )
+        }else{
+            routineTestViewModel.saveLocalRoutineTest(routineTest, uuids, workBeforeID)
+        }
+    }
+
     private fun handleResponseError(errorEntity: ErrorEntity?) {
         val errorMessage = handleError(errorEntity)
         displayErrorMessage(errorMessage)

@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +15,7 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
-import com.cancer.yaqeen.data.features.home.schedule.medication.models.ReminderTime
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.ReminderTime2
 import com.cancer.yaqeen.data.features.home.schedule.symptom.models.SymptomTrack
 import com.cancer.yaqeen.databinding.FragmentChooseTimeSymptomBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
@@ -30,6 +29,7 @@ import com.cancer.yaqeen.presentation.util.disable
 import com.cancer.yaqeen.presentation.util.enable
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.Locale
 
 
 @AndroidEntryPoint
@@ -56,9 +56,10 @@ class ChooseTimeSymptomFragment : BaseFragment() {
         setFragmentResultListener(Constants.REQUEST_DATE_KEY) { requestKey, bundle ->
             if (requestKey == Constants.REQUEST_DATE_KEY) {
                 val date = bundle.getLong(Constants.DATE_SELECTED_KEY)
-                val startDate = convertMilliSecondsToDate(date)
-                binding.editTextStartFrom.setText(startDate)
-                symptomsViewModel.selectStartDate(startDate)
+                val startDateUI = convertMilliSecondsToDate(date)
+                val startDateEn = convertMilliSecondsToDate(date, local = Locale.ENGLISH)
+                binding.editTextStartFrom.setText(startDateUI)
+                symptomsViewModel.selectStartDate(startDateUI, startDateEn)
 
                 checkPeriodTimeData()
             }
@@ -66,19 +67,21 @@ class ChooseTimeSymptomFragment : BaseFragment() {
 
         setFragmentResultListener(Constants.REQUEST_REMINDER_TIME_KEY) { requestKey, bundle ->
             if (requestKey == Constants.REQUEST_REMINDER_TIME_KEY) {
-                val reminderTime: ReminderTime? = bundle.getParcelable(Constants.REMINDER_TIME_KEY)
-                reminderTime?.run {
-                    val timing = if (isAM) getString(R.string.am) else getString(R.string.pm)
-                    binding.editTextTime.setText("$text $timing")
-                }
-                val time = if (reminderTime != null) {
-                    val timing = if (reminderTime.isAM) getString(R.string.am) else getString(R.string.pm)
-                    "${reminderTime.text} $timing"
-                }
-                else null
+//                val reminderTime: ReminderTime? = bundle.getParcelable(Constants.REMINDER_TIME_KEY)
+                val reminderTime2: ReminderTime2? = bundle.getParcelable(Constants.REMINDER_TIME_KEY2)
+//                Log.d("reminderTime", "onViewCreated: $reminderTime")
+//                reminderTime?.run {
+//                    val timing = if (isAM) getString(R.string.am) else getString(R.string.pm)
+//                    binding.editTextTime.setText("$text $timing")
+//                }
+//                val time = if (reminderTime != null) {
+//                    val timing = if (reminderTime.isAM) getString(R.string.am) else getString(R.string.pm)
+//                    "${reminderTime.text} $timing"
+//                }
+//                else null
 
-                binding.editTextTime.setText(time ?: "")
-                symptomsViewModel.selectReminderTime(time)
+                binding.editTextTime.setText(reminderTime2?.timeUI.toString())
+                symptomsViewModel.selectReminderTime(reminderTime2)
 
                 checkPeriodTimeData()
             }
@@ -100,10 +103,10 @@ class ChooseTimeSymptomFragment : BaseFragment() {
 
     private fun updateUI(symptomTrack: SymptomTrack?) {
         symptomTrack?.run {
-            if (startDate != null)
-                binding.editTextStartFrom.setText(startDate!!)
-            if (reminderTime?.isNotEmpty() == true) {
-                binding.editTextTime.setText("$reminderTime")
+            if (startDateUI != null)
+                binding.editTextStartFrom.setText(startDateUI!!)
+            if (reminderTime2 != null) {
+                binding.editTextTime.setText("${reminderTime2?.timeUI}")
             }
             if (details?.isNotEmpty() == true)
                 binding.tvSymptomDetails.text = details
@@ -152,7 +155,9 @@ class ChooseTimeSymptomFragment : BaseFragment() {
         }
         binding.editTextStartFrom.setOnClickListener {
             navController.tryNavigate(
-                R.id.calendarFragment
+                ChooseTimeSymptomFragmentDirections.actionChooseTimeSymptomFragmentToCalendarFragment(
+                    0L, false
+                )
             )
         }
         binding.editTextTime.setOnClickListener {
