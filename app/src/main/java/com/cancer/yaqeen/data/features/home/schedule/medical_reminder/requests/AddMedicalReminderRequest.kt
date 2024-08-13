@@ -1,8 +1,8 @@
 package com.cancer.yaqeen.data.features.home.schedule.medical_reminder.requests
 
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.ScheduleType
-import com.cancer.yaqeen.data.utils.formatDateAPI
-import com.cancer.yaqeen.data.utils.formatTimeAPI
+import com.cancer.yaqeen.data.utils.formatDateUIToDateAPI
+import com.cancer.yaqeen.data.utils.formatEnglishDateToDateAPI
 import com.google.gson.annotations.SerializedName
 
 data class AddMedicalReminderRequest(
@@ -57,7 +57,7 @@ data class AddMedicalReminderRequestBuilder(
                     notes = notes,
                     notifyBeforeMinutes = notifyBeforeMinutes
                 ),
-                startDate = "${startDate?.formatDateAPI() ?: ""} ${time ?: ""}"
+                startDate = "${formatEnglishDateToDateAPI(startDate)} ${time ?: ""}"
             )
         )
 }

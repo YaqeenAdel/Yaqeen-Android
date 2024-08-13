@@ -72,7 +72,7 @@ class MedicationTimesAdapter(
         private val _context = itemBinding.root.context
 
         fun bind(position: Int, item: Time) {
-            itemBinding.tvMedicationTime.text = item.time
+            itemBinding.tvMedicationTime.text = item.timeEn
             val isSelected = selectedPosition == position
             itemBinding.btnMedication.isChecked = isSelected
 

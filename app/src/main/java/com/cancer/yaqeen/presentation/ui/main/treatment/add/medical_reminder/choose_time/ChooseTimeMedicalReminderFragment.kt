@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -215,7 +214,7 @@ class ChooseTimeMedicalReminderFragment : BaseFragment() {
             binding.itemSymptom.tvReminderVal.text = doctorName ?: ""
             binding.itemSymptom.tvReminder.changeVisibility(show = isReminder, isGone = true)
             binding.itemSymptom.tvReminderVal.changeVisibility(show = isReminder, isGone = true)
-            binding.itemSymptom.tvDateTimeVal.text = "$reminderTime - $startDate"
+            binding.itemSymptom.tvDateTimeVal.text = "${reminderTime2?.timeUI.toString()} - $startDateUI"
 
             binding.itemSymptom.layoutLess.changeVisibility(show = true)
             binding.itemSymptom.layoutMore.changeVisibility(show = false, isGone = true)
@@ -273,7 +272,9 @@ class ChooseTimeMedicalReminderFragment : BaseFragment() {
         }
         binding.editTextStartFrom.setOnClickListener {
             navController.tryNavigate(
-                R.id.calendarFragment
+                ChooseTimeMedicalReminderFragmentDirections.actionChooseTimeMedicalReminderFragmentToCalendarFragment(
+                    0L, true
+                )
             )
         }
         binding.editTextTime.setOnClickListener {

@@ -46,15 +46,20 @@ class MedicationsFragment : BaseFragment() {
         args.medication
     }
 
+    private val destinationId by lazy {
+        args.destinationId
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         if (medication == null)
             medicationsViewModel.resetMedicationTrack()
         else
             medicationsViewModel.setMedicationTrack(
                 MappingMedicationAsMedicationTrack(requireContext()).map(medication!!)
             )
+
+        medicationsViewModel.setDestinationId(destinationId)
     }
 
     override fun onCreateView(

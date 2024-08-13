@@ -51,6 +51,7 @@ class AlarmReminder(private val context: Context): ReminderManager() {
     private fun setReminderSpecificDay(medication: MedicationDB, dayId: Int, oneTime: Boolean): String {
         val uuid = with(medication) {
             val timeDelayInMilliSeconds = calculateStartDateTimeForSpecificDay(startDateTime, dayId)
+            Log.d("AlarmSpecificDay", "setReminderSpecificDay: $timeDelayInMilliSeconds")
             ReminderRequest.Builder(context)
                 .setStartDateTime(timeDelayInMilliSeconds)
                 .setPeriodTime(periodTimeId)
@@ -120,6 +121,7 @@ class AlarmReminder(private val context: Context): ReminderManager() {
     private fun setReminderSpecificDay(routineTest: RoutineTestDB, dayId: Int, oneTime: Boolean): String {
         val uuid = with(routineTest) {
             val timeDelayInMilliSeconds = calculateStartDateTimeForSpecificDay(startDateTime, dayId)
+            Log.d("AlarmSpecificDay", "setReminderSpecificDay, routineTest: $timeDelayInMilliSeconds")
             ReminderRequest.Builder(context)
                 .setStartDateTime(timeDelayInMilliSeconds)
                 .setPeriodTime(periodTimeId)

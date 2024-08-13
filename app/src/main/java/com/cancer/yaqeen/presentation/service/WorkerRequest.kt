@@ -142,10 +142,18 @@ class WorkerRequest private constructor(){
                 TimeUnit.HOURS
             )
 
-        private fun initPeriodicWorkEveryXMinutes(repeatInterval: Long): PeriodicWorkRequest.Builder =
-            PeriodicWorkRequestBuilder<ReminderWorker>(
+        private fun initPeriodicWorkEveryXMinutes(repeatInterval: Long): PeriodicWorkRequest.Builder {
+            val repeatInterval = if (repeatInterval < 15)
+                15
+            else
+                repeatInterval
+
+            return PeriodicWorkRequestBuilder<ReminderWorker>(
                 repeatInterval,
                 TimeUnit.MINUTES
             )
+
+        }
+
     }
 }

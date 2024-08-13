@@ -357,6 +357,9 @@ class SchedulesHistoryViewModel @Inject constructor(
     fun userIsLoggedIn() =
         prefEncryptionUtil.isLogged
 
+    fun selectedLanguageIsArabic() =
+        prefEncryptionUtil.selectedLanguageIsArabic()
+
 
     private suspend fun emitLoading(isLoading: Boolean) {
         withContext(Dispatchers.Main) {

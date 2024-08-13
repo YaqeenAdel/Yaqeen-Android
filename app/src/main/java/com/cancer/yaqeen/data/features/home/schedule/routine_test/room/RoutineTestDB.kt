@@ -1,8 +1,10 @@
 package com.cancer.yaqeen.data.features.home.schedule.routine_test.room
 
+import android.content.Context
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.schedule.medication.room.ReminderStatus
 import com.cancer.yaqeen.data.utils.convertMillisecondsToTime
 import com.cancer.yaqeen.presentation.util.convertMilliSecondsToDate
@@ -37,14 +39,15 @@ data class RoutineTestDB(
     var statusReminder: ReminderStatus = ReminderStatus.NEW
 ): Parcelable{
 
-    fun createNotificationMessage(): String{
+    fun createNotificationMessage(context: Context): String{
         val date = convertMilliSecondsToDate(startDateTime)
         var timeMillis = getCurrentTimeMillis()
         if (reminderBeforeIsAvailable){
             timeMillis += TimeUnit.MINUTES.toMillis(reminderBeforeInMinutes.toLong())
         }
         val time = convertMillisecondsToTime(timeMillis)
-        return "Hello! Just a friendly reminder to test: $routineTestName at $date $time as prescribed today. Your health is important, so let's stay on track together. \uD83D\uDE0A"
+        return context.getString(R.string.routine_test_message, routineTestName, date, time)
+//        return "Hello! Just a friendly reminder to test: $routineTestName at $date $time as prescribed today. Your health is important, so let's stay on track together. \uD83D\uDE0A"
     }
 
 }

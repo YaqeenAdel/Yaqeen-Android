@@ -186,15 +186,15 @@
     <string name="common_of_symptoms">الأعراض الشائعة.</string>
     <string name="symptoms_details">تفاصيل الأعراض</string>
     <string name="details">تفاصيل</string>
-    <string name="symptoms_details_hint">إن إضافة مشاعرك وتفاصيلك أمر بالغ الأهمية عند تقديم المعلومات للطبيب خلال موعدك...</string>
+    <string name="symptoms_details_hint">إن إضافة مشاعرك وتفاصيلك أمر بالغ الأهمية عند تقديم المعلومات للطبيب خلال موعدك…</string>
     <string name="attach_image_text">قم بتضمين صورة لمساعدة الطبيب في تصور المشكلة.</string>
     <string name="camera">الكاميرا</string>
     <string name="my_file">ملفي</string>
     <string name="select_attached_files">حدد الملفات المرفقة</string>
     <string name="remind">ذكرني</string>
-    <string name="would_you_like_a_reminder_for_your_upcoming_doctor_s_appointment">Would you like a reminder for your upcoming doctor\'s appointment?</string>
+    <string name="would_you_like_a_reminder_for_your_upcoming_doctor_s_appointment">هل ترغب في الحصول على تذكير لموعدك القادم مع الطبيب؟</string>
     <string name="doctor_s_name">اسم الطبيب</string>
-    <string name="day_and_time">اسم ووقت</string>
+    <string name="day_and_time">تاريخ ووقت</string>
     <string name="delete">مسح</string>
     <string name="flash_is_not_available">الفلاش غير متاح</string>
     <string name="healthcare_alert">تذكير صحي</string>
@@ -219,9 +219,12 @@
     <string name="please_enable_permission_to_draw_over_other_apps">يرجى تمكين الإذن </string>
     <string name="ignore">تجاهل</string>
     <string name="medication_reminder">تذكير طبي</string>
+    <string name="medication_reminder_message">مرحبًا! تذكير ودي بتناول %s: %s من %s: %s الآن وفقًا للوصفة الطبية اليوم. صحتك مهمة، لذا فلنحافظ على المسار الصحيح معًا. 😊</string>
+    <string name="routine_test_message">مرحبًا! تذكير ودي بضرورة إجراء الاختبار: %s يوم %s %s وفقًا لما هو موصوف لهذا اليوم. صحتك مهمة، لذا فلنستمر على المسار الصحيح معًا. 😊</string>
     <string name="reminder_text_message">مرحبًا! مجرد تذكير ودي بتناول الدواء الخاص بك الآن كما هو موصوف اليوم. صحتك مهمة، لذلك دعونا نبقى على المسار الصحيح معًا. 😊</string>
     <string name="routine_test_reminder">تذكير بالاختبار الروتيني</string>
     <string name="medical_appointment_reminder">تذكير بميعاد طبي</string>
+    <string name="medical_appointment_message">مرحبًا! تذكير ودي بأن لديك موعدًا يوم %s الساعة %s مع الطبيب: %s في %s، ملاحظة لك رقم الهاتف: %s. صحتك مهمة، لذا دعنا نبقى على المسار الصحيح معًا. 😊</string>
     <string name="no_app_found_to_share_it">لم يتم العثور على تطبيق للمشاركه من خلاله</string>
     <string name="share_via">مشاركه عبر</string>
     <string name="non_hodgkin_s_lymphoma">سرطان الجهاز اللمفاوي</string>
@@ -235,7 +238,7 @@
     <string name="thyroid">غدة درقية</string>
     <string name="ok">حسنا</string>
     <string name="you_must_select_a_new_datetime">يجب عليك تحديد تاريخ/وقت جديد</string>
-    <string name="please_select_the_allow_all_option">PLease select the \'Allow all\' option</string>
+    <string name="please_select_the_allow_all_option">الرجاء تحديد خيار "السماح للجميع"</string>
     <string name="good_morning">صباح الخير</string>
     <string name="good_afternoon">مساء الخير</string>
     <string name="good_evening">مساء الخير</string>

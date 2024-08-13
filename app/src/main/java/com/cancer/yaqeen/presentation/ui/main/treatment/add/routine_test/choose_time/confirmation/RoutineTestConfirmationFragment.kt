@@ -25,9 +25,9 @@ import com.cancer.yaqeen.presentation.service.AlarmReminder
 import com.cancer.yaqeen.presentation.service.ReminderManager
 import com.cancer.yaqeen.presentation.service.WorkerReminder
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.routine_test.RoutineTestViewModel
+import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.Constants.OPEN_ROUTINE_TEST_WINDOW_ACTION
 import com.cancer.yaqeen.presentation.util.Constants.UPDATE_LOCAL_REMINDED_SCHEDULES_ACTION
-import com.cancer.yaqeen.presentation.util.Constants.UPDATE_LOCAL_SCHEDULES_ACTION_KEY
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindImage
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindImageURI
@@ -35,7 +35,7 @@ import com.cancer.yaqeen.presentation.util.convertMilliSecondsToDate
 import com.cancer.yaqeen.presentation.util.disableTouch
 import com.cancer.yaqeen.presentation.util.enableStoragePermissions
 import com.cancer.yaqeen.presentation.util.enableTouch
-import com.cancer.yaqeen.presentation.util.scheduleJobService
+import com.cancer.yaqeen.presentation.util.scheduleJobServicePeriodically
 import com.cancer.yaqeen.presentation.util.schedulingPermissionsAreGranted
 import com.cancer.yaqeen.presentation.util.storagePermissionsAreGranted
 import com.cancer.yaqeen.presentation.util.tryPopBackStack
@@ -106,7 +106,7 @@ class RoutineTestConfirmationFragment : BaseFragment() {
         routineTestTrack?.run {
             binding.tvRoutineTestName.text = routineTestName ?: ""
             binding.tvNotesVal.text = notes ?: ""
-            binding.tvDaysVal.text = if (specificDays.isNullOrEmpty()) periodTime?.time ?: "" else specificDays!!.joinToString { it.name }
+            binding.tvDaysVal.text = if (specificDays.isNullOrEmpty()) periodTime?.timeEn ?: "" else specificDays!!.joinToString { it.name }
             binding.tvStartFromVal.text = startDate?.let { convertMilliSecondsToDate(it) } ?: ""
             val reminderBeforeTime = getReminderBeforeTime(reminderBefore)
             binding.tvReminderVal.text = reminderBeforeTime
@@ -162,9 +162,9 @@ class RoutineTestConfirmationFragment : BaseFragment() {
     }
 
     private fun addWorkerReminderPeriodically() {
-        scheduleJobService(requireContext(), TimeUnit.MINUTES.toMillis(15), PersistableBundle().apply {
+        scheduleJobServicePeriodically(requireContext(), TimeUnit.MINUTES.toMillis(15), PersistableBundle().apply {
             putString(
-                UPDATE_LOCAL_SCHEDULES_ACTION_KEY,
+                Constants.ACTION_KEY,
                 UPDATE_LOCAL_REMINDED_SCHEDULES_ACTION
             )
         })

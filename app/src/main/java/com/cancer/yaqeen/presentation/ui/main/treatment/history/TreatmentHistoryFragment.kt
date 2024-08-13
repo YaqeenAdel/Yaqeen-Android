@@ -19,6 +19,7 @@ import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.ScheduleType
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Time.Companion.getHours24
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Timing
+import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.data.utils.getTodayDate
 import com.cancer.yaqeen.databinding.FragmentTreatmentHistoryBinding
@@ -43,6 +44,7 @@ import com.google.android.material.button.MaterialButton
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import java.util.Calendar
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
@@ -61,16 +63,16 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
 
     private var scheduledType: ScheduleType = ScheduleType.MEDICATION
 
-
     private val workerReminder: ReminderManager by lazy {
         AlarmReminder(requireContext())
     }
 
-    private val requestPermissionLauncher: ActivityResultLauncher<String?> = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
+    private val requestPermissionLauncher: ActivityResultLauncher<String?> =
+        registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted ->
 
-    }
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -85,7 +87,7 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
         super.onViewCreated(view, savedInstanceState)
 
         setFragmentResultListener(Constants.REQUEST_MEDICATION_ID_KEY) { requestKey, bundle ->
-            if(requestKey == Constants.REQUEST_MEDICATION_ID_KEY) {
+            if (requestKey == Constants.REQUEST_MEDICATION_ID_KEY) {
                 val medicationId = bundle.getInt(Constants.MEDICATION_ID_KEY)
 
                 medicationsAdapter.deleteMedication(medicationId)
@@ -100,7 +102,7 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
 
         observeStates()
 
-        when(savedInstanceState?.getInt("scheduledType") ?: ScheduleType.MEDICATION.id){
+        when (savedInstanceState?.getInt("scheduledType") ?: ScheduleType.MEDICATION.id) {
             ScheduleType.MEDICATION.id -> enableMedications()
             ScheduleType.SYMPTOMS.id -> enableSymptoms()
             ScheduleType.MEDICAL_REMINDER.id -> enableMedicalReminders()
@@ -131,7 +133,7 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
 
     }
 
-    private fun setListener(){
+    private fun setListener() {
         binding.toolbar.setNavigationOnClickListener {
             navController.popBackStack()
         }
@@ -142,6 +144,7 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
         binding.btnMedicalReminder.setOnClickListener(this)
 
     }
+
     private fun enableMedications() {
         binding.btnMedications.updateUI()
         binding.tvScheduleHistory.updateUI(getString(R.string.history_s_medications))
@@ -150,7 +153,7 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
         getMedications()
     }
 
-    private fun enableSymptoms(){
+    private fun enableSymptoms() {
         binding.btnSymptoms.updateUI()
         binding.tvScheduleHistory.updateUI(getString(R.string.history_s_symptoms))
         binding.rvSymptomsHistory.updateUI()
@@ -158,7 +161,7 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
         getSymptoms()
     }
 
-    private fun enableMedicalReminders(){
+    private fun enableMedicalReminders() {
         binding.btnMedicalReminder.updateUI()
         binding.tvScheduleHistory.updateUI(getString(R.string.history_s_medical_reminder))
         binding.rvMedicalAppointmentsHistory.updateUI()
@@ -166,7 +169,7 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
         getMedicalReminders()
     }
 
-    private fun enableRoutineTests(){
+    private fun enableRoutineTests() {
         binding.btnRoutineTests.updateUI()
         binding.tvScheduleHistory.updateUI(getString(R.string.history_s_routine_tests))
         binding.rvRoutineTestsHistory.updateUI()
@@ -201,7 +204,11 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
         lifecycleScope {
             viewModel.viewStateDeleteSymptom.observe(viewLifecycleOwner) { symptomId ->
                 symptomId?.let {
-                    Toast.makeText(requireContext(), getString(R.string.symptom_deleted_successfully), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.symptom_deleted_successfully),
+                        Toast.LENGTH_SHORT
+                    ).show()
                     symptomsAdapter.deleteSymptom(symptomId)
                 }
             }
@@ -210,7 +217,11 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
         lifecycleScope {
             viewModel.viewStateDeleteMedicalReminder.observe(viewLifecycleOwner) { medicalReminderId ->
                 medicalReminderId?.let {
-                    Toast.makeText(requireContext(), getString(R.string.appointment_deleted_successfully), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.appointment_deleted_successfully),
+                        Toast.LENGTH_SHORT
+                    ).show()
                     medicalRemindersAdapter.deleteMedicalReminder(medicalReminderId)
                 }
             }
@@ -231,7 +242,11 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
         lifecycleScope {
             viewModel.viewStateDeleteRoutineTest.observe(viewLifecycleOwner) { routineTestId ->
                 routineTestId?.let {
-                    Toast.makeText(requireContext(), getString(R.string.routine_test_deleted_successfully), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.routine_test_deleted_successfully),
+                        Toast.LENGTH_SHORT
+                    ).show()
                     routineTestsAdapter.deleteRoutineTest(routineTestId)
                 }
             }
@@ -278,7 +293,7 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
     }
 
     private fun setupTimesAdapter() {
-        timesAdapter = TimesAdapter {
+        timesAdapter = TimesAdapter(viewModel.selectedLanguageIsArabic()) {
 
         }
 
@@ -296,7 +311,9 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
         medicationsAdapter = MedicationsAdapter(
             onItemClick = {
                 navController.tryNavigate(
-                    TreatmentHistoryFragmentDirections.actionTreatmentHistoryFragmentToMedicationDialogFragment(it)
+                    TreatmentHistoryFragmentDirections.actionTreatmentHistoryFragmentToMedicationDialogFragment(
+                        it
+                    )
                 )
             }
         )
@@ -314,7 +331,10 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
         symptomsAdapter = SymptomsAdapter(
             onEditClick = {
                 navController.tryNavigate(
-                    TreatmentHistoryFragmentDirections.actionTreatmentHistoryFragmentToSymptomsTypesFragment(it)
+                    TreatmentHistoryFragmentDirections.actionTreatmentHistoryFragmentToSymptomsTypesFragment(
+                        it,
+                        R.id.treatmentHistoryFragment
+                    )
                 )
             },
             onDeleteClick = {
@@ -335,7 +355,9 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
         medicalRemindersAdapter = MedicalRemindersAdapter(
             onEditClick = {
                 navController.tryNavigate(
-                    TreatmentHistoryFragmentDirections.actionTreatmentHistoryFragmentToMedicalReminderInfoFragment(it)
+                    TreatmentHistoryFragmentDirections.actionTreatmentHistoryFragmentToMedicalReminderInfoFragment(
+                        it
+                    )
                 )
             },
             onDeleteClick = {
@@ -356,7 +378,9 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
         routineTestsAdapter = RoutineTestsAdapter(
             onEditClick = {
                 navController.tryNavigate(
-                    TreatmentHistoryFragmentDirections.actionTreatmentHistoryFragmentToRoutineTestInfoFragment(it)
+                    TreatmentHistoryFragmentDirections.actionTreatmentHistoryFragmentToRoutineTestInfoFragment(
+                        it
+                    )
                 )
             },
             onDeleteClick = {
@@ -372,6 +396,7 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
             )
         }
     }
+
     private fun getCurrentHour(): Int {
         val currentDate = Calendar.getInstance()
         val timing = (currentDate.timeInMillis.timestampToTiming())
@@ -382,7 +407,7 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
 
     private fun selectItem(itemId: Int) {
         val selectItemPosition = timesAdapter.selectItem(itemId)
-        if(selectItemPosition >= Constants.MAX_POSITION_TO_SCROLL) {
+        if (selectItemPosition >= Constants.MAX_POSITION_TO_SCROLL) {
             val position = when (selectItemPosition) {
                 timesAdapter.itemCount - Constants.MAX_POSITION_TO_SCROLL -> selectItemPosition + 1
                 timesAdapter.itemCount - 1 -> selectItemPosition
@@ -434,7 +459,11 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
         binding.btnMedicalReminder.updateButtonUI()
     }
 
-    private fun MaterialButton.updateButtonUI(textColorId: Int = R.color.dark_gray, backgroundColorId: Int = R.color.light_gray, iconColorId: Int = R.color.medium_gray) {
+    private fun MaterialButton.updateButtonUI(
+        textColorId: Int = R.color.dark_gray,
+        backgroundColorId: Int = R.color.light_gray,
+        iconColorId: Int = R.color.medium_gray
+    ) {
         val context = requireContext()
         setTextColor(ContextCompat.getColor(context, textColorId))
         backgroundTintList = ContextCompat.getColorStateList(context, backgroundColorId)
@@ -446,27 +475,35 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
     }
 
     override fun onClick(v: View?) {
-        when(v?.id){
+        when (v?.id) {
             R.id.btn_add -> {
                 if (viewModel.userIsLoggedIn()) {
-                    if (schedulingPermissionsAreGranted(requireActivity(), requireContext(), requestPermissionLauncher))
+                    if (schedulingPermissionsAreGranted(
+                            requireActivity(),
+                            requireContext(),
+                            requestPermissionLauncher
+                        )
+                    )
                         navController.tryNavigate(
                             TreatmentHistoryFragmentDirections.actionTreatmentHistoryFragmentToTreatmentFragment()
                         )
-                }
-                else {
+                } else {
                     navController.tryNavigate(R.id.authFragment)
                 }
             }
+
             R.id.btn_medications -> {
                 enableMedications()
             }
+
             R.id.btn_symptoms -> {
                 enableSymptoms()
             }
+
             R.id.btn_routine_tests -> {
                 enableRoutineTests()
             }
+
             R.id.btn_medical_reminder -> {
                 enableMedicalReminders()
             }

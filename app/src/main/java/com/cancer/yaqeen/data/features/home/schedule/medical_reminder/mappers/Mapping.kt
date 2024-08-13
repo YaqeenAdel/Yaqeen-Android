@@ -12,7 +12,7 @@ import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.responses.
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.responses.GetMedicalRemindersResponse
 import com.cancer.yaqeen.data.features.home.schedule.routine_test.models.ReminderBefore
 import com.cancer.yaqeen.data.features.home.schedule.symptom.mappers.MappingSymptomRemoteAsModel
-import com.cancer.yaqeen.data.utils.convertToMillis
+import com.cancer.yaqeen.data.utils.convertDateTimeToMillis
 import com.cancer.yaqeen.presentation.ui.main.treatment.getReminderTimeFromDateTime
 
 
@@ -72,7 +72,7 @@ class MappingMedicalRemindersRemoteAsModel: Mapper<GetMedicalRemindersResponse, 
                 doctorName = entity?.physician ?: "",
                 location = entity?.location ?: "",
                 phoneNumber = entity?.phoneNumber ?: "",
-                startDate = startDate?.convertToMillis() ?: 0L,
+                startDate = convertDateTimeToMillis(startDate),
                 reminderTime = getReminderTimeFromDateTime(startDate.toString()),
                 reminderBefore = ReminderBefore.createReminderBefore(
                     entity?.notifyBeforeMinutes ?: 0

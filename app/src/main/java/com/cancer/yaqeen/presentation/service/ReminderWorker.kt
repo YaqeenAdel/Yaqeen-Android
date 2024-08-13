@@ -17,6 +17,7 @@ import android.os.Build
 import android.os.Build.VERSION.SDK_INT
 import android.os.Build.VERSION_CODES.O
 import android.os.Build.VERSION_CODES.Q
+import android.os.PersistableBundle
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
@@ -41,20 +42,24 @@ import com.cancer.yaqeen.domain.features.home.schedule.routine_test.GetLocalRemi
 import com.cancer.yaqeen.domain.features.home.schedule.routine_test.GetLocalRoutineTestsUseCase
 import com.cancer.yaqeen.presentation.receiver.NotificationReceiver
 import com.cancer.yaqeen.presentation.ui.MainActivity
+import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.Constants.ACTION_KEY
 import com.cancer.yaqeen.presentation.util.Constants.OBJECT_JSON
 import com.cancer.yaqeen.presentation.util.Constants.UPDATE_LOCAL_MEDICATION_ACTION
 import com.cancer.yaqeen.presentation.util.Constants.UPDATE_LOCAL_ROUTINE_TEST_ACTION
 import com.cancer.yaqeen.presentation.util.Constants.UPDATE_LOCAL_REMINDED_SCHEDULES_ACTION
 import com.cancer.yaqeen.presentation.util.Constants.UPDATE_LOCAL_SCHEDULES_ACTION
+import com.cancer.yaqeen.presentation.util.scheduleJobServicePeriodically
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.Random
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltWorker
@@ -84,12 +89,14 @@ class ReminderWorker @AssistedInject constructor(
     override suspend fun doWork(): Result {
         try {
             val objectJsonValue = inputData.getString(OBJECT_JSON)
-            Log.d("ReminderWorker", "doWork: ${inputData.getString(ACTION_KEY)}")
+            Log.d("ReminderWorker", "Worker doWork: $objectJsonValue")
+            Log.d("ReminderWorker", "Worker doWork: ${inputData.getString(ACTION_KEY)}")
 
             when (val actionName = inputData.getString(ACTION_KEY)) {
                 UPDATE_LOCAL_SCHEDULES_ACTION -> {
                     getSchedules()
                 }
+
                 UPDATE_LOCAL_REMINDED_SCHEDULES_ACTION -> {
 //                    prefEncryptionUtil.workRunningInMillis =
 //                        System.currentTimeMillis() + PeriodTimeEnum.EVERY_3_HOURS.timeInMillis
@@ -97,14 +104,13 @@ class ReminderWorker @AssistedInject constructor(
                 }
 
                 UPDATE_LOCAL_MEDICATION_ACTION -> {
-                    Log.d("NotificationReceiver", "onReceive: UPDATE_LOCAL_MEDICATION_ACTION")
                     val medication: MedicationDB? =
                         objectJsonValue.toString().fromJson(MedicationDB::class.java)
                     medication?.let {
                         setMedicationReminder(
                             it.apply {
 //                                isReminded = true
-                                statusReminder = ReminderStatus.NEW
+                                statusReminder = ReminderStatus.REMINDED
                                 workID = null
                                 workSpecificDaysIDs = listOf()
                                 startDateTime = increaseDateTime(it.startDateTime, it.periodTimeId)
@@ -129,7 +135,7 @@ class ReminderWorker @AssistedInject constructor(
                         setRoutineTestReminder(
                             it.apply {
 //                                isReminded = true
-                                statusReminder = ReminderStatus.NEW
+                                statusReminder = ReminderStatus.REMINDED
                                 workID = null
                                 workSpecificDaysIDs = listOf()
                                 startDateTime = increaseDateTime(it.startDateTime, it.periodTimeId)
@@ -161,13 +167,23 @@ class ReminderWorker @AssistedInject constructor(
 
             return Result.success()
         } catch (e: Exception) {
+
+            scheduleJobServicePeriodically(context = context, bundle = PersistableBundle().apply {
+                putString(
+                    ACTION_KEY,
+                    UPDATE_LOCAL_REMINDED_SCHEDULES_ACTION
+                )
+            })
+            Log.d("ReminderWorker", "Worker Exception: $e")
             if (SDK_INT >= Build.VERSION_CODES.S) {
 //                throw Exception("Reminder-Worker: $stopReason $e")
-            }else {
+            } else {
 //                throw Exception("Reminder-Worker: ${WorkInfo.STOP_REASON_UNKNOWN} $e")
             }
             return Result.retry()
         } finally {
+            Log.d("ReminderWorker", "Worker doWork: finally")
+
 //            throw Exception("Reminder-Worker: $stopReason")
         }
     }
@@ -179,23 +195,29 @@ class ReminderWorker @AssistedInject constructor(
 
     private fun getLocalMedications() {
         GlobalScope.launch(Dispatchers.Default) {
-            getLocalMedicationsUseCase().collectLatest {
-                it.data?.let { localMedications ->
-                    if (localMedications.isNotEmpty())
-                        setMedicationReminders(localMedications)
+            getLocalMedicationsUseCase()
+                .catch {
+                    Log.d("ReminderWorker", "getLocalMedications, catch: $this")
+                }.collectLatest {
+                    it.data?.let { localMedications ->
+                        if (localMedications.isNotEmpty())
+                            setMedicationReminders(localMedications)
+                    }
                 }
-            }
         }
     }
 
     private fun getLocalRoutineTests() {
         GlobalScope.launch(Dispatchers.Default) {
-            getLocalRoutineTestsUseCase().collectLatest {
-                it.data?.let { localRoutineTests ->
-                    if (localRoutineTests.isNotEmpty())
-                        setRoutineTestReminders(localRoutineTests)
+            getLocalRoutineTestsUseCase()
+                .catch {
+
+                }.collectLatest {
+                    it.data?.let { localRoutineTests ->
+                        if (localRoutineTests.isNotEmpty())
+                            setRoutineTestReminders(localRoutineTests)
+                    }
                 }
-            }
         }
     }
 
@@ -205,54 +227,73 @@ class ReminderWorker @AssistedInject constructor(
     }
 
     private fun getLocalRemindedMedications() {
-        GlobalScope.launch(Dispatchers.Default) {
-            getLocalRemindedMedicationsUseCase().collectLatest {
-                it.data?.let { localMedications ->
-                    if (localMedications.isNotEmpty())
-                        setMedicationReminders(localMedications)
+        Log.d("ReminderWorker", "Worker getLocalRemindedMedications")
+        GlobalScope.launch(Dispatchers.IO) {
+            getLocalRemindedMedicationsUseCase()
+                .catch {
+
+                }.collectLatest {
+                    it.data?.let { localMedications ->
+                        Log.d("ReminderWorker", "Worker localMedications $localMedications")
+                        if (localMedications.isNotEmpty())
+                            setMedicationReminders(localMedications)
+                    }
                 }
-            }
         }
     }
 
     private fun getLocalRemindedRoutineTests() {
-        GlobalScope.launch(Dispatchers.Default) {
-            getLocalRemindedRoutineTestsUseCase().collectLatest {
-                it.data?.let { localRoutineTests ->
-                    if (localRoutineTests.isNotEmpty())
-                        setRoutineTestReminders(localRoutineTests)
+        GlobalScope.launch(Dispatchers.IO) {
+            getLocalRemindedRoutineTestsUseCase()
+                .catch {
+
+                }.collectLatest {
+                    it.data?.let { localRoutineTests ->
+                        if (localRoutineTests.isNotEmpty())
+                            setRoutineTestReminders(localRoutineTests)
+                    }
                 }
-            }
         }
     }
 
     private fun setMedicationReminders(medications: List<MedicationDB>) {
-        Log.d("NotificationReceiver", "setMedicationReminders")
+        Log.d("ReminderWorker", "Worker setMedicationReminders")
         medications.onEach { medication ->
-            medication.statusReminder = ReminderStatus.NEW
             setMedicationReminder(medication)
         }
     }
 
-    private fun setMedicationReminder(medication: MedicationDB){
+    private fun setMedicationReminder(medication: MedicationDB) {
         if (medication.periodTimeId == PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id) {
-            val uuids =
-                workerReminder.setReminderDays(medication.apply { json = toJson() })
+            var uuids = listOf<String>()
+            try {
+                uuids = workerReminder.setReminderDays(medication.apply { json = toJson() })
+                medication.statusReminder = ReminderStatus.NEW
+            } catch (_: Exception) {
 
-            updateMedication(
-                medication.apply {
-                    workSpecificDaysIDs = uuids
-                }
-            )
-
+            } finally {
+                updateMedication(
+                    medication.apply {
+                        workSpecificDaysIDs = uuids
+                    }
+                )
+            }
         } else {
-            val uuid = workerReminder.setReminder(medication.apply { json = toJson() })
+            var uuid = ""
 
-            updateMedication(
-                medication.apply {
-                    workID = uuid
-                }
-            )
+            try {
+                uuid = workerReminder.setReminder(medication.apply { json = toJson() })
+                medication.statusReminder = ReminderStatus.NEW
+            } catch (_: Exception) {
+
+            } finally {
+                Log.d("ReminderWorker", "Worker setMedicationReminder uuid: $uuid")
+                updateMedication(
+                    medication.apply {
+                        workID = uuid
+                    }
+                )
+            }
         }
     }
 
@@ -261,40 +302,58 @@ class ReminderWorker @AssistedInject constructor(
         GlobalScope.launch((Dispatchers.IO)) {
             editLocalMedicationUseCase(
                 medication
-            ).collect()
+            ).catch {}.collect()
         }
     }
 
     private fun setRoutineTestReminders(routineTests: List<RoutineTestDB>) {
         routineTests.onEach { routineTest ->
-            routineTest.statusReminder = ReminderStatus.NEW
             setRoutineTestReminder(routineTest)
         }
     }
 
-    private fun setRoutineTestReminder(routineTest: RoutineTestDB){
+    private fun setRoutineTestReminder(routineTest: RoutineTestDB) {
         if (routineTest.periodTimeId == PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id) {
-            val (uuids, workBeforeID) = workerReminder.setReminderDays(routineTest.apply {
-                json = toJson()
-            })
+            var uuids = listOf<String>()
+            var workBeforeID: String? = null
+            try {
+                val reminderInfo = workerReminder.setReminderDays(routineTest.apply {
+                    json = toJson()
+                })
+                uuids = reminderInfo.first
+                workBeforeID = reminderInfo.second
+                routineTest.statusReminder = ReminderStatus.NEW
+            } catch (_: Exception) {
 
-            updateRoutineTest(
-                routineTest.apply {
-                    workSpecificDaysIDs = uuids
-                    this.workBeforeID = workBeforeID
-                }
-            )
+            } finally {
+                updateRoutineTest(
+                    routineTest.apply {
+                        this.workSpecificDaysIDs = uuids
+                        this.workBeforeID = workBeforeID
+                    }
+                )
+            }
         } else {
-            val (periodicWorkID, workBeforeID) = workerReminder.setReminder(routineTest.apply {
-                json = toJson()
-            })
+            var periodicWorkID = ""
+            var workBeforeID: String? = null
+            try {
+                val reminderInfo = workerReminder.setReminder(routineTest.apply {
+                    json = toJson()
+                })
+                periodicWorkID = reminderInfo.first
+                workBeforeID = reminderInfo.second
+                routineTest.statusReminder = ReminderStatus.NEW
 
-            updateRoutineTest(
-                routineTest.apply {
-                    workID = periodicWorkID
-                    this.workBeforeID = workBeforeID
-                }
-            )
+            } catch (_: Exception) {
+
+            } finally {
+                updateRoutineTest(
+                    routineTest.apply {
+                        this.workID = periodicWorkID
+                        this.workBeforeID = workBeforeID
+                    }
+                )
+            }
 
         }
     }
@@ -303,7 +362,7 @@ class ReminderWorker @AssistedInject constructor(
         GlobalScope.launch((Dispatchers.IO)) {
             editLocalRoutineTestUseCase(
                 routineTest
-            ).collect()
+            ).catch {}.collect()
         }
     }
 
@@ -340,7 +399,11 @@ class ReminderWorker @AssistedInject constructor(
 
     private fun createForegroundInfo(): ForegroundInfo {
         return if (SDK_INT >= Q) {
-            ForegroundInfo(Random().nextInt(), sendNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
+            ForegroundInfo(
+                Random().nextInt(),
+                sendNotification(),
+                ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+            )
         } else {
             ForegroundInfo(Random().nextInt(), sendNotification())
         }

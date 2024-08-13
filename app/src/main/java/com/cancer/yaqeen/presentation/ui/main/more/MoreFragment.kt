@@ -43,11 +43,12 @@ class MoreFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
         WorkerReminder(requireContext())
     }
 
-    private val requestPermissionLauncher: ActivityResultLauncher<String?> = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
+    private val requestPermissionLauncher: ActivityResultLauncher<String?> =
+        registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted ->
 
-    }
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -62,9 +63,9 @@ class MoreFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
         super.onViewCreated(view, savedInstanceState)
 
         setFragmentResultListener(Constants.REQUEST_USER_LOG_IN_KEY) { requestKey, bundle ->
-            if(requestKey == Constants.REQUEST_USER_LOG_IN_KEY) {
+            if (requestKey == Constants.REQUEST_USER_LOG_IN_KEY) {
                 val isLoggedIn = bundle.getBoolean(Constants.USER_LOG_IN_KEY)
-                if(isLoggedIn)
+                if (isLoggedIn)
                     updateUI()
             }
         }
@@ -86,7 +87,7 @@ class MoreFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
         updateUI()
     }
 
-    private fun setListener(){
+    private fun setListener() {
         binding.btnMedicine.setOnClickListener(this)
         binding.btnSymptoms.setOnClickListener(this)
         binding.btnSavedArticles.setOnClickListener(this)
@@ -97,11 +98,12 @@ class MoreFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
         binding.btnLogIn.setOnClickListener(this)
 
     }
+
     private fun observeStates() {
         lifecycleScope {
             moreViewModel.viewStateLogoutSuccess.observe(viewLifecycleOwner) { response ->
                 response?.let { (logoutSuccess, appHasWorker) ->
-                    if(logoutSuccess){
+                    if (logoutSuccess) {
                         workerReminder.cancelAllReminders()
                         if (appHasWorker)
                             workerReminderPeriodically.cancelAllReminders()
@@ -135,7 +137,7 @@ class MoreFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
     }
 
     private fun setLanguage() {
-        val language = if (moreViewModel.selectedLanguageIsEnglish()){
+        val language = if (moreViewModel.selectedLanguageIsEnglish()) {
             getString(R.string.arabic)
         } else {
             getString(R.string.english)
@@ -148,45 +150,61 @@ class MoreFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
         alpha = if (isLogged) 1.0f else 0.5f
     }
 
-    private fun navigateToAddingSchedule(onNavigate:() -> Unit) {
+    private fun navigateToAddingSchedule(onNavigate: () -> Unit) {
         if (moreViewModel.userIsLoggedIn()) {
-            if (schedulingPermissionsAreGranted(requireActivity(), requireContext(), requestPermissionLauncher))
+            if (schedulingPermissionsAreGranted(
+                    requireActivity(),
+                    requireContext(),
+                    requestPermissionLauncher
+                )
+            )
                 onNavigate()
-        }
-        else {
+        } else {
             navController.tryNavigate(R.id.authFragment)
         }
     }
 
     override fun onClick(v: View?) {
-        when(v?.id){
+        when (v?.id) {
             R.id.btn_medicine -> {
                 navigateToAddingSchedule {
-                    navController.tryNavigate(MoreFragmentDirections.actionMoreFragmentToMedicationsFragment(null))
-                }
-            }
-            R.id.btn_symptoms -> {
-                navigateToAddingSchedule {
                     navController.tryNavigate(
-                        MoreFragmentDirections.actionMoreFragmentToSymptomsTypesFragment(
-                            null
+                        MoreFragmentDirections.actionMoreFragmentToMedicationsFragment(
+                            null,
+                            R.id.moreFragment
                         )
                     )
                 }
             }
+
+            R.id.btn_symptoms -> {
+                navigateToAddingSchedule {
+                    navController.tryNavigate(
+                        MoreFragmentDirections.actionMoreFragmentToSymptomsTypesFragment(
+                            null,
+                            R.id.moreFragment
+                        )
+                    )
+                }
+            }
+
             R.id.btn_saved_articles -> {
                 navController.tryNavigate(MoreFragmentDirections.actionMoreFragmentToSavedArticlesFragment())
             }
+
             R.id.btn_language -> {
                 moreViewModel.switchLanguage()
                 (requireActivity() as? MainActivity)?.changeLanguageByDestination(R.id.moreFragment)
             }
+
             R.id.btn_help -> {
                 navController.tryNavigate(MoreFragmentDirections.actionMoreFragmentToHelpFragment())
             }
+
             R.id.btn_log_out -> {
                 moreViewModel.logout(requireContext())
             }
+
             R.id.btn_log_in -> {
                 navController.tryNavigate(R.id.authFragment)
             }

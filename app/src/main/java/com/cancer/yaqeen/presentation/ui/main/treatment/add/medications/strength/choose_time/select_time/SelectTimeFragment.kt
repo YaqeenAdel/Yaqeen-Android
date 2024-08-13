@@ -116,7 +116,7 @@ class SelectTimeFragment : BaseFragment() {
             binding.textLayoutSpecificDays.changeVisibility(!specificDaysIsNotSelected)
 
             if(specificDaysIsNotSelected)
-                binding.itemMedicationTime.tvMedicationTime.text = periodTime?.time ?: ""
+                binding.itemMedicationTime.tvMedicationTime.text = periodTime?.timeEn ?: ""
             else
                 binding.editTextSpecificDays.setText(specificDays?.joinToString { it.name } ?: "")
         }
@@ -146,7 +146,9 @@ class SelectTimeFragment : BaseFragment() {
 
         binding.editTextStartFrom.setOnClickListener {
             navController.tryNavigate(
-                R.id.calendarFragment
+                SelectTimeFragmentDirections.actionSelectTimeFragmentToCalendarFragment(
+                    0L, true
+                )
             )
         }
         binding.editTextTime.setOnClickListener {

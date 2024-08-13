@@ -23,20 +23,19 @@ import com.cancer.yaqeen.presentation.service.AlarmReminder
 import com.cancer.yaqeen.presentation.service.ReminderManager
 import com.cancer.yaqeen.presentation.service.WorkerReminder
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.MedicationsViewModel
+import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.Constants.OPEN_MEDICATION_WINDOW_ACTION
 import com.cancer.yaqeen.presentation.util.Constants.UPDATE_LOCAL_REMINDED_SCHEDULES_ACTION
-import com.cancer.yaqeen.presentation.util.Constants.UPDATE_LOCAL_SCHEDULES_ACTION_KEY
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindResourceImage
 import com.cancer.yaqeen.presentation.util.convertMilliSecondsToDate
 import com.cancer.yaqeen.presentation.util.disableTouch
 import com.cancer.yaqeen.presentation.util.enableTouch
-import com.cancer.yaqeen.presentation.util.scheduleJobService
+import com.cancer.yaqeen.presentation.util.scheduleJobServicePeriodically
 import com.cancer.yaqeen.presentation.util.schedulingPermissionsAreGranted
 import com.cancer.yaqeen.presentation.util.tryPopBackStack
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
-import java.util.concurrent.TimeUnit
 
 
 @AndroidEntryPoint
@@ -92,7 +91,7 @@ class MedicationConfirmationFragment : BaseFragment() {
             medicationType?.apply { bindResourceImage(binding.ivMedicationType, iconResId) }
             binding.tvNotesVal.text = notes ?: ""
             binding.tvAmountVal.text = "${dosageAmount ?: ""} ${medicationType?.name ?: ""}"
-            binding.tvDaysVal.text = if (specificDays.isNullOrEmpty()) periodTime?.time ?: "" else specificDays!!.joinToString { it.name }
+            binding.tvDaysVal.text = if (specificDays.isNullOrEmpty()) periodTime?.timeEn ?: "" else specificDays!!.joinToString { it.name }
             binding.tvStartFromVal.text = startDate?.let { convertMilliSecondsToDate(it) } ?: ""
             binding.tvTimeVal.text = reminderTime?.run {
                 val timing = if (isAM) getString(R.string.am) else getString(R.string.pm)
@@ -119,9 +118,9 @@ class MedicationConfirmationFragment : BaseFragment() {
     }
 
     private fun addWorkerReminderPeriodically() {
-        scheduleJobService(requireContext(), TimeUnit.MINUTES.toMillis(15), PersistableBundle().apply {
+        scheduleJobServicePeriodically(context = requireContext(), bundle = PersistableBundle().apply {
             putString(
-                UPDATE_LOCAL_SCHEDULES_ACTION_KEY,
+                Constants.ACTION_KEY,
                 UPDATE_LOCAL_REMINDED_SCHEDULES_ACTION
             )
         })
@@ -161,7 +160,7 @@ class MedicationConfirmationFragment : BaseFragment() {
 
         lifecycleScope {
             medicationsViewModel.viewStateAddMedication.observe(viewLifecycleOwner) { response ->
-                response?.let { (added, medication) ->
+                response?.let { (added, medication, destinationId) ->
                     if(added){
                         Log.d("NotificationReceiver", "viewStateEditMedication: added")
                         addWorkerReminderPeriodically()
@@ -175,7 +174,7 @@ class MedicationConfirmationFragment : BaseFragment() {
                         Toast.makeText(requireContext(),
                             getString(R.string.medication_added_successfully), Toast.LENGTH_SHORT).show()
                         navController.tryPopBackStack(
-                            R.id.treatmentHistoryFragment,
+                            destinationId ?: R.id.homeFragment,
                             false
                         )
                     }
@@ -185,7 +184,7 @@ class MedicationConfirmationFragment : BaseFragment() {
 
         lifecycleScope {
             medicationsViewModel.viewStateEditMedication.observe(viewLifecycleOwner) { response ->
-                response?.let { (edited, medication) ->
+                response?.let { (edited, medication, destinationId) ->
                     addWorkerReminderPeriodically()
 
                     var uuids = listOf<String>()
@@ -202,8 +201,9 @@ class MedicationConfirmationFragment : BaseFragment() {
 
                     Toast.makeText(requireContext(),
                         getString(R.string.medication_edited_successfully), Toast.LENGTH_SHORT).show()
+
                     navController.tryPopBackStack(
-                        R.id.treatmentHistoryFragment,
+                        destinationId ?: R.id.homeFragment,
                         false
                     )
                 }

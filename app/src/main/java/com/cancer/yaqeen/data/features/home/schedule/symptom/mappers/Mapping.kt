@@ -2,7 +2,7 @@ package com.cancer.yaqeen.data.features.home.schedule.symptom.mappers
 
 import com.cancer.yaqeen.data.base.Mapper
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Photo
-import com.cancer.yaqeen.data.features.home.schedule.routine_test.responses.AddRoutineTestResponse
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.ReminderTime2
 import com.cancer.yaqeen.data.features.home.schedule.symptom.models.ModifyScheduleResponse
 import com.cancer.yaqeen.data.features.home.schedule.symptom.models.Symptom
 import com.cancer.yaqeen.data.features.home.schedule.symptom.models.SymptomTrack
@@ -14,11 +14,11 @@ import com.cancer.yaqeen.data.features.home.schedule.symptom.responses.SymptomRe
 import com.cancer.yaqeen.data.features.home.schedule.symptom.responses.SymptomTypesResponse
 import com.cancer.yaqeen.data.features.home.schedule.symptom.responses.SymptomsResponse
 import com.cancer.yaqeen.data.features.home.schedule.symptom.responses.UploadUrlResponse
+import com.cancer.yaqeen.data.utils.convertDateTimeAPIToHour24UI
 import com.cancer.yaqeen.data.utils.createPhotosList
-import com.cancer.yaqeen.data.utils.formatDate
-import com.cancer.yaqeen.data.utils.formatTime
-import com.cancer.yaqeen.presentation.util.generateFileName
-import com.cancer.yaqeen.presentation.util.getCurrentTimeMillis
+import com.cancer.yaqeen.data.utils.formatDateTimeAPIToDateUI
+import com.cancer.yaqeen.data.utils.formatDateTimeAPIToTimeUI
+import java.util.Locale
 
 
 class MappingSymptomsTypesRemoteAsUIModel: Mapper<SymptomTypesResponse, List<SymptomType>> {
@@ -104,8 +104,14 @@ class MappingSymptomRemoteAsModel: Mapper<SymptomResponse, Symptom> {
             ),
             photosList = createPhotosList(photoLink, downloadPhotoLink?.url, downloadPhotoLinks?.urls?.map { it.url }),
             details = details,
-            reminderTime = time?.formatTime() ?: "",
-            startDate = time?.formatDate() ?: "",
+            reminderTime2 = ReminderTime2(
+                timeEN = formatDateTimeAPIToTimeUI(dateTime = time, locale = Locale.ENGLISH),
+                timeUI = formatDateTimeAPIToTimeUI(time),
+                hour24 = convertDateTimeAPIToHour24UI(time),
+            ),
+            startDateUI = formatDateTimeAPIToDateUI(time),
+//            reminderTime = formatDateTimeAPIToTimeUI(dateTime = time, locale = Locale.ENGLISH),
+            startDate = formatDateTimeAPIToDateUI(time, locale = Locale.ENGLISH),
             doctorName = notes
         )
     }
@@ -118,8 +124,9 @@ class MappingSymptomAsSymptomTrack: Mapper<Symptom, SymptomTrack> {
             symptomTypes = symptomTypes,
             details = details,
             photosList = photosList as MutableList<Photo>?,
-            reminderTime = reminderTime,
-            startDate = startDate,
+            reminderTime2 = reminderTime2,
+            startDateUI = startDateUI,
+            startDateEn = startDate,
             doctorName = doctorName,
             editable = true,
             symptomId = id,

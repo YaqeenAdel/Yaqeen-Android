@@ -89,7 +89,10 @@ class MedicalRemindersAdapter(
         if (position == -1)
             return
 
-        items.removeAt(position)
+        if (items.size == 1)
+            items = arrayListOf()
+        else
+            items.removeAt(position)
         super.submitList(items)
         notifyDataSetChanged()
     }

@@ -1,7 +1,6 @@
 package com.cancer.yaqeen.presentation.ui.main.treatment
 
 import android.content.Context
-import android.util.Log
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Day
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.DayEnum
@@ -128,11 +127,11 @@ fun getPeriodTimeFromCronExpression(cronExpression: String): Time {
         val hourFields = hourField.split("/")
         if (hourFields[1] == "8")
             Time(
-                id = PeriodTimeEnum.EVERY_8_HOURS.id, time = "", cronExpression = PeriodTimeEnum.EVERY_8_HOURS.cronExpression
+                id = PeriodTimeEnum.EVERY_8_HOURS.id, timeEn = "", timeAr = "", cronExpression = PeriodTimeEnum.EVERY_8_HOURS.cronExpression
             )
         else
             Time(
-                id = PeriodTimeEnum.EVERY_12_HOURS.id, time = "", cronExpression = PeriodTimeEnum.EVERY_12_HOURS.cronExpression
+                id = PeriodTimeEnum.EVERY_12_HOURS.id, timeEn = "", timeAr = "", cronExpression = PeriodTimeEnum.EVERY_12_HOURS.cronExpression
             )
 
     }else {
@@ -140,23 +139,23 @@ fun getPeriodTimeFromCronExpression(cronExpression: String): Time {
 
         if(dayOfMonthField == "*")
             Time(
-                id = PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id, time = "", cronExpression = PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.cronExpression
+                id = PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id, timeEn = "", timeAr = "", cronExpression = PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.cronExpression
             )
         else{
 
             when(dayOfMonthField.split("/")[1]){
                 "1" -> Time(
-                    id = PeriodTimeEnum.EVERY_DAY.id, time = "", cronExpression = PeriodTimeEnum.EVERY_DAY.cronExpression
+                    id = PeriodTimeEnum.EVERY_DAY.id, timeEn = "", timeAr = "", cronExpression = PeriodTimeEnum.EVERY_DAY.cronExpression
                 )
                 "7" -> Time(
-                    id = PeriodTimeEnum.EVERY_WEEK.id, time = "", cronExpression = PeriodTimeEnum.EVERY_WEEK.cronExpression
+                    id = PeriodTimeEnum.EVERY_WEEK.id, timeEn = "", timeAr = "", cronExpression = PeriodTimeEnum.EVERY_WEEK.cronExpression
                 )
                 "30" -> Time(
-                    id = PeriodTimeEnum.EVERY_MONTH.id, time = "", cronExpression = PeriodTimeEnum.EVERY_MONTH.cronExpression
+                    id = PeriodTimeEnum.EVERY_MONTH.id, timeEn = "", timeAr = "", cronExpression = PeriodTimeEnum.EVERY_MONTH.cronExpression
                 )
                 else ->
                     Time(
-                    id = PeriodTimeEnum.DAY_AFTER_DAY.id, time = "", cronExpression = PeriodTimeEnum.DAY_AFTER_DAY.cronExpression
+                    id = PeriodTimeEnum.DAY_AFTER_DAY.id, timeEn = "", timeAr = "", cronExpression = PeriodTimeEnum.DAY_AFTER_DAY.cronExpression
                 )
             }
         }

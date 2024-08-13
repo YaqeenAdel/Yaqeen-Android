@@ -227,9 +227,12 @@
     <string name="please_enable_permission_to_draw_over_other_apps">Please enable permission to draw over other apps</string>
     <string name="ignore">Ignore</string>
     <string name="medication_reminder">Medication Reminder</string>
+    <string name="medication_reminder_message">Hello! Just a friendly reminder to take %s: %s from %s: %s now as prescribed today. Your health is important, so let\'s stay on track together. 😊</string>
+    <string name="routine_test_message">Hello! Just a friendly reminder to test: %s at %s %s as prescribed for today. Your health is important, so let\'s stay on track together. 😊</string>
     <string name="reminder_text_message">Hello! Just a friendly reminder to take your medicine now as prescribed today. Your health is important, so let\'s stay on track together. 😊</string>
     <string name="routine_test_reminder">Routine Test Reminder</string>
     <string name="medical_appointment_reminder">Medical Appointment Reminder</string>
+    <string name="medical_appointment_message">Hello! Just a friendly reminder to you have an appointment at %s %s with doctor: %s in %s, note for you phone number: %s. Your health is important, so let\'s stay on track together. 😊</string>
     <string name="no_app_found_to_share_it">No app found to share it</string>
     <string name="share_via">Share Via</string>
     <string name="non_hodgkin_s_lymphoma">Non-Hodgkin’s Lymphoma</string>

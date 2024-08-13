@@ -218,6 +218,10 @@
             app:nullable="true"
             app:argType="com.cancer.yaqeen.data.features.home.schedule.medication.models.Medication"/>
 
+        <argument
+            android:name="destinationId"
+            app:argType="integer"/>
+
         <action
             android:id="@+id/action_medicationsFragment_to_strengthFragment"
             app:destination="@id/strengthFragment" />
@@ -237,6 +241,17 @@
         <action
             android:id="@+id/action_chooseTimeFragment_to_selectTimeFragment"
             app:destination="@id/selectTimeFragment" />
+        <action
+            android:id="@+id/action_chooseTimeFragment_to_calendarFragment"
+            app:destination="@id/calendarFragment">
+
+            <argument
+                android:name="minDate"
+                app:argType="long"/>
+            <argument
+                android:name="hasMinDate"
+                app:argType="boolean"/>
+        </action>
     </fragment>
     <fragment
         android:id="@+id/medicationConfirmationFragment"
@@ -245,7 +260,17 @@
     <dialog
         android:id="@+id/calendarFragment"
         android:name="com.cancer.yaqeen.presentation.ui.main.treatment.add.common.CalendarFragment"
-        tools:layout="@layout/fragment_calendar" />
+        tools:layout="@layout/fragment_calendar">
+
+        <argument
+            android:name="minDate"
+            app:argType="long"/>
+        <argument
+            android:name="hasMinDate"
+            app:argType="boolean"/>
+
+    </dialog>
+
     <dialog
         android:id="@+id/timeFragment"
         android:name="com.cancer.yaqeen.presentation.ui.main.treatment.add.common.TimeFragment"
@@ -277,6 +302,17 @@
         <action
             android:id="@+id/action_selectTimeFragment_to_medicationConfirmationFragment"
             app:destination="@id/medicationConfirmationFragment" />
+        <action
+            android:id="@+id/action_selectTimeFragment_to_calendarFragment"
+            app:destination="@id/calendarFragment">
+
+            <argument
+                android:name="minDate"
+                app:argType="long"/>
+            <argument
+                android:name="hasMinDate"
+                app:argType="boolean"/>
+        </action>
     </fragment>
     <dialog
         android:id="@+id/medicationDialogFragment"
@@ -328,6 +364,9 @@
             app:nullable="true"
             app:argType="com.cancer.yaqeen.data.features.home.schedule.symptom.models.Symptom"/>
 
+        <argument
+            android:name="destinationId"
+            app:argType="integer"/>
         <action
             android:id="@+id/action_symptomsTypesFragment_to_symptomsDetailsFragment"
             app:destination="@id/symptomsDetailsFragment" />
@@ -352,6 +391,17 @@
         <action
             android:id="@+id/action_chooseTimeSymptomFragment_to_symptomConfirmationFragment"
             app:destination="@id/symptomConfirmationFragment" />
+        <action
+            android:id="@+id/action_chooseTimeSymptomFragment_to_calendarFragment"
+            app:destination="@id/calendarFragment">
+
+            <argument
+                android:name="minDate"
+                app:argType="long"/>
+            <argument
+                android:name="hasMinDate"
+                app:argType="boolean"/>
+        </action>
     </fragment>
     <fragment
         android:id="@+id/photoFullScreenFragment"
@@ -400,6 +450,17 @@
         <action
             android:id="@+id/action_chooseTimeMedicalReminderFragment_to_symptomsHistoryFragment"
             app:destination="@id/symptomsHistoryFragment" />
+        <action
+            android:id="@+id/action_chooseTimeMedicalReminderFragment_to_calendarFragment"
+            app:destination="@id/calendarFragment">
+
+            <argument
+                android:name="minDate"
+                app:argType="long"/>
+            <argument
+                android:name="hasMinDate"
+                app:argType="boolean"/>
+        </action>
     </fragment>
     <fragment
         android:id="@+id/medicalReminderConfirmationFragment"
@@ -431,6 +492,17 @@
         <action
             android:id="@+id/action_chooseTimeRoutineTestFragment_to_routineTestConfirmationFragment"
             app:destination="@id/routineTestConfirmationFragment" />
+        <action
+            android:id="@+id/action_chooseTimeRoutineTestFragment_to_calendarFragment"
+            app:destination="@id/calendarFragment">
+
+            <argument
+                android:name="minDate"
+                app:argType="long"/>
+            <argument
+                android:name="hasMinDate"
+                app:argType="boolean"/>
+        </action>
     </fragment>
     <fragment
         android:id="@+id/routineTestConfirmationFragment"

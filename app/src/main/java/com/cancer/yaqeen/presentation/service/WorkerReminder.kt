@@ -186,15 +186,20 @@ class WorkerReminder(private val context: Context): ReminderManager() {
     }
 
     override fun setPeriodReminder(timeDelayInMilliSeconds: Long, periodTimeId: Int, actionName: String): String {
-        val periodicWorkRequest = WorkerRequest.Builder()
-            .setStartDateTime(timeDelayInMilliSeconds)
-            .setPeriodTime(periodTimeId)
-            .setActionName(actionName)
-            .build()
+        return try {
+            val periodicWorkRequest = WorkerRequest.Builder()
+                .setStartDateTime(timeDelayInMilliSeconds)
+                .setPeriodTime(periodTimeId)
+                .setActionName(actionName)
+                .build()
 
-        enqueueWork(periodicWorkRequest)
+            enqueueWork(periodicWorkRequest)
 
-        return periodicWorkRequest.id.toString()
+            periodicWorkRequest.id.toString()
+        }catch (_: Exception){
+            ""
+        }
+
     }
 
     override fun<T> setReminder(timeDelayInMilliSeconds: Long, obj: T, actionName: String): String {

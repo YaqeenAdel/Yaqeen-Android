@@ -85,7 +85,15 @@ class AttachedPhotosAdapter(
     }
 
     fun deletePicture(item: Photo) {
-        items.remove(item)
+        val position = items.indexOfFirst { it.id == item.id }
+
+        if (position == -1)
+            return
+        if (items.size == 1)
+            items = arrayListOf()
+        else
+            items.removeAt(position)
+
         super.submitList(items)
         notifyDataSetChanged()
     }

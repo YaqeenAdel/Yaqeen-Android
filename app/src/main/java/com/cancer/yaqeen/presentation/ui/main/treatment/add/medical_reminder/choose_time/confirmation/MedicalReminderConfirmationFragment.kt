@@ -133,7 +133,7 @@ class MedicalReminderConfirmationFragment : BaseFragment() {
                 binding.tvSymptomsVal.text = types
                 binding.tvSymptomNotesVal.text = details
                 binding.tvReminderSymptomVal.text = doctorName ?: ""
-                binding.tvDateTimeVal.text = "$reminderTime - $startDate"
+                binding.tvDateTimeVal.text = "${reminderTime2?.timeUI.toString()} - $startDateUI"
 
             }
 

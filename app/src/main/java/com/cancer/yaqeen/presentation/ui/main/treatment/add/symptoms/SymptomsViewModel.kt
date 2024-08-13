@@ -1,12 +1,12 @@
 package com.cancer.yaqeen.presentation.ui.main.treatment.add.symptoms
 
 import android.net.Uri
-import android.util.Log
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Photo
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.ReminderTime2
 import com.cancer.yaqeen.data.features.home.schedule.symptom.models.SymptomTrack
 import com.cancer.yaqeen.data.features.home.schedule.symptom.models.SymptomType
 import com.cancer.yaqeen.data.features.home.schedule.symptom.requests.AddSymptomRequestBuilder
@@ -50,11 +50,11 @@ class SymptomsViewModel @Inject constructor(
     private val _viewStateSymptomsTypes = MutableStateFlow<List<SymptomType>>(listOf())
     val viewStateSymptomsTypes = _viewStateSymptomsTypes.asStateFlow()
 
-    private val _viewStateAddSymptom = SingleLiveEvent<Boolean?>()
-    val viewStateAddSymptom: LiveData<Boolean?> = _viewStateAddSymptom
+    private val _viewStateAddSymptom = SingleLiveEvent<Pair<Boolean, Int?>?>()
+    val viewStateAddSymptom: LiveData<Pair<Boolean, Int?>?> = _viewStateAddSymptom
 
-    private val _viewStateEditSymptom = SingleLiveEvent<Boolean?>()
-    val viewStateEditSymptom: LiveData<Boolean?> = _viewStateEditSymptom
+    private val _viewStateEditSymptom = SingleLiveEvent<Pair<Boolean, Int?>?>()
+    val viewStateEditSymptom: LiveData<Pair<Boolean, Int?>?> = _viewStateEditSymptom
 
     private val _viewStateLoading = MutableStateFlow<Boolean>(false)
     val viewStateLoading = _viewStateLoading.asStateFlow()
@@ -113,13 +113,14 @@ class SymptomsViewModel @Inject constructor(
         viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             val symptomTrackField = getSymptomTrack()
             symptomTrackField?.run {
+                val destinationId = this.destinationId
                 addSymptomUseCase(
                     AddSymptomRequestBuilder(
                         details = details ?: "",
                         symptomLookupIds = symptomTypes?.map { it.id } ?: listOf(),
                         doctorName = doctorName ?: "",
-                        startDate = startDate,
-                        time = reminderTime,
+                        startDate = startDateEn,
+                        time = reminderTime2?.timeEN,
                         photos = photosList ?: listOf(),
                     )
                 ).onEach { response ->
@@ -130,7 +131,7 @@ class SymptomsViewModel @Inject constructor(
                             response.data?.let {
                                 if (it.scheduleIsModified) {
                                     resetSymptomTrack()
-                                    _viewStateAddSymptom.postValue(true)
+                                    _viewStateAddSymptom.postValue(true to destinationId)
                                 }
                             }
                         }
@@ -149,13 +150,14 @@ class SymptomsViewModel @Inject constructor(
         viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             val symptomTrackField = getSymptomTrack()
             symptomTrackField?.run {
+                val destinationId = this.destinationId
                 addSymptomWithoutPhotoUseCase(
                     AddSymptomRequestBuilder(
                         details = details ?: "",
                         symptomLookupIds = symptomTypes?.map { it.id } ?: listOf(),
                         doctorName = doctorName ?: "",
-                        startDate = startDate,
-                        time = reminderTime,
+                        startDate = startDateEn,
+                        time = reminderTime2?.timeEN,
                         photos = listOf(),
                     ).buildRequestBody()
                 ).collect { response ->
@@ -165,7 +167,7 @@ class SymptomsViewModel @Inject constructor(
                         Status.SUCCESS -> {
                             response.data?.let {
                                 resetSymptomTrack()
-                                _viewStateAddSymptom.postValue(true)
+                                _viewStateAddSymptom.postValue(true to destinationId)
                             }
                         }
 
@@ -191,14 +193,15 @@ class SymptomsViewModel @Inject constructor(
         viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             val symptomTrackField = getSymptomTrack()
             symptomTrackField?.run {
+                val destinationId = this.destinationId
                 editSymptomWithoutUploadUseCase(
                     symptomId = symptomId ?: 0,
                     AddSymptomRequestBuilder(
                         details = details ?: "",
                         symptomLookupIds = symptomTypes?.map { it.id } ?: listOf(),
                         doctorName = doctorName ?: "",
-                        startDate = startDate,
-                        time = reminderTime,
+                        startDate = startDateEn,
+                        time = reminderTime2?.timeEN,
                         photos = photosList ?: listOf(),
                     ).buildRequestBody()
                 ).onEach { response ->
@@ -208,7 +211,7 @@ class SymptomsViewModel @Inject constructor(
                         Status.SUCCESS -> {
                             if (response.data == true) {
                                 resetSymptomTrack()
-                                _viewStateEditSymptom.postValue(true)
+                                _viewStateEditSymptom.postValue(true to destinationId)
                             }
                         }
 
@@ -226,14 +229,15 @@ class SymptomsViewModel @Inject constructor(
         viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             val symptomTrackField = getSymptomTrack()
             symptomTrackField?.run {
+                val destinationId = this.destinationId
                 editSymptomUseCase(
                     symptomId = symptomId ?: 0,
                     AddSymptomRequestBuilder(
                         details = details ?: "",
                         symptomLookupIds = symptomTypes?.map { it.id } ?: listOf(),
                         doctorName = doctorName ?: "",
-                        startDate = startDate,
-                        time = reminderTime,
+                        startDate = startDateEn,
+                        time = reminderTime2?.timeEN,
                         photos = photosList ?: listOf(),
                     )
                 ).collect { response ->
@@ -243,7 +247,7 @@ class SymptomsViewModel @Inject constructor(
                         Status.SUCCESS -> {
                             response.data?.let {
                                 resetSymptomTrack()
-                                _viewStateEditSymptom.postValue(true)
+                                _viewStateEditSymptom.postValue(true to destinationId)
                             }
                         }
 
@@ -265,6 +269,12 @@ class SymptomsViewModel @Inject constructor(
     fun resetSymptomTrack(){
         symptomTrackField.set(SymptomTrack())
         resetSymptomsTypes()
+    }
+
+    fun setDestinationId(destinationId: Int) {
+        symptomTrackField.get()?.also {
+            it.destinationId = destinationId
+        }
     }
 
     fun setSymptomTrack(symptomTrack: SymptomTrack) =
@@ -323,14 +333,15 @@ class SymptomsViewModel @Inject constructor(
     fun getSymptomPhotos(): List<Photo>? =
         symptomTrackField.get()?.photosList
 
-    fun selectStartDate(startDate: String) =
+    fun selectStartDate(startDateUI: String, startDateEn: String) =
         symptomTrackField.get()?.also {
-            it.startDate = startDate
+            it.startDateUI = startDateUI
+            it.startDateEn = startDateEn
         }
 
-    fun selectReminderTime(time: String?) =
+    fun selectReminderTime(reminderTime: ReminderTime2?) =
         symptomTrackField.get()?.also {
-            it.reminderTime = time
+            it.reminderTime2 = reminderTime
         }
 
     fun setDoctorName(doctorName: String) =

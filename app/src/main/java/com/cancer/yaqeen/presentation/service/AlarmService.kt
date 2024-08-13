@@ -8,16 +8,20 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.os.Build
+import android.os.PersistableBundle
 import android.util.Log
 import androidx.core.app.ServiceCompat
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.auth.models.User
+import com.cancer.yaqeen.data.features.home.schedule.medication.models.PeriodTimeEnum
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
+import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.Constants.NOTIFICATION_REMINDER_SERVICE_ID
 import com.cancer.yaqeen.presentation.util.Constants.UPDATE_LOCAL_SCHEDULES_ACTION_KEY
 import com.cancer.yaqeen.presentation.util.Constants.UPDATE_LOCAL_REMINDED_SCHEDULES_ACTION
 import com.cancer.yaqeen.presentation.util.NotificationUtils
 import com.cancer.yaqeen.presentation.util.getWelcomeMessage
+import com.cancer.yaqeen.presentation.util.scheduleJobServicePeriodically
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -37,12 +41,18 @@ class AlarmService: JobService() {
     lateinit var prefEncryptionUtil: SharedPrefEncryptionUtil
 
     override fun onStartJob(params: JobParameters?): Boolean {
-        val actionName = params?.extras?.getString(UPDATE_LOCAL_SCHEDULES_ACTION_KEY, UPDATE_LOCAL_REMINDED_SCHEDULES_ACTION) ?: UPDATE_LOCAL_REMINDED_SCHEDULES_ACTION
+        Log.d("ReminderWorker", "AlarmService: onStartJob")
+        val actionName = params?.extras?.getString(Constants.ACTION_KEY)
 
-        workerReminder.setReminder(
-            TimeUnit.MINUTES.toMillis(5L),
-            actionName
-        )
+        Log.d("ReminderWorker", "AlarmService actionName: $actionName")
+
+        if (actionName ==  UPDATE_LOCAL_REMINDED_SCHEDULES_ACTION){
+            workerReminder.setPeriodReminder(
+                TimeUnit.MINUTES.toMillis(5L),
+                PeriodTimeEnum.EVERY_3_HOURS.id,
+                actionName
+            )
+        }
 
         val motivatingPhrases = resources.getStringArray(R.array.motivating_phrases_array).toList()
         val phrase = motivatingPhrases.random() ?: resources.getString(R.string.reminder_running)
@@ -93,21 +103,29 @@ class AlarmService: JobService() {
 
 
     override fun onStopJob(params: JobParameters?): Boolean {
-        Log.d("NotificationReceiver", "AlarmService: onStopJob")
+        Log.d("ReminderWorker", "AlarmService: onStopJob")
         val notificationManager: NotificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.cancel(NOTIFICATION_REMINDER_SERVICE_ID)
+//
+//        scheduleJobServicePeriodically(context = this, bundle = PersistableBundle().apply {
+//            putString(
+//                UPDATE_LOCAL_SCHEDULES_ACTION_KEY,
+//                UPDATE_LOCAL_REMINDED_SCHEDULES_ACTION
+//            )
+//        })
         return false
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        Log.d("ReminderWorker", "AlarmService: onStartCommand")
         return super.onStartCommand(intent, flags, startId)
     }
 
     override fun onCreate() {
         super.onCreate()
 
-        Log.d("NotificationReceiver", "AlarmService: onCreate")
+        Log.d("ReminderWorker", "AlarmService: onCreate")
     }
 
     override fun onDestroy() {
