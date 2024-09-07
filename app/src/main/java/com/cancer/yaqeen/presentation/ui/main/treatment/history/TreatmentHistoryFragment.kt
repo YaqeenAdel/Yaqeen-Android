@@ -1,5 +1,7 @@
 package com.cancer.yaqeen.presentation.ui.main.treatment.history
 
+import android.Manifest
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,6 +12,7 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.content.PermissionChecker
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
@@ -35,6 +38,7 @@ import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.changeVisibility
 import com.cancer.yaqeen.presentation.util.dpToPx
+import com.cancer.yaqeen.presentation.util.enableNotificationPermissions
 import com.cancer.yaqeen.presentation.util.recyclerview.VerticalMarginItemDecoration
 import com.cancer.yaqeen.presentation.util.schedulingPermissionsAreGranted
 import com.cancer.yaqeen.presentation.util.timestampToHour
@@ -474,6 +478,21 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
         this.text = text
     }
 
+    private fun checkNotificationPermission(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (PermissionChecker.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) == PermissionChecker.PERMISSION_GRANTED){
+
+            } else {
+                enableNotificationPermissions(
+                    requestPermissionLauncher
+                )
+            }
+        }
+    }
+
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.btn_add -> {
@@ -483,10 +502,12 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
                             requireContext(),
                             requestPermissionLauncher
                         )
-                    )
+                    ) {
+                        checkNotificationPermission()
                         navController.tryNavigate(
                             TreatmentHistoryFragmentDirections.actionTreatmentHistoryFragmentToTreatmentFragment()
                         )
+                    }
                 } else {
                     navController.tryNavigate(R.id.authFragment)
                 }

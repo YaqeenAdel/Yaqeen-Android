@@ -23,6 +23,8 @@ import com.cancer.yaqeen.data.features.home.schedule.routine_test.room.RoutineTe
 import com.cancer.yaqeen.databinding.LayoutReminderBinding
 import com.cancer.yaqeen.presentation.ui.main.treatment.getMedicationType
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindResourceImage
+import com.cancer.yaqeen.presentation.util.drawOverlaysPermissionAreGranted
+import com.cancer.yaqeen.presentation.util.enableDrawOverlaysPermission
 
 
 abstract class Window(private val context: Context) {
@@ -57,8 +59,10 @@ abstract class Window(private val context: Context) {
         try {
             if (mView?.windowToken == null) {
                 if (mView?.parent == null) {
-                    mWindowManager?.addView(mView, mParams)
                     playDefaultAlarmSound()
+                    if (!drawOverlaysPermissionAreGranted(context))
+                        return
+                    mWindowManager?.addView(mView, mParams)
                 }
             }
         } catch (e: Exception) {
