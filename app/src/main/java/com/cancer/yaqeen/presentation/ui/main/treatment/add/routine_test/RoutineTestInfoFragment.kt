@@ -349,13 +349,12 @@ class RoutineTestInfoFragment : BaseFragment() {
                     timeAr = "",
                     cronExpression = PeriodTimeEnum.EVERY_MONTH.cronExpression
                 ),
-                //TODO(SPECIFIC_DAYS_OF_THE_WEEK): Will reAdding this type after fix the issue.
-//                Time(
-//                    id = PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id,
-//                    timeEn = getString(R.string.specific_days_of_the_week),
-//                    timeAr = "",
-//                    cronExpression = PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.cronExpression
-//                )
+                Time(
+                    id = PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id,
+                    timeEn = getString(R.string.specific_days_of_the_week),
+                    timeAr = "",
+                    cronExpression = PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.cronExpression
+                )
             )
         )
     }

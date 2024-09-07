@@ -384,7 +384,7 @@ class ReminderWorker @AssistedInject constructor(
                 startDateTime + PeriodTimeEnum.DAY_AFTER_DAY.timeInMillis
             }
 
-            PeriodTimeEnum.EVERY_WEEK.id -> {
+            PeriodTimeEnum.EVERY_WEEK.id, PeriodTimeEnum.SPECIFIC_DAYS_OF_THE_WEEK.id -> {
                 startDateTime + PeriodTimeEnum.EVERY_WEEK.timeInMillis
             }
 

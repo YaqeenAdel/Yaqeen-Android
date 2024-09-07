@@ -10,6 +10,7 @@ import com.cancer.yaqeen.data.features.home.schedule.medication.models.PeriodTim
 import com.cancer.yaqeen.data.utils.toJson
 import com.cancer.yaqeen.presentation.receiver.NotificationReceiver
 import java.util.concurrent.TimeUnit
+import kotlin.math.absoluteValue
 
 
 class ReminderRequest private constructor() {
@@ -90,7 +91,7 @@ class ReminderRequest private constructor() {
 
             val flags =
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
-            return PendingIntent.getBroadcast(context, requestCode, intent, flags)
+            return PendingIntent.getBroadcast(context, requestCode.absoluteValue, intent, flags)
         }
 
         fun build(): String {
@@ -116,7 +117,7 @@ class ReminderRequest private constructor() {
                 )
             }
 
-            return requestCode.toString()
+            return requestCode.absoluteValue.toString()
         }
 
     private fun getIntervalInMillis(periodTimeId: Int?): Long =
