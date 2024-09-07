@@ -9,21 +9,22 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="@color/white"
         tools:context=".presentation.ui.main.treatment.add.medical_reminder.choose_time.ChooseTimeMedicalReminderFragment">
 
         <ScrollView
             android:id="@+id/scrollView"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/btn_next"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/btn_next">
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
 
         <com.google.android.material.appbar.MaterialToolbar
@@ -412,6 +413,7 @@
             android:visibility="gone"
             android:background="@drawable/background_view_gray_radius_8"
             android:layout_marginTop="@dimen/_14sdp"
+            android:layout_marginBottom="@dimen/_12sdp"
             app:layout_constraintStart_toStartOf="@id/text_layout_time"
             app:layout_constraintEnd_toEndOf="@id/text_layout_time"
             app:layout_constraintTop_toBottomOf="@id/text_layout_note">
@@ -484,7 +486,7 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </ScrollView>
+        </ScrollView>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_next"
@@ -503,8 +505,8 @@
             android:fontFamily="sans-serif-medium"
             app:backgroundTint="@color/light_gray"
             app:cornerRadius="@dimen/_16sdp"
-            android:layout_marginVertical="@dimen/_18sdp"
-            android:layout_marginHorizontal="@dimen/_16sdp"
+            android:layout_marginBottom="@dimen/_18sdp"
+            android:layout_marginHorizontal="@dimen/_20sdp"
             app:layout_constraintVertical_bias="1"
             app:layout_constraintTop_toBottomOf="@id/scrollView"
             app:layout_constraintStart_toStartOf="@id/scrollView"

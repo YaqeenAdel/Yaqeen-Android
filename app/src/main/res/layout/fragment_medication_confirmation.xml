@@ -13,6 +13,18 @@
         android:background="@color/white"
         tools:context=".presentation.ui.main.treatment.add.medications.strength.choose_time.select_time.confirmation.MedicationConfirmationFragment">
 
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/btn_confirm"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -29,18 +41,6 @@
             app:navigationIcon="@drawable/ic_arrow_back"
             app:titleCentered="true"/>
 
-        <ScrollView
-            android:id="@+id/scrollView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintStart_toStartOf="@id/toolbar"
-            app:layout_constraintEnd_toEndOf="@id/toolbar"
-            app:layout_constraintTop_toBottomOf="@id/toolbar"
-            app:layout_constraintBottom_toTopOf="@+id/btn_confirm">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
         <TextView
             android:id="@+id/tv_medication_name"
             android:layout_width="0dp"
@@ -54,7 +54,7 @@
             android:fontFamily="sans-serif-medium"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
         <TextView
             android:id="@+id/tv_medication_details"
@@ -292,7 +292,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_time_val" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-        </ScrollView>
+    </ScrollView>
 
 
         <com.google.android.material.button.MaterialButton

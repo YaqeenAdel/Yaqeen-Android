@@ -18,18 +18,9 @@ class SplashViewModel
     private val refreshTokenUseCase: RefreshTokenUseCase
 ) : ViewModel() {
 
-    private val _viewStateUserInfo = MutableStateFlow<Boolean?>(null)
-    val viewStateUserInfo = _viewStateUserInfo.asStateFlow()
-
     private var viewModelJob: Job? = null
 
-    fun checkUserInfo() {
-        val isLoggedIn = prefUtil.isLogged
-        viewModelJob = viewModelScope.launch {
-            _viewStateUserInfo.emit(isLoggedIn)
-        }
-
-    }
+    fun userIsLogged() = prefUtil.isLogged
 
     fun refreshToken(requireContext: Context) {
         val isLoggedIn = prefUtil.isLogged

@@ -27,13 +27,6 @@ class SplashFragment : BaseFragment() {
 
     private lateinit var navController: NavController
 
-    private val requestPermissionLauncher: ActivityResultLauncher<String?> = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted == true)
-            checkUserInfo()
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -48,46 +41,19 @@ class SplashFragment : BaseFragment() {
 
         navController = findNavController()
 
-        observeUiState()
-        checkNotificationPermission()
-    }
+        val isLogged = splashViewModel.userIsLogged()
 
-    private fun observeUiState() {
-        lifecycleScope {
-            splashViewModel.viewStateUserInfo.collectLatest { isLogged ->
-                if (isLogged == null){
-                    Handler().postDelayed({}, 3000)
-                }else if(isLogged){
-                    navController.navigate(
-                        SplashFragmentDirections.actionSplashFragmentToQuoteFragment()
-                    )
-                }else {
-                    navController.navigate(
-                        SplashFragmentDirections.actionSplashFragmentToOnBoardingFragment()
-                    )
-                }
-            }
-        }
-    }
-    private fun checkNotificationPermission(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (PermissionChecker.checkSelfPermission(
-                    requireContext(),
-                    Manifest.permission.POST_NOTIFICATIONS
-                ) == PermissionChecker.PERMISSION_GRANTED){
-                checkUserInfo()
-            } else {
-                enableNotificationPermissions(
-                    requestPermissionLauncher
+        Handler().postDelayed({
+            if(isLogged){
+                navController.navigate(
+                    SplashFragmentDirections.actionSplashFragmentToQuoteFragment()
+                )
+            }else {
+                navController.navigate(
+                    SplashFragmentDirections.actionSplashFragmentToOnBoardingFragment()
                 )
             }
-        }else {
-            checkUserInfo()
-        }
-    }
-
-    private fun checkUserInfo(){
-        splashViewModel.checkUserInfo()
+        }, 3000)
     }
 
 }
