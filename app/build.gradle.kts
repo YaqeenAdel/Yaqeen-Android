@@ -27,8 +27,8 @@ android {
         applicationId = "com.cancer.yaqeen"
         minSdk = 21
         targetSdk = 34
-        versionCode = 4
-        versionName = "1.0.4"
+        versionCode = 5
+        versionName = "1.0.5"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         manifestPlaceholders["auth0Domain"] =  "yaqeen.eu.auth0.com"
         manifestPlaceholders["auth0Scheme"] =  "demo"
