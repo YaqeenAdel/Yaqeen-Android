@@ -131,16 +131,18 @@ class ReminderWorker @AssistedInject constructor(
                 UPDATE_LOCAL_ROUTINE_TEST_ACTION -> {
                     val routineTest: RoutineTestDB? =
                         objectJsonValue.toString().fromJson(RoutineTestDB::class.java)
+                    Log.d("reminderBefore", "doWork: $routineTest")
                     routineTest?.let {
-                        setRoutineTestReminder(
-                            it.apply {
+                        if (!it.reminderBeforeIsAvailable){
+                            setRoutineTestReminder(
+                                it.apply {
 //                                isReminded = true
-                                statusReminder = ReminderStatus.REMINDED
-                                workID = null
-                                workSpecificDaysIDs = listOf()
-                                startDateTime = increaseDateTime(it.startDateTime, it.periodTimeId)
-                            }
-                        )
+                                    statusReminder = ReminderStatus.REMINDED
+                                    workID = null
+                                    workSpecificDaysIDs = listOf()
+                                    startDateTime = increaseDateTime(it.startDateTime, it.periodTimeId)
+                                }
+                            )
 //                        updateRoutineTest(
 //                            it.apply {
 //                                workID = null
@@ -150,6 +152,7 @@ class ReminderWorker @AssistedInject constructor(
 //                                startDateTime = increaseDateTime(it.startDateTime, it.periodTimeId)
 //                            }
 //                        )
+                        }
                     }
                 }
 

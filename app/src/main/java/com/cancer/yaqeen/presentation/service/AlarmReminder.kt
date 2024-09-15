@@ -16,6 +16,7 @@ import com.cancer.yaqeen.presentation.receiver.NotificationReceiver
 import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.Constants.OPEN_MEDICAL_APPOINTMENT_WINDOW_ACTION
 import com.cancer.yaqeen.presentation.util.Constants.OPEN_MEDICATION_WINDOW_ACTION
+import com.cancer.yaqeen.presentation.util.Constants.OPEN_ROUTINE_TEST_BEFORE_WINDOW_ACTION
 import com.cancer.yaqeen.presentation.util.Constants.OPEN_ROUTINE_TEST_WINDOW_ACTION
 import java.util.concurrent.TimeUnit
 
@@ -78,6 +79,7 @@ class AlarmReminder(private val context: Context): ReminderManager() {
                 .setReminderType(oneTime)
                 .build()
         }
+        Log.d("reminderBefore", "setReminder: $routineTest")
 
         val reminderBeforeID = if (routineTest.reminderBeforeInMinutes > 0) {
             scheduleReminder(routineTest.apply { reminderBeforeIsAvailable = true })
@@ -90,10 +92,13 @@ class AlarmReminder(private val context: Context): ReminderManager() {
         val uuid = with(routineTest){
             val timeDelayInMilliSeconds =
                 startDateTime - TimeUnit.MINUTES.toMillis(routineTest.reminderBeforeInMinutes.toLong())
+            Log.d("reminderBefore", "scheduleReminder: $routineTest")
+            Log.d("reminderBefore", "scheduleReminder: $timeDelayInMilliSeconds")
+
             ReminderRequest.Builder(context)
                 .setStartDateTime(timeDelayInMilliSeconds)
                 .setPeriodTime(periodTimeId)
-                .setActionName(OPEN_ROUTINE_TEST_WINDOW_ACTION)
+                .setActionName(OPEN_ROUTINE_TEST_BEFORE_WINDOW_ACTION)
                 .setRequestCode(System.currentTimeMillis().toInt())
                 .setObjectKey(Constants.ROUTINE_TEST)
                 .setJson(json)

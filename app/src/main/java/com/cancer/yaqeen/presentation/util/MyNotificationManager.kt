@@ -5,7 +5,12 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.app.PendingIntent.getActivity
 import android.content.Context
+import android.content.Context.NOTIFICATION_SERVICE
+import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
+import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
@@ -20,6 +25,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.cancer.yaqeen.R
+import com.cancer.yaqeen.presentation.ui.MainActivity
 
 class MyNotificationManager private constructor(private val context: Context) {
 
@@ -137,7 +143,15 @@ class MyNotificationManager private constructor(private val context: Context) {
             builder.setStyle(style)
             return this
         }
-        fun setPendingIntent(pendingIntent: PendingIntent): Builder{
+        fun setPendingIntent(): Builder{
+            val intent = Intent(context, MainActivity::class.java)
+            intent.flags = FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK
+            val pendingIntent = getActivity(
+                context,
+                0,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
             builder.setContentIntent(pendingIntent)
             return this
         }

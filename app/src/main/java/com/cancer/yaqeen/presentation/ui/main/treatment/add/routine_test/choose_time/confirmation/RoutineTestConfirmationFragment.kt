@@ -26,6 +26,7 @@ import com.cancer.yaqeen.presentation.service.ReminderManager
 import com.cancer.yaqeen.presentation.service.WorkerReminder
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.routine_test.RoutineTestViewModel
 import com.cancer.yaqeen.presentation.util.Constants
+import com.cancer.yaqeen.presentation.util.Constants.OPEN_ROUTINE_TEST_BEFORE_WINDOW_ACTION
 import com.cancer.yaqeen.presentation.util.Constants.OPEN_ROUTINE_TEST_WINDOW_ACTION
 import com.cancer.yaqeen.presentation.util.Constants.UPDATE_LOCAL_REMINDED_SCHEDULES_ACTION
 import com.cancer.yaqeen.presentation.util.autoCleared
@@ -281,6 +282,8 @@ class RoutineTestConfirmationFragment : BaseFragment() {
                     workerReminder.cancelReminder(workID.toString(), actionName, objectJsonValue)
                     workerReminder.cancelReminder(workID.toString())
                     workBeforeID?.let {
+                        val actionNameBefore = OPEN_ROUTINE_TEST_BEFORE_WINDOW_ACTION
+                        workerReminder.cancelReminder(workID.toString(), actionNameBefore, objectJsonValue)
                         workerReminder.cancelReminder(it)
                     }
                 }

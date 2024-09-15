@@ -53,7 +53,7 @@ class ReminderRequest private constructor() {
         }
 
         fun setRequestCode(requestCode: Int): Builder {
-            this.requestCode = requestCode
+            this.requestCode = requestCode.absoluteValue
             return this
         }
 
@@ -91,7 +91,7 @@ class ReminderRequest private constructor() {
 
             val flags =
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
-            return PendingIntent.getBroadcast(context, requestCode.absoluteValue, intent, flags)
+            return PendingIntent.getBroadcast(context, requestCode, intent, flags)
         }
 
         fun build(): String {
@@ -117,7 +117,7 @@ class ReminderRequest private constructor() {
                 )
             }
 
-            return requestCode.absoluteValue.toString()
+            return requestCode.toString()
         }
 
     private fun getIntervalInMillis(periodTimeId: Int?): Long =

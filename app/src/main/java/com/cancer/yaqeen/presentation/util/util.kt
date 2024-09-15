@@ -2,18 +2,21 @@ package com.cancer.yaqeen.presentation.util
 
 import android.content.ContentValues
 import android.content.Context
+import android.content.DialogInterface
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewTreeObserver
+import androidx.core.content.ContextCompat
+import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.onboarding.models.Language
 import com.cancer.yaqeen.databinding.DialogImageBinding
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindImage
@@ -219,4 +222,35 @@ fun showImageDialog(layoutInflater: LayoutInflater, context: Context, imageUrl: 
         popUpDialogBinding.imageView.setImageURI(imageUri)
 
     dialog.show()
+}
+
+fun showPermissionConfirmationDialog(context: Context, title: String? = null, message: String? = null, onClickConfirm: () -> Unit) {
+    val builder = MaterialAlertDialogBuilder(context)
+    builder.apply {
+        setTitle(title)
+        setMessage(message)
+        setPositiveButton(context.getString(R.string.ok)) { dialog, _ ->
+            dialog.dismiss()
+            onClickConfirm()
+        }
+        setNegativeButton(context.getString(R.string.close)) { dialog, _ ->
+            dialog.dismiss()
+        }
+        setCancelable(false)
+    }
+    val dialogPermissionConfirmationLogout = builder.create()
+    dialogPermissionConfirmationLogout.apply {
+        window?.setBackgroundDrawableResource(R.drawable.background_dialog_view_18)
+        setOnShowListener {
+            getButton(DialogInterface.BUTTON_POSITIVE).let { positiveButton ->
+                positiveButton.setTextColor(ContextCompat.getColor(context, R.color.primary_color))
+                positiveButton.setBackgroundColor(Color.WHITE)
+            }
+            getButton(DialogInterface.BUTTON_NEGATIVE).let { positiveButton ->
+                positiveButton.setTextColor(ContextCompat.getColor(context, R.color.primary_color))
+                positiveButton.setBackgroundColor(Color.WHITE)
+            }
+        }
+        show()
+    }
 }
