@@ -18,6 +18,7 @@ import com.cancer.yaqeen.presentation.util.Constants.NOTIFICATION_ID
 import com.cancer.yaqeen.presentation.util.Constants.OPEN_MEDICATION_WINDOW_ACTION
 import com.cancer.yaqeen.presentation.util.Constants.OPEN_ROUTINE_TEST_WINDOW_ACTION
 import com.cancer.yaqeen.presentation.util.Constants.OPEN_MEDICAL_APPOINTMENT_WINDOW_ACTION
+import com.cancer.yaqeen.presentation.util.Constants.OPEN_ROUTINE_TEST_BEFORE_WINDOW_ACTION
 import com.cancer.yaqeen.presentation.util.Constants.UPDATE_LOCAL_MEDICATION_ACTION
 import com.cancer.yaqeen.presentation.util.Constants.UPDATE_LOCAL_ROUTINE_TEST_ACTION
 import com.cancer.yaqeen.presentation.util.Constants.UPDATE_LOCAL_SCHEDULES_ACTION
@@ -77,11 +78,29 @@ class NotificationReceiver : BroadcastReceiver() {
                 val detailsRoutineTest: String = routineTest?.createNotificationMessage(context).toString()
                 val medicationId = routineTest?.routineTestId ?: 1
 
+                Log.d("reminderBefore", "NotificationReceiver: $routineTest")
+
                 reminder.setReminder(
                     TimeUnit.MINUTES.toMillis(1),
                     routineTest,
                     UPDATE_LOCAL_ROUTINE_TEST_ACTION
                 )
+
+                notificationUtils.notify(title, detailsRoutineTest, medicationId)
+
+                val window = RoutineTestWindow(context)
+                window.setRoutineTest(routineTest)
+                window.open()
+            }
+            OPEN_ROUTINE_TEST_BEFORE_WINDOW_ACTION -> {
+                reminder = WorkerReminder(context)
+                val title = context.getString(R.string.routine_test_reminder)
+                val routineTest: RoutineTestDB? = intent.data.toString().fromJson(RoutineTestDB::class.java)
+
+                val detailsRoutineTest: String = routineTest?.createNotificationMessage(context).toString()
+                val medicationId = routineTest?.routineTestId ?: 1
+
+                Log.d("reminderBefore", "OPEN_ROUTINE_TEST_BEFORE_WINDOW_ACTION: $routineTest")
 
                 notificationUtils.notify(title, detailsRoutineTest, medicationId)
 

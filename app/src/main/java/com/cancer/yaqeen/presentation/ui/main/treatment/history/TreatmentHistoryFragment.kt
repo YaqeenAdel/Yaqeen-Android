@@ -35,6 +35,7 @@ import com.cancer.yaqeen.presentation.ui.main.treatment.history.adapters.Medicat
 import com.cancer.yaqeen.presentation.ui.main.treatment.history.adapters.RoutineTestsAdapter
 import com.cancer.yaqeen.presentation.ui.main.treatment.history.adapters.SymptomsAdapter
 import com.cancer.yaqeen.presentation.util.Constants
+import com.cancer.yaqeen.presentation.util.Constants.OPEN_ROUTINE_TEST_BEFORE_WINDOW_ACTION
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.changeVisibility
 import com.cancer.yaqeen.presentation.util.dpToPx
@@ -264,6 +265,8 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
                     workerReminder.cancelReminder(workID.toString(), actionName, objectJsonValue)
                     workerReminder.cancelReminder(workID.toString())
                     workBeforeID?.let {
+                        val actionNameBefore = OPEN_ROUTINE_TEST_BEFORE_WINDOW_ACTION
+                        workerReminder.cancelReminder(workID.toString(), actionNameBefore, objectJsonValue)
                         workerReminder.cancelReminder(it)
                     }
                 }

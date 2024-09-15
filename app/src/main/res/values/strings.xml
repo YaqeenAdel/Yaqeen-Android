@@ -252,6 +252,9 @@
     <string name="good_evening">Good Evening</string>
     <string name="good_night">Good Night</string>
     <string name="reminder_running">Reminder Running…</string>
+    <string name="allow_permission">Allow Permission</string>
+    <string name="select_yaqeen_app_and_allow_the_permission">Please enable the permission to activate alert\n\nSelect YAQEEN App and allow the permission</string>
+    <string name="please_enable_the_permission_to_activate_alert">Please enable the permission to activate alert</string>
 
     <string-array name="languages_array">
         <item>English</item>

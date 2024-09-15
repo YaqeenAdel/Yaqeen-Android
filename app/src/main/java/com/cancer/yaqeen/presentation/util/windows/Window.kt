@@ -10,28 +10,19 @@ import android.net.Uri
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
-import android.util.Log
 import android.view.Gravity
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import com.cancer.yaqeen.R
-import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.room.MedicalAppointmentDB
-import com.cancer.yaqeen.data.features.home.schedule.medication.room.MedicationDB
-import com.cancer.yaqeen.data.features.home.schedule.routine_test.room.RoutineTestDB
-import com.cancer.yaqeen.databinding.LayoutReminderBinding
-import com.cancer.yaqeen.presentation.ui.main.treatment.getMedicationType
-import com.cancer.yaqeen.presentation.util.binding_adapters.bindResourceImage
 import com.cancer.yaqeen.presentation.util.drawOverlaysPermissionAreGranted
-import com.cancer.yaqeen.presentation.util.enableDrawOverlaysPermission
 
 
 abstract class Window(private val context: Context) {
     private var mView: View? = null
     private var mParams: WindowManager.LayoutParams? = null
     private var mWindowManager: WindowManager? = null
-//    private var layoutReminderBinding: LayoutReminderBinding? = null
+
+    //    private var layoutReminderBinding: LayoutReminderBinding? = null
     private var ringtone: Ringtone? = null
     private var vibrator: Vibrator? = null
 
@@ -41,8 +32,18 @@ abstract class Window(private val context: Context) {
                 // than filling the screen
                 WindowManager.LayoutParams.MATCH_PARENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,  // Display it on top of other application windows
-                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,  // Don't let it grab the input focus
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,  // Make the underlying application window visible
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                    WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+                else WindowManager.LayoutParams.TYPE_PHONE,  // Don't let it grab the input focus
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+                        WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD or
+                        WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
+                        WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH or
+                        WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
+                        WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
+                // Make the underlying application window visible
                 // through any transparent parts
                 PixelFormat.TRANSLUCENT
             )
@@ -51,7 +52,7 @@ abstract class Window(private val context: Context) {
         mWindowManager = context.getSystemService(WINDOW_SERVICE) as WindowManager
     }
 
-    protected fun setView(view: View?){
+    protected fun setView(view: View?) {
         mView = view
     }
 
@@ -79,6 +80,7 @@ abstract class Window(private val context: Context) {
         } catch (e: Exception) {
         }
     }
+
     private fun playDefaultAlarmSound() {
         try {
             val notification: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
@@ -97,7 +99,7 @@ abstract class Window(private val context: Context) {
         }
     }
 
-    private fun playVibration(){
+    private fun playVibration() {
         try {
             val vibrationPattern = longArrayOf(0, 500, 500, 500, 500)
             val repeatCount = 3
@@ -115,7 +117,7 @@ abstract class Window(private val context: Context) {
                     vibrator?.vibrate(vibrationPattern, repeatCount)
                 }
             }
-        }catch (e: Exception){
+        } catch (e: Exception) {
 
         }
     }

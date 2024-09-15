@@ -42,21 +42,21 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
 
     private val onboardingViewModel: OnboardingViewModel by activityViewModels()
 
-    private val handler = Handler()
-    private var scrollPosition = 0
-
-    private val runnable = object : Runnable {
-
-        override fun run() {
-            try {
-                val count = adapter.itemCount
-                binding.viewPager.setCurrentItem(scrollPosition++ % count, true)
-
-                handler.postDelayed(this, 3000)
-            } catch (_: Exception) {
-            }
-        }
-    }
+//    private val handler = Handler()
+//    private var scrollPosition = 0
+//
+//    private val runnable = object : Runnable {
+//
+//        override fun run() {
+//            try {
+//                val count = adapter.itemCount
+//                binding.viewPager.setCurrentItem(scrollPosition++ % count, true)
+//
+//                handler.postDelayed(this, 3000)
+//            } catch (_: Exception) {
+//            }
+//        }
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -253,7 +253,7 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
 
         binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-                scrollPosition = position + 1
+//                scrollPosition = position + 1
             }
 
             override fun onPageScrollStateChanged(state: Int) {}
@@ -265,7 +265,7 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
             }
         })
 
-        handler.post(runnable)
+//        handler.post(runnable)
     }
 
     private fun navigateToHome() {
@@ -284,8 +284,8 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
     }
 
     private fun removeCallbacks() {
-        binding.viewPager.removeCallbacks(runnable)
-        handler.removeCallbacks(runnable)
+//        binding.viewPager.removeCallbacks(runnable)
+//        handler.removeCallbacks(runnable)
     }
 
     override fun onClick(v: View?) {
