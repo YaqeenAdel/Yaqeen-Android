@@ -16,6 +16,7 @@ import androidx.navigation.fragment.navArgs
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.schedule.medication.mappers.MappingMedicationAsMedicationTrack
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.MedicationTrack
+import com.cancer.yaqeen.data.utils.toJson
 import com.cancer.yaqeen.databinding.FragmentMedicationsBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.ui.main.treatment.getMedicationTypes
@@ -24,6 +25,10 @@ import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.disable
 import com.cancer.yaqeen.presentation.util.dpToPx
 import com.cancer.yaqeen.presentation.util.enable
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.CAPSULE_NAME
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.MEDICATION_TYPE
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvent
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.SELECT_MEDICATION_TYPE
 import com.cancer.yaqeen.presentation.util.recyclerview.VerticalMarginItemDecoration
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import dagger.hilt.android.AndroidEntryPoint
@@ -109,7 +114,19 @@ class MedicationsFragment : BaseFragment() {
 
         binding.btnNext.setOnClickListener {
             val capsuleName = getCapsuleName()
-            medicationsViewModel.selectMedicationType(medicationTypesAdapter.getItemSelected(), capsuleName.trim())
+            val medicationType = medicationTypesAdapter.getItemSelected()
+            medicationsViewModel.selectMedicationType(medicationType, capsuleName.trim())
+
+            medicationsViewModel.logEvent(
+                GoogleAnalyticsEvent(
+                    eventName = SELECT_MEDICATION_TYPE,
+                    eventParams = arrayOf(
+                        CAPSULE_NAME to capsuleName,
+                        MEDICATION_TYPE to medicationType.toJson(),
+                    )
+                )
+            )
+
             navController.tryNavigate(
                 MedicationsFragmentDirections.actionMedicationsFragmentToStrengthFragment()
             )

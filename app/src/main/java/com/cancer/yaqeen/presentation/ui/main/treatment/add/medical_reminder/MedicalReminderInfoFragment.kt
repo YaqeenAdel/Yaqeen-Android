@@ -17,12 +17,20 @@ import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.mappers.MappingMedicalReminderAsMedicalReminderTrack
 import com.cancer.yaqeen.data.features.home.schedule.medical_reminder.models.MedicalReminderTrack
 import com.cancer.yaqeen.data.features.home.schedule.medication.mappers.MappingMedicationAsMedicationTrack
+import com.cancer.yaqeen.data.utils.toJson
 import com.cancer.yaqeen.databinding.FragmentMedicalReminderInfoBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.MedicationsFragmentArgs
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.disable
 import com.cancer.yaqeen.presentation.util.enable
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.DOCTOR_LOCATION
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.DOCTOR_NAME
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.DOCTOR_PHONE_NUMBER
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.MEDICATION
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvent
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.CONFIRM_MEDICATION
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.SET_DOCTOR_INFO
 import com.cancer.yaqeen.presentation.util.isValidPhone
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import dagger.hilt.android.AndroidEntryPoint
@@ -115,6 +123,16 @@ class MedicalReminderInfoFragment : BaseFragment() {
             doctorName = doctorName,
             location = location,
             phoneNumber = phoneNumber
+        )
+        medicalReminderViewModel.logEvent(
+            GoogleAnalyticsEvent(
+                eventName = SET_DOCTOR_INFO,
+                eventParams = arrayOf(
+                    DOCTOR_NAME to doctorName,
+                    DOCTOR_LOCATION to location,
+                    DOCTOR_PHONE_NUMBER to phoneNumber,
+                )
+            )
         )
     }
 

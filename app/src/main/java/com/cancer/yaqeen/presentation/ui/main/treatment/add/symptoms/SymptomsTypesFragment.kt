@@ -1,11 +1,9 @@
 package com.cancer.yaqeen.presentation.ui.main.treatment.add.symptoms
 
-import android.content.Context
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,20 +14,20 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.cancer.yaqeen.R
-import com.cancer.yaqeen.data.features.home.schedule.medication.mappers.MappingMedicationAsMedicationTrack
-import com.cancer.yaqeen.data.features.home.schedule.medication.models.MedicationTrack
 import com.cancer.yaqeen.data.features.home.schedule.symptom.mappers.MappingSymptomAsSymptomTrack
 import com.cancer.yaqeen.data.features.home.schedule.symptom.models.SymptomTrack
-import com.cancer.yaqeen.data.features.home.schedule.symptom.models.SymptomType
 import com.cancer.yaqeen.data.network.error.ErrorEntity
+import com.cancer.yaqeen.data.utils.toJson
 import com.cancer.yaqeen.databinding.FragmentSymptomsTypesBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
-import com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.MedicationsFragmentArgs
-import com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.MedicationsViewModel
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.disable
 import com.cancer.yaqeen.presentation.util.dpToPx
 import com.cancer.yaqeen.presentation.util.enable
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.ROUTINE_TEST
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.SYMPTOMS_TYPES
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvent
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.SELECT_SYMPTOM_TYPE
 import com.cancer.yaqeen.presentation.util.recyclerview.VerticalMarginItemDecoration
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import dagger.hilt.android.AndroidEntryPoint
@@ -134,7 +132,16 @@ class SymptomsTypesFragment : BaseFragment() {
         }
 
         binding.btnNext.setOnClickListener {
-            symptomsViewModel.selectSymptomTypes(symptomsTypesAdapter.getItemsSelected())
+            val symptomsTypes = symptomsTypesAdapter.getItemsSelected()
+            symptomsViewModel.selectSymptomTypes(symptomsTypes)
+            symptomsViewModel.logEvent(
+                GoogleAnalyticsEvent(
+                    eventName = SELECT_SYMPTOM_TYPE,
+                    eventParams = arrayOf(
+                        SYMPTOMS_TYPES to symptomsTypes.toJson(),
+                    )
+                )
+            )
             navController.tryNavigate(
                 SymptomsTypesFragmentDirections.actionSymptomsTypesFragmentToSymptomsDetailsFragment()
             )

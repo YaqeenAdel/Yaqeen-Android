@@ -18,6 +18,7 @@ import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.MedicationTrack
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.ReminderTime
+import com.cancer.yaqeen.data.utils.toJson
 import com.cancer.yaqeen.databinding.FragmentSelectTimeBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.MedicationsViewModel
@@ -28,6 +29,12 @@ import com.cancer.yaqeen.presentation.util.changeVisibility
 import com.cancer.yaqeen.presentation.util.convertMilliSecondsToDate
 import com.cancer.yaqeen.presentation.util.disable
 import com.cancer.yaqeen.presentation.util.enable
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.DAYS
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.DOSAGE_AMOUNT
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.NOTES
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.TIME
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvent
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.CHOOSE_TIME
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -138,6 +145,16 @@ class SelectTimeFragment : BaseFragment() {
             val notes = binding.editTextNote.text.toString().trim()
             val dosageAmount = binding.editTextDosage.text.toString().trim()
             medicationsViewModel.selectNotesAndDosageAmount(notes = notes, dosageAmount = dosageAmount)
+
+            medicationsViewModel.logEvent(
+                GoogleAnalyticsEvent(
+                    eventName = CHOOSE_TIME,
+                    eventParams = arrayOf(
+                        NOTES to notes,
+                        DOSAGE_AMOUNT to dosageAmount,
+                    )
+                )
+            )
 
             navController.tryNavigate(
                 SelectTimeFragmentDirections.actionSelectTimeFragmentToMedicationConfirmationFragment()

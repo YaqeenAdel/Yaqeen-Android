@@ -6,6 +6,7 @@ import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.presentation.util.MyContextWrapper
+import com.google.firebase.FirebaseApp
 import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
@@ -18,6 +19,7 @@ class YaqeenApp: Application(), Configuration.Provider {
     override fun onCreate() {
         super.onCreate()
         FirebaseAnalytics.getInstance(applicationContext)
+        FirebaseApp.initializeApp(applicationContext)
     }
 
     override val workManagerConfiguration: Configuration

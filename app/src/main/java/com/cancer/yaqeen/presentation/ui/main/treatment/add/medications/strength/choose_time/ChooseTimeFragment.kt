@@ -21,6 +21,7 @@ import com.cancer.yaqeen.data.features.home.schedule.medication.models.Medicatio
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.PeriodTimeEnum
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.ReminderTime
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Time
+import com.cancer.yaqeen.data.utils.toJson
 import com.cancer.yaqeen.databinding.FragmentChooseTimeBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.MedicationsViewModel
@@ -32,6 +33,15 @@ import com.cancer.yaqeen.presentation.util.convertMilliSecondsToDate
 import com.cancer.yaqeen.presentation.util.disable
 import com.cancer.yaqeen.presentation.util.dpToPx
 import com.cancer.yaqeen.presentation.util.enable
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.DAYS
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.DOSAGE_AMOUNT
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.NOTES
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.STRENGTH_AMOUNT
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.TIME
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.UNIT_TYPE
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvent
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.CHOOSE_TIME
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.SELECT_MEDICATION_TYPE
 import com.cancer.yaqeen.presentation.util.recyclerview.VerticalMarginItemDecoration
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import dagger.hilt.android.AndroidEntryPoint
@@ -152,12 +162,25 @@ class ChooseTimeFragment : BaseFragment() {
             val notes = binding.editTextNote.text.toString().trim()
             val dosageAmount = binding.editTextDosage.text.toString().trim()
 
+            val time = medicationTimesAdapter.getItemSelected()
+            val days = daysAdapter.getItemsSelected()
 
             medicationsViewModel.selectPeriodTime(
-                periodTime = medicationTimesAdapter.getItemSelected(),
-                specificDays = daysAdapter.getItemsSelected(),
+                periodTime = time,
+                specificDays = days,
                 notes = notes,
                 dosageAmount = dosageAmount,
+            )
+            medicationsViewModel.logEvent(
+                GoogleAnalyticsEvent(
+                    eventName = CHOOSE_TIME,
+                    eventParams = arrayOf(
+                        TIME to time.toJson(),
+                        DAYS to days.toJson(),
+                        NOTES to notes,
+                        DOSAGE_AMOUNT to dosageAmount,
+                    )
+                )
             )
             navController.tryNavigate(
                 ChooseTimeFragmentDirections.actionChooseTimeFragmentToSelectTimeFragment()

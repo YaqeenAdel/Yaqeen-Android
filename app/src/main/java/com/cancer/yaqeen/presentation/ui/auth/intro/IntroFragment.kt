@@ -11,6 +11,9 @@ import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.databinding.FragmentIntroBinding
 import com.cancer.yaqeen.presentation.ui.auth.OnboardingViewModel
 import com.cancer.yaqeen.presentation.util.autoCleared
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvent
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.LOGOUT
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.START_CREATE_ACCOUNT
 import com.cancer.yaqeen.presentation.util.tryNavigate
 
 class IntroFragment : Fragment() {
@@ -44,6 +47,11 @@ class IntroFragment : Fragment() {
 
     private fun setListener(){
         binding.btnStart.setOnClickListener {
+            viewModel.logEvent(
+                GoogleAnalyticsEvent(
+                    eventName = START_CREATE_ACCOUNT,
+                )
+            )
             navController.tryNavigate(
                 IntroFragmentDirections.actionIntroFragmentToSelectCancerTypeFragment()
             )

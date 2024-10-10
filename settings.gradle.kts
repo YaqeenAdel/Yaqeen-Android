@@ -22,3 +22,5 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Yaqeen"
 include(":app")
+include(":cardstackview")
+//include(":sample")

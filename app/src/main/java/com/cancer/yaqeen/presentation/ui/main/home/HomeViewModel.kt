@@ -1,5 +1,7 @@
 package com.cancer.yaqeen.presentation.ui.main.home
 
+import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -21,8 +23,15 @@ import com.cancer.yaqeen.domain.features.home.articles.usecases.SaveArticleUseCa
 import com.cancer.yaqeen.domain.features.home.articles.usecases.UnBookmarkArticleUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.GetTodayRemindersUseCase
 import com.cancer.yaqeen.domain.features.onboarding.usecases.GetUserProfileUseCase
+import com.cancer.yaqeen.presentation.base.BaseViewModel
 import com.cancer.yaqeen.presentation.util.SingleLiveEvent
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.ARTICLE_ID
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.ARTICLE_LINK
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvent
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.ADD_ARTICLE_TO_FAVOURITE
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.REMOVE_ARTICLE_TO_FAVOURITE
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -38,6 +47,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
+    @ApplicationContext val _context: Context,
     private val prefEncryptionUtil: SharedPrefEncryptionUtil,
     private val getUserProfileUseCase: GetUserProfileUseCase,
     private val getArticlesUseCase: GetArticlesUseCase,
@@ -49,7 +59,8 @@ class HomeViewModel @Inject constructor(
     private val removeBookmarkedArticleUseCase: RemoveBookmarkedArticleUseCase,
     private val saveArticleUseCase: SaveArticleUseCase,
 //    private val removeArticleFromFavouriteUseCase: RemoveArticleFromFavouriteUseCase,
-) : ViewModel() {
+) : BaseViewModel(context = _context, prefEncryptionUtil = prefEncryptionUtil) {
+
 
     private var viewModelJob: Job? = null
 
@@ -224,10 +235,24 @@ class HomeViewModel @Inject constructor(
         prefEncryptionUtil.isLogged
 
     fun changeFavouriteStatusArticle(article: Article) {
-        if (article.isFavorite)
+        val eventName = if (article.isFavorite) {
             unBookmarkArticle(article)
-        else
+            REMOVE_ARTICLE_TO_FAVOURITE
+        }
+        else {
             bookmarkArticle(article)
+            ADD_ARTICLE_TO_FAVOURITE
+        }
+
+        logEvent(
+            GoogleAnalyticsEvent(
+                eventName = eventName,
+                eventParams = arrayOf(
+                    ARTICLE_ID to article.contentID,
+                    ARTICLE_LINK to article.link,
+                )
+            )
+        )
     }
 
     private fun bookmarkArticle(article: Article) {
