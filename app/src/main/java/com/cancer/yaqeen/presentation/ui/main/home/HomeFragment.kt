@@ -28,6 +28,11 @@ import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindImage
 import com.cancer.yaqeen.presentation.util.changeVisibility
 import com.cancer.yaqeen.presentation.util.dpToPx
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.ARTICLE_ID
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.ARTICLE_LINK
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvent
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.ADD_ARTICLE_TO_FAVOURITE
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.OPEN_ARTICLE_DETAILS
 import com.cancer.yaqeen.presentation.util.recyclerview.VerticalMarginItemDecoration
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager
@@ -119,15 +124,36 @@ class HomeFragment : BaseFragment(showBottomMenu = true) {
     private fun setupArticlesAdapter() {
         articlesAdapter = ArticlesAdapter(
             onItemClick = {
+                homeViewModel.logEvent(
+                    GoogleAnalyticsEvent(
+                        eventName = OPEN_ARTICLE_DETAILS,
+                        eventParams = arrayOf(
+                            ARTICLE_ID to it.contentID,
+                            ARTICLE_LINK to it.link,
+                        )
+                    )
+                )
                 navController.tryNavigate(
                     HomeFragmentDirections.actionHomeFragmentToArticleDetailsFragment(it, false)
                 )
             },
             onFavouriteArticleClick = {
-                if (homeViewModel.userIsLoggedIn())
+                if (homeViewModel.userIsLoggedIn()) {
                     homeViewModel.changeFavouriteStatusArticle(it)
-                else
+                }
+                else {
+                    homeViewModel.logEvent(
+                        GoogleAnalyticsEvent(
+                            eventName = ADD_ARTICLE_TO_FAVOURITE,
+                            eventParams = arrayOf(
+                                ARTICLE_ID to it.contentID,
+                                ARTICLE_LINK to it.link,
+                            )
+                        )
+                    )
+
                     navController.tryNavigate(R.id.authFragment)
+                }
             }
         )
         binding.rvArticles.apply {

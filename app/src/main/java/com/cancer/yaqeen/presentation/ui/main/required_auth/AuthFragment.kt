@@ -25,6 +25,10 @@ import com.cancer.yaqeen.presentation.ui.auth.OnboardingViewModel
 import com.cancer.yaqeen.presentation.util.Constants.REQUEST_USER_LOG_IN_KEY
 import com.cancer.yaqeen.presentation.util.Constants.USER_LOG_IN_KEY
 import com.cancer.yaqeen.presentation.util.autoCleared
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.ERROR
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvent
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.LOGIN_FAILED
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.USER_PROFILE_UPDATED
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import com.cancer.yaqeen.presentation.util.tryNavigateUp
 import com.cancer.yaqeen.presentation.util.tryPopBackStack
@@ -114,6 +118,14 @@ class AuthFragment : BaseBottomSheetDialogFragment(showBottomMenu = true) {
 
     private fun displayErrorMessage(errorMessage: String?) {
         errorMessage?.let {
+            onboardingViewModel.logEvent(
+                GoogleAnalyticsEvent(
+                    eventName = LOGIN_FAILED,
+                    eventParams = arrayOf(
+                        ERROR to errorMessage
+                    )
+                )
+            )
             Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
         }
     }

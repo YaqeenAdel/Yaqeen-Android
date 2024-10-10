@@ -21,6 +21,14 @@ import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.binding_adapters.bindImage
 import com.cancer.yaqeen.presentation.util.changeVisibility
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvent
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.ADD_TREATMENT
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.LOGIN
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.LOGOUT
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.OPEN_HELP_VIEW
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.OPEN_MEDICINE
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.OPEN_SAVED_ARTICLES
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.OPEN_SYMPTOMS
 import com.cancer.yaqeen.presentation.util.schedulingPermissionsAreGranted
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import dagger.hilt.android.AndroidEntryPoint
@@ -167,6 +175,11 @@ class MoreFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.btn_medicine -> {
+                moreViewModel.logEvent(
+                    GoogleAnalyticsEvent(
+                        eventName = OPEN_MEDICINE,
+                    )
+                )
                 navigateToAddingSchedule {
                     navController.tryNavigate(
                         MoreFragmentDirections.actionMoreFragmentToMedicationsFragment(
@@ -178,6 +191,11 @@ class MoreFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
             }
 
             R.id.btn_symptoms -> {
+                moreViewModel.logEvent(
+                    GoogleAnalyticsEvent(
+                        eventName = OPEN_SYMPTOMS,
+                    )
+                )
                 navigateToAddingSchedule {
                     navController.tryNavigate(
                         MoreFragmentDirections.actionMoreFragmentToSymptomsTypesFragment(
@@ -189,6 +207,11 @@ class MoreFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
             }
 
             R.id.btn_saved_articles -> {
+                moreViewModel.logEvent(
+                    GoogleAnalyticsEvent(
+                        eventName = OPEN_SAVED_ARTICLES,
+                    )
+                )
                 navController.tryNavigate(MoreFragmentDirections.actionMoreFragmentToSavedArticlesFragment())
             }
 
@@ -198,10 +221,20 @@ class MoreFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
             }
 
             R.id.btn_help -> {
+                moreViewModel.logEvent(
+                    GoogleAnalyticsEvent(
+                        eventName = OPEN_HELP_VIEW,
+                    )
+                )
                 navController.tryNavigate(MoreFragmentDirections.actionMoreFragmentToHelpFragment())
             }
 
             R.id.btn_log_out -> {
+                moreViewModel.logEvent(
+                    GoogleAnalyticsEvent(
+                        eventName = LOGOUT,
+                    )
+                )
                 moreViewModel.logout(requireContext())
             }
 

@@ -16,6 +16,9 @@ import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.disable
 import com.cancer.yaqeen.presentation.util.enable
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.INTEREST_NAME
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvent
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.SEARCH_ARTICLE
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -98,8 +101,17 @@ class SearchFragment : BaseFragment(), OnClickListener {
             else -> "" to false
         }
 
-        if (isInterest)
+        if (isInterest) {
+            splashViewModel.logEvent(
+                GoogleAnalyticsEvent(
+                    eventName = SEARCH_ARTICLE,
+                    eventParams = arrayOf(
+                        INTEREST_NAME to interestName
+                    )
+                )
+            )
             navigateToArticles(interestName)
+        }
 
     }
 

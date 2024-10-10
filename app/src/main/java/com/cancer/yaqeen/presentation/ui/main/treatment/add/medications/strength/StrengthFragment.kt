@@ -14,6 +14,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.MedicationTrack
+import com.cancer.yaqeen.data.utils.toJson
 import com.cancer.yaqeen.databinding.FragmentStrengthBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.MedicationsViewModel
@@ -22,6 +23,13 @@ import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.disable
 import com.cancer.yaqeen.presentation.util.dpToPx
 import com.cancer.yaqeen.presentation.util.enable
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.CAPSULE_NAME
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.MEDICATION_TYPE
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.STRENGTH_AMOUNT
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.UNIT_TYPE
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvent
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.SELECT_MEDICATION_TYPE
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.SELECT_STRENGTH_AMOUNT
 import com.cancer.yaqeen.presentation.util.recyclerview.VerticalMarginItemDecoration
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import dagger.hilt.android.AndroidEntryPoint
@@ -89,7 +97,17 @@ class StrengthFragment : BaseFragment() {
 
         binding.btnNext.setOnClickListener {
             val strengthAmount = getStrengthAmount()
-            medicationsViewModel.selectUnitType(unitTypesAdapter.getItemSelected(), strengthAmount.trim())
+            val unitType = unitTypesAdapter.getItemSelected()
+            medicationsViewModel.selectUnitType(unitType, strengthAmount.trim())
+            medicationsViewModel.logEvent(
+                GoogleAnalyticsEvent(
+                    eventName = SELECT_STRENGTH_AMOUNT,
+                    eventParams = arrayOf(
+                        STRENGTH_AMOUNT to strengthAmount,
+                        UNIT_TYPE to unitType.toJson(),
+                    )
+                )
+            )
             navController.tryNavigate(
                 StrengthFragmentDirections.actionStrengthFragmentToChooseTimeFragment()
             )

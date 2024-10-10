@@ -26,6 +26,7 @@ import com.cancer.yaqeen.data.features.home.schedule.medication.models.PeriodTim
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Time
 import com.cancer.yaqeen.data.features.home.schedule.routine_test.mappers.MappingRoutineTestAsRoutineTestTrack
 import com.cancer.yaqeen.data.features.home.schedule.routine_test.models.RoutineTestTrack
+import com.cancer.yaqeen.data.utils.toJson
 import com.cancer.yaqeen.databinding.FragmentRoutineTestInfoBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.medications.strength.choose_time.DaysAdapter
@@ -38,6 +39,11 @@ import com.cancer.yaqeen.presentation.util.changeVisibility
 import com.cancer.yaqeen.presentation.util.disable
 import com.cancer.yaqeen.presentation.util.dpToPx
 import com.cancer.yaqeen.presentation.util.enable
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.DAYS
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.ROUTINE_TEST_NAME
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.TIME
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvent
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.SET_ROUTINE_TEST_INFO
 import com.cancer.yaqeen.presentation.util.recyclerview.VerticalMarginItemDecoration
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import dagger.hilt.android.AndroidEntryPoint
@@ -146,11 +152,25 @@ class RoutineTestInfoFragment : BaseFragment() {
 
         binding.btnNext.setOnClickListener {
             val routineTestName = binding.editTextTestName.text.toString().trim()
+            val time = medicationTimesAdapter.getItemSelected()
+            val days = daysAdapter.getItemsSelected()
             routineTestViewModel.setRoutineTestInfo(
                 routineTestName = routineTestName,
-                periodTime = medicationTimesAdapter.getItemSelected(),
-                specificDays = daysAdapter.getItemsSelected()
+                periodTime = time,
+                specificDays = days
             )
+
+            routineTestViewModel.logEvent(
+                GoogleAnalyticsEvent(
+                    eventName = SET_ROUTINE_TEST_INFO,
+                    eventParams = arrayOf(
+                        ROUTINE_TEST_NAME to routineTestName,
+                        TIME to time.toJson(),
+                        DAYS to days.toJson(),
+                    )
+                )
+            )
+
             navController.tryNavigate(
                 RoutineTestInfoFragmentDirections.actionRoutineTestInfoFragmentToChooseTimeRoutineTestFragment()
             )

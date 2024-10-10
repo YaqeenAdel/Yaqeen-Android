@@ -14,6 +14,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.network.error.ErrorEntity
+import com.cancer.yaqeen.data.utils.toJson
 import com.cancer.yaqeen.databinding.FragmentSymptomConfirmationBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.symptoms.SymptomsViewModel
@@ -25,6 +26,14 @@ import com.cancer.yaqeen.presentation.util.disableTouch
 import com.cancer.yaqeen.presentation.util.dpToPx
 import com.cancer.yaqeen.presentation.util.enableStoragePermissions
 import com.cancer.yaqeen.presentation.util.enableTouch
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.ERROR
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.SYMPTOM
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.SYMPTOMS_TYPES
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvent
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.CONFIRM_SYMPTOM
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.LOGIN_FAILED
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.SELECT_SYMPTOM_TYPE
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.SYMPTOM_CONFIRM_FAILED
 import com.cancer.yaqeen.presentation.util.recyclerview.HorizontalMarginItemDecoration
 import com.cancer.yaqeen.presentation.util.storagePermissionsAreGranted
 import com.cancer.yaqeen.presentation.util.tryPopBackStack
@@ -149,8 +158,16 @@ class SymptomConfirmationFragment : BaseFragment() {
             return
         }
 
-        val medicationTrack = symptomsViewModel.getSymptomTrack()
-        if (medicationTrack?.editable == true)
+        symptomsViewModel.logEvent(
+            GoogleAnalyticsEvent(
+                eventName = CONFIRM_SYMPTOM,
+                eventParams = arrayOf(
+                    SYMPTOM to symptomTrack.toJson(),
+                )
+            )
+        )
+
+        if (symptomTrack?.editable == true)
             symptomsViewModel.editSymptom()
         else
             symptomsViewModel.addSymptom()
@@ -209,6 +226,14 @@ class SymptomConfirmationFragment : BaseFragment() {
 
     private fun displayErrorMessage(errorMessage: String?) {
         errorMessage?.let {
+            symptomsViewModel.logEvent(
+                GoogleAnalyticsEvent(
+                    eventName = SYMPTOM_CONFIRM_FAILED,
+                    eventParams = arrayOf(
+                        ERROR to errorMessage
+                    )
+                )
+            )
             Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
         }
     }

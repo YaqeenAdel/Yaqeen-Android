@@ -36,6 +36,16 @@ import com.cancer.yaqeen.presentation.util.convertMilliSecondsToDate
 import com.cancer.yaqeen.presentation.util.disableTouch
 import com.cancer.yaqeen.presentation.util.enableStoragePermissions
 import com.cancer.yaqeen.presentation.util.enableTouch
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.DAYS
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.ERROR
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.ROUTINE_TEST
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.ROUTINE_TEST_NAME
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.TIME
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvent
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.CONFIRM_ROUTINE_TEST
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.ROUTINE_TEST_CONFIRM_FAILED
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.SET_ROUTINE_TEST_INFO
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.SYMPTOM_CONFIRM_FAILED
 import com.cancer.yaqeen.presentation.util.scheduleJobServicePeriodically
 import com.cancer.yaqeen.presentation.util.schedulingPermissionsAreGranted
 import com.cancer.yaqeen.presentation.util.storagePermissionsAreGranted
@@ -158,6 +168,14 @@ class RoutineTestConfirmationFragment : BaseFragment() {
         }
 
         if (schedulingPermissionsAreGranted(requireActivity(), requireContext(), requestPermissionLauncher)) {
+            routineTestViewModel.logEvent(
+                GoogleAnalyticsEvent(
+                    eventName = CONFIRM_ROUTINE_TEST,
+                    eventParams = arrayOf(
+                        ROUTINE_TEST to routineTestTrack.toJson(),
+                    )
+                )
+            )
             routineTestViewModel.modifyRoutineTest()
         }
     }
@@ -332,6 +350,14 @@ class RoutineTestConfirmationFragment : BaseFragment() {
 
     private fun displayErrorMessage(errorMessage: String?) {
         errorMessage?.let {
+            routineTestViewModel.logEvent(
+                GoogleAnalyticsEvent(
+                    eventName = ROUTINE_TEST_CONFIRM_FAILED,
+                    eventParams = arrayOf(
+                        ERROR to errorMessage
+                    )
+                )
+            )
             Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
         }
     }

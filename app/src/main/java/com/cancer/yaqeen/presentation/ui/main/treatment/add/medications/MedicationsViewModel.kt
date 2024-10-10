@@ -1,5 +1,6 @@
 package com.cancer.yaqeen.presentation.ui.main.treatment.add.medications
 
+import android.content.Context
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
@@ -23,12 +24,18 @@ import com.cancer.yaqeen.domain.features.home.schedule.medication.EditLocalMedic
 import com.cancer.yaqeen.domain.features.home.schedule.medication.EditMedicationUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.GetLocalMedicationUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.SaveLocalMedicationUseCase
+import com.cancer.yaqeen.presentation.base.BaseViewModel
 import com.cancer.yaqeen.presentation.util.SingleLiveEvent
 import com.cancer.yaqeen.presentation.util.calculateStartDateTime
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvent
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.MEDICAL_REMINDER_CONFIRMED
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.MEDICATION_CONFIRMED
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.ROUTINE_TEST_CONFIRMED
 import com.cancer.yaqeen.presentation.util.timestampToDay
 import com.cancer.yaqeen.presentation.util.timestampToMonth
 import com.cancer.yaqeen.presentation.util.timestampToYear
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -41,13 +48,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MedicationsViewModel @Inject constructor(
+    @ApplicationContext val _context: Context,
     private val prefEncryptionUtil: SharedPrefEncryptionUtil,
     private val addMedicationUseCase: AddMedicationUseCase,
     private val editMedicationUseCase: EditMedicationUseCase,
     private val getLocalMedicationUseCase: GetLocalMedicationUseCase,
     private val saveLocalMedicationUseCase: SaveLocalMedicationUseCase,
     private val editLocalMedicationUseCase: EditLocalMedicationUseCase,
-) : ViewModel() {
+) : BaseViewModel(context = _context, prefEncryptionUtil = prefEncryptionUtil) {
 
     private var viewModelJob: Job? = null
 
@@ -152,6 +160,11 @@ class MedicationsViewModel @Inject constructor(
                         Status.ERROR -> emitError(response.errorEntity)
                         Status.SUCCESS -> {
                             response.data?.let {
+                                logEvent(
+                                    GoogleAnalyticsEvent(
+                                        eventName = MEDICATION_CONFIRMED,
+                                    )
+                                )
                                 val medicationDB =
                                     createMedicationDB(
                                         requestBuilder,
@@ -254,6 +267,11 @@ class MedicationsViewModel @Inject constructor(
                         Status.ERROR -> emitError(response.errorEntity)
                         Status.SUCCESS -> {
                             if (response.data == true) {
+                                logEvent(
+                                    GoogleAnalyticsEvent(
+                                        eventName = MEDICATION_CONFIRMED,
+                                    )
+                                )
                                 val medicationDB =
                                     createMedicationDB(
                                         requestBuilder,

@@ -62,6 +62,8 @@ android {
 
 dependencies {
 
+    implementation(project(path = ":cardstackview"))
+
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.9.0")
@@ -77,9 +79,10 @@ dependencies {
     implementation("androidx.hilt:hilt-work:1.2.0")
 
     // Firebase
+//    implementation("com.google.firebase:firebase-analytics:22.1.2")
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-crashlytics-ktx")
-    implementation(platform("com.google.firebase:firebase-bom:30.2.0"))
+    implementation(platform("com.google.firebase:firebase-bom:33.4.0"))
 
 
     // Retrofit & okhttp3
@@ -125,7 +128,7 @@ dependencies {
     implementation("com.github.ybq:Android-SpinKit:1.4.0")
 
     implementation("com.airbnb.android:lottie:3.4.0")
-    implementation("com.yuyakaido.android:card-stack-view:2.3.4")
+//    implementation("com.yuyakaido.android:card-stack-view:2.3.4")
 
     // Lifecycle
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.1")

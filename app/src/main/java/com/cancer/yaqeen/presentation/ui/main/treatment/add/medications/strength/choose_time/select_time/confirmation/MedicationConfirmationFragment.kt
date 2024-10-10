@@ -31,6 +31,15 @@ import com.cancer.yaqeen.presentation.util.binding_adapters.bindResourceImage
 import com.cancer.yaqeen.presentation.util.convertMilliSecondsToDate
 import com.cancer.yaqeen.presentation.util.disableTouch
 import com.cancer.yaqeen.presentation.util.enableTouch
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.DOSAGE_AMOUNT
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.ERROR
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.MEDICATION
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.NOTES
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvent
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.CHOOSE_TIME
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.CONFIRM_MEDICATION
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.MEDICATION_CONFIRM_FAILED
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.ROUTINE_TEST_CONFIRM_FAILED
 import com.cancer.yaqeen.presentation.util.scheduleJobServicePeriodically
 import com.cancer.yaqeen.presentation.util.schedulingPermissionsAreGranted
 import com.cancer.yaqeen.presentation.util.tryPopBackStack
@@ -109,6 +118,14 @@ class MedicationConfirmationFragment : BaseFragment() {
         binding.btnConfirm.setOnClickListener {
             if (schedulingPermissionsAreGranted(requireActivity(), requireContext(), requestPermissionLauncher)) {
                 val medicationTrack = medicationsViewModel.getMedicationTrack()
+                medicationsViewModel.logEvent(
+                    GoogleAnalyticsEvent(
+                        eventName = CONFIRM_MEDICATION,
+                        eventParams = arrayOf(
+                            MEDICATION to medicationTrack.toJson(),
+                        )
+                    )
+                )
                 if (medicationTrack?.editable == true)
                     medicationsViewModel.editMedication()
                 else
@@ -253,6 +270,14 @@ class MedicationConfirmationFragment : BaseFragment() {
 
     private fun displayErrorMessage(errorMessage: String?) {
         errorMessage?.let {
+            medicationsViewModel.logEvent(
+                GoogleAnalyticsEvent(
+                    eventName = MEDICATION_CONFIRM_FAILED,
+                    eventParams = arrayOf(
+                        ERROR to errorMessage
+                    )
+                )
+            )
             Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
         }
     }

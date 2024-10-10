@@ -40,6 +40,9 @@ import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.changeVisibility
 import com.cancer.yaqeen.presentation.util.dpToPx
 import com.cancer.yaqeen.presentation.util.enableNotificationPermissions
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.SCHEDULING_PERMISSION_ARE_GRANTED
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvent
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.ADD_TREATMENT
 import com.cancer.yaqeen.presentation.util.recyclerview.VerticalMarginItemDecoration
 import com.cancer.yaqeen.presentation.util.schedulingPermissionsAreGranted
 import com.cancer.yaqeen.presentation.util.timestampToHour
@@ -266,7 +269,11 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
                     workerReminder.cancelReminder(workID.toString())
                     workBeforeID?.let {
                         val actionNameBefore = OPEN_ROUTINE_TEST_BEFORE_WINDOW_ACTION
-                        workerReminder.cancelReminder(workID.toString(), actionNameBefore, objectJsonValue)
+                        workerReminder.cancelReminder(
+                            workID.toString(),
+                            actionNameBefore,
+                            objectJsonValue
+                        )
                         workerReminder.cancelReminder(it)
                     }
                 }
@@ -481,12 +488,13 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
         this.text = text
     }
 
-    private fun checkNotificationPermission(){
+    private fun checkNotificationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (PermissionChecker.checkSelfPermission(
                     requireContext(),
                     Manifest.permission.POST_NOTIFICATIONS
-                ) == PermissionChecker.PERMISSION_GRANTED){
+                ) == PermissionChecker.PERMISSION_GRANTED
+            ) {
 
             } else {
                 enableNotificationPermissions(
@@ -500,18 +508,31 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
         when (v?.id) {
             R.id.btn_add -> {
                 if (viewModel.userIsLoggedIn()) {
-                    if (schedulingPermissionsAreGranted(
-                            requireActivity(),
-                            requireContext(),
-                            requestPermissionLauncher
+                    val schedulingPermissionsAreGranted = schedulingPermissionsAreGranted(
+                        requireActivity(),
+                        requireContext(),
+                        requestPermissionLauncher
+                    )
+                    viewModel.logEvent(
+                        GoogleAnalyticsEvent(
+                            eventName = ADD_TREATMENT,
+                            eventParams = arrayOf(
+                                SCHEDULING_PERMISSION_ARE_GRANTED to schedulingPermissionsAreGranted
+                            )
                         )
-                    ) {
+                    )
+                    if (schedulingPermissionsAreGranted) {
                         checkNotificationPermission()
                         navController.tryNavigate(
                             TreatmentHistoryFragmentDirections.actionTreatmentHistoryFragmentToTreatmentFragment()
                         )
                     }
                 } else {
+                    viewModel.logEvent(
+                        GoogleAnalyticsEvent(
+                            eventName = ADD_TREATMENT,
+                        )
+                    )
                     navController.tryNavigate(R.id.authFragment)
                 }
             }
