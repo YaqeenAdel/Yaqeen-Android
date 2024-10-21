@@ -204,9 +204,9 @@ class HomeViewModel @Inject constructor(
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             bookmarkedArticles.sortedBy { it.contentID }.onEach { bookmarkedArticle ->
-                articles.sortedBy { it.contentID }.first {
+                articles.sortedBy { it.contentID }.firstOrNull {
                     it.contentID == bookmarkedArticle.contentID
-                }.apply {
+                }?.apply {
                     bookmarkID = bookmarkedArticle.bookmarkID
                     isFavorite = true
                 }
