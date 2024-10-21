@@ -171,17 +171,17 @@ class ChooseTimeFragment : BaseFragment() {
                 notes = notes,
                 dosageAmount = dosageAmount,
             )
-            medicationsViewModel.logEvent(
-                GoogleAnalyticsEvent(
-                    eventName = CHOOSE_TIME,
-                    eventParams = arrayOf(
-                        TIME to time.toJson(),
-                        DAYS to days.toJson(),
-                        NOTES to notes,
-                        DOSAGE_AMOUNT to dosageAmount,
-                    )
-                )
-            )
+//            medicationsViewModel.logEvent(
+//                GoogleAnalyticsEvent(
+//                    eventName = CHOOSE_TIME,
+//                    eventParams = arrayOf(
+//                        TIME to time.toJson(),
+//                        DAYS to days.toJson(),
+//                        NOTES to notes,
+//                        DOSAGE_AMOUNT to dosageAmount,
+//                    )
+//                )
+//            )
             navController.tryNavigate(
                 ChooseTimeFragmentDirections.actionChooseTimeFragmentToSelectTimeFragment()
             )

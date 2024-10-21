@@ -27,18 +27,9 @@ open class BaseViewModel(
 
     fun logEvent(googleAnalyticsEvent: GoogleAnalyticsEvent) {
         with(googleAnalyticsEvent) {
-            val params = getAllEventParams().apply {
-                LOGGED_IN to prefEncryptionUtil.isLogged.toString()
-            }
-            if (prefEncryptionUtil.isLogged) {
-                val user = prefEncryptionUtil.getModelData(PREF_USER, User::class.java)
-                logEvent(eventName, params.apply {
-                    USER_ID to user?.id
-                    USER_NAME to user?.name
-                })
-            } else {
-                logEvent(eventName, params)
-            }
+            val user = prefEncryptionUtil.getModelData(PREF_USER, User::class.java)
+            val params = getAllEventParams(prefEncryptionUtil.isLogged, user?.id, user?.name)
+            logEvent(eventName, params)
         }
 
     }

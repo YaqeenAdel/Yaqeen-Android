@@ -168,14 +168,6 @@ class RoutineTestConfirmationFragment : BaseFragment() {
         }
 
         if (schedulingPermissionsAreGranted(requireActivity(), requireContext(), requestPermissionLauncher)) {
-            routineTestViewModel.logEvent(
-                GoogleAnalyticsEvent(
-                    eventName = CONFIRM_ROUTINE_TEST,
-                    eventParams = arrayOf(
-                        ROUTINE_TEST to routineTestTrack.toJson(),
-                    )
-                )
-            )
             routineTestViewModel.modifyRoutineTest()
         }
     }

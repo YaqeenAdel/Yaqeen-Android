@@ -28,12 +28,14 @@ object GoogleAnalyticsEvents {
     const val UPDATE_MODULES = "Update_Modules"
 
     // Search
-    const val SEARCH_ARTICLE = "Interest_Name"
+    const val SEARCH_ARTICLE = "Search_Article"
 
     // Treatment
     const val ADD_TREATMENT = "Add_Treatment"
     const val OPEN_MEDICINE = "Open_Medicine"
     const val OPEN_SYMPTOMS = "Open_Symptoms"
+    const val OPEN_ROUTINE_TEST = "Open_Routine_Test"
+    const val OPEN_MEDICAL_REMINDER = "Open_Medical_Reminder"
 
     // Settings
     const val OPEN_SAVED_ARTICLES = "Open_Saved_Articles"
@@ -43,7 +45,7 @@ object GoogleAnalyticsEvents {
     // Articles
     const val OPEN_ARTICLE_DETAILS = "Open_Article_Details"
     const val ADD_ARTICLE_TO_FAVOURITE = "Add_Article_To_Favourite"
-    const val REMOVE_ARTICLE_TO_FAVOURITE = "Remove_Article_To_Favourite"
+    const val REMOVE_ARTICLE_TO_FAVOURITE = "Remove_Article_From_Favourite"
 
     // Medications
     const val SELECT_MEDICATION_TYPE = "Select_Medication_Type"

@@ -3,7 +3,6 @@ package com.cancer.yaqeen.presentation.ui.main.treatment.history
 import android.Manifest
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +21,6 @@ import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.ScheduleType
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Time.Companion.getHours24
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Timing
-import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.data.utils.getTodayDate
 import com.cancer.yaqeen.databinding.FragmentTreatmentHistoryBinding
@@ -40,7 +38,7 @@ import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.changeVisibility
 import com.cancer.yaqeen.presentation.util.dpToPx
 import com.cancer.yaqeen.presentation.util.enableNotificationPermissions
-import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.SCHEDULING_PERMISSION_ARE_GRANTED
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.SCHEDULING_PERMISSIONS_ARE_GRANTED
 import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvent
 import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.ADD_TREATMENT
 import com.cancer.yaqeen.presentation.util.recyclerview.VerticalMarginItemDecoration
@@ -52,7 +50,6 @@ import com.google.android.material.button.MaterialButton
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import java.util.Calendar
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
@@ -517,7 +514,7 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
                         GoogleAnalyticsEvent(
                             eventName = ADD_TREATMENT,
                             eventParams = arrayOf(
-                                SCHEDULING_PERMISSION_ARE_GRANTED to schedulingPermissionsAreGranted
+                                SCHEDULING_PERMISSIONS_ARE_GRANTED to schedulingPermissionsAreGranted
                             )
                         )
                     )

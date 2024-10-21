@@ -117,15 +117,15 @@ class MedicationsFragment : BaseFragment() {
             val medicationType = medicationTypesAdapter.getItemSelected()
             medicationsViewModel.selectMedicationType(medicationType, capsuleName.trim())
 
-            medicationsViewModel.logEvent(
-                GoogleAnalyticsEvent(
-                    eventName = SELECT_MEDICATION_TYPE,
-                    eventParams = arrayOf(
-                        CAPSULE_NAME to capsuleName,
-                        MEDICATION_TYPE to medicationType.toJson(),
-                    )
-                )
-            )
+//            medicationsViewModel.logEvent(
+//                GoogleAnalyticsEvent(
+//                    eventName = SELECT_MEDICATION_TYPE,
+//                    eventParams = arrayOf(
+//                        CAPSULE_NAME to capsuleName,
+//                        MEDICATION_TYPE to medicationType.toJson(),
+//                    )
+//                )
+//            )
 
             navController.tryNavigate(
                 MedicationsFragmentDirections.actionMedicationsFragmentToStrengthFragment()

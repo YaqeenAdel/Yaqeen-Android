@@ -20,6 +20,7 @@ import com.cancer.yaqeen.data.features.home.schedule.routine_test.room.RoutineTe
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.data.network.base.Status
 import com.cancer.yaqeen.data.network.error.ErrorEntity
+import com.cancer.yaqeen.data.utils.toJson
 import com.cancer.yaqeen.domain.features.home.schedule.routine_test.AddRoutineTestUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.routine_test.AddRoutineTestWithoutPhotoUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.routine_test.EditLocalRoutineTestUseCase
@@ -30,9 +31,20 @@ import com.cancer.yaqeen.domain.features.home.schedule.routine_test.SaveLocalRou
 import com.cancer.yaqeen.presentation.base.BaseViewModel
 import com.cancer.yaqeen.presentation.util.SingleLiveEvent
 import com.cancer.yaqeen.presentation.util.calculateStartDateTime
+import com.cancer.yaqeen.presentation.util.convertMilliSecondsToDate
 import com.cancer.yaqeen.presentation.util.generateFileName
 import com.cancer.yaqeen.presentation.util.getCurrentTimeMillis
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.DAYS
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.NOTES
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.PERIOD_TIME
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.PHOTO_ATTACHED
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.REMINDER_TIME
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.REMINDER_TIME_BEFORE
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.ROUTINE_TEST
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.ROUTINE_TEST_NAME
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.START_DATE
 import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvent
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.CONFIRM_ROUTINE_TEST
 import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.MEDICATION_CONFIRMED
 import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.ROUTINE_TEST_CONFIRMED
 import com.cancer.yaqeen.presentation.util.timestampToDay
@@ -174,6 +186,7 @@ class RoutineTestViewModel @Inject constructor(
     private fun addRoutineTestWithPhoto() {
         viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             val routineTestTrackField = getRoutineTestTrack()
+            logRoutineTestEvent(routineTestTrackField)
             routineTestTrackField?.run {
                 val requestBuilder = AddRoutineTestRequestBuilder(
                     routineTestName = routineTestName ?: "",
@@ -225,6 +238,26 @@ class RoutineTestViewModel @Inject constructor(
         }
     }
 
+    private fun logRoutineTestEvent(routineTestTrackField: RoutineTestTrack?) {
+        routineTestTrackField?.run {
+            logEvent(
+                GoogleAnalyticsEvent(
+                    eventName = CONFIRM_ROUTINE_TEST,
+                    eventParams = arrayOf(
+                        ROUTINE_TEST_NAME to routineTestName.toString(),
+                        PHOTO_ATTACHED to (photo != null).toString(),
+                        PERIOD_TIME to periodTime?.timeEn.toString(),
+                        DAYS to (specificDays?.map { it.cronExpression }?.joinToString(separator = ",") { it } ?: ""),
+                        START_DATE to startDate?.let { convertMilliSecondsToDate(startDate!!) }.toString(),
+                        REMINDER_TIME to reminderTime?.run { "${hour24}:${minute}" }.toString(),
+                        REMINDER_TIME_BEFORE to reminderBefore.toString(),
+                        NOTES to notes.toString()
+                    )
+                )
+            )
+        }
+    }
+
     private fun createRoutineTestDB(
         builder: AddRoutineTestRequestBuilder,
         startDate: Long?,
@@ -251,6 +284,7 @@ class RoutineTestViewModel @Inject constructor(
     private fun editRoutineTestWithPhoto() {
         viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             val routineTestTrackField = getRoutineTestTrack()
+            logRoutineTestEvent(routineTestTrackField)
             routineTestTrackField?.run {
                 val requestBuilder = AddRoutineTestRequestBuilder(
                     routineTestName = routineTestName ?: "",
@@ -306,6 +340,7 @@ class RoutineTestViewModel @Inject constructor(
     private fun addRoutineTestWithoutPhoto() {
         viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             val routineTestTrackField = getRoutineTestTrack()
+            logRoutineTestEvent(routineTestTrackField)
             routineTestTrackField?.run {
                 val requestBuilder = AddRoutineTestRequestBuilder(
                     routineTestName = routineTestName ?: "",
@@ -357,6 +392,7 @@ class RoutineTestViewModel @Inject constructor(
     private fun editRoutineTestWithoutPhoto() {
         viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             val routineTestTrackField = getRoutineTestTrack()
+            logRoutineTestEvent(routineTestTrackField)
             routineTestTrackField?.run {
                 val requestBuilder = AddRoutineTestRequestBuilder(
                     routineTestName = routineTestName ?: "",
