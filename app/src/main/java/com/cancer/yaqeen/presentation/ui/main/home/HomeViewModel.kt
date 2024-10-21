@@ -184,10 +184,12 @@ class HomeViewModel @Inject constructor(
         bookmarkedArticles: List<LocalArticle>
     ) {
         viewModelScope.launch(Dispatchers.IO) {
-            bookmarkedArticles.sortedBy { it.articleID }.onEach { bookmarkedArticle ->
-                articles.sortedBy { it.contentID }.first {
+            val bookmarkedArticlesSorted = bookmarkedArticles.sortedBy { it.articleID }
+            val articlesSorted = articles.sortedBy { it.contentID }
+            bookmarkedArticlesSorted.onEach { bookmarkedArticle ->
+                articlesSorted.firstOrNull {
                     it.contentID == bookmarkedArticle.articleID
-                }.apply {
+                }?.apply {
                     bookmarkID = bookmarkedArticle.bookmarkID
                     isFavorite = true
                 }
