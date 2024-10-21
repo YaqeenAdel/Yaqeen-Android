@@ -146,15 +146,15 @@ class SelectTimeFragment : BaseFragment() {
             val dosageAmount = binding.editTextDosage.text.toString().trim()
             medicationsViewModel.selectNotesAndDosageAmount(notes = notes, dosageAmount = dosageAmount)
 
-            medicationsViewModel.logEvent(
-                GoogleAnalyticsEvent(
-                    eventName = CHOOSE_TIME,
-                    eventParams = arrayOf(
-                        NOTES to notes,
-                        DOSAGE_AMOUNT to dosageAmount,
-                    )
-                )
-            )
+//            medicationsViewModel.logEvent(
+//                GoogleAnalyticsEvent(
+//                    eventName = CHOOSE_TIME,
+//                    eventParams = arrayOf(
+//                        NOTES to notes,
+//                        DOSAGE_AMOUNT to dosageAmount,
+//                    )
+//                )
+//            )
 
             navController.tryNavigate(
                 SelectTimeFragmentDirections.actionSelectTimeFragmentToMedicationConfirmationFragment()

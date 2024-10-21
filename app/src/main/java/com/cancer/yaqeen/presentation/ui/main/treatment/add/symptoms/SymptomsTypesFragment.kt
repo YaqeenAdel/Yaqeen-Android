@@ -134,14 +134,14 @@ class SymptomsTypesFragment : BaseFragment() {
         binding.btnNext.setOnClickListener {
             val symptomsTypes = symptomsTypesAdapter.getItemsSelected()
             symptomsViewModel.selectSymptomTypes(symptomsTypes)
-            symptomsViewModel.logEvent(
-                GoogleAnalyticsEvent(
-                    eventName = SELECT_SYMPTOM_TYPE,
-                    eventParams = arrayOf(
-                        SYMPTOMS_TYPES to symptomsTypes.toJson(),
-                    )
-                )
-            )
+//            symptomsViewModel.logEvent(
+//                GoogleAnalyticsEvent(
+//                    eventName = SELECT_SYMPTOM_TYPE,
+//                    eventParams = arrayOf(
+//                        SYMPTOMS_TYPES to symptomsTypes.toJson(),
+//                    )
+//                )
+//            )
             navController.tryNavigate(
                 SymptomsTypesFragmentDirections.actionSymptomsTypesFragmentToSymptomsDetailsFragment()
             )

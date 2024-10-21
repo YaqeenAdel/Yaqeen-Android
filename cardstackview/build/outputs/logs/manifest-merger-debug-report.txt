@@ -1,0 +1,25 @@
+-- Merging decision tree log ---
+manifest
+ADDED from D:\MIX\My Apps\Paradise\Yaqeen-App\cardstackview\src\main\AndroidManifest.xml:3:1-58
+INJECTED from D:\MIX\My Apps\Paradise\Yaqeen-App\cardstackview\src\main\AndroidManifest.xml:3:1-58
+INJECTED from D:\MIX\My Apps\Paradise\Yaqeen-App\cardstackview\src\main\AndroidManifest.xml:3:1-58
+	package
+		ADDED from D:\MIX\My Apps\Paradise\Yaqeen-App\cardstackview\src\main\AndroidManifest.xml:3:11-56
+		INJECTED from D:\MIX\My Apps\Paradise\Yaqeen-App\cardstackview\src\main\AndroidManifest.xml
+		INJECTED from D:\MIX\My Apps\Paradise\Yaqeen-App\cardstackview\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from D:\MIX\My Apps\Paradise\Yaqeen-App\cardstackview\src\main\AndroidManifest.xml:3:1-58
+uses-sdk
+INJECTED from D:\MIX\My Apps\Paradise\Yaqeen-App\cardstackview\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from D:\MIX\My Apps\Paradise\Yaqeen-App\cardstackview\src\main\AndroidManifest.xml
+INJECTED from D:\MIX\My Apps\Paradise\Yaqeen-App\cardstackview\src\main\AndroidManifest.xml
+INJECTED from D:\MIX\My Apps\Paradise\Yaqeen-App\cardstackview\src\main\AndroidManifest.xml
+INJECTED from D:\MIX\My Apps\Paradise\Yaqeen-App\cardstackview\src\main\AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from D:\MIX\My Apps\Paradise\Yaqeen-App\cardstackview\src\main\AndroidManifest.xml
+		ADDED from D:\MIX\My Apps\Paradise\Yaqeen-App\cardstackview\src\main\AndroidManifest.xml
+		INJECTED from D:\MIX\My Apps\Paradise\Yaqeen-App\cardstackview\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from D:\MIX\My Apps\Paradise\Yaqeen-App\cardstackview\src\main\AndroidManifest.xml
+		ADDED from D:\MIX\My Apps\Paradise\Yaqeen-App\cardstackview\src\main\AndroidManifest.xml
+		INJECTED from D:\MIX\My Apps\Paradise\Yaqeen-App\cardstackview\src\main\AndroidManifest.xml

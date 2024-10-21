@@ -1,0 +1,4 @@
+#Tue Oct 08 02:18:21 EEST 2024
+base.0=D\:\\MIX\\My Apps\\Paradise\\Yaqeen-App\\cardstackview\\build\\intermediates\\dex\\debugAndroidTest\\mergeDexDebugAndroidTest\\classes.dex
+path.0=classes.dex
+renamed.0=classes.dex

@@ -99,15 +99,15 @@ class StrengthFragment : BaseFragment() {
             val strengthAmount = getStrengthAmount()
             val unitType = unitTypesAdapter.getItemSelected()
             medicationsViewModel.selectUnitType(unitType, strengthAmount.trim())
-            medicationsViewModel.logEvent(
-                GoogleAnalyticsEvent(
-                    eventName = SELECT_STRENGTH_AMOUNT,
-                    eventParams = arrayOf(
-                        STRENGTH_AMOUNT to strengthAmount,
-                        UNIT_TYPE to unitType.toJson(),
-                    )
-                )
-            )
+//            medicationsViewModel.logEvent(
+//                GoogleAnalyticsEvent(
+//                    eventName = SELECT_STRENGTH_AMOUNT,
+//                    eventParams = arrayOf(
+//                        STRENGTH_AMOUNT to strengthAmount,
+//                        UNIT_TYPE to unitType.toJson(),
+//                    )
+//                )
+//            )
             navController.tryNavigate(
                 StrengthFragmentDirections.actionStrengthFragmentToChooseTimeFragment()
             )

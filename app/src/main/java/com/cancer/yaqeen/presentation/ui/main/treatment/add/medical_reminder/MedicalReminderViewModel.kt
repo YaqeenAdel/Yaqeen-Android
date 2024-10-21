@@ -32,6 +32,11 @@ import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttri
 import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.DOCTOR_NAME
 import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.DOCTOR_PHONE_NUMBER
 import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.MEDICAL_REMINDER
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.NOTES
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.REMINDER_TIME
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.REMINDER_TIME_BEFORE
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.START_DATE
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.SYMPTOM
 import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvent
 import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.CONFIRM_MEDICAL_REMINDER
 import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.MEDICAL_REMINDER_CONFIRMED
@@ -125,14 +130,6 @@ class MedicalReminderViewModel @Inject constructor(
 
 
     fun modifyMedicalReminder() {
-        logEvent(
-            GoogleAnalyticsEvent(
-                eventName = CONFIRM_MEDICAL_REMINDER,
-                eventParams = arrayOf(
-                    MEDICAL_REMINDER to medicalReminderTrackField.get()?.toJson().toString(),
-                )
-            )
-        )
         if (medicalReminderTrackField.get()?.editable == true)
             editMedicalReminder()
         else
@@ -163,6 +160,7 @@ class MedicalReminderViewModel @Inject constructor(
     private fun addMedicalReminder() {
         viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             val medicalReminderTrackField = getMedicalReminderTrack()
+            logMedicalReminderEvent(medicalReminderTrackField)
             medicalReminderTrackField?.run {
                 val requestBuilder = AddMedicalReminderRequestBuilder(
                     doctorName = doctorName ?: "",
@@ -207,6 +205,26 @@ class MedicalReminderViewModel @Inject constructor(
         }
     }
 
+    private fun logMedicalReminderEvent(medicalReminderTrackField: MedicalReminderTrack?) {
+        medicalReminderTrackField?.run {
+            logEvent(
+                GoogleAnalyticsEvent(
+                    eventName = CONFIRM_MEDICAL_REMINDER,
+                    eventParams = arrayOf(
+                        DOCTOR_NAME to doctorName.toString(),
+                        DOCTOR_LOCATION to location.toString(),
+                        DOCTOR_PHONE_NUMBER to phoneNumber.toString(),
+                        START_DATE to startDate?.let { convertMilliSecondsToDate(startDate!!) }.toString(),
+                        REMINDER_TIME to reminderTime?.run { "${hour24}:${minute}" }.toString(),
+                        REMINDER_TIME_BEFORE to reminderBefore.toString(),
+                        NOTES to notes.toString(),
+                        SYMPTOM to symptom?.id.toString(),
+                    )
+                )
+            )
+        }
+    }
+
     private fun createMedicalAppointmentDB(
         builder: AddMedicalReminderRequestBuilder,
         startDate: Long?,
@@ -234,6 +252,7 @@ class MedicalReminderViewModel @Inject constructor(
     private fun editMedicalReminder() {
         viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             val medicalReminderTrackField = getMedicalReminderTrack()
+            logMedicalReminderEvent(medicalReminderTrackField)
             medicalReminderTrackField?.run {
                 val requestBuilder = AddMedicalReminderRequestBuilder(
                     doctorName = doctorName ?: "",

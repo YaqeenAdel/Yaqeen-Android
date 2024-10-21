@@ -124,16 +124,16 @@ class MedicalReminderInfoFragment : BaseFragment() {
             location = location,
             phoneNumber = phoneNumber
         )
-        medicalReminderViewModel.logEvent(
-            GoogleAnalyticsEvent(
-                eventName = SET_DOCTOR_INFO,
-                eventParams = arrayOf(
-                    DOCTOR_NAME to doctorName,
-                    DOCTOR_LOCATION to location,
-                    DOCTOR_PHONE_NUMBER to phoneNumber,
-                )
-            )
-        )
+//        medicalReminderViewModel.logEvent(
+//            GoogleAnalyticsEvent(
+//                eventName = SET_DOCTOR_INFO,
+//                eventParams = arrayOf(
+//                    DOCTOR_NAME to doctorName,
+//                    DOCTOR_LOCATION to location,
+//                    DOCTOR_PHONE_NUMBER to phoneNumber,
+//                )
+//            )
+//        )
     }
 
     private fun updateUI(medicalReminderTrack: MedicalReminderTrack?){

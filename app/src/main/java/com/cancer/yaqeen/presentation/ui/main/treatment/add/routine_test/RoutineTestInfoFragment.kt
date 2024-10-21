@@ -160,16 +160,16 @@ class RoutineTestInfoFragment : BaseFragment() {
                 specificDays = days
             )
 
-            routineTestViewModel.logEvent(
-                GoogleAnalyticsEvent(
-                    eventName = SET_ROUTINE_TEST_INFO,
-                    eventParams = arrayOf(
-                        ROUTINE_TEST_NAME to routineTestName,
-                        TIME to time.toJson(),
-                        DAYS to days.toJson(),
-                    )
-                )
-            )
+//            routineTestViewModel.logEvent(
+//                GoogleAnalyticsEvent(
+//                    eventName = SET_ROUTINE_TEST_INFO,
+//                    eventParams = arrayOf(
+//                        ROUTINE_TEST_NAME to routineTestName,
+//                        TIME to time.toJson(),
+//                        DAYS to days.toJson(),
+//                    )
+//                )
+//            )
 
             navController.tryNavigate(
                 RoutineTestInfoFragmentDirections.actionRoutineTestInfoFragmentToChooseTimeRoutineTestFragment()

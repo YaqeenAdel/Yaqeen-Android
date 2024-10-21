@@ -31,10 +31,18 @@ import com.cancer.yaqeen.presentation.util.binding_adapters.bindResourceImage
 import com.cancer.yaqeen.presentation.util.convertMilliSecondsToDate
 import com.cancer.yaqeen.presentation.util.disableTouch
 import com.cancer.yaqeen.presentation.util.enableTouch
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.CAPSULE_NAME
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.DAYS
 import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.DOSAGE_AMOUNT
 import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.ERROR
 import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.MEDICATION
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.MEDICATION_TYPE
 import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.NOTES
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.REMINDER_TIME
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.START_DATE
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.STRENGTH_AMOUNT
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.TIME
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.UNIT_TYPE
 import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvent
 import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.CHOOSE_TIME
 import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.CONFIRM_MEDICATION
@@ -118,14 +126,7 @@ class MedicationConfirmationFragment : BaseFragment() {
         binding.btnConfirm.setOnClickListener {
             if (schedulingPermissionsAreGranted(requireActivity(), requireContext(), requestPermissionLauncher)) {
                 val medicationTrack = medicationsViewModel.getMedicationTrack()
-                medicationsViewModel.logEvent(
-                    GoogleAnalyticsEvent(
-                        eventName = CONFIRM_MEDICATION,
-                        eventParams = arrayOf(
-                            MEDICATION to medicationTrack.toJson(),
-                        )
-                    )
-                )
+
                 if (medicationTrack?.editable == true)
                     medicationsViewModel.editMedication()
                 else

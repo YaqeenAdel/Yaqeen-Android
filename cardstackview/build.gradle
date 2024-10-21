@@ -1,0 +1,14 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 34
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 33
+    }
+}
+
+dependencies {
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+}

@@ -158,15 +158,6 @@ class SymptomConfirmationFragment : BaseFragment() {
             return
         }
 
-        symptomsViewModel.logEvent(
-            GoogleAnalyticsEvent(
-                eventName = CONFIRM_SYMPTOM,
-                eventParams = arrayOf(
-                    SYMPTOM to symptomTrack.toJson(),
-                )
-            )
-        )
-
         if (symptomTrack?.editable == true)
             symptomsViewModel.editSymptom()
         else
