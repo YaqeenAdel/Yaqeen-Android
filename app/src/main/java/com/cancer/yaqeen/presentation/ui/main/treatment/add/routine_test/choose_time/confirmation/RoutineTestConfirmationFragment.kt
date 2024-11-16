@@ -26,6 +26,7 @@ import com.cancer.yaqeen.presentation.service.ReminderManager
 import com.cancer.yaqeen.presentation.service.WorkerReminder
 import com.cancer.yaqeen.presentation.ui.main.treatment.add.routine_test.RoutineTestViewModel
 import com.cancer.yaqeen.presentation.util.Constants
+import com.cancer.yaqeen.presentation.util.Constants.OPEN_ROUTINE_TEST_BEFORE_WINDOW_ACTION
 import com.cancer.yaqeen.presentation.util.Constants.OPEN_ROUTINE_TEST_WINDOW_ACTION
 import com.cancer.yaqeen.presentation.util.Constants.UPDATE_LOCAL_REMINDED_SCHEDULES_ACTION
 import com.cancer.yaqeen.presentation.util.autoCleared
@@ -35,6 +36,16 @@ import com.cancer.yaqeen.presentation.util.convertMilliSecondsToDate
 import com.cancer.yaqeen.presentation.util.disableTouch
 import com.cancer.yaqeen.presentation.util.enableStoragePermissions
 import com.cancer.yaqeen.presentation.util.enableTouch
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.DAYS
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.ERROR
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.ROUTINE_TEST
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.ROUTINE_TEST_NAME
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.TIME
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvent
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.CONFIRM_ROUTINE_TEST
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.ROUTINE_TEST_CONFIRM_FAILED
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.SET_ROUTINE_TEST_INFO
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.SYMPTOM_CONFIRM_FAILED
 import com.cancer.yaqeen.presentation.util.scheduleJobServicePeriodically
 import com.cancer.yaqeen.presentation.util.schedulingPermissionsAreGranted
 import com.cancer.yaqeen.presentation.util.storagePermissionsAreGranted
@@ -281,6 +292,8 @@ class RoutineTestConfirmationFragment : BaseFragment() {
                     workerReminder.cancelReminder(workID.toString(), actionName, objectJsonValue)
                     workerReminder.cancelReminder(workID.toString())
                     workBeforeID?.let {
+                        val actionNameBefore = OPEN_ROUTINE_TEST_BEFORE_WINDOW_ACTION
+                        workerReminder.cancelReminder(workID.toString(), actionNameBefore, objectJsonValue)
                         workerReminder.cancelReminder(it)
                     }
                 }
@@ -329,6 +342,14 @@ class RoutineTestConfirmationFragment : BaseFragment() {
 
     private fun displayErrorMessage(errorMessage: String?) {
         errorMessage?.let {
+            routineTestViewModel.logEvent(
+                GoogleAnalyticsEvent(
+                    eventName = ROUTINE_TEST_CONFIRM_FAILED,
+                    eventParams = arrayOf(
+                        ERROR to errorMessage
+                    )
+                )
+            )
             Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
         }
     }

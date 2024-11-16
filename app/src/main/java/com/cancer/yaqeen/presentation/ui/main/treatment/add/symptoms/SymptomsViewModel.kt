@@ -1,5 +1,6 @@
 package com.cancer.yaqeen.presentation.ui.main.treatment.add.symptoms
 
+import android.content.Context
 import android.net.Uri
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
@@ -13,15 +14,30 @@ import com.cancer.yaqeen.data.features.home.schedule.symptom.requests.AddSymptom
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.data.network.base.Status
 import com.cancer.yaqeen.data.network.error.ErrorEntity
+import com.cancer.yaqeen.data.utils.toJson
 import com.cancer.yaqeen.domain.features.home.schedule.symptom.AddSymptomUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.symptom.AddSymptomWithoutPhotoUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.symptom.EditSymptomUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.symptom.EditSymptomWithoutUploadUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.symptom.GetSymptomsTypesUseCase
+import com.cancer.yaqeen.presentation.base.BaseViewModel
 import com.cancer.yaqeen.presentation.util.SingleLiveEvent
 import com.cancer.yaqeen.presentation.util.generateFileName
 import com.cancer.yaqeen.presentation.util.getCurrentTimeMillis
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.DAYS
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.DETAILS
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.DOCTOR_NAME
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.PHOTO_ATTACHED
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.REMINDER_TIME
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.START_DATE
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.SYMPTOM
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.SYMPTOMS_TYPES
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvent
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.CONFIRM_SYMPTOM
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.ROUTINE_TEST_CONFIRMED
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.SYMPTOM_CONFIRMED
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,13 +52,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SymptomsViewModel @Inject constructor(
+    @ApplicationContext val _context: Context,
     private val prefEncryptionUtil: SharedPrefEncryptionUtil,
     private val getSymptomsTypesUseCase: GetSymptomsTypesUseCase,
     private val addSymptomUseCase: AddSymptomUseCase,
     private val addSymptomWithoutPhotoUseCase: AddSymptomWithoutPhotoUseCase,
     private val editSymptomWithoutUploadUseCase: EditSymptomWithoutUploadUseCase,
     private val editSymptomUseCase: EditSymptomUseCase,
-) : ViewModel() {
+) : BaseViewModel(context = _context, prefEncryptionUtil = prefEncryptionUtil) {
 
     private var viewModelJob: Job? = null
 
@@ -112,6 +129,7 @@ class SymptomsViewModel @Inject constructor(
     private fun addSymptomWithPhoto() {
         viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             val symptomTrackField = getSymptomTrack()
+            logSymptomEvent(symptomTrackField)
             symptomTrackField?.run {
                 val destinationId = this.destinationId
                 addSymptomUseCase(
@@ -129,6 +147,11 @@ class SymptomsViewModel @Inject constructor(
                         Status.ERROR -> emitError(response.errorEntity)
                         Status.SUCCESS -> {
                             response.data?.let {
+                                logEvent(
+                                    GoogleAnalyticsEvent(
+                                        eventName = SYMPTOM_CONFIRMED,
+                                    )
+                                )
                                 if (it.scheduleIsModified) {
                                     resetSymptomTrack()
                                     _viewStateAddSymptom.postValue(true to destinationId)
@@ -146,9 +169,29 @@ class SymptomsViewModel @Inject constructor(
         }
     }
 
+    private fun logSymptomEvent(symptomTrackField: SymptomTrack?) {
+
+        symptomTrackField?.run {
+            logEvent(
+                GoogleAnalyticsEvent(
+                    eventName = CONFIRM_SYMPTOM,
+                    eventParams = arrayOf(
+                        SYMPTOMS_TYPES to (symptomTypes?.map { it.name }?.joinToString(separator = ",") { it } ?: ""),
+                        DETAILS to details.toString(),
+                        PHOTO_ATTACHED to (photosList?.isNotEmpty() == true).toString(),
+                        REMINDER_TIME to reminderTime2?.timeEN.toString(),
+                        START_DATE to startDateEn.toString(),
+                        DOCTOR_NAME to doctorName.toString(),
+                    )
+                )
+            )
+        }
+    }
+
     private fun addSymptomWithoutPhoto() {
         viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             val symptomTrackField = getSymptomTrack()
+            logSymptomEvent(symptomTrackField)
             symptomTrackField?.run {
                 val destinationId = this.destinationId
                 addSymptomWithoutPhotoUseCase(
@@ -166,6 +209,11 @@ class SymptomsViewModel @Inject constructor(
                         Status.ERROR -> emitError(response.errorEntity)
                         Status.SUCCESS -> {
                             response.data?.let {
+                                logEvent(
+                                    GoogleAnalyticsEvent(
+                                        eventName = SYMPTOM_CONFIRMED,
+                                    )
+                                )
                                 resetSymptomTrack()
                                 _viewStateAddSymptom.postValue(true to destinationId)
                             }
@@ -192,6 +240,7 @@ class SymptomsViewModel @Inject constructor(
     private fun editSymptomWithoutUpload() {
         viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             val symptomTrackField = getSymptomTrack()
+            logSymptomEvent(symptomTrackField)
             symptomTrackField?.run {
                 val destinationId = this.destinationId
                 editSymptomWithoutUploadUseCase(
@@ -210,6 +259,11 @@ class SymptomsViewModel @Inject constructor(
                         Status.ERROR -> emitError(response.errorEntity)
                         Status.SUCCESS -> {
                             if (response.data == true) {
+                                logEvent(
+                                    GoogleAnalyticsEvent(
+                                        eventName = SYMPTOM_CONFIRMED,
+                                    )
+                                )
                                 resetSymptomTrack()
                                 _viewStateEditSymptom.postValue(true to destinationId)
                             }
@@ -228,6 +282,7 @@ class SymptomsViewModel @Inject constructor(
     private fun editSymptomWithUpload() {
         viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             val symptomTrackField = getSymptomTrack()
+            logSymptomEvent(symptomTrackField)
             symptomTrackField?.run {
                 val destinationId = this.destinationId
                 editSymptomUseCase(
@@ -246,6 +301,11 @@ class SymptomsViewModel @Inject constructor(
                         Status.ERROR -> emitError(response.errorEntity)
                         Status.SUCCESS -> {
                             response.data?.let {
+                                logEvent(
+                                    GoogleAnalyticsEvent(
+                                        eventName = SYMPTOM_CONFIRMED,
+                                    )
+                                )
                                 resetSymptomTrack()
                                 _viewStateEditSymptom.postValue(true to destinationId)
                             }

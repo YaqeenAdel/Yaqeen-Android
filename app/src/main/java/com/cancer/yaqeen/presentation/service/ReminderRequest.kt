@@ -10,6 +10,7 @@ import com.cancer.yaqeen.data.features.home.schedule.medication.models.PeriodTim
 import com.cancer.yaqeen.data.utils.toJson
 import com.cancer.yaqeen.presentation.receiver.NotificationReceiver
 import java.util.concurrent.TimeUnit
+import kotlin.math.absoluteValue
 
 
 class ReminderRequest private constructor() {
@@ -52,7 +53,7 @@ class ReminderRequest private constructor() {
         }
 
         fun setRequestCode(requestCode: Int): Builder {
-            this.requestCode = requestCode
+            this.requestCode = requestCode.absoluteValue
             return this
         }
 

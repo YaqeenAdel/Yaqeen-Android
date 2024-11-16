@@ -1,5 +1,6 @@
 package com.cancer.yaqeen.presentation.ui.main.treatment.add.medications
 
+import android.content.Context
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
@@ -18,17 +19,37 @@ import com.cancer.yaqeen.data.features.home.schedule.medication.room.ReminderSta
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.data.network.base.Status
 import com.cancer.yaqeen.data.network.error.ErrorEntity
+import com.cancer.yaqeen.data.utils.toJson
 import com.cancer.yaqeen.domain.features.home.schedule.medication.AddMedicationUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.EditLocalMedicationUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.EditMedicationUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.GetLocalMedicationUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.medication.SaveLocalMedicationUseCase
+import com.cancer.yaqeen.presentation.base.BaseViewModel
 import com.cancer.yaqeen.presentation.util.SingleLiveEvent
 import com.cancer.yaqeen.presentation.util.calculateStartDateTime
+import com.cancer.yaqeen.presentation.util.convertMilliSecondsToDate
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.CAPSULE_NAME
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.DAYS
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.DOSAGE_AMOUNT
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.MEDICATION_TYPE
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.NOTES
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.PERIOD_TIME
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.REMINDER_TIME
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.START_DATE
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.STRENGTH_AMOUNT
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.TIME
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.UNIT_TYPE
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvent
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.CONFIRM_MEDICATION
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.MEDICAL_REMINDER_CONFIRMED
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.MEDICATION_CONFIRMED
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.ROUTINE_TEST_CONFIRMED
 import com.cancer.yaqeen.presentation.util.timestampToDay
 import com.cancer.yaqeen.presentation.util.timestampToMonth
 import com.cancer.yaqeen.presentation.util.timestampToYear
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -41,13 +62,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MedicationsViewModel @Inject constructor(
+    @ApplicationContext val _context: Context,
     private val prefEncryptionUtil: SharedPrefEncryptionUtil,
     private val addMedicationUseCase: AddMedicationUseCase,
     private val editMedicationUseCase: EditMedicationUseCase,
     private val getLocalMedicationUseCase: GetLocalMedicationUseCase,
     private val saveLocalMedicationUseCase: SaveLocalMedicationUseCase,
     private val editLocalMedicationUseCase: EditLocalMedicationUseCase,
-) : ViewModel() {
+) : BaseViewModel(context = _context, prefEncryptionUtil = prefEncryptionUtil) {
 
     private var viewModelJob: Job? = null
 
@@ -127,6 +149,7 @@ class MedicationsViewModel @Inject constructor(
     fun addMedication() {
         viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             val medicationTrackField = getMedicationTrack()
+            logMedicationEvent(medicationTrackField)
             medicationTrackField?.run {
                 val destinationId = this.destinationId
                 val requestBuilder = AddMedicationRequestBuilder(
@@ -152,6 +175,11 @@ class MedicationsViewModel @Inject constructor(
                         Status.ERROR -> emitError(response.errorEntity)
                         Status.SUCCESS -> {
                             response.data?.let {
+                                logEvent(
+                                    GoogleAnalyticsEvent(
+                                        eventName = MEDICATION_CONFIRMED,
+                                    )
+                                )
                                 val medicationDB =
                                     createMedicationDB(
                                         requestBuilder,
@@ -172,6 +200,28 @@ class MedicationsViewModel @Inject constructor(
                     }
                 }
             }
+        }
+    }
+
+    private fun logMedicationEvent(medicationTrackField: MedicationTrack?) {
+        medicationTrackField?.run {
+            logEvent(
+                GoogleAnalyticsEvent(
+                    eventName = CONFIRM_MEDICATION,
+                    eventParams = arrayOf(
+                        CAPSULE_NAME to medicationName.toString(),
+                        MEDICATION_TYPE to medicationType?.nameEn.toString(),
+                        STRENGTH_AMOUNT to strengthAmount.toString(),
+                        UNIT_TYPE to unitType?.name.toString(),
+                        REMINDER_TIME to reminderTime?.run { "${hour24}:${minute}" }.toString(),
+                        START_DATE to startDate?.let { convertMilliSecondsToDate(startDate!!) }.toString(),
+                        PERIOD_TIME to periodTime?.timeEn.toString(),
+                        DAYS to (specificDays?.map { it.cronExpression }?.joinToString(separator = ",") { it } ?: ""),
+                        DOSAGE_AMOUNT to dosageAmount.toString(),
+                        NOTES to notes.toString(),
+                    )
+                )
+            )
         }
     }
 
@@ -228,6 +278,7 @@ class MedicationsViewModel @Inject constructor(
     fun editMedication(){
         viewModelJob = viewModelScope.launch(Dispatchers.IO) {
             val medicationTrackField = getMedicationTrack()
+            logMedicationEvent(medicationTrackField)
             medicationTrackField?.run {
                 val destinationId = this.destinationId
                 val requestBuilder = AddMedicationRequestBuilder(
@@ -254,6 +305,11 @@ class MedicationsViewModel @Inject constructor(
                         Status.ERROR -> emitError(response.errorEntity)
                         Status.SUCCESS -> {
                             if (response.data == true) {
+                                logEvent(
+                                    GoogleAnalyticsEvent(
+                                        eventName = MEDICATION_CONFIRMED,
+                                    )
+                                )
                                 val medicationDB =
                                     createMedicationDB(
                                         requestBuilder,

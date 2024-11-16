@@ -20,6 +20,11 @@ import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.ui.auth.OnboardingViewModel
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.dpToPx
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.ERROR
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvent
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.SELECT_CANCER_TYPE
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.SELECT_STAGE
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.UPDATE_STAGE
 import com.cancer.yaqeen.presentation.util.recyclerview.VerticalMarginItemDecoration
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import com.cancer.yaqeen.presentation.util.tryPopBackStack
@@ -66,6 +71,11 @@ class StagesFragment : BaseFragment() {
         }
 
         binding.btnNext.setOnClickListener {
+            viewModel.logEvent(
+                GoogleAnalyticsEvent(
+                    eventName = SELECT_STAGE,
+                )
+            )
             viewModel.updateUserProfile()
         }
 
@@ -111,6 +121,11 @@ class StagesFragment : BaseFragment() {
                 }
             }
         }
+        lifecycleScope {
+            viewModel.viewStateError.collectLatest {
+                handleResponseError(it)
+            }
+        }
     }
 
     private fun handleResponseError(errorEntity: ErrorEntity?) {
@@ -120,6 +135,14 @@ class StagesFragment : BaseFragment() {
 
     private fun displayErrorMessage(errorMessage: String?) {
         errorMessage?.let {
+            splashViewModel.logEvent(
+                GoogleAnalyticsEvent(
+                    eventName = UPDATE_STAGE,
+                    eventParams = arrayOf(
+                        ERROR to errorMessage
+                    )
+                )
+            )
             Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
         }
     }

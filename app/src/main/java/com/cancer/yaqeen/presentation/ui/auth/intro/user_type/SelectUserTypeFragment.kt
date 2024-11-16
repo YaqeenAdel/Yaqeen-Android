@@ -19,6 +19,10 @@ import com.cancer.yaqeen.databinding.FragmentSelectUserTypeBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.ui.auth.OnboardingViewModel
 import com.cancer.yaqeen.presentation.util.autoCleared
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.ERROR
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvent
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.LOGIN_FAILED
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.UPDATE_USER_TYPE
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import com.cancer.yaqeen.presentation.util.tryPopBackStack
 import dagger.hilt.android.AndroidEntryPoint
@@ -155,6 +159,14 @@ class SelectUserTypeFragment : BaseFragment() {
 
     private fun displayErrorMessage(errorMessage: String?) {
         errorMessage?.let {
+            splashViewModel.logEvent(
+                GoogleAnalyticsEvent(
+                    eventName = UPDATE_USER_TYPE,
+                    eventParams = arrayOf(
+                        ERROR to errorMessage
+                    )
+                )
+            )
             Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
         }
     }

@@ -24,6 +24,12 @@ import com.cancer.yaqeen.presentation.ui.auth.OnboardingViewModel
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.changeVisibility
 import com.cancer.yaqeen.presentation.util.dpToPx
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.ERROR
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvent
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.SELECT_MODULES
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.SELECT_STAGE
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.UPDATE_MODULES
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.UPDATE_STAGE
 import com.cancer.yaqeen.presentation.util.recyclerview.CenterGridMarginItemDecoration
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import dagger.hilt.android.AndroidEntryPoint
@@ -76,6 +82,11 @@ class ModulesFragment : BaseFragment() {
         }
 
         binding.btnFinish.setOnClickListener {
+            viewModel.logEvent(
+                GoogleAnalyticsEvent(
+                    eventName = SELECT_MODULES,
+                )
+            )
             viewModel.updateUserProfile(true)
         }
 
@@ -123,6 +134,11 @@ class ModulesFragment : BaseFragment() {
                 }
             }
         }
+        lifecycleScope {
+            viewModel.viewStateError.collectLatest {
+                handleResponseError(it)
+            }
+        }
     }
 
     private fun handleResponseError(errorEntity: ErrorEntity?) {
@@ -132,6 +148,14 @@ class ModulesFragment : BaseFragment() {
 
     private fun displayErrorMessage(errorMessage: String?) {
         errorMessage?.let {
+            splashViewModel.logEvent(
+                GoogleAnalyticsEvent(
+                    eventName = UPDATE_MODULES,
+                    eventParams = arrayOf(
+                        ERROR to errorMessage
+                    )
+                )
+            )
             Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
         }
     }

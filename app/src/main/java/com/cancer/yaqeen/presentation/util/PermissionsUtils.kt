@@ -135,10 +135,14 @@ fun drawOverlaysPermissionAreGranted(context: Context) =
 
 fun enableDrawOverlaysPermission(context: Context): Boolean {
     if (!drawOverlaysPermissionAreGranted(context)) {
-        Toast.makeText(context,
-            context.getString(R.string.please_enable_permission_to_draw_over_other_apps), Toast.LENGTH_LONG).show()
-        val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:${context.packageName}"))
-        context.startActivity(intent)
+        showPermissionConfirmationDialog(
+            context = context,
+            title = context.getString(R.string.allow_permission),
+            message = context.getString(R.string.please_enable_permission_to_draw_over_other_apps)
+        ){
+            val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:${context.packageName}"))
+            context.startActivity(intent)
+        }
         return false
     }
     return true
@@ -152,19 +156,25 @@ fun requestExactAlarmPermission(activity: Activity, context: Context): Boolean {
         val alarmManager = activity.getSystemService(AppCompatActivity.ALARM_SERVICE) as AlarmManager
 
         if (alarmManager.canScheduleExactAlarms()) {
-            val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
-            intent.data = Uri.Builder()
-                .scheme("package")
-                .opaquePart(activity.packageName)
-                .build()
-            activity.registerReceiver(
-                null, IntentFilter(
-                    AlarmManager.ACTION_SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED
-                )
-            )
-            activity.startActivity(intent)
 
-            Toast.makeText(context, "Allow the permission", Toast.LENGTH_SHORT).show()
+            showPermissionConfirmationDialog(
+                context = context,
+                title = context.getString(R.string.allow_permission),
+                message = context.getString(R.string.please_enable_the_permission_to_activate_alert)
+            ){
+                val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+                intent.data = Uri.Builder()
+                    .scheme("package")
+                    .opaquePart(activity.packageName)
+                    .build()
+                activity.registerReceiver(
+                    null, IntentFilter(
+                        AlarmManager.ACTION_SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED
+                    )
+                )
+                activity.startActivity(intent)
+
+            }
             return false
         }
     }
@@ -228,15 +238,20 @@ fun requestNotificationPolicyPermission(activity: Activity): Boolean {
         ) as NotificationManager
 
         if (!notificationManager.isNotificationPolicyAccessGranted) {
-            val intent = Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS)
-            activity.registerReceiver(
-                null, IntentFilter(
-                    NotificationManager.ACTION_NOTIFICATION_POLICY_ACCESS_GRANTED_CHANGED
-                )
-            )
-            activity.startActivity(intent)
 
-            Toast.makeText(activity, "Select YAQEEN App and allow the permission", Toast.LENGTH_SHORT).show()
+            showPermissionConfirmationDialog(
+                context = activity,
+                title = activity.getString(R.string.allow_permission),
+                message = activity.getString(R.string.select_yaqeen_app_and_allow_the_permission)
+            ){
+                val intent = Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS)
+                activity.registerReceiver(
+                    null, IntentFilter(
+                        NotificationManager.ACTION_NOTIFICATION_POLICY_ACCESS_GRANTED_CHANGED
+                    )
+                )
+                activity.startActivity(intent)
+            }
             return false
         }
     }

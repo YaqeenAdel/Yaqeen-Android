@@ -1,0 +1,7 @@
+R_DEF: Internal format may change without notice
+local
+id bottom_overlay
+id left_overlay
+id right_overlay
+id top_overlay
+layout overlay
