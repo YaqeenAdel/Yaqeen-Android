@@ -17,6 +17,7 @@ import com.cancer.yaqeen.data.features.onboarding.models.University
 import com.cancer.yaqeen.data.features.onboarding.requests.UpdateProfileRequestBuilder
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.data.network.error.ErrorEntity
+import com.cancer.yaqeen.data.utils.toJson
 import com.cancer.yaqeen.domain.features.auth.login.usecases.LoginUseCase
 import com.cancer.yaqeen.domain.features.auth.login.usecases.LogoutUseCase
 import com.cancer.yaqeen.domain.features.onboarding.usecases.GetResourcesUseCase
@@ -24,8 +25,19 @@ import com.cancer.yaqeen.domain.features.onboarding.usecases.GetUniversitiesUseC
 import com.cancer.yaqeen.domain.features.onboarding.usecases.GetUserProfileUseCase
 import com.cancer.yaqeen.domain.features.onboarding.usecases.UpdateInterestsUserUseCase
 import com.cancer.yaqeen.domain.features.onboarding.usecases.UpdateUserProfileUseCase
+import com.cancer.yaqeen.presentation.base.BaseViewModel
 import com.cancer.yaqeen.presentation.util.SingleLiveEvent
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.ERROR
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.USER_PROFILE
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvent
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.LOGIN
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.LOGIN_FAILED
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.LOGIN_SUCCESS
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.SELECT_MODULES
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.UPDATE_USER_PROFILE
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.USER_PROFILE_UPDATED
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -39,6 +51,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class OnboardingViewModel @Inject constructor(
+    @ApplicationContext val _context: Context,
     private val prefEncryptionUtil: SharedPrefEncryptionUtil,
     private val loginUseCase: LoginUseCase,
     private val logoutUseCase: LogoutUseCase,
@@ -47,7 +60,7 @@ class OnboardingViewModel @Inject constructor(
     private val getUserProfileUseCase: GetUserProfileUseCase,
     private val updateUserProfileUseCase: UpdateUserProfileUseCase,
     private val updateInterestsUserUseCase: UpdateInterestsUserUseCase,
-) : ViewModel() {
+) : BaseViewModel(context = _context, prefEncryptionUtil = prefEncryptionUtil) {
 
 
     private val _viewStateResources = MutableStateFlow<Resources?>(null)
@@ -130,12 +143,24 @@ class OnboardingViewModel @Inject constructor(
     }
 
     fun login(context: Context) {
+        logEvent(
+            GoogleAnalyticsEvent(
+                eventName = LOGIN
+            )
+        )
         viewModelScope.launch(Dispatchers.IO) {
             loginUseCase(context).onEach { response ->
                 when (response.status) {
-                    Status.ERROR -> emitError(response.errorEntity)
+                    Status.ERROR -> {
+                        emitError(response.errorEntity)
+                    }
                     Status.SUCCESS -> {
                         response.data?.let {
+                            logEvent(
+                                GoogleAnalyticsEvent(
+                                    eventName = LOGIN_SUCCESS
+                                )
+                            )
                             getProfile(it)
                         }
                     }
@@ -221,16 +246,25 @@ class OnboardingViewModel @Inject constructor(
         val user = getUser()
         getUserProfile()?.run {
             viewModelScope.launch(Dispatchers.IO) {
+                val updateProfileRequestBuilder = UpdateProfileRequestBuilder(
+                    firstName = user?.firstName ?: "",
+                    lastName = user?.lastName ?: "",
+                    gender = user?.gender ?: "",
+                    interestModuleIds ?: listOf(0),
+                    ageGroupPatient = 1,
+                    cancerStageIDPatient = stageId,
+                    cancerTypeIDPatient = cancerTypeId
+                )
+                logEvent(
+                    GoogleAnalyticsEvent(
+                        eventName = UPDATE_USER_PROFILE,
+                        eventParams = arrayOf(
+                            USER_PROFILE to updateProfileRequestBuilder.toJson()
+                        )
+                    )
+                )
                 updateUserProfileUseCase(
-                    UpdateProfileRequestBuilder(
-                        firstName = user?.firstName ?: "",
-                        lastName = user?.lastName ?: "",
-                        gender = user?.gender ?: "",
-                        interestModuleIds ?: listOf(0),
-                        ageGroupPatient = 1,
-                        cancerStageIDPatient = stageId,
-                        cancerTypeIDPatient = cancerTypeId
-                    ).buildRequestBody()
+                    updateProfileRequestBuilder.buildRequestBody()
 
                 ).onEach { response ->
                     emitLoading(response.loading)
@@ -238,6 +272,11 @@ class OnboardingViewModel @Inject constructor(
                         Status.ERROR -> emitError(response.errorEntity)
                         Status.SUCCESS -> {
                             response.data?.let {
+                                logEvent(
+                                    GoogleAnalyticsEvent(
+                                        eventName = USER_PROFILE_UPDATED,
+                                    )
+                                )
                                 _viewStateUpdateProfileSuccess.emit(true)
                                 _viewStateUpdateProfileSuccess.emit(null)
                             }

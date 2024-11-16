@@ -25,6 +25,11 @@ import com.cancer.yaqeen.presentation.util.Constants.BODY_KEY
 import com.cancer.yaqeen.presentation.util.Constants.PHOTO_ID_KEY
 import com.cancer.yaqeen.presentation.util.Constants.TITLE_KEY
 import com.cancer.yaqeen.presentation.util.autoCleared
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.ERROR
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvent
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.LOGIN
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.LOGIN_FAILED
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.SKIP_AUTH
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,21 +47,21 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
 
     private val onboardingViewModel: OnboardingViewModel by activityViewModels()
 
-    private val handler = Handler()
-    private var scrollPosition = 0
-
-    private val runnable = object : Runnable {
-
-        override fun run() {
-            try {
-                val count = adapter.itemCount
-                binding.viewPager.setCurrentItem(scrollPosition++ % count, true)
-
-                handler.postDelayed(this, 3000)
-            } catch (_: Exception) {
-            }
-        }
-    }
+//    private val handler = Handler()
+//    private var scrollPosition = 0
+//
+//    private val runnable = object : Runnable {
+//
+//        override fun run() {
+//            try {
+//                val count = adapter.itemCount
+//                binding.viewPager.setCurrentItem(scrollPosition++ % count, true)
+//
+//                handler.postDelayed(this, 3000)
+//            } catch (_: Exception) {
+//            }
+//        }
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -151,6 +156,14 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
 
     private fun displayErrorMessage(errorMessage: String?) {
         errorMessage?.let {
+            onboardingViewModel.logEvent(
+                GoogleAnalyticsEvent(
+                    eventName = LOGIN_FAILED,
+                    eventParams = arrayOf(
+                        ERROR to errorMessage
+                    )
+                )
+            )
             Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
         }
     }
@@ -253,7 +266,7 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
 
         binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-                scrollPosition = position + 1
+//                scrollPosition = position + 1
             }
 
             override fun onPageScrollStateChanged(state: Int) {}
@@ -265,7 +278,7 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
             }
         })
 
-        handler.post(runnable)
+//        handler.post(runnable)
     }
 
     private fun navigateToHome() {
@@ -284,13 +297,18 @@ class OnBoardingFragment : BaseFragment(), OnClickListener {
     }
 
     private fun removeCallbacks() {
-        binding.viewPager.removeCallbacks(runnable)
-        handler.removeCallbacks(runnable)
+//        binding.viewPager.removeCallbacks(runnable)
+//        handler.removeCallbacks(runnable)
     }
 
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.tv_skip -> {
+                onboardingViewModel.logEvent(
+                    GoogleAnalyticsEvent(
+                        eventName = SKIP_AUTH
+                    )
+                )
                 navigateToHome()
             }
 

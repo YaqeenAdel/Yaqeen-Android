@@ -1,0 +1,6 @@
+com.yuyakaido.android.cardstackview
+id bottom_overlay
+id left_overlay
+id right_overlay
+id top_overlay
+layout overlay

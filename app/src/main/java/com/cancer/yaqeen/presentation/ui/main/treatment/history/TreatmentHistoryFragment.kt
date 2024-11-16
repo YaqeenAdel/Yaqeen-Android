@@ -1,7 +1,8 @@
 package com.cancer.yaqeen.presentation.ui.main.treatment.history
 
+import android.Manifest
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.content.PermissionChecker
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
@@ -19,7 +21,6 @@ import com.cancer.yaqeen.R
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.ScheduleType
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Time.Companion.getHours24
 import com.cancer.yaqeen.data.features.home.schedule.medication.models.Timing
-import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.data.network.error.ErrorEntity
 import com.cancer.yaqeen.data.utils.getTodayDate
 import com.cancer.yaqeen.databinding.FragmentTreatmentHistoryBinding
@@ -32,9 +33,14 @@ import com.cancer.yaqeen.presentation.ui.main.treatment.history.adapters.Medicat
 import com.cancer.yaqeen.presentation.ui.main.treatment.history.adapters.RoutineTestsAdapter
 import com.cancer.yaqeen.presentation.ui.main.treatment.history.adapters.SymptomsAdapter
 import com.cancer.yaqeen.presentation.util.Constants
+import com.cancer.yaqeen.presentation.util.Constants.OPEN_ROUTINE_TEST_BEFORE_WINDOW_ACTION
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.changeVisibility
 import com.cancer.yaqeen.presentation.util.dpToPx
+import com.cancer.yaqeen.presentation.util.enableNotificationPermissions
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.SCHEDULING_PERMISSIONS_ARE_GRANTED
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvent
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.ADD_TREATMENT
 import com.cancer.yaqeen.presentation.util.recyclerview.VerticalMarginItemDecoration
 import com.cancer.yaqeen.presentation.util.schedulingPermissionsAreGranted
 import com.cancer.yaqeen.presentation.util.timestampToHour
@@ -44,7 +50,6 @@ import com.google.android.material.button.MaterialButton
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import java.util.Calendar
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
@@ -260,6 +265,12 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
                     workerReminder.cancelReminder(workID.toString(), actionName, objectJsonValue)
                     workerReminder.cancelReminder(workID.toString())
                     workBeforeID?.let {
+                        val actionNameBefore = OPEN_ROUTINE_TEST_BEFORE_WINDOW_ACTION
+                        workerReminder.cancelReminder(
+                            workID.toString(),
+                            actionNameBefore,
+                            objectJsonValue
+                        )
                         workerReminder.cancelReminder(it)
                     }
                 }
@@ -474,20 +485,51 @@ class TreatmentHistoryFragment : BaseFragment(showBottomMenu = true), View.OnCli
         this.text = text
     }
 
+    private fun checkNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (PermissionChecker.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) == PermissionChecker.PERMISSION_GRANTED
+            ) {
+
+            } else {
+                enableNotificationPermissions(
+                    requestPermissionLauncher
+                )
+            }
+        }
+    }
+
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.btn_add -> {
                 if (viewModel.userIsLoggedIn()) {
-                    if (schedulingPermissionsAreGranted(
-                            requireActivity(),
-                            requireContext(),
-                            requestPermissionLauncher
+                    val schedulingPermissionsAreGranted = schedulingPermissionsAreGranted(
+                        requireActivity(),
+                        requireContext(),
+                        requestPermissionLauncher
+                    )
+                    viewModel.logEvent(
+                        GoogleAnalyticsEvent(
+                            eventName = ADD_TREATMENT,
+                            eventParams = arrayOf(
+                                SCHEDULING_PERMISSIONS_ARE_GRANTED to schedulingPermissionsAreGranted
+                            )
                         )
                     )
+                    if (schedulingPermissionsAreGranted) {
+                        checkNotificationPermission()
                         navController.tryNavigate(
                             TreatmentHistoryFragmentDirections.actionTreatmentHistoryFragmentToTreatmentFragment()
                         )
+                    }
                 } else {
+                    viewModel.logEvent(
+                        GoogleAnalyticsEvent(
+                            eventName = ADD_TREATMENT,
+                        )
+                    )
                     navController.tryNavigate(R.id.authFragment)
                 }
             }

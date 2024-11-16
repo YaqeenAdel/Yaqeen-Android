@@ -4,15 +4,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cancer.yaqeen.BuildConfig.TERMS_AND_CONDITION
 import com.cancer.yaqeen.data.features.onboarding.models.TermsAndCondition
 import com.cancer.yaqeen.databinding.FragmentTermsAndConditionBinding
 import com.cancer.yaqeen.presentation.base.BaseFragment
+import com.cancer.yaqeen.presentation.base.BaseViewModel
+import com.cancer.yaqeen.presentation.ui.auth.OnboardingViewModel
 import com.cancer.yaqeen.presentation.util.MyWebViewClient
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.dpToPx
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvent
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.ACCEPT_TERMS_CONDITIONS
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.LOGOUT
 import com.cancer.yaqeen.presentation.util.recyclerview.VerticalMarginItemDecoration
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import com.cancer.yaqeen.presentation.util.tryPopBackStack
@@ -27,7 +33,7 @@ class TermsAndConditionFragment : BaseFragment() {
 
 //    private lateinit var termsAndConditionAdapter: TermsAndConditionAdapter
 
-//    private val viewModel: OnboardingViewModel by activityViewModels()
+//    private val viewModel: OnboardingViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,6 +52,11 @@ class TermsAndConditionFragment : BaseFragment() {
 //        setupTermsAndConditionAdapter()
 
         binding.btnAccept.setOnClickListener {
+            splashViewModel.logEvent(
+                GoogleAnalyticsEvent(
+                    eventName = ACCEPT_TERMS_CONDITIONS,
+                )
+            )
             navController.tryNavigate(
                 TermsAndConditionFragmentDirections.actionTermsAndConditionFragmentToIntroFragment()
             )

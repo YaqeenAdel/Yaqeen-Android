@@ -1,5 +1,6 @@
 package com.cancer.yaqeen.presentation.ui.main.treatment.history
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -26,8 +27,10 @@ import com.cancer.yaqeen.domain.features.home.schedule.routine_test.GetRoutineTe
 import com.cancer.yaqeen.domain.features.home.schedule.routine_test.RemoveLocalRoutineTestUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.symptom.DeleteSymptomUseCase
 import com.cancer.yaqeen.domain.features.home.schedule.symptom.GetSymptomsUseCase
+import com.cancer.yaqeen.presentation.base.BaseViewModel
 import com.cancer.yaqeen.presentation.util.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,6 +41,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SchedulesHistoryViewModel @Inject constructor(
+    @ApplicationContext val _context: Context,
     private val prefEncryptionUtil: SharedPrefEncryptionUtil,
     private val getMedicationRemindersUseCase: GetMedicationRemindersUseCase,
     private val getSymptomsUseCase: GetSymptomsUseCase,
@@ -51,7 +55,7 @@ class SchedulesHistoryViewModel @Inject constructor(
     private val removeLocalRoutineTestUseCase: RemoveLocalRoutineTestUseCase,
     private val removeLocalMedicalAppointmentUseCase: RemoveLocalMedicalAppointmentUseCase,
     private val removeLocalMedicationUseCase: RemoveLocalMedicationUseCase,
-) : ViewModel() {
+) : BaseViewModel(context = _context, prefEncryptionUtil = prefEncryptionUtil) {
 
     private var viewModelJob: Job? = null
 

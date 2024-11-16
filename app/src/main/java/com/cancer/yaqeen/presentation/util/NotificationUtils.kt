@@ -106,6 +106,7 @@ class NotificationUtils @Inject constructor(val context: Context) {
                     .bigText(details)
                     .setBigContentTitle(title)
             )
+            .setPendingIntent()
 
         val actionIntent = Intent(context, NotificationReceiver::class.java).apply {
             action = IGNORE_NOTIFICATION_ACTION
@@ -151,6 +152,7 @@ class NotificationUtils @Inject constructor(val context: Context) {
                     .bigText(details)
                     .setBigContentTitle(title)
             )
+            .setPendingIntent()
 
         return  notificationBuilder.createNotification()
     }

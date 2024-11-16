@@ -28,6 +28,12 @@ import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.ui.auth.OnboardingViewModel
 import com.cancer.yaqeen.presentation.util.autoCleared
 import com.cancer.yaqeen.presentation.util.dpToPx
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsAttributes.ERROR
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvent
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.SELECT_CANCER_TYPE
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.START_CREATE_ACCOUNT
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.UPDATE_CANCER_TYPE
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.UPDATE_USER_TYPE
 import com.cancer.yaqeen.presentation.util.recyclerview.VerticalMarginItemDecoration
 import com.cancer.yaqeen.presentation.util.tryNavigate
 import com.cancer.yaqeen.presentation.util.tryPopBackStack
@@ -83,6 +89,11 @@ class SelectCancerTypeFragment : BaseFragment() {
         }
 
         binding.btnNext.setOnClickListener {
+            viewModel.logEvent(
+                GoogleAnalyticsEvent(
+                    eventName = SELECT_CANCER_TYPE,
+                )
+            )
             viewModel.updateUserProfile()
         }
 
@@ -133,6 +144,11 @@ class SelectCancerTypeFragment : BaseFragment() {
                 }
             }
         }
+        lifecycleScope {
+            viewModel.viewStateError.collectLatest {
+                handleResponseError(it)
+            }
+        }
     }
 
     private fun handleResponseError(errorEntity: ErrorEntity?) {
@@ -142,6 +158,14 @@ class SelectCancerTypeFragment : BaseFragment() {
 
     private fun displayErrorMessage(errorMessage: String?) {
         errorMessage?.let {
+            splashViewModel.logEvent(
+                GoogleAnalyticsEvent(
+                    eventName = UPDATE_CANCER_TYPE,
+                    eventParams = arrayOf(
+                        ERROR to errorMessage
+                    )
+                )
+            )
             Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
         }
     }

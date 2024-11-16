@@ -5,7 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cancer.yaqeen.data.local.SharedPrefEncryptionUtil
 import com.cancer.yaqeen.domain.features.auth.login.usecases.RefreshTokenUseCase
+import com.cancer.yaqeen.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -14,22 +16,14 @@ import javax.inject.Inject
 @HiltViewModel
 class SplashViewModel
 @Inject constructor(
+    @ApplicationContext val _context: Context,
     private val prefUtil: SharedPrefEncryptionUtil,
     private val refreshTokenUseCase: RefreshTokenUseCase
-) : ViewModel() {
-
-    private val _viewStateUserInfo = MutableStateFlow<Boolean?>(null)
-    val viewStateUserInfo = _viewStateUserInfo.asStateFlow()
+) : BaseViewModel(context = _context, prefEncryptionUtil = prefUtil) {
 
     private var viewModelJob: Job? = null
 
-    fun checkUserInfo() {
-        val isLoggedIn = prefUtil.isLogged
-        viewModelJob = viewModelScope.launch {
-            _viewStateUserInfo.emit(isLoggedIn)
-        }
-
-    }
+    fun userIsLogged() = prefUtil.isLogged
 
     fun refreshToken(requireContext: Context) {
         val isLoggedIn = prefUtil.isLogged

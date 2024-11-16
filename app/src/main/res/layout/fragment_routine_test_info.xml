@@ -13,6 +13,18 @@
         android:background="@color/white"
         tools:context=".presentation.ui.main.treatment.add.routine_test.RoutineTestInfoFragment">
 
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/btn_next"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -279,18 +291,6 @@
         app:layout_constraintStart_toStartOf="@id/card_view"
         app:layout_constraintTop_toBottomOf="@+id/card_view" />
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/scrollView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintStart_toStartOf="@id/tv_title"
-        app:layout_constraintEnd_toEndOf="@id/tv_title"
-        app:layout_constraintTop_toBottomOf="@id/tv_title"
-        app:layout_constraintBottom_toTopOf="@id/btn_next">
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_times"
@@ -300,9 +300,9 @@
             android:nestedScrollingEnabled="false"
             android:saveEnabled="false"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tv_title"
+            app:layout_constraintEnd_toEndOf="@id/tv_title"
+            app:layout_constraintTop_toBottomOf="@id/tv_title"
             app:layout_constraintVertical_bias="0"
             tools:itemCount="5"
             tools:listitem="@layout/item_medication_time" />
@@ -366,9 +366,11 @@
             app:backgroundTint="@color/light_gray"
             app:cornerRadius="@dimen/_16sdp"
             android:layout_marginBottom="@dimen/_18sdp"
+            android:layout_marginHorizontal="@dimen/_20sdp"
             app:layout_constraintTop_toBottomOf="@id/scrollView"
             app:layout_constraintStart_toStartOf="@id/scrollView"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/scrollView"/>
+            app:layout_constraintEnd_toEndOf="@id/scrollView"
+            app:layout_constraintVertical_bias="1"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

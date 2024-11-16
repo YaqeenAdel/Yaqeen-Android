@@ -78,9 +78,6 @@ class ArticleDetailsFragment : BaseFragment() {
             else
                 navController.tryNavigate(R.id.authFragment)
         }
-        binding.ivShare.setOnClickListener {
-
-        }
 
         binding.ivShare.setOnClickListener {
             shareArticle()

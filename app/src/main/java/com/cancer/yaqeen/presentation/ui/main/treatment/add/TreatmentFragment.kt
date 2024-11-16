@@ -20,6 +20,11 @@ import com.cancer.yaqeen.presentation.base.BaseFragment
 import com.cancer.yaqeen.presentation.ui.main.treatment.TimesAdapter
 import com.cancer.yaqeen.presentation.util.Constants
 import com.cancer.yaqeen.presentation.util.autoCleared
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvent
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.OPEN_MEDICAL_REMINDER
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.OPEN_MEDICINE
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.OPEN_ROUTINE_TEST
+import com.cancer.yaqeen.presentation.util.google_analytics.GoogleAnalyticsEvents.OPEN_SYMPTOMS
 import com.cancer.yaqeen.presentation.util.timestampToDay
 import com.cancer.yaqeen.presentation.util.timestampToHour
 import com.cancer.yaqeen.presentation.util.timestampToTiming
@@ -133,6 +138,11 @@ class TreatmentFragment : BaseFragment(showBottomMenu = true), View.OnClickListe
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.btn_medications -> {
+                splashViewModel.logEvent(
+                    GoogleAnalyticsEvent(
+                        eventName = OPEN_MEDICINE,
+                    )
+                )
                 navController.tryNavigate(
                     TreatmentFragmentDirections.actionTreatmentFragmentToMedicationsFragment(
                         null,
@@ -142,6 +152,11 @@ class TreatmentFragment : BaseFragment(showBottomMenu = true), View.OnClickListe
             }
 
             R.id.btn_symptoms -> {
+                splashViewModel.logEvent(
+                    GoogleAnalyticsEvent(
+                        eventName = OPEN_SYMPTOMS,
+                    )
+                )
                 navController.tryNavigate(
                     TreatmentFragmentDirections.actionTreatmentFragmentToSymptomsTypesFragment(
                         null,
@@ -151,6 +166,11 @@ class TreatmentFragment : BaseFragment(showBottomMenu = true), View.OnClickListe
             }
 
             R.id.btn_routine_tests -> {
+                splashViewModel.logEvent(
+                    GoogleAnalyticsEvent(
+                        eventName = OPEN_ROUTINE_TEST,
+                    )
+                )
                 navController.tryNavigate(
                     TreatmentFragmentDirections.actionTreatmentFragmentToRoutineTestInfoFragment(
                         null
@@ -159,6 +179,11 @@ class TreatmentFragment : BaseFragment(showBottomMenu = true), View.OnClickListe
             }
 
             R.id.btn_medical_appointment -> {
+                splashViewModel.logEvent(
+                    GoogleAnalyticsEvent(
+                        eventName = OPEN_MEDICAL_REMINDER,
+                    )
+                )
                 navController.tryNavigate(
                     TreatmentFragmentDirections.actionTreatmentFragmentToMedicalReminderInfoFragment(
                         null
