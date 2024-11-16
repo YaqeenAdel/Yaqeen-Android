@@ -100,7 +100,7 @@ class MoreFragment : BaseFragment(showBottomMenu = true), View.OnClickListener {
         binding.btnSymptoms.setOnClickListener(this)
         binding.btnSavedArticles.setOnClickListener(this)
         binding.btnLanguage.setOnClickListener(this)
-        binding.btnAccountSetting.setOnClickListener(this)
+//        binding.btnAccountSetting.setOnClickListener(this)
         binding.btnHelp.setOnClickListener(this)
         binding.btnLogOut.setOnClickListener(this)
         binding.btnLogIn.setOnClickListener(this)
