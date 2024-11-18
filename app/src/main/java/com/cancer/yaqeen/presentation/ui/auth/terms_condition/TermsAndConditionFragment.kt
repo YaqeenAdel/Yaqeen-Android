@@ -1,6 +1,7 @@
 package com.cancer.yaqeen.presentation.ui.auth.terms_condition
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -83,7 +84,6 @@ class TermsAndConditionFragment : BaseFragment() {
 
         binding.webView.loadUrl(link)
     }
-
 
 //    private fun observeStates() {
 //        lifecycleScope {

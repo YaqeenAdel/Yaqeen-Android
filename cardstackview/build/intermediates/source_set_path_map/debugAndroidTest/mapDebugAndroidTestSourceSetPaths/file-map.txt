@@ -1,0 +1,7 @@
+com.yuyakaido.android.cardstackview.test.cardstackview-core-1.3.2-0 C:\Users\muhmm\.gradle\caches\8.9\transforms\469d7f3846664370546773916a89b666\transformed\core-1.3.2\res
+com.yuyakaido.android.cardstackview.test.cardstackview-recyclerview-1.2.1-1 C:\Users\muhmm\.gradle\caches\8.9\transforms\919b20c59d8b6bb167cac9576819f4c6\transformed\recyclerview-1.2.1\res
+com.yuyakaido.android.cardstackview.test.cardstackview-androidTest-2 D:\Android Apps\Yaqeen-Android\cardstackview\build\generated\res\resValues\androidTest\debug
+com.yuyakaido.android.cardstackview.test.cardstackview-mergeDebugAndroidTestResources-3 D:\Android Apps\Yaqeen-Android\cardstackview\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\merged.dir
+com.yuyakaido.android.cardstackview.test.cardstackview-mergeDebugAndroidTestResources-4 D:\Android Apps\Yaqeen-Android\cardstackview\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\stripped.dir
+com.yuyakaido.android.cardstackview.test.cardstackview-debugAndroidTest-5 D:\Android Apps\Yaqeen-Android\cardstackview\build\intermediates\merged_res\debugAndroidTest\mergeDebugAndroidTestResources
+com.yuyakaido.android.cardstackview.test.cardstackview-debug-6 D:\Android Apps\Yaqeen-Android\cardstackview\build\intermediates\packaged_res\debug\packageDebugResources
