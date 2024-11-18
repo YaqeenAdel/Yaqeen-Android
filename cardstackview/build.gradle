@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 
 android {
+    namespace = "com.yuyakaido.android.cardstackview"
     compileSdkVersion 34
 
     defaultConfig {
