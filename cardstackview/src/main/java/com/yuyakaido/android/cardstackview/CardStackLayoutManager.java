@@ -12,6 +12,7 @@ import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cancer.yaqeen.R;
 import com.yuyakaido.android.cardstackview.internal.CardStackSetting;
 import com.yuyakaido.android.cardstackview.internal.CardStackSmoothScroller;
 import com.yuyakaido.android.cardstackview.internal.CardStackState;
