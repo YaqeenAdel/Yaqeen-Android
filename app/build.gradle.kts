@@ -23,6 +23,13 @@ keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 android {
     compileSdk = 34
 
+    namespace = "com.cancer.yaqeen"
+
+    val apiUrlPropertiesFile = rootProject.file("gradle.properties")
+    val apiUrlProperties = Properties().apply {
+        load(apiUrlPropertiesFile.inputStream())
+    }
+
     defaultConfig {
         applicationId = "com.cancer.yaqeen"
         minSdk = 21
@@ -32,6 +39,42 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         manifestPlaceholders["auth0Domain"] =  "yaqeen.eu.auth0.com"
         manifestPlaceholders["auth0Scheme"] =  "demo"
+
+        buildConfigField(
+            "String",
+            "BASE_URL",
+            apiUrlProperties.getProperty("BASE_URL") ?: ""
+        )
+        buildConfigField(
+            "String",
+            "AUTH_0_SCHEMA",
+            apiUrlProperties.getProperty("AUTH_0_SCHEMA") ?: ""
+        )
+        buildConfigField(
+            "String",
+            "AUTH_0_DOMAIN",
+            apiUrlProperties.getProperty("AUTH_0_DOMAIN") ?: ""
+        )
+        buildConfigField(
+            "String",
+            "AUTH_0_URL",
+            apiUrlProperties.getProperty("AUTH_0_URL") ?: ""
+        )
+        buildConfigField(
+            "String",
+            "AUTH_0_CLIENT_ID",
+            apiUrlProperties.getProperty("AUTH_0_CLIENT_ID") ?: ""
+        )
+        buildConfigField(
+            "String",
+            "TERMS_AND_CONDITION",
+            apiUrlProperties.getProperty("TERMS_AND_CONDITION") ?: ""
+        )
+        buildConfigField(
+            "String",
+            "HELP",
+            apiUrlProperties.getProperty("HELP") ?: ""
+        )
     }
     signingConfigs {
         create("config") {
@@ -48,15 +91,16 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     buildFeatures {
         viewBinding = true
         dataBinding = true
+        buildConfig = true
     }
 }
 
@@ -73,9 +117,9 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
     // Hilt
-    implementation("com.google.dagger:hilt-android:2.44")
-    kapt("com.google.dagger:hilt-android-compiler:2.44")
-    kapt("androidx.hilt:hilt-compiler:1.0.0")
+    implementation("com.google.dagger:hilt-android:2.47")
+    kapt("com.google.dagger:hilt-android-compiler:2.47")
+    kapt("androidx.hilt:hilt-compiler:1.3.0")
     implementation("androidx.hilt:hilt-work:1.2.0")
 
     // Firebase

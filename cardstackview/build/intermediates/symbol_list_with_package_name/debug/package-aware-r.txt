@@ -1,4 +1,4 @@
-com.yuyakaido.android.cardstackview
+com.cancer.yaqeen
 id bottom_overlay
 id left_overlay
 id right_overlay

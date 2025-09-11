@@ -3,6 +3,7 @@ apply plugin: 'com.android.library'
 android {
     compileSdkVersion 34
 
+    namespace = "com.cancer.yaqeen"
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 33
